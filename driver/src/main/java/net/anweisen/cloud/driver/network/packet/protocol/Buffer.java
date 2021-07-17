@@ -122,6 +122,12 @@ public abstract class Buffer extends ByteBuf {
 	public abstract Buffer writeOptionalDocument(@Nullable Document document);
 
 	@Nonnull
+	public abstract Collection<Document> readDocumentCollection();
+
+	@Nonnull
+	public abstract Buffer writeDocumentCollection(@Nonnull Collection<? extends Document> documents);
+
+	@Nonnull
 	public abstract <T extends SerializableObject> T readObject(@Nonnull Class<T> objectClass);
 
 	@Nonnull

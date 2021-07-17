@@ -240,6 +240,25 @@ public class DefaultBuffer extends Buffer {
 		return this.readBoolean() ? this.readDocument() : null;
 	}
 
+	@Nonnull
+	@Override
+	@SuppressWarnings("unchecked")
+	public Collection<Document> readDocumentCollection() {
+		Collection<? extends Document> documents = readObjectCollection(SerializableDocument.class);
+		return (Collection<Document>) documents;
+	}
+
+	@Nonnull
+	@Override
+	public Buffer writeDocumentCollection(@Nonnull Collection<? extends Document> documents) {
+		List<SerializableDocument> mapped = new ArrayList<>(documents.size());
+		for (Document document : documents) {
+			mapped.add(new SerializableDocument(document));
+		}
+		writeObjectCollection(mapped);
+		return this;
+	}
+
 	@Override
 	@Nonnull
 	public Buffer writeOptionalDocument(@Nullable Document document) {
