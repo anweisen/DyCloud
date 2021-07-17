@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>net.anweisen.cloud</groupId>
+	<artifactId>root</artifactId>
+	<version>1.0</version>
+	<packaging>pom</packaging>
+	<url>https://github.com/anweisen/MinecraftCloud</url>
+
+	<properties>
+		<utilities.version>1.3.1</utilities.version>
+		<spigot.version>1.16.5-R0.1-SNAPSHOT</spigot.version>
+		<bungee.version>1.16-R0.5-SNAPSHOT</bungee.version>
+		<netty.version>4.1.66.Final</netty.version>
+	</properties>
+
+	<modules>
+		<module>driver</module>
+		<module>master</module>
+		<module>node</module>
+		<module>wrapper</module>
+	</modules>
+
+	<distributionManagement>
+		<repository>
+			<id>anweisen</id>
+			<name>GitHub anweisen Apache Maven Packages</name>
+			<url>https://maven.pkg.github.com/anweisen/MinecraftCloud</url>
+		</repository>
+	</distributionManagement>
+
+</project>
