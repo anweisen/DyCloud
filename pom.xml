@@ -19,6 +19,7 @@
 
 	<modules>
 		<module>driver</module>
+		<module>base</module>
 		<module>master</module>
 		<module>node</module>
 		<module>wrapper</module>
