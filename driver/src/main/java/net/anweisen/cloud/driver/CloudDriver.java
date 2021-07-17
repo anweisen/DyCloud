@@ -1,6 +1,7 @@
 package net.anweisen.cloud.driver;
 
 import com.google.common.base.Preconditions;
+import net.anweisen.cloud.driver.database.DatabaseManager;
 import net.anweisen.utilities.common.logging.ILogger;
 
 import javax.annotation.Nonnull;
@@ -36,6 +37,9 @@ public abstract class CloudDriver {
 	public DriverEnvironment getEnvironment() {
 		return environment;
 	}
+
+	@Nonnull
+	public abstract DatabaseManager getDatabaseManager();
 
 	private static CloudDriver instance;
 
