@@ -12,6 +12,9 @@ I would recommend you to use one of the following cloud systems:
 
 ## Structure
 
-- **master**: Manager of the cloud, commander of nodes
-- **node**: Responsible for ports of services (minecraft servers, bungee proxies)
-- **wrapper**: Runs on a service, connects to the node
+- **driver**
+  - **base**
+	- **master**: Manager of the cloud, commander of nodes
+	- **node**: Responsible for ports of services (minecraft servers, bungee proxies)
+  - **wrapper**: Runs on a service, connects to the node
+
