@@ -4,6 +4,8 @@ import com.google.common.base.Preconditions;
 import net.anweisen.utilities.common.logging.ILogger;
 
 import javax.annotation.Nonnull;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -11,12 +13,18 @@ import javax.annotation.Nonnull;
  */
 public abstract class CloudDriver {
 
+	protected final ScheduledExecutorService executor = Executors.newScheduledThreadPool(4);
 	protected final ILogger logger;
 	protected final DriverEnvironment environment;
 
 	public CloudDriver(@Nonnull ILogger logger, @Nonnull DriverEnvironment environment) {
 		this.logger = logger;
 		this.environment = environment;
+	}
+
+	@Nonnull
+	public ScheduledExecutorService getExecutor() {
+		return executor;
 	}
 
 	@Nonnull
