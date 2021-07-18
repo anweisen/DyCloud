@@ -1,5 +1,5 @@
 # MinecraftCloud
-A simple minecraft cloud system using docker & netty for learning purpose
+A simple minecraft cloud system using docker & netty supporting multiroot & multiproxy for learning purpose
 
 **This project is only intended as a learning experience**.
 You should **not use this cloud system for production**, as no support will be given and the project may be very inactive and lack features.
