@@ -58,8 +58,8 @@ public abstract class NettyChannelHandler extends SimpleChannelInboundHandler<Pa
 		getPacketDispatcher().execute(() -> {
 			try {
 
-				channel.getHandler().handlePacketReceive(channel, packet);
-				getListenerRegistry().handlePacket(channel, packet);
+				if (channel.getHandler() != null && channel.getHandler().handlePacketReceive(channel, packet))
+					getListenerRegistry().handlePacket(channel, packet);
 
 			} catch (Exception ex) {
 				CloudDriver.getInstance().getLogger().error("An error occurred while handling packet", ex);
