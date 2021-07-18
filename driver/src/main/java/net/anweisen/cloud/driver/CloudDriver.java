@@ -15,6 +15,8 @@ import java.util.concurrent.ScheduledExecutorService;
 public abstract class CloudDriver {
 
 	protected final ScheduledExecutorService executor = Executors.newScheduledThreadPool(4);
+	protected final EventManager eventManager = new DefaultEventManager();
+
 	protected final ILogger logger;
 	protected final DriverEnvironment environment;
 
@@ -26,6 +28,11 @@ public abstract class CloudDriver {
 	@Nonnull
 	public ScheduledExecutorService getExecutor() {
 		return executor;
+	}
+
+	@Nonnull
+	public EventManager getEventManager() {
+		return eventManager;
 	}
 
 	@Nonnull
