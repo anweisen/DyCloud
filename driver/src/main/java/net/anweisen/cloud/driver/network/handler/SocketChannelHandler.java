@@ -1,5 +1,6 @@
-package net.anweisen.cloud.driver.network;
+package net.anweisen.cloud.driver.network.handler;
 
+import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 
 import javax.annotation.Nonnull;
@@ -21,8 +22,8 @@ public interface SocketChannelHandler {
 	 * Handles a incoming packet from a provided channel, that contains that channel handler
 	 *
 	 * @param channel the providing channel on that this handler is sets on this
-	 * @param packet  the packet, that will received from the remote component
-	 * @return should return true that, the packet that was received is allowed to handle from the packet listeners at the packetListenerRegistry
+	 * @param packet the packet, that was received from the remote component
+	 * @return whether the packet that was received is allowed to handle from the packet listeners at the packetListenerRegistry
 	 */
 	boolean handlePacketReceive(@Nonnull SocketChannel channel, @Nonnull Packet packet) throws Exception;
 
