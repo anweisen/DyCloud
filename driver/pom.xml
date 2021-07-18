@@ -37,6 +37,17 @@
 			<version>${netty.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.jline</groupId>
+			<artifactId>jline</artifactId>
+			<version>3.20.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.fusesource.jansi</groupId>
+			<artifactId>jansi</artifactId>
+			<version>2.3.3</version>
+		</dependency>
+
 	</dependencies>
 
 	<repositories>
@@ -90,6 +101,5 @@
 			<url>https://maven.pkg.github.com/anweisen/MinecraftCloud</url>
 		</repository>
 	</distributionManagement>
-
 
 </project>
