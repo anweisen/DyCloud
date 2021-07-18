@@ -4,10 +4,12 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.anweisen.cloud.driver.network.packet.SerializableObject;
 import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utilities.common.misc.FileUtils;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -25,11 +27,11 @@ public abstract class Buffer extends ByteBuf {
 		return wrap(Unpooled.buffer());
 	}
 
-//	@Nonnull
-//	@CheckReturnValue
-//	public static Buffer readAll(@Nonnull InputStream inputStream) {
-//		return wrap(FileUtils.toByteArray(inputStream));
-//	}
+	@Nonnull
+	@CheckReturnValue
+	public static Buffer readAll(@Nonnull InputStream inputStream) {
+		return wrap(FileUtils.toByteArray(inputStream));
+	}
 
 	@Nonnull
 	@CheckReturnValue
