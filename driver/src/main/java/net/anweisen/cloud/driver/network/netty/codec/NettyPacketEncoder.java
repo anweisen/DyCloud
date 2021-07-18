@@ -15,8 +15,8 @@ public final class NettyPacketEncoder extends MessageToByteEncoder<Packet> {
 	@Override
 	protected void encode(ChannelHandlerContext ctx, Packet packet, ByteBuf byteBuf) {
 		if (packet.isShowDebug() && CloudDriver.getInstance() != null && CloudDriver.getInstance().getLogger().isLevelEnabled(LogLevel.DEBUG)) {
-			CloudDriver.getInstance().getLogger().debug(
-				"Encoded packet on channel {} with id {}, header={};body={}",
+			CloudDriver.getInstance().getLogger().trace(
+				"Successfully encoded packet on channel {} with id {}, header={};body={}",
 				packet.getChannel(),
 				packet.getUniqueId(),
 				packet.getHeader().toJson(),

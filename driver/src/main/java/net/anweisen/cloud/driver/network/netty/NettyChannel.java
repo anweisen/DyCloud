@@ -60,8 +60,8 @@ public class NettyChannel implements SocketChannel {
 	private ChannelFuture writePacket(@Nonnull Packet packet) {
 
 		if (packet.isShowDebug() && CloudDriver.getInstance() != null && CloudDriver.getInstance().getLogger().isLevelEnabled(LogLevel.DEBUG)) {
-			CloudDriver.getInstance().getLogger().debug(
-				"Sending packet on channel {} with id {}, header={};body={}",
+			CloudDriver.getInstance().getLogger().trace(
+				"Successfully sending packet on channel {} with id {}, header={};body={}",
 				packet.getChannel(),
 				packet.getUniqueId(),
 				packet.getHeader().toJson(),
