@@ -1,6 +1,5 @@
 package net.anweisen.cloud.driver.network.packet;
 
-import com.sun.xml.internal.bind.v2.runtime.output.Encoded;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.utilities.common.config.Document;
 
@@ -24,35 +23,34 @@ public class Packet {
 	protected Document header;
 	protected Buffer body;
 
-	public Packet(int channel, @Nonnull Document header) {
+	public Packet(int channel, @Nullable Document header) {
 		this(channel, header, (Buffer) null);
 	}
 
-	public Packet(int channel, @Nonnull Document header, byte[] body) {
+	public Packet(int channel, @Nullable Document header, @Nullable byte[] body) {
 		this(channel, UUID.randomUUID(), header, body);
 	}
 
-	public Packet(int channel, @Nonnull UUID uniqueId, @Nonnull Document header, byte[] body) {
+	public Packet(int channel, @Nonnull UUID uniqueId, @Nullable Document header, @Nullable byte[] body) {
 		this.channel = channel;
 		this.uniqueId = uniqueId;
 		this.header = header;
 		this.body = body == null ? null : Buffer.wrap(body);
 	}
 
-
-	public Packet(int channel, Buffer body) {
+	public Packet(int channel, @Nullable Buffer body) {
 		this(channel, Document.empty(), body);
 	}
 
-	public Packet(int channel, @Nonnull Document header, Buffer body) {
+	public Packet(int channel, @Nullable Document header, @Nullable Buffer body) {
 		this(channel, UUID.randomUUID(), header, body);
 	}
 
-	public Packet(int channel, @Nonnull UUID uniqueId, @Nonnull Document header) {
+	public Packet(int channel, @Nonnull UUID uniqueId, @Nullable Document header) {
 		this(channel, uniqueId, header, (Buffer) null);
 	}
 
-	public Packet(int channel, @Nonnull UUID uniqueId, @Nonnull Document header, @Nullable Buffer body) {
+	public Packet(int channel, @Nonnull UUID uniqueId, @Nullable Document header, @Nullable Buffer body) {
 		this.channel = channel;
 		this.uniqueId = uniqueId;
 		this.header = header;
@@ -64,19 +62,19 @@ public class Packet {
 
 	@Nonnull
 	@CheckReturnValue
-	public static Packet createResponseFor(@Nonnull Packet packet, Document header, Buffer body) {
+	public static Packet createResponseFor(@Nonnull Packet packet, @Nullable Document header, @Nullable Buffer body) {
 		return new Packet(-1, packet.getUniqueId(), header, body);
 	}
 
 	@Nonnull
 	@CheckReturnValue
-	public static Packet createResponseFor(@Nonnull Packet packet, Document header) {
+	public static Packet createResponseFor(@Nonnull Packet packet, @Nullable Document header) {
 		return new Packet(-1, packet.getUniqueId(), header);
 	}
 
 	@Nonnull
 	@CheckReturnValue
-	public static Packet createResponseFor(@Nonnull Packet packet, Buffer body) {
+	public static Packet createResponseFor(@Nonnull Packet packet, @Nullable Buffer body) {
 		return new Packet(-1, packet.getUniqueId(), Document.empty(), body);
 	}
 
