@@ -22,7 +22,7 @@ public class ConsoleLogger implements ILogger {
 	private final DateFormat dateFormat = new SimpleDateFormat("dd.MM HH:mm:ss.SSS");
 	private final Console console;
 
-	private LogLevel level = LogLevel.INFO;
+	private LogLevel level = LogLevel.TRACE;
 
 	public ConsoleLogger(@Nonnull Console console, @Nonnull LogLevel level) {
 		this.console = console;
