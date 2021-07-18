@@ -47,10 +47,16 @@ public final class HostAndPort implements SerializableObject {
 	@Nonnull
 	@CheckReturnValue
 	public static HostAndPort localhost(int port) {
+		return create(localhost(), port);
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	public static String localhost() {
 		try {
-			return new HostAndPort(InetAddress.getLocalHost().getHostAddress(), port);
+			return InetAddress.getLocalHost().getHostAddress();
 		} catch (UnknownHostException ex) {
-			return new HostAndPort("127.0.0.1", port);
+			return "127.0.0.1";
 		}
 	}
 
