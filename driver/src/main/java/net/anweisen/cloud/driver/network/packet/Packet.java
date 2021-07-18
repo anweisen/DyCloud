@@ -13,7 +13,7 @@ public class Packet {
 	/**
 	 * An one length size byte[] for empty packet bodies
 	 */
-	public static final byte[] EMPTY_PACKET_BYTE_ARRAY = new byte[]{0};
+	public static final byte[] EMPTY_PACKET_BYTE_ARRAY = new byte[] { 0 };
 	public static final Packet EMPTY = new Packet(-1, Document.empty(), EMPTY_PACKET_BYTE_ARRAY);
 
 	protected final long creationMillis = System.currentTimeMillis();
