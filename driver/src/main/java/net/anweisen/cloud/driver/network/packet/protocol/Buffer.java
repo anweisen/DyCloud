@@ -19,7 +19,7 @@ import java.util.UUID;
  */
 public abstract class Buffer extends ByteBuf {
 
-	public static final Buffer EMPTY = create();
+	private static final Buffer EMPTY = create();
 
 	@Nonnull
 	@CheckReturnValue
@@ -45,6 +45,11 @@ public abstract class Buffer extends ByteBuf {
 		return new DefaultBuffer(buf);
 	}
 
+	@Nonnull
+	@CheckReturnValue
+	public static Buffer empty() {
+		return EMPTY;
+	}
 
 	@Nonnull
 	public abstract String readString();
