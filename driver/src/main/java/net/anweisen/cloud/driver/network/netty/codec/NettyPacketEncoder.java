@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 public final class NettyPacketEncoder extends MessageToByteEncoder<Packet> {
 
 	@Override
-	protected void encode(ChannelHandlerContext ctx, Packet packet, ByteBuf byteBuf) {
+	protected void encode(@Nonnull ChannelHandlerContext context, @Nonnull Packet packet, @Nonnull ByteBuf buffer) {
 		if (packet.isShowDebug() && CloudDriver.getInstance() != null && CloudDriver.getInstance().getLogger().isLevelEnabled(LogLevel.DEBUG)) {
 			CloudDriver.getInstance().getLogger().trace(
 				"Successfully encoded packet on channel {} with id {}, header={};body={}",
@@ -25,20 +25,20 @@ public final class NettyPacketEncoder extends MessageToByteEncoder<Packet> {
 		}
 
 		// channel
-		NettyUtils.writeVarInt(byteBuf, packet.getChannel());
+		NettyUtils.writeVarInt(buffer, packet.getChannel());
 		// unique id
-		byteBuf
+		buffer
 			.writeLong(packet.getUniqueId().getMostSignificantBits())
 			.writeLong(packet.getUniqueId().getLeastSignificantBits());
 		// header
-		this.writeHeader(packet, byteBuf);
+		this.writeHeader(packet, buffer);
 		// body
 		if (packet.getBuffer() != null) {
 			int amount = packet.getBuffer().readableBytes();
-			NettyUtils.writeVarInt(byteBuf, amount);
-			byteBuf.writeBytes(packet.getBuffer(), 0, amount);
+			NettyUtils.writeVarInt(buffer, amount);
+			buffer.writeBytes(packet.getBuffer(), 0, amount);
 		} else {
-			NettyUtils.writeVarInt(byteBuf, 0);
+			NettyUtils.writeVarInt(buffer, 0);
 		}
 	}
 

@@ -2,6 +2,9 @@ package net.anweisen.cloud.driver.network;
 
 import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.network.packet.Packet;
+import net.anweisen.cloud.driver.network.packet.chunk.ChunkedQueryResponse;
+import net.anweisen.cloud.driver.network.packet.chunk.listener.ChunkedPacketListener;
+import net.anweisen.cloud.driver.network.packet.chunk.listener.ConsumingChunkedPacketListener;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -53,6 +56,21 @@ public final class InternalQueryResponseManager {
 	private static void registerQueryHandler(@Nonnull UUID uniqueId, boolean autoRemove, @Nonnull BiConsumer<? super SocketChannel, ? super Packet> consumer) {
 		checkCachedValidation();
 		waitingPackets.put(uniqueId, new Callback(autoRemove, consumer));
+	}
+
+	public static void registerChunkedQueryHandler(@Nonnull UUID uniqueId, @Nonnull Consumer<ChunkedQueryResponse> consumer) {
+		ChunkedPacketListener listener = new ConsumingChunkedPacketListener(response -> {
+			removeEntry(uniqueId);
+			consumer.accept(response);
+		});
+
+		registerQueryHandler(uniqueId, false, (channel, packet) -> {
+			try {
+				listener.handlePacket(channel, packet);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		});
 	}
 
 	private static void checkCachedValidation() {

@@ -6,40 +6,38 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.util.ByteProcessor;
 import net.anweisen.cloud.driver.network.exception.SilentDecoderException;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public final class NettyPacketLengthDeserializer extends ByteToMessageDecoder {
 
-	private static final SilentDecoderException BAD_LENGTH = new SilentDecoderException("Bad packet length");
-	private static final SilentDecoderException INVALID_VAR_INT = new SilentDecoderException("Invalid var int");
-
 	@Override
-	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
-		if (!ctx.channel().isActive()) {
-			in.clear();
+	protected void decode(@Nonnull ChannelHandlerContext context, @Nonnull ByteBuf buffer, @Nonnull List<Object> out) {
+		if (!context.channel().isActive()) {
+			buffer.clear();
 			return;
 		}
 
 		VarIntByteProcessor processor = new VarIntByteProcessor();
-		int varIntByteEnding = in.forEachByte(processor);
+		int varIntByteEnding = buffer.forEachByte(processor);
 
 		if (processor.result != VarIntByteProcessor.ProcessingResult.OK) {
-			throw INVALID_VAR_INT;
+			throw SilentDecoderException.INVALID_VAR_INT;
 		} else {
 			int varInt = processor.varInt;
 			int bytesRead = processor.bytesRead;
 
 			if (varInt < 0) {
-				in.clear();
-				throw BAD_LENGTH;
+				buffer.clear();
+				throw SilentDecoderException.BAD_PACKET_LENGTH;
 			} else if (varInt == 0) {
 				// empty packet, ignore it
-				in.readerIndex(varIntByteEnding + 1);
+				buffer.readerIndex(varIntByteEnding + 1);
 			} else {
 				int minimumReadableBytes = varInt + bytesRead;
-				if (in.isReadable(minimumReadableBytes)) {
-					out.add(in.retainedSlice(varIntByteEnding + 1, varInt));
-					in.skipBytes(minimumReadableBytes);
+				if (buffer.isReadable(minimumReadableBytes)) {
+					out.add(buffer.retainedSlice(varIntByteEnding + 1, varInt));
+					buffer.skipBytes(minimumReadableBytes);
 				}
 			}
 		}

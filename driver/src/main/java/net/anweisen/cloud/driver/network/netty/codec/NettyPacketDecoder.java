@@ -11,6 +11,7 @@ import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.common.logging.LogLevel;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
@@ -18,24 +19,24 @@ import java.util.UUID;
 public final class NettyPacketDecoder extends ByteToMessageDecoder {
 
 	@Override
-	protected void decode(ChannelHandlerContext ctx, ByteBuf byteBuf, List<Object> out) {
-		if (ctx != null && (!ctx.channel().isActive() || !byteBuf.isReadable())) {
-			byteBuf.clear();
+	protected void decode(@Nullable ChannelHandlerContext context, @Nonnull ByteBuf buffer, @Nonnull List<Object> out) {
+		if (context != null && (!context.channel().isActive() || !buffer.isReadable())) {
+			buffer.clear();
 			return;
 		}
 
 		try {
-			int channel = NettyUtils.readVarInt(byteBuf);
-			UUID uniqueId = new UUID(byteBuf.readLong(), byteBuf.readLong());
-			Document header = this.readHeader(byteBuf);
-			Buffer body = Buffer.wrap(NettyUtils.readByteArray(byteBuf, NettyUtils.readVarInt(byteBuf)));
+			int channel = NettyUtils.readVarInt(buffer);
+			UUID uniqueId = new UUID(buffer.readLong(), buffer.readLong());
+			Document header = this.readHeader(buffer);
+			Buffer body = Buffer.wrap(NettyUtils.readByteArray(buffer, NettyUtils.readVarInt(buffer)));
 
 			Packet packet = new Packet(channel, uniqueId, header, body);
 			out.add(packet);
 
 			this.showDebug(packet);
-		} catch (Exception exception) {
-			exception.printStackTrace();
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 	}
 
@@ -52,13 +53,13 @@ public final class NettyPacketDecoder extends ByteToMessageDecoder {
 	}
 
 	@Nonnull
-	protected Document readHeader(@Nonnull ByteBuf buf) {
-		int length = NettyUtils.readVarInt(buf);
+	protected Document readHeader(@Nonnull ByteBuf buffer) {
+		int length = NettyUtils.readVarInt(buffer);
 		if (length == 0) {
 			return Document.empty();
 		} else {
 			byte[] content = new byte[length];
-			buf.readBytes(content);
+			buffer.readBytes(content);
 			return Document.parseJson(new String(content, StandardCharsets.UTF_8));
 		}
 	}

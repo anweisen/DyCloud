@@ -10,7 +10,10 @@ import javax.annotation.Nonnull;
  */
 public class SilentDecoderException extends DecoderException {
 
-	public SilentDecoderException(@Nonnull String message) {
+	public static final SilentDecoderException INVALID_VAR_INT = new SilentDecoderException("Invalid var int");
+	public static final SilentDecoderException BAD_PACKET_LENGTH = new SilentDecoderException("Bad packet length");
+
+	private SilentDecoderException(@Nonnull String message) {
 		super(message);
 	}
 

@@ -25,7 +25,6 @@ import java.util.concurrent.*;
 public final class NettyUtils {
 
 	private static final ThreadFactory THREAD_FACTORY = FastThreadLocalThread::new;
-	private static final SilentDecoderException INVALID_VAR_INT = new SilentDecoderException("Invalid var int");
 	private static final RejectedExecutionHandler DEFAULT_REJECT_HANDLER = new ThreadPoolExecutor.CallerRunsPolicy();
 
 	static {
@@ -88,35 +87,35 @@ public final class NettyUtils {
 		return data;
 	}
 
-	public static int readVarInt(@Nonnull ByteBuf byteBuf) {
-		return (int) readVarVariant(byteBuf, 5);
+	public static int readVarInt(@Nonnull ByteBuf buffer) {
+		return (int) readVarVariant(buffer, 5);
 	}
 
 	@Nonnull
-	public static ByteBuf writeVarInt(@Nonnull ByteBuf byteBuf, int value) {
+	public static ByteBuf writeVarInt(@Nonnull ByteBuf buffer, int value) {
 		while (true) {
 			if ((value & -128) == 0) {
-				byteBuf.writeByte(value);
-				return byteBuf;
+				buffer.writeByte(value);
+				return buffer;
 			}
 
-			byteBuf.writeByte(value & 0x7F | 0x80);
+			buffer.writeByte(value & 0x7F | 0x80);
 			value >>>= 7;
 		}
 	}
 
-	public static long readVarLong(ByteBuf byteBuf) {
-		return readVarVariant(byteBuf, 10);
+	public static long readVarLong(@Nonnull ByteBuf buffer) {
+		return readVarVariant(buffer, 10);
 	}
 
-	public static ByteBuf writeVarLong(@Nonnull ByteBuf byteBuf, long value) {
+	public static ByteBuf writeVarLong(@Nonnull ByteBuf buffer, long value) {
 		while (true) {
 			if ((value & -128) == 0) {
-				byteBuf.writeByte((int) value);
-				return byteBuf;
+				buffer.writeByte((int) value);
+				return buffer;
 			}
 
-			byteBuf.writeByte((int) value & 0x7F | 0x80);
+			buffer.writeByte((int) value & 0x7F | 0x80);
 			value >>>= 7;
 		}
 	}
@@ -131,21 +130,22 @@ public final class NettyUtils {
 				return i;
 			}
 		}
-		throw INVALID_VAR_INT;
+
+		throw SilentDecoderException.INVALID_VAR_INT;
 	}
 
 	@Nonnull
-	public static ByteBuf writeString(@Nonnull ByteBuf byteBuf, @Nonnull String string) {
+	public static ByteBuf writeString(@Nonnull ByteBuf buffer, @Nonnull String string) {
 		byte[] content = string.getBytes(StandardCharsets.UTF_8);
-		writeVarInt(byteBuf, content.length);
-		byteBuf.writeBytes(content);
-		return byteBuf;
+		writeVarInt(buffer, content.length);
+		buffer.writeBytes(content);
+		return buffer;
 	}
 
 	@Nonnull
-	public static String readString(@Nonnull ByteBuf byteBuf) {
-		int size = readVarInt(byteBuf);
-		return new String(readByteArray(byteBuf, size), StandardCharsets.UTF_8);
+	public static String readString(@Nonnull ByteBuf buffer) {
+		int size = readVarInt(buffer);
+		return new String(readByteArray(buffer, size), StandardCharsets.UTF_8);
 	}
 
 	public static int getThreadAmount() {

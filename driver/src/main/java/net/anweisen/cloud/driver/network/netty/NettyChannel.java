@@ -5,13 +5,22 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.network.HostAndPort;
+import net.anweisen.cloud.driver.network.InternalQueryResponseManager;
 import net.anweisen.cloud.driver.network.SocketChannel;
-import net.anweisen.cloud.driver.network.SocketChannelHandler;
+import net.anweisen.cloud.driver.network.handler.SocketChannelHandler;
 import net.anweisen.cloud.driver.network.packet.Packet;
+import net.anweisen.cloud.driver.network.packet.chunk.ChunkedPacketBuilder;
+import net.anweisen.cloud.driver.network.packet.chunk.ChunkedQueryResponse;
+import net.anweisen.utilities.common.concurrent.task.CompletableTask;
+import net.anweisen.utilities.common.concurrent.task.Task;
+import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.common.logging.LogLevel;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.UUID;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -37,6 +46,63 @@ public class NettyChannel implements SocketChannel {
 		this.client = client;
 	}
 
+	@Nonnull
+	@Override
+	public Task<Packet> registerQueryResponseHandler(@Nonnull UUID uniqueId) {
+		Preconditions.checkNotNull(uniqueId, "UUID cannot be null");
+
+		CompletableTask<Packet> task = Task.completable();
+		InternalQueryResponseManager.registerQueryHandler(uniqueId, task::complete);
+		return task;
+	}
+
+	@Nonnull
+	@Override
+	public Task<Packet> sendQueryAsync(@Nonnull Packet packet) {
+		Preconditions.checkNotNull(packet, "Packet cannot be null");
+
+		Task<Packet> task = registerQueryResponseHandler(packet.getUniqueId());
+		sendPacket(packet);
+		return task;
+	}
+
+	@Nullable
+	@Override
+	public Packet sendQuery(@Nonnull Packet packet) {
+		return sendQueryAsync(packet).getDef(null);
+	}
+
+	@Nonnull
+	@Override
+	public Task<ChunkedQueryResponse> sendChunkedPacketQuery(@Nonnull Packet packet) {
+		Preconditions.checkNotNull(packet, "Packet cannot be null");
+
+		CompletableTask<ChunkedQueryResponse> task = Task.completable();
+		InternalQueryResponseManager.registerChunkedQueryHandler(packet.getUniqueId(), task::complete);
+		sendPacket(packet);
+		return task;
+	}
+
+	@Override
+	public boolean sendChunkedPackets(@Nonnull UUID uniqueId, @Nonnull Document header, @Nonnull InputStream inputStream, int channel) throws IOException {
+		return ChunkedPacketBuilder.newBuilder(channel, inputStream)
+			.uniqueId(uniqueId)
+			.header(header)
+			.target(this)
+			.complete()
+			.isSuccess();
+	}
+
+	@Override
+	public boolean sendChunkedPacketsResponse(@Nonnull UUID uniqueId, @Nonnull Document header, @Nonnull InputStream inputStream) throws IOException {
+		return sendChunkedPackets(uniqueId, header, inputStream, -1);
+	}
+
+	@Override
+	public boolean sendChunkedPackets(@Nonnull Document header, @Nonnull InputStream inputStream, int channel) throws IOException {
+		return sendChunkedPackets(UUID.randomUUID(), header, inputStream, channel);
+	}
+
 	@Override
 	public void sendPacket(@Nonnull Packet packet) {
 		Preconditions.checkNotNull(packet, "Packet cannot be null");
@@ -58,17 +124,6 @@ public class NettyChannel implements SocketChannel {
 	}
 
 	private ChannelFuture writePacket(@Nonnull Packet packet) {
-
-		if (packet.isShowDebug() && CloudDriver.getInstance() != null && CloudDriver.getInstance().getLogger().isLevelEnabled(LogLevel.DEBUG)) {
-			CloudDriver.getInstance().getLogger().trace(
-				"Successfully sending packet on channel {} with id {}, header={};body={}",
-				packet.getChannel(),
-				packet.getUniqueId(),
-				packet.getHeader().toJson(),
-				packet.getBuffer() != null ? packet.getBuffer().readableBytes() : 0
-			);
-		}
-
 		return channel.writeAndFlush(packet);
 	}
 
@@ -94,7 +149,7 @@ public class NettyChannel implements SocketChannel {
 	}
 
 	@Override
-	public void setHandler(SocketChannelHandler handler) {
+	public void setHandler(@Nullable SocketChannelHandler handler) {
 		this.handler = handler;
 	}
 
@@ -113,5 +168,10 @@ public class NettyChannel implements SocketChannel {
 	@Override
 	public boolean isClientSide() {
 		return client;
+	}
+
+	@Override
+	public String toString() {
+		return "SocketChannel[client=" + clientAddress + " server=" + serverAddress + "]";
 	}
 }
