@@ -15,12 +15,12 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.ResourceLeakDetector;
-import io.netty.util.concurrent.FastThreadLocalThread;
 import io.netty.util.internal.logging.InternalLoggerFactory;
 import io.netty.util.internal.logging.JdkLoggerFactory;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.DriverEnvironment;
 import net.anweisen.cloud.driver.network.exception.SilentDecoderException;
+import net.anweisen.utilities.common.collection.NamedThreadFactory;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnegative;
@@ -30,7 +30,7 @@ import java.util.concurrent.*;
 
 public final class NettyUtils {
 
-	private static final ThreadFactory THREAD_FACTORY = FastThreadLocalThread::new;
+	private static final ThreadFactory EVENT_LOOP_THREAD_FACTORY = new NamedThreadFactory("EventLoopGroup");
 	private static final RejectedExecutionHandler DEFAULT_REJECT_HANDLER = new ThreadPoolExecutor.CallerRunsPolicy();
 
 	static {
@@ -50,7 +50,7 @@ public final class NettyUtils {
 	@Nonnull
 	@CheckReturnValue
 	public static EventLoopGroup newEventLoopGroup() {
-		return new NioEventLoopGroup(4, threadFactory());
+		return new NioEventLoopGroup(4, getEventLoopThreadFactory());
 	}
 
 	@Nonnull
@@ -58,8 +58,15 @@ public final class NettyUtils {
 	public static Executor newPacketDispatcher() {
 		// a cached pool with a thread idle-lifetime of 30 seconds
 		// rejected tasks will be executed on the calling thread (See ThreadPoolExecutor.CallerRunsPolicy)
-		return new ThreadPoolExecutor(0, getThreadAmount(),
-			30L, TimeUnit.SECONDS, new SynchronousQueue<>(true), DEFAULT_REJECT_HANDLER);
+		return new ThreadPoolExecutor(
+			0,
+			getThreadAmount(),
+			30L,
+			TimeUnit.SECONDS,
+			new SynchronousQueue<>(true),
+			new NamedThreadFactory("PacketDispatcher"),
+			DEFAULT_REJECT_HANDLER
+		);
 	}
 
 	@Nonnull
@@ -78,8 +85,8 @@ public final class NettyUtils {
 
 	@Nonnull
 	@CheckReturnValue
-	public static ThreadFactory threadFactory() {
-		return THREAD_FACTORY;
+	public static ThreadFactory getEventLoopThreadFactory() {
+		return EVENT_LOOP_THREAD_FACTORY;
 	}
 
 	@Nonnull
