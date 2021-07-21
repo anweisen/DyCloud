@@ -2,7 +2,6 @@ package net.anweisen.cloud.driver.network.packet.protocol;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import net.anweisen.cloud.driver.network.packet.SerializableObject;
 import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.common.misc.FileUtils;
 

@@ -6,7 +6,6 @@ import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.util.ByteProcessor;
 import net.anweisen.cloud.driver.network.netty.NettyUtils;
-import net.anweisen.cloud.driver.network.packet.SerializableObject;
 import net.anweisen.utilities.common.config.Document;
 
 import javax.annotation.Nonnull;

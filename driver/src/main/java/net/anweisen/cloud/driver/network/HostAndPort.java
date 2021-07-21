@@ -1,8 +1,8 @@
 package net.anweisen.cloud.driver.network;
 
 import com.google.common.base.Preconditions;
-import net.anweisen.cloud.driver.network.packet.SerializableObject;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;

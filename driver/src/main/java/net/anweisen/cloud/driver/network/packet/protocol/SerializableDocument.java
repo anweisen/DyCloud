@@ -1,7 +1,6 @@
 package net.anweisen.cloud.driver.network.packet.protocol;
 
 import com.google.common.base.Preconditions;
-import net.anweisen.cloud.driver.network.packet.SerializableObject;
 import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.common.config.document.wrapper.WrappedDocument;
 

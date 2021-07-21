@@ -1,6 +1,4 @@
-package net.anweisen.cloud.driver.network.packet;
-
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+package net.anweisen.cloud.driver.network.packet.protocol;
 
 import javax.annotation.Nonnull;
 
