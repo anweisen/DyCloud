@@ -43,7 +43,8 @@ public class DefaultEventManager implements EventManager {
 				throw new IllegalArgumentException(String.format(
 					"Listener method %s:%s has to be public with exactly one argument",
 					listener.getClass().getName(),
-					method.getName()));
+					method.getName()
+				));
 			}
 
 			Class<?> parameterType = method.getParameterTypes()[0];
@@ -52,7 +53,8 @@ public class DefaultEventManager implements EventManager {
 					"Parameter type %s of listener method %s:%s is not an event",
 					parameterType.getName(),
 					listener.getClass().getName(),
-					method.getName()));
+					method.getName()
+				));
 			}
 
 			EventListener annotation = method.getAnnotation(EventListener.class);
