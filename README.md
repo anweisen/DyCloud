@@ -21,3 +21,44 @@ I would recommend you to use one of the **following cloud systems**:
   - **wrapper** (*remote*): Runs on a service, connects to the master. <br>
 				*Probably known as runner or bridge from other cloud systems*
 
+## Progress
+
+ 📁 | Name / Label / Description
+--- | --------------------------
+✔️ | Logging
+✔️ | Basic Networking with Netty
+✔️ | Advanced Networking: Chunked Packets & Queries
+✔️ | Node Management + Authentication
+✔️ | Request API with Packets
+✔️ | Event System
+✔️ | Master TemplateStorage -> Download
+❌ | Wrapper -> Setup & Start & Stop
+❌ | Wrapper Authentication
+❌ | Node Information Cycle & Timeout
+❌ | Basic Service Events
+❌ | Service auto start (minCount & maxCount)
+❌ | Shutdown mechanism
+❌ | Template Cache
+❌ | MultiProxy Cord
+❌ | Lobby Balancing
+✔️ | Remote Database API
+❌ | Messenger System for Modules
+❌ | Proxy Bridge
+❌ | Bukkit Bridge
+❌ | Implement all driver functions for wrapper & node (remote)
+❌ | Wrapper & Node to Master Logging
+❌ | Player Executor
+❌ | Permission System
+❌ | Permission Chat & Tab Extension
+❌ | Module System (Master, Node?, Wrapper?)
+❌ | Cloud Commands
+❌ | Service Screens
+❌ | Proxy Commands (+ Cloud Command API?)
+⚠️ | Service Deployments
+⚠️ | Static Services
+⚠️ | [CloudAPI](https://github.com/anweisen/CloudAPI) Integration
+
+``✔️`` Finished - Implemented <br>
+``🚧`` Current Goal - In Progress <br>
+``❌`` Planned <br>
+``⚠️`` Not important - Long time planned goals 
