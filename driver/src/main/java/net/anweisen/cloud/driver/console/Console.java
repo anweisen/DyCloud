@@ -32,6 +32,11 @@ public interface Console {
 	void setPrompt(@Nonnull String prompt);
 
 	@Nonnull
+	String getScreenName();
+
+	void setScreenName(@Nonnull String screen);
+
+	@Nonnull
 	Task<String> readLine();
 
 	@Nonnull

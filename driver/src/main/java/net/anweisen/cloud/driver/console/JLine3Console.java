@@ -23,17 +23,15 @@ import java.util.concurrent.Executors;
  */
 public class JLine3Console implements Console {
 
-	private static final String USER = System.getProperty("user.name");
-	private static final String VERSION = "MinecraftCloud";
-
 	private final ConsoleReadThread consoleReadThread = new ConsoleReadThread(this);
 	private final ExecutorService animationThreadPool = Executors.newCachedThreadPool();
 
 	private final Terminal terminal;
 	private final LineReaderImpl lineReader;
 
-	private String prompt = System.getProperty("cloudnet.console.prompt", "&8| &c%user%&8@&7%screen% &8» &r");
-	private String screenName = VERSION;
+	private final String promptTemplate = System.getProperty("cloud.console.prompt", "&8| &bCloud &8» &b%screen% &8» &r");
+	private String prompt = null;
+	private String screenName = "Console";
 	private boolean printingEnabled = true;
 
 	public JLine3Console() throws Exception {
@@ -168,10 +166,20 @@ public class JLine3Console implements Console {
 		this.updatePrompt();
 	}
 
+	@Nonnull
+	@Override
+	public String getScreenName() {
+		return screenName;
+	}
+
+	@Override
+	public void setScreenName(@Nonnull String screenName) {
+		this.screenName = screenName;
+		this.updatePrompt();
+	}
+
 	private void updatePrompt() {
-		this.prompt = ConsoleColor.toColoredString('&', this.prompt)
-			.replace("%version%", VERSION)
-			.replace("%user%", USER)
+		this.prompt = ConsoleColor.toColoredString('&', this.promptTemplate)
 			.replace("%screen%", this.screenName);
 		this.lineReader.setPrompt(this.prompt);
 	}
