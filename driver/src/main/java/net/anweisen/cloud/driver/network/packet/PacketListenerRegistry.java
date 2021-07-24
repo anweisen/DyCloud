@@ -3,7 +3,6 @@ package net.anweisen.cloud.driver.network.packet;
 import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.network.SocketChannel;
-import net.anweisen.utilities.common.logging.LogLevel;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
@@ -43,16 +42,6 @@ public class PacketListenerRegistry {
 	}
 
 	public void handlePacket(@Nonnull SocketChannel channel, @Nonnull Packet packet) {
-		if (packet.isShowDebug() && CloudDriver.getInstance() != null && CloudDriver.getInstance().getLogger().isLevelEnabled(LogLevel.DEBUG)) {
-			CloudDriver.getInstance().getLogger().debug(
-				"Successfully decoded packet on channel {} with id {}, header={};body={}",
-				packet.getChannel(),
-				packet.getUniqueId(),
-				packet.getHeader().toJson(),
-				packet.getBuffer() != null ? packet.getBuffer().readableBytes() : 0
-			);
-		}
-
 		List<PacketListener> listeners = this.listeners.get(packet.getChannel());
 		if (listeners == null) return;
 
