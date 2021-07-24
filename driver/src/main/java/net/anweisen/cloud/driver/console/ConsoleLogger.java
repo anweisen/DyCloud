@@ -19,7 +19,7 @@ import java.util.Date;
  */
 public class ConsoleLogger implements ILogger {
 
-	private final DateFormat dateFormat = new SimpleDateFormat("dd.MM HH:mm:ss.SSS");
+	private final DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
 	private final Console console;
 
 	private LogLevel level = LogLevel.TRACE;
@@ -42,14 +42,19 @@ public class ConsoleLogger implements ILogger {
 			.append("[")
 			.append(ConsoleColor.WHITE)
 			.append(dateFormat.format(Date.from(Instant.now())))
-			.append(ConsoleColor.DARK_GRAY)
+			.append(" ");
+
+		SpacePadder.leftPad(format, Thread.currentThread().getName(), 18);
+
+		format.append(ConsoleColor.DARK_GRAY)
 			.append("] ")
-			.append(level.isColorized() ? ConsoleColor.RED : ConsoleColor.GRAY)
-			.append(level.getUpperCaseName())
-			.append(ConsoleColor.DARK_GRAY)
-			.append(": ")
-			.append(level.isColorized() ? ConsoleColor.YELLOW : ConsoleColor.DEFAULT)
+			.append(level.isColorized() ? ConsoleColor.RED : ConsoleColor.GRAY);
+
+		SpacePadder.rightPad(format, level.getUpperCaseName() + ConsoleColor.DARK_GRAY + ":", 9 + (ConsoleColor.DARK_GRAY + ":").length());
+
+		format.append(level.isColorized() ? ConsoleColor.YELLOW : ConsoleColor.DEFAULT)
 			.append(FallbackLogger.formatMessage(message, args));
+
 
 		Throwable ex = null;
 		for (Object arg : args) {
