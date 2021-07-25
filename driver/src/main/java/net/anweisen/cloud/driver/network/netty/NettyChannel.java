@@ -3,7 +3,6 @@ package net.anweisen.cloud.driver.network.netty;
 import com.google.common.base.Preconditions;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
-import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.network.HostAndPort;
 import net.anweisen.cloud.driver.network.InternalQueryResponseManager;
 import net.anweisen.cloud.driver.network.SocketChannel;
@@ -14,7 +13,6 @@ import net.anweisen.cloud.driver.network.packet.chunk.ChunkedQueryResponse;
 import net.anweisen.utilities.common.concurrent.task.CompletableTask;
 import net.anweisen.utilities.common.concurrent.task.Task;
 import net.anweisen.utilities.common.config.Document;
-import net.anweisen.utilities.common.logging.LogLevel;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
