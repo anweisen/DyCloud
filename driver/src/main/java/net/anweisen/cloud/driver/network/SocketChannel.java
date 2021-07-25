@@ -3,10 +3,14 @@ package net.anweisen.cloud.driver.network;
 import net.anweisen.cloud.driver.network.handler.SocketChannelHandler;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketSender;
+import net.anweisen.cloud.driver.network.packet.chunk.ChunkedQueryResponse;
 import net.anweisen.utilities.common.concurrent.task.Task;
+import net.anweisen.utilities.common.config.Document;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.UUID;
 
 /**
@@ -20,6 +24,15 @@ public interface SocketChannel extends PacketSender {
 
 	@Nonnull
 	Task<Packet> sendQueryAsync(@Nonnull Packet packet);
+
+	@Nonnull
+	Task<ChunkedQueryResponse> sendChunkedPacketQuery(@Nonnull Packet packet);
+
+	boolean sendChunkedPacketsResponse(@Nonnull UUID uniqueId, @Nonnull Document header, @Nonnull InputStream inputStream) throws IOException;
+
+	boolean sendChunkedPackets(@Nonnull Document header, @Nonnull InputStream inputStream, int channel) throws IOException;
+
+	boolean sendChunkedPackets(@Nonnull UUID uniqueId, @Nonnull Document header, @Nonnull InputStream inputStream, int channel) throws IOException;
 
 	@Nullable
 	Packet sendQuery(@Nonnull Packet packet);
