@@ -5,8 +5,12 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
-import net.anweisen.cloud.driver.CloudDriver;
-import net.anweisen.cloud.driver.network.*;
+import net.anweisen.cloud.driver.console.LoggingApiUser;
+import net.anweisen.cloud.driver.network.DefaultSocketComponent;
+import net.anweisen.cloud.driver.network.HostAndPort;
+import net.anweisen.cloud.driver.network.SocketChannel;
+import net.anweisen.cloud.driver.network.SocketServer;
+import net.anweisen.cloud.driver.network.handler.SocketChannelHandler;
 import net.anweisen.cloud.driver.network.netty.NettyUtils;
 
 import javax.annotation.Nonnull;
@@ -17,7 +21,7 @@ import java.util.function.Supplier;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class NettySocketServer extends DefaultSocketComponent implements SocketServer {
+public class NettySocketServer extends DefaultSocketComponent implements SocketServer, LoggingApiUser {
 
 	protected final EventLoopGroup bossEventLoopGroup = NettyUtils.newEventLoopGroup();
 	protected final EventLoopGroup workerEventLoopGroup = NettyUtils.newEventLoopGroup();
@@ -44,7 +48,7 @@ public class NettySocketServer extends DefaultSocketComponent implements SocketS
 				.sync()
 				.channel();
 
-			CloudDriver.getInstance().getLogger().info("Socket listening on {}!", address);
+			info("Socket listening on {}!", address);
 		} catch (InterruptedException ex) {
 			ex.printStackTrace();
 		}
