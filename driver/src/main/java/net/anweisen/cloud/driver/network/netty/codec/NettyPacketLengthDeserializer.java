@@ -68,7 +68,6 @@ public final class NettyPacketLengthDeserializer extends ByteToMessageDecoder {
 		}
 
 		private enum ProcessingResult {
-
 			OK,
 			TOO_SHORT,
 			TOO_BIG
