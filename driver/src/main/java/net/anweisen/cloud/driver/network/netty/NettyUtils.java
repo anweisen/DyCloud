@@ -46,7 +46,6 @@ public final class NettyUtils {
 
 	private NettyUtils() {}
 
-	// TODO kqueue and epoll
 	@Nonnull
 	@CheckReturnValue
 	public static EventLoopGroup newEventLoopGroup() {
