@@ -22,6 +22,11 @@ public interface SocketComponent extends PacketSender {
 	@Nonnull
 	Collection<SocketChannel> getChannels();
 
+	default SocketChannel getFirstChannel() {
+		Collection<SocketChannel> channels = this.getChannels();
+		return channels.isEmpty() ? null : channels.iterator().next();
+	}
+
 	void closeChannels();
 
 	@Nonnull
