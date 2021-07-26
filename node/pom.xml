@@ -26,6 +26,12 @@
 			<version>${project.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.github.docker-java</groupId>
+			<artifactId>docker-java</artifactId>
+			<version>${docker.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<repositories>

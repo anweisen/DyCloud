@@ -15,6 +15,7 @@
 		<spigot.version>1.16.5-R0.1-SNAPSHOT</spigot.version>
 		<bungee.version>1.16-R0.5-SNAPSHOT</bungee.version>
 		<netty.version>4.1.66.Final</netty.version>
+		<docker.version>3.2.11</docker.version>
 	</properties>
 
 	<modules>
