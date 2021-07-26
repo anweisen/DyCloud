@@ -1,6 +1,5 @@
 package net.anweisen.cloud.driver.network.packet.chunk.listener;
 
-import com.sun.istack.internal.NotNull;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.chunk.ChunkedPacket;
@@ -40,7 +39,7 @@ public class ChunkedPacketSession implements LoggingApiUser {
 		this.properties = properties;
 	}
 
-	public void handleIncomingChunk(@NotNull ChunkedPacket packet) throws IOException {
+	public void handleIncomingChunk(@Nonnull ChunkedPacket packet) throws IOException {
 		if (this.closed) {
 			packet.clearData();
 			throw new IllegalStateException(String.format("Session is already closed but received packet %d, %b", packet.getChunkId(), packet.isEnd()));
