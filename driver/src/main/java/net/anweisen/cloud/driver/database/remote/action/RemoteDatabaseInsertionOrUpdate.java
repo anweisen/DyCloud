@@ -71,8 +71,11 @@ public class RemoteDatabaseInsertionOrUpdate implements DatabaseInsertionOrUpdat
 
 	// TODO maybe a callback ?
 
-	public void execute() throws DatabaseException {
-		CloudDriver.getInstance().getSocketComponent().getFirstChannel().sendPacket(new DatabaseActionPacket(DatabaseActionType.INSERT_OR_UPDATE, buffer -> buffer.writeString(table).writeDocument(document)));
+	public Void execute() throws DatabaseException {
+		CloudDriver.getInstance().getSocketComponent().getFirstChannel().sendPacket(
+			new DatabaseActionPacket(DatabaseActionType.INSERT_OR_UPDATE, buffer -> buffer.writeString(table).writeDocument(document))
+		);
+		return null;
 	}
 
 	@Nonnull

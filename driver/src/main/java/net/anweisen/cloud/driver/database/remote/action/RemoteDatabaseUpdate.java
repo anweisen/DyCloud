@@ -69,8 +69,11 @@ public class RemoteDatabaseUpdate implements DatabaseUpdate {
 
 	// TODO maybe a callback ?
 
-	public void execute() throws DatabaseException {
-		CloudDriver.getInstance().getSocketComponent().getFirstChannel().sendPacket(new DatabaseActionPacket(DatabaseActionType.UPDATE, buffer -> buffer.writeString(table).writeDocument(document)));
+	public Void execute() throws DatabaseException {
+		CloudDriver.getInstance().getSocketComponent().getFirstChannel().sendPacket(
+			new DatabaseActionPacket(DatabaseActionType.UPDATE, buffer -> buffer.writeString(table).writeDocument(document))
+		);
+		return null;
 	}
 
 	@Nonnull
