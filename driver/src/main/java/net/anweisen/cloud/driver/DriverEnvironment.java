@@ -8,10 +8,25 @@ package net.anweisen.cloud.driver;
  */
 public enum DriverEnvironment {
 
-	MASTER,
+	MASTER(true, false),
 
-	NODE,
+	NODE(true, true),
 
-	WRAPPER
+	WRAPPER(false, true);
 
+	private final boolean base;
+	private final boolean remote;
+
+	DriverEnvironment(boolean base, boolean remote) {
+		this.base = base;
+		this.remote = remote;
+	}
+
+	public boolean isBase() {
+		return base;
+	}
+
+	public boolean isRemote() {
+		return remote;
+	}
 }
