@@ -7,8 +7,8 @@ import net.anweisen.cloud.driver.network.InternalQueryResponseManager;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.handler.SocketChannelHandler;
 import net.anweisen.cloud.driver.network.packet.Packet;
-import net.anweisen.cloud.driver.network.packet.packets.ConfigInitPacket;
 import net.anweisen.cloud.master.CloudMaster;
+import net.anweisen.cloud.master.node.NodeServer;
 
 import javax.annotation.Nonnull;
 
@@ -20,7 +20,10 @@ public class SocketChannelServerHandler implements SocketChannelHandler {
 
 	@Override
 	public void handleChannelInitialize(@Nonnull SocketChannel channel) throws Exception {
-		CloudDriver driver = CloudDriver.getInstance();
+		CloudMaster cloud = CloudMaster.getInstance();
+
+		cloud.getLogger().info("Channel[client={} server={}] was successfully connected", channel.getClientAddress(), channel.getServerAddress());
+		cloud.getLogger().debug("Currently there {} {} channel{} connected to this socket", cloud.getSocketComponent().getChannels().size() == 1 ? "is" : "are", cloud.getSocketComponent().getChannels().size(), cloud.getSocketComponent().getChannels().size() == 1 ? "" : "s");
 
 		if (!inWhitelist(channel)) {
 			try {
@@ -31,7 +34,7 @@ public class SocketChannelServerHandler implements SocketChannelHandler {
 			return;
 		}
 
-		SocketChannelConnectEvent event = driver.getEventManager().callEvent(new SocketChannelConnectEvent(channel));
+		SocketChannelConnectEvent event = cloud.getEventManager().callEvent(new SocketChannelConnectEvent(channel));
 		if (event.isCancelled()) {
 			try {
 				channel.close();
@@ -40,10 +43,6 @@ public class SocketChannelServerHandler implements SocketChannelHandler {
 			}
 			return;
 		}
-
-		driver.getLogger().info("Channel[client={} server={}] was successfully connected", channel.getClientAddress(), channel.getServerAddress());
-
-		channel.sendPacket(ConfigInitPacket.create());
 
 	}
 
@@ -57,10 +56,16 @@ public class SocketChannelServerHandler implements SocketChannelHandler {
 
 	@Override
 	public void handleChannelClose(@Nonnull SocketChannel channel) throws Exception {
-		CloudDriver driver = CloudDriver.getInstance();
+		CloudMaster cloud = CloudMaster.getInstance();
 
-		driver.getEventManager().callEvent(new SocketChannelConnectEvent(channel));
-		driver.getLogger().info("Channel[client={} server={}] was closed", channel.getClientAddress(), channel.getServerAddress());
+		cloud.getEventManager().callEvent(new SocketChannelConnectEvent(channel));
+		cloud.getLogger().info("Channel[client={} server={}] was closed", channel.getClientAddress(), channel.getServerAddress());
+
+		NodeServer nodeServer = cloud.getNodeManager().getNodeServer(channel);
+		if (nodeServer != null) {
+			cloud.getLogger().warn("Node '{}' has disconnected", nodeServer.getInfo().getName());
+			cloud.getNodeManager().getNodeServers().remove(nodeServer);
+		}
 	}
 
 	protected boolean inWhitelist(@Nonnull SocketChannel channel) {

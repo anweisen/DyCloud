@@ -18,20 +18,17 @@ import java.util.Objects;
  */
 public final class HostAndPort implements SerializableObject {
 
-	protected String host;
-
-	protected int port;
+	private String host;
+	private int port;
 
 	public HostAndPort(@Nonnull String host, int port) {
 		Preconditions.checkNotNull(host, "Host cannot be null");
-
 		this.host = host;
 		this.port = port;
 	}
 
 	public HostAndPort(@Nonnull InetSocketAddress socketAddress) {
 		Preconditions.checkNotNull(socketAddress, "socketAddress cannot be null");
-
 		this.host = socketAddress.getAddress().getHostAddress();
 		this.port = socketAddress.getPort();
 	}
@@ -40,7 +37,6 @@ public final class HostAndPort implements SerializableObject {
 	@CheckReturnValue
 	public static HostAndPort fromSocketAddress(@Nonnull SocketAddress address) {
 		Preconditions.checkArgument(address instanceof InetSocketAddress, "Cannot convert " + address.getClass().getSimpleName() + " to InetSocketAddress");
-
 		return new HostAndPort((InetSocketAddress) address);
 	}
 

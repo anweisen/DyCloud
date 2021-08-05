@@ -11,7 +11,7 @@ public interface SocketServer extends SocketComponent {
 	void addListener(@Nonnull HostAndPort address);
 
 	default void addListener(int port) {
-		addListener("0.0.0.0", port);
+		addListener(HostAndPort.localhost(port));
 	}
 
 	default void addListener(@Nonnull String host, int port) {
