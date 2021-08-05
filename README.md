@@ -32,8 +32,10 @@ I would recommend you to use one of the **following cloud systems**:
 ✔️ | Request API with Packets
 ✔️ | Event System
 ✔️ | Master TemplateStorage -> Download
-❌ | Wrapper -> Setup & Start & Stop
+🚧 | Docker: Wrapper Setup
+❌ | Service Start / Stop
 ❌ | Wrapper Authentication
+❌ | Proper Docker Connection (Not Legacy)
 ❌ | Node Information Cycle & Timeout
 ❌ | Basic Service Events
 ❌ | Service auto start (minCount & maxCount)
