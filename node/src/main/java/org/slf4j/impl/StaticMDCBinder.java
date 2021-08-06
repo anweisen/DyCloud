@@ -7,8 +7,6 @@ public class StaticMDCBinder {
 
     public static final StaticMDCBinder SINGLETON = new StaticMDCBinder();
 
-    private StaticMDCBinder() {}
-
     public static StaticMDCBinder getSingleton() {
         return SINGLETON;
     }
