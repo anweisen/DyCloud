@@ -39,7 +39,7 @@ I would recommend you to use one of the **following cloud systems**:
 ❌ | Node Information Cycle & Timeout
 ❌ | Basic Service Events
 ❌ | Service auto start (minCount & maxCount)
-❌ | Shutdown mechanism
+🚧 | Shutdown mechanism
 ❌ | Template Cache
 ❌ | MultiProxy Cord
 ❌ | Lobby Balancing
@@ -58,7 +58,7 @@ I would recommend you to use one of the **following cloud systems**:
 ❌ | Proxy Commands (+ Cloud Command API?)
 ⚠️ | Service Deployments
 ⚠️ | Static Services
-⚠️ | [CloudAPI](https://github.com/anweisen/CloudAPI) Integration
+⚠️ | [CloudAPI](https://github.com/anweisen/CloudAPI) Implementation
 
 ``✔️`` Finished - Implemented <br>
 ``🚧`` Current Goal - In Progress <br>
