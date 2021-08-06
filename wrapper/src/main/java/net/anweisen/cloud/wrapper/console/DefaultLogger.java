@@ -51,9 +51,6 @@ public class DefaultLogger implements ILogger {
 
 		PrintStream stream = level.isColorized() ? System.err : System.out;
 		stream.println(format);
-
-		if (ex != null)
-			ex.printStackTrace(stream);
 	}
 
 	@Nonnull
