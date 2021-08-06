@@ -32,27 +32,29 @@ I would recommend you to use one of the **following cloud systems**:
 ✔️ | Request API with Packets
 ✔️ | Event System
 ✔️ | Master TemplateStorage -> Download
-🚧 | Docker: Wrapper Setup
-❌ | Service Start / Stop
-❌ | Wrapper Authentication
+✔️ | Docker: Wrapper Setup
+🚧 | Service Start / Stop
+🚧 | Wrapper Authentication
 ❌ | Proper Docker Connection (Not Legacy)
 ❌ | Node Information Cycle & Timeout
 ❌ | Basic Service Events
 ❌ | Service auto start (minCount & maxCount)
 🚧 | Shutdown mechanism
 ❌ | Template Cache
+🚧 | Proxy Bridge
+🚧 | Dynamic Service Registry
 ❌ | MultiProxy Cord
 ❌ | Lobby Balancing
 ✔️ | Remote Database API
 ❌ | Messenger System for Modules
-❌ | Proxy Bridge
 ❌ | Bukkit Bridge
 ❌ | Implement all driver functions for wrapper & node (remote)
 ❌ | Wrapper & Node to Master Logging
 ❌ | Player Executor
 ❌ | Permission System
 ❌ | Permission Chat & Tab Extension
-❌ | Module System (Master, Node?, Wrapper?)
+🚧 | Module System (Master, Node?, Wrapper?)
+🚧 | Module Copy
 ❌ | Cloud Commands
 ❌ | Service Screens
 ❌ | Proxy Commands (+ Cloud Command API?)
