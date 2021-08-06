@@ -29,7 +29,7 @@ public class NettyServerChannelHandler extends NettyChannelHandler {
 	public void channelActive(@Nonnull ChannelHandlerContext context) throws Exception {
 		channel = new NettyChannel(
 			context.channel(),
-			server.getHandler().get(),
+			server.getHandlerSupplier().get(),
 			address, // we are the server
 			HostAndPort.fromSocketAddress(context.channel().remoteAddress()),
 			false

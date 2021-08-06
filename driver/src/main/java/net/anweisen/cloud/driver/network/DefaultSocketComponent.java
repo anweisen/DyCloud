@@ -22,10 +22,10 @@ public abstract class DefaultSocketComponent implements SocketComponent {
 
 	protected final Collection<SocketChannel> channels = new ConcurrentLinkedQueue<>();
 
-	protected final Supplier<SocketChannelHandler> handler;
+	protected final Supplier<SocketChannelHandler> handlerSupplier;
 
-	public DefaultSocketComponent(@Nonnull Supplier<SocketChannelHandler> handler) {
-		this.handler = handler;
+	public DefaultSocketComponent(@Nonnull Supplier<SocketChannelHandler> handlerSupplier) {
+		this.handlerSupplier = handlerSupplier;
 	}
 
 	@Override
@@ -54,8 +54,8 @@ public abstract class DefaultSocketComponent implements SocketComponent {
 	}
 
 	@Nonnull
-	public Supplier<SocketChannelHandler> getHandler() {
-		return handler;
+	public Supplier<SocketChannelHandler> getHandlerSupplier() {
+		return handlerSupplier;
 	}
 
 	@Override
