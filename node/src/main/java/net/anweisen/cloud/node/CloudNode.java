@@ -21,6 +21,8 @@ import net.anweisen.cloud.driver.network.netty.client.NettySocketClient;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketConstants;
 import net.anweisen.cloud.driver.network.packet.PacketListenerRegistry;
+import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket;
+import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket.AuthenticationType;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.node.NodeManager;
 import net.anweisen.cloud.driver.service.ServiceFactory;
@@ -157,10 +159,9 @@ public final class CloudNode extends CloudBase {
 
 	private void sendAuthentication() {
 		logger.info("Sending authentication to master..");
-		socketClient.sendPacket(new Packet(
-				PacketConstants.AUTH_CHANNEL,
-				Buffer.create().writeString(config.getNodeName()).writeUUID(config.getIdentity())
-		));
+		socketClient.sendPacket(new AuthenticationPacket(AuthenticationType.NODE, buffer -> {
+			buffer.writeUUID(config.getIdentity()).writeString(config.getNodeName());
+		}));
 	}
 
 	public synchronized void shutdown() throws Exception {
