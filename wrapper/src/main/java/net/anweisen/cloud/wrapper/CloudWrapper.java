@@ -4,14 +4,11 @@ import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.DriverEnvironment;
 import net.anweisen.cloud.driver.database.DatabaseManager;
 import net.anweisen.cloud.driver.network.SocketClient;
-import net.anweisen.cloud.driver.network.SocketComponent;
 import net.anweisen.cloud.driver.network.handler.SocketChannelClientHandler;
 import net.anweisen.cloud.driver.network.netty.client.NettySocketClient;
-import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketConstants;
 import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket;
 import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket.AuthenticationType;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.node.NodeManager;
 import net.anweisen.cloud.driver.service.ServiceFactory;
 import net.anweisen.cloud.driver.service.ServiceManager;
@@ -152,7 +149,7 @@ public final class CloudWrapper extends CloudDriver {
 				logger.info("Starting application thread..");
 				mainMethod.invoke(
 					null,
-					new Object[] { new String[] {}}
+					new Object[] { new String[0] }
 				);
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -165,17 +162,14 @@ public final class CloudWrapper extends CloudDriver {
 	}
 
 	@Nullable
-	private String getMainClass(@Nullable Path applicationFile) {
-		if (applicationFile != null && Files.exists(applicationFile)) {
-			try (JarFile jarFile = new JarFile(applicationFile.toFile())) {
-				Manifest manifest = jarFile.getManifest();
-				return manifest == null ? null : manifest.getMainAttributes().getValue("Main-Class");
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
+	private String getMainClass(@Nonnull Path applicationFile) {
+		try (JarFile jarFile = new JarFile(applicationFile.toFile())) {
+			Manifest manifest = jarFile.getManifest();
+			return manifest == null ? null : manifest.getMainAttributes().getValue("Main-Class");
+		} catch (IOException ex) {
+			ex.printStackTrace();
 		}
 		return null;
-
 	}
 
 	@Nullable

@@ -8,11 +8,9 @@ import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.database.Database;
 import net.anweisen.utilities.database.DatabaseConfig;
 import net.anweisen.utilities.database.SimpleDatabaseTypeResolver;
-import net.anweisen.utilities.database.exceptions.DatabaseException;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author anweisen | https://github.com/anweisen

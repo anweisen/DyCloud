@@ -7,7 +7,6 @@ import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket.Authent
 import net.anweisen.cloud.driver.network.packet.def.ConfigInitPacket;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.node.NodeInfo;
-import net.anweisen.cloud.driver.service.config.ServiceTask;
 import net.anweisen.cloud.master.CloudMaster;
 import net.anweisen.cloud.master.network.packets.NetworkAuthResponsePacket;
 import net.anweisen.cloud.master.node.DefaultNodeServer;
@@ -15,8 +14,6 @@ import net.anweisen.cloud.master.node.NodeServer;
 import net.anweisen.cloud.master.service.specific.CloudService;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -40,7 +37,7 @@ public class AuthenticationListener implements PacketListener {
 		UUID identity = buffer.readUUID();
 		String name = buffer.readString();
 
-		cloud.getLogger().trace("Received authentication from {}: Type={}, Name={}", channel, type, name);
+		cloud.getLogger().trace("Received authentication from {}: type={}, name={}", channel, type, name);
 
 		if (!cloud.getConfig().getIdentity().equals(identity)) {
 			cloud.getLogger().info("Authentication for node {} with identity {} was rejected: {}", name, identity, channel);

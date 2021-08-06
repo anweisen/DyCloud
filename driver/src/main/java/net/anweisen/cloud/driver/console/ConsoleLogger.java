@@ -19,8 +19,8 @@ import java.util.Date;
  */
 public class ConsoleLogger implements ILogger {
 
-	private final DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
 	private final Console console;
+	private final DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
 
 	private LogLevel level = LogLevel.TRACE;
 

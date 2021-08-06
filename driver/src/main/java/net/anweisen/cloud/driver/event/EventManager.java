@@ -1,11 +1,15 @@
 package net.anweisen.cloud.driver.event;
 
+import net.anweisen.cloud.driver.CloudDriver;
+
 import javax.annotation.Nonnull;
 import java.util.Collection;
 
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
+ *
+ * @see CloudDriver#getEventManager()
  */
 public interface EventManager {
 

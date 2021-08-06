@@ -1,6 +1,7 @@
 package net.anweisen.cloud.driver.network.packet.chunk.listener;
 
 import com.google.common.base.Preconditions;
+import net.anweisen.utilities.common.misc.FileUtils;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -22,7 +23,7 @@ public abstract class CachedChunkedPacketListener extends ChunkedPacketListener 
 	@Nonnull
 	@Override
 	protected OutputStream createOutputStream(@Nonnull UUID sessionUniqueId, @Nonnull Map<String, Object> properties) throws IOException {
-		Path path = Paths.get(System.getProperty("cloud.tempFiles", "temp"), sessionUniqueId.toString());
+		Path path = FileUtils.getTempDirectory().resolve(sessionUniqueId.toString());
 		Files.createDirectories(path.getParent());
 
 		properties.put("path", path);

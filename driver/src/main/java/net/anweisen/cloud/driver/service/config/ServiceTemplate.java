@@ -16,12 +16,12 @@ public class ServiceTemplate implements SerializableObject {
 	private String storage;
 	private String name;
 
+	public ServiceTemplate() {
+	}
+
 	public ServiceTemplate(@Nonnull String storage, @Nonnull String name) {
 		this.storage = storage;
 		this.name = name;
-	}
-
-	public ServiceTemplate() {
 	}
 
 	@Override
@@ -51,8 +51,14 @@ public class ServiceTemplate implements SerializableObject {
 		return CloudDriver.getInstance().getServiceConfigManager().getTemplateStorage(storage);
 	}
 
+	@Nonnull
 	@Override
 	public String toString() {
-		return "ServiceTemplate[" + storage + "/" + name + "]";
+		return "ServiceTemplate[" + toShortString() + "]";
+	}
+
+	@Nonnull
+	public String toShortString() {
+		return storage + "/" + name;
 	}
 }

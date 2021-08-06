@@ -57,8 +57,8 @@ public class RemoteDatabase extends AbstractDatabase {
 	public void createTable(@Nonnull String name, @Nonnull SQLColumn... columns) throws DatabaseException {
 		CloudDriver.getInstance().getSocketComponent().getFirstChannel().sendPacket(
 			new DatabaseActionPacket(DatabaseActionType.CREATE_TABLE, buffer -> buffer.writeString(name).writeObjectCollection(
-				Arrays.stream(columns).map(SerializableSQLColumn::new).collect(Collectors.toList()))
-			)
+				Arrays.stream(columns).map(SerializableSQLColumn::new).collect(Collectors.toList())
+			))
 		);
 	}
 
