@@ -6,9 +6,11 @@ import io.netty.channel.ChannelFactory;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.ServerChannel;
 import io.netty.channel.epoll.Epoll;
+import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.epoll.EpollSocketChannel;
 import io.netty.channel.kqueue.KQueue;
+import io.netty.channel.kqueue.KQueueEventLoopGroup;
 import io.netty.channel.kqueue.KQueueServerSocketChannel;
 import io.netty.channel.kqueue.KQueueSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -49,7 +51,9 @@ public final class NettyUtils {
 	@Nonnull
 	@CheckReturnValue
 	public static EventLoopGroup newEventLoopGroup() {
-		return new NioEventLoopGroup(4, getEventLoopThreadFactory());
+		return Epoll.isAvailable() ? new EpollEventLoopGroup(4, getEventLoopThreadFactory())
+			: KQueue.isAvailable() ? new KQueueEventLoopGroup(4, getEventLoopThreadFactory())
+								   : new NioEventLoopGroup(4, getEventLoopThreadFactory());
 	}
 
 	@Nonnull
@@ -72,14 +76,16 @@ public final class NettyUtils {
 	@CheckReturnValue
 	public static ChannelFactory<? extends Channel> getClientChannelFactory() {
 		return Epoll.isAvailable() ? EpollSocketChannel::new
-			: KQueue.isAvailable() ? KQueueSocketChannel::new : NioSocketChannel::new;
+			: KQueue.isAvailable() ? KQueueSocketChannel::new
+								   : NioSocketChannel::new;
 	}
 
 	@Nonnull
 	@CheckReturnValue
 	public static ChannelFactory<? extends ServerChannel> getServerChannelFactory() {
 		return Epoll.isAvailable() ? EpollServerSocketChannel::new
-			: KQueue.isAvailable() ? KQueueServerSocketChannel::new : NioServerSocketChannel::new;
+			: KQueue.isAvailable() ? KQueueServerSocketChannel::new
+			                       : NioServerSocketChannel::new;
 	}
 
 	@Nonnull
