@@ -9,9 +9,11 @@ import net.anweisen.utilities.database.Order;
 import net.anweisen.utilities.database.action.DatabaseQuery;
 import net.anweisen.utilities.database.action.ExecutedQuery;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
+import net.anweisen.utilities.database.internal.abstraction.DefaultExecutedQuery;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -87,7 +89,7 @@ public class RemoteDatabaseQuery implements DatabaseQuery {
 	public Task<ExecutedQuery> executeAsync() {
 		return CloudDriver.getInstance().getSocketComponent().getFirstChannel()
 			.sendQueryAsync(new DatabaseActionPacket(DatabaseActionType.QUERY, buffer -> buffer.writeString(table).writeDocument(document)))
-			.map(packet -> new RemoteExecutedQuery(packet.getBuffer().readDocumentCollection()));
+			.map(packet -> new DefaultExecutedQuery(new ArrayList<>(packet.getBuffer().readDocumentCollection())));
 	}
 
 	@Override
