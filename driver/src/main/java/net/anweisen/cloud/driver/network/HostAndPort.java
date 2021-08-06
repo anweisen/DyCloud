@@ -35,6 +35,16 @@ public final class HostAndPort implements SerializableObject {
 
 	@Nonnull
 	@CheckReturnValue
+	public static HostAndPort parse(@Nonnull String input) {
+		String[] args = input.split(":");
+		if (args.length == 2)
+			return create(args[0], Integer.parseInt(args[1]));
+
+		throw new IllegalStateException("Unable to parse '" + input + "'");
+	}
+
+	@Nonnull
+	@CheckReturnValue
 	public static HostAndPort fromSocketAddress(@Nonnull SocketAddress address) {
 		Preconditions.checkArgument(address instanceof InetSocketAddress, "Cannot convert " + address.getClass().getSimpleName() + " to InetSocketAddress");
 		return new HostAndPort((InetSocketAddress) address);
