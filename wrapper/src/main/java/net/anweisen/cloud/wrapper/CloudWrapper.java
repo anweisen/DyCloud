@@ -28,6 +28,12 @@ public final class CloudWrapper extends CloudDriver {
 	}
 
 	public synchronized void startApplication() throws Exception {
+
+	@Override
+	public void shutdown() throws Exception {
+
+		shutdownDriver();
+
 	}
 
 	@Nonnull

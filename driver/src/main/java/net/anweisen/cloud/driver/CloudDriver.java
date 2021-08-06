@@ -2,6 +2,7 @@ package net.anweisen.cloud.driver;
 
 import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.database.DatabaseManager;
+import net.anweisen.utilities.common.function.ExceptionallyRunnable;
 import net.anweisen.utilities.common.logging.ILogger;
 
 import javax.annotation.Nonnull;
@@ -20,10 +21,22 @@ public abstract class CloudDriver {
 	protected final ILogger logger;
 	protected final DriverEnvironment environment;
 
+	{
+		Runtime.getRuntime().addShutdownHook(new Thread((ExceptionallyRunnable) this::shutdown, "ShutdownHook"));
+	}
+
 	public CloudDriver(@Nonnull ILogger logger, @Nonnull DriverEnvironment environment) {
 		this.logger = logger;
 		this.environment = environment;
 	}
+
+	protected final void shutdownDriver() {
+
+		executor.shutdown();
+
+	}
+
+	public abstract void shutdown() throws Exception;
 
 	@Nonnull
 	public ScheduledExecutorService getExecutor() {

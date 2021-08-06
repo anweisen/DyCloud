@@ -162,6 +162,14 @@ public final class CloudNode extends CloudBase {
 				Buffer.create().writeString(config.getNodeName()).writeUUID(config.getIdentity())
 			)
 		);
+
+	public synchronized void shutdown() throws Exception {
+
+		logger.info("Shutting down..");
+
+		shutdownBase();
+		shutdownDriver();
+
 	}
 
 	@Nonnull
