@@ -116,7 +116,7 @@ public final class CloudNode extends CloudBase {
 
 	}
 
-	private void connectAndAwaitAuthentication() throws Exception {
+	private void connectAndAwaitAuthentication() throws InterruptedException {
 
 		AuthenticationResponseListener listener;
 		Lock lock = new ReentrantLock();
@@ -160,8 +160,8 @@ public final class CloudNode extends CloudBase {
 		socketClient.sendPacket(new Packet(
 				PacketConstants.AUTH_CHANNEL,
 				Buffer.create().writeString(config.getNodeName()).writeUUID(config.getIdentity())
-			)
-		);
+		));
+	}
 
 	public synchronized void shutdown() throws Exception {
 
