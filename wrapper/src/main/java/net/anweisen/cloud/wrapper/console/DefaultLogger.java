@@ -22,6 +22,7 @@ import java.util.Date;
 public class DefaultLogger implements ILogger {
 
 	private final DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+	private final PrintStream out = System.out, err = System.err;
 
 	private LogLevel level = LogLevel.TRACE;
 
@@ -49,7 +50,7 @@ public class DefaultLogger implements ILogger {
 			format.append(System.lineSeparator()).append(writer);
 		}
 
-		PrintStream stream = level.isColorized() ? System.err : System.out;
+		PrintStream stream = level.isColorized() ? err : out;
 		stream.println(format);
 	}
 
