@@ -16,6 +16,8 @@
 		<bungee.version>1.16-R0.5-SNAPSHOT</bungee.version>
 		<netty.version>4.1.66.Final</netty.version>
 		<docker.version>3.2.11</docker.version>
+		<bungee.version>1.17-R0.1-SNAPSHOT</bungee.version>
+		<spigot.version>1.17.1-R0.1-SNAPSHOT</spigot.version>
 	</properties>
 
 	<modules>
@@ -24,6 +26,7 @@
 		<module>master</module>
 		<module>node</module>
 		<module>wrapper</module>
+		<module>bridge</module>
 	</modules>
 
 	<distributionManagement>

@@ -1,0 +1,4 @@
+name: Bridge
+author: anweisen
+version: 1.0
+main: net.anweisen.cloud.bridge.proxy.ProxyCloudBridge
