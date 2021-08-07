@@ -25,6 +25,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -135,11 +136,28 @@ public final class CloudWrapper extends CloudDriver {
 
 		Path applicationFile = getApplicationFile();
 		if (applicationFile == null) throw new IllegalStateException("Unable to locate application file");
+		logger.debug("Using {} to launch application..", applicationFile);
 
-		applicationClassLoader = new URLClassLoader(new URL[] { applicationFile.toFile().toURI().toURL() }, this.getClass().getClassLoader());
+		applicationClassLoader = new URLClassLoader(new URL[] { applicationFile.toUri().toURL() }, this.getClass().getClassLoader());
+
+		// https://stackoverflow.com/questions/5380275/replacement-system-classloader-for-classes-in-jars-containing-jars
+		try {
+			Field loaderField = ClassLoader.class.getDeclaredField("scl");
+			loaderField.setAccessible(true);
+			loaderField.set(null, applicationClassLoader);
+
+			Field setField = ClassLoader.class.getDeclaredField("sclSet");
+			setField.setAccessible(true);
+			setField.set(null, true);
+
+			logger.debug("Successfully injected system class loader");
+		} catch (Throwable ex) {
+			logger.error("Unable to replace system class loader", ex);
+		}
 
 		String mainClassName = getMainClass(applicationFile);
 		if (mainClassName == null) throw new IllegalStateException("Cannot extract main class from manifest");
+		logger.debug("Using '{}' as main class..", mainClassName);
 
 		Class<?> mainClass = applicationClassLoader.loadClass(mainClassName);
 		Method mainMethod = mainClass.getMethod("main", String[].class);
