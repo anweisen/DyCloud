@@ -199,7 +199,7 @@ public final class CloudWrapper extends CloudDriver {
 	}
 
 	@Override
-	public void shutdown() throws Exception {
+	public synchronized void shutdown() throws Exception {
 
 		shutdownDriver();
 

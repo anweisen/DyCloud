@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.database.DatabaseManager;
 import net.anweisen.utilities.common.function.ExceptionallyRunnable;
 import net.anweisen.utilities.common.logging.ILogger;
+import net.anweisen.utilities.common.misc.FileUtils;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.Executors;
@@ -37,7 +38,7 @@ public abstract class CloudDriver {
 
 	protected final void shutdownDriver() {
 
-		FileUtils.deleteFileReported(tempDirectory);
+		FileUtils.delete(tempDirectory);
 
 		executor.shutdown();
 

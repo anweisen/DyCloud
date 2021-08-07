@@ -172,9 +172,13 @@ public final class CloudNode extends CloudBase {
 		moduleManager.enableModules();
 	}
 
+	@Override
 	public synchronized void shutdown() throws Exception {
 
 		logger.info("Shutting down..");
+
+		logger.info("Closing socket connection..");
+		socketClient.closeChannels();
 
 		shutdownBase();
 		shutdownDriver();

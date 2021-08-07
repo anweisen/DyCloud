@@ -101,6 +101,19 @@ public final class CloudMaster extends CloudBase {
 		moduleManager.enableModules();
 	}
 
+	@Override
+	public synchronized void shutdown() throws Exception {
+
+		logger.info("Shutting down..");
+
+		logger.info("Closing all socket channels..");
+		socketServer.closeChannels();
+
+		shutdownBase();
+		shutdownDriver();
+
+	}
+
 	@Nonnull
 	@Override
 	public SocketServer getSocketComponent() {
