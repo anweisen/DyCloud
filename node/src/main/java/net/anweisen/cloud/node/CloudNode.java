@@ -95,6 +95,8 @@ public final class CloudNode extends CloudBase {
 		loadNetworkListeners(socketClient.getListenerRegistry());
 		connectAndAwaitAuthentication();
 
+		initModules();
+
 	}
 
 	private void initDocker() {
@@ -162,6 +164,12 @@ public final class CloudNode extends CloudBase {
 		socketClient.sendPacket(new AuthenticationPacket(AuthenticationType.NODE, buffer -> {
 			buffer.writeUUID(config.getIdentity()).writeString(config.getNodeName());
 		}));
+	}
+
+	private void initModules() {
+		moduleManager.resolveModules();
+		moduleManager.loadModules();
+		moduleManager.enableModules();
 	}
 
 	public synchronized void shutdown() throws Exception {

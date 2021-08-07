@@ -79,6 +79,10 @@ public final class CloudMaster extends CloudBase {
 		socketServer.addListener(config.getHostAddress());
 
 		loadNetworkListeners(socketServer.getListenerRegistry());
+		initModules();
+
+		logger.info("The cloud master is ready and running!");
+
 	}
 
 	private void loadNetworkListeners(@Nonnull PacketListenerRegistry registry) {
@@ -89,6 +93,12 @@ public final class CloudMaster extends CloudBase {
 		registry.addListener(PacketConstants.REQUEST_API_CHANNEL, new RequestPacketListener(
 			new TemplateRequestHandlers()
 		));
+	}
+
+	private void initModules() {
+		moduleManager.resolveModules();
+		moduleManager.loadModules();
+		moduleManager.enableModules();
 	}
 
 	@Nonnull

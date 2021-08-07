@@ -1,5 +1,7 @@
 package net.anweisen.cloud.base;
 
+import net.anweisen.cloud.base.module.DefaultModuleManager;
+import net.anweisen.cloud.base.module.ModuleManager;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.DriverEnvironment;
 import net.anweisen.cloud.driver.console.Console;
@@ -7,8 +9,6 @@ import net.anweisen.utilities.common.logging.ILogger;
 import net.anweisen.utilities.common.misc.FileUtils;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -18,6 +18,7 @@ import java.nio.file.Paths;
  */
 public abstract class CloudBase extends CloudDriver {
 
+	protected final ModuleManager moduleManager = new DefaultModuleManager();
 
 	protected final Console console;
 
@@ -33,6 +34,8 @@ public abstract class CloudBase extends CloudDriver {
 	}
 
 	@Nonnull
+	public ModuleManager getModuleManager() {
+		return moduleManager;
 	}
 
 	private static CloudBase instance;
