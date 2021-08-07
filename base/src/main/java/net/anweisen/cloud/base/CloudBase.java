@@ -18,15 +18,8 @@ import java.nio.file.Paths;
  */
 public abstract class CloudBase extends CloudDriver {
 
+
 	protected final Console console;
-
-	protected final Path tempDirectory;
-
-	{
-		tempDirectory = Paths.get(System.getProperty("cloud.temp", "temp"));
-		FileUtils.createDirectoryReported(tempDirectory);
-		FileUtils.setTempDirectory(tempDirectory);
-	}
 
 	public CloudBase(@Nonnull ILogger logger, @Nonnull Console console, @Nonnull DriverEnvironment environment) {
 		super(logger, environment);
@@ -35,17 +28,11 @@ public abstract class CloudBase extends CloudDriver {
 
 	protected final void shutdownBase() throws Exception {
 
-		FileUtils.deleteFileReported(tempDirectory);
-
-
-
 		console.close();
 
 	}
 
 	@Nonnull
-	public Path getTempDirectory() {
-		return tempDirectory;
 	}
 
 	private static CloudBase instance;

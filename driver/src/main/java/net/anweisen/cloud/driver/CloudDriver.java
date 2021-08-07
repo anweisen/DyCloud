@@ -20,9 +20,14 @@ public abstract class CloudDriver {
 
 	protected final ILogger logger;
 	protected final DriverEnvironment environment;
+	protected final Path tempDirectory;
 
 	{
 		Runtime.getRuntime().addShutdownHook(new Thread((ExceptionallyRunnable) this::shutdown, "ShutdownHook"));
+
+		tempDirectory = Paths.get(System.getProperty("cloud.temp", "temp"));
+		FileUtils.createDirectoryReported(tempDirectory);
+		FileUtils.setTempDirectory(tempDirectory);
 	}
 
 	public CloudDriver(@Nonnull ILogger logger, @Nonnull DriverEnvironment environment) {
@@ -32,11 +37,18 @@ public abstract class CloudDriver {
 
 	protected final void shutdownDriver() {
 
+		FileUtils.deleteFileReported(tempDirectory);
+
 		executor.shutdown();
 
 	}
 
 	public abstract void shutdown() throws Exception;
+
+	@Nonnull
+	public Path getTempDirectory() {
+		return tempDirectory;
+	}
 
 	@Nonnull
 	public ScheduledExecutorService getExecutor() {
