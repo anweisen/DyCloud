@@ -37,12 +37,13 @@ I would recommend you to use one of the **following cloud systems**:
 🚧 | Wrapper Authentication
 ❌ | Proper Docker Connection (Not Legacy)
 ❌ | Node Information Cycle & Timeout
+🚧 | ServiceInfo publish
 ❌ | Basic Service Events
 ❌ | Service auto start (minCount & maxCount)
 🚧 | Shutdown mechanism
 ❌ | Template Cache
 🚧 | Proxy Bridge
-🚧 | Dynamic Service Registry
+🚧 | Dynamic Proxy Server Registry
 ❌ | MultiProxy Cord
 ❌ | Lobby Balancing
 ✔️ | Remote Database API
@@ -53,8 +54,8 @@ I would recommend you to use one of the **following cloud systems**:
 ❌ | Player Executor
 ❌ | Permission System
 ❌ | Permission Chat & Tab Extension
-🚧 | Module System (Master, Node?, Wrapper?)
-🚧 | Module Copy
+✔️ | Module System (Master, Node?, Wrapper?)
+✔️ | Module Copy
 ❌ | Cloud Commands
 ❌ | Service Screens
 ❌ | Proxy Commands (+ Cloud Command API?)
