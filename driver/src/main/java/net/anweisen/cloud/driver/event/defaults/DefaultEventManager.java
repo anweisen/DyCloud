@@ -1,5 +1,6 @@
 package net.anweisen.cloud.driver.event.defaults;
 
+import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.event.*;
 import net.anweisen.utilities.common.misc.ReflectionUtils;
 
@@ -95,6 +96,8 @@ public class DefaultEventManager implements EventManager {
 	@Nonnull
 	@Override
 	public <E extends Event> E callEvent(@Nonnull E event) {
+		CloudDriver.getInstance().getLogger().trace("Calling event {}", event.getClass().getSimpleName());
+
 		for (RegisteredListener listener : listeners) {
 			if (!listener.getEventClass().isAssignableFrom(event.getClass())) continue;
 			if (listener.getIgnoreCancelled() && event instanceof Cancelable && ((Cancelable)event).isCancelled()) continue;
