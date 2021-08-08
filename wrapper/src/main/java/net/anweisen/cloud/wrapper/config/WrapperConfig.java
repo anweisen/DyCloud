@@ -2,9 +2,12 @@ package net.anweisen.cloud.wrapper.config;
 
 import net.anweisen.cloud.driver.network.HostAndPort;
 import net.anweisen.cloud.driver.service.config.ServiceTask;
+import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.utilities.common.config.Document;
 
 import javax.annotation.Nonnull;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 /**
@@ -13,13 +16,23 @@ import java.util.UUID;
  */
 public class WrapperConfig {
 
-	private final HostAndPort masterAddress = HostAndPort.parse(System.getenv("cloud.config.master"));
-	private final UUID identity = UUID.fromString(System.getenv("cloud.config.identity"));
-	private final UUID uniqueId = UUID.fromString(System.getenv("cloud.service.uuid"));
-	private final String nodeName = System.getenv("cloud.service.node");
-	private final String name = System.getenv("cloud.service.name");
-	private final int number = Integer.parseInt(name.split("-")[1]);
-	private final ServiceTask task = Document.parseJson(System.getenv("cloud.service.task")).toInstanceOf(ServiceTask.class);
+	private static final Path configPath = Paths.get(".cloud", "config.json");
+
+	private HostAndPort masterAddress;
+	private UUID identity;
+	private ServiceTask task;
+	private ServiceInfo serviceInfo;
+
+	public void load() {
+
+		Document document = Document.readJsonFile(configPath.toFile());
+
+		masterAddress = document.get("master", HostAndPort.class);
+		identity = document.getUUID("identity");
+		task = document.get("task", ServiceTask.class);
+		serviceInfo = document.get("service", ServiceInfo.class);
+
+	}
 
 	@Nonnull
 	public UUID getIdentity() {
@@ -27,31 +40,17 @@ public class WrapperConfig {
 	}
 
 	@Nonnull
-	public UUID getUniqueId() {
-		return uniqueId;
-	}
-
-	@Nonnull
-	public String getName() {
-		return name;
-	}
-
-	@Nonnull
-	public String getNodeName() {
-		return nodeName;
-	}
-
-	@Nonnull
 	public ServiceTask getTask() {
 		return task;
-	}
-
-	public int getServiceNumber() {
-		return number;
 	}
 
 	@Nonnull
 	public HostAndPort getMasterAddress() {
 		return masterAddress;
+	}
+
+	@Nonnull
+	public ServiceInfo getServiceInfo() {
+		return serviceInfo;
 	}
 }
