@@ -6,6 +6,7 @@ import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListenerRegistry;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executor;
@@ -56,6 +57,16 @@ public abstract class DefaultSocketComponent implements SocketComponent {
 	@Nonnull
 	public Supplier<SocketChannelHandler> getHandlerSupplier() {
 		return handlerSupplier;
+	}
+
+	@Override
+	public void sendPacket(@Nonnull Packet packet, @Nonnull SocketChannel... skipChannels) {
+		for (SocketChannel channel : channels) {
+			if (Arrays.asList(skipChannels).contains(channel))
+				continue;
+
+			channel.sendPacket(packet);
+		}
 	}
 
 	@Override

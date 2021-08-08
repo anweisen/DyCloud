@@ -1,5 +1,6 @@
 package net.anweisen.cloud.driver.network;
 
+import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListenerRegistry;
 import net.anweisen.cloud.driver.network.packet.PacketSender;
 
@@ -15,6 +16,8 @@ import java.util.concurrent.Executor;
  * @see SocketServer
  */
 public interface SocketComponent extends PacketSender {
+
+	void sendPacket(@Nonnull Packet packet, @Nonnull SocketChannel... skipChannels);
 
 	@Nonnull
 	Executor getPacketDispatcher();
