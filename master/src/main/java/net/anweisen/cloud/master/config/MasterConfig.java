@@ -19,8 +19,6 @@ public class MasterConfig {
 	public static final File FILE = new File("config.json");
 	public static final int DEFAULT_PORT = 3507;
 
-	private FileDocument document;
-
 	private UUID identity;
 	private HostAndPort hostAddress;
 	private Collection<String> ipWhitelist;
@@ -28,7 +26,7 @@ public class MasterConfig {
 
 	public void load() {
 
-		document = FileDocument.readJsonFile(FILE);
+		FileDocument document = FileDocument.readJsonFile(FILE);
 
 		identity = document.getUUID("identity");
 		if (identity == null)

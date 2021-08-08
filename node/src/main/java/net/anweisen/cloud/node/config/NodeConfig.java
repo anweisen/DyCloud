@@ -16,8 +16,6 @@ public class NodeConfig {
 	public static final File FILE = new File("config.json");
 	public static final int DEFAULT_PORT = 3507;
 
-	private FileDocument document;
-
 	private String nodeName;
 	private UUID identity;
 	private HostAndPort masterAddress;
@@ -25,7 +23,7 @@ public class NodeConfig {
 
 	public void load() {
 
-		document = FileDocument.readJsonFile(FILE);
+		FileDocument document = FileDocument.readJsonFile(FILE);
 
 		nodeName = document.getString("name");
 		if (nodeName ==  null)
