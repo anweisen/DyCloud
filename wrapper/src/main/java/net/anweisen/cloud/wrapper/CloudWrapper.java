@@ -3,6 +3,7 @@ package net.anweisen.cloud.wrapper;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.DriverEnvironment;
 import net.anweisen.cloud.driver.database.DatabaseManager;
+import net.anweisen.cloud.driver.database.remote.RemoteDatabaseManager;
 import net.anweisen.cloud.driver.network.SocketClient;
 import net.anweisen.cloud.driver.network.handler.SocketChannelClientHandler;
 import net.anweisen.cloud.driver.network.netty.client.NettySocketClient;
@@ -47,6 +48,8 @@ public final class CloudWrapper extends CloudDriver {
 	private final Path workDirectory = Paths.get("");
 
 	private final WrapperConfig config = new WrapperConfig();
+
+	private final DatabaseManager databaseManager = new RemoteDatabaseManager();
 
 	private final Thread mainThread = Thread.currentThread();
 	private Thread applicationThread;
@@ -234,7 +237,7 @@ public final class CloudWrapper extends CloudDriver {
 	@Nonnull
 	@Override
 	public DatabaseManager getDatabaseManager() {
-		return null;
+		return databaseManager;
 	}
 
 	@Nonnull
