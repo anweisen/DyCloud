@@ -7,6 +7,8 @@ import net.anweisen.utilities.common.logging.ILogger;
 import net.anweisen.utilities.common.misc.FileUtils;
 
 import javax.annotation.Nonnull;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -27,7 +29,7 @@ public abstract class CloudDriver {
 		Runtime.getRuntime().addShutdownHook(new Thread((ExceptionallyRunnable) this::shutdown, "ShutdownHook"));
 
 		tempDirectory = Paths.get(System.getProperty("cloud.temp", "temp"));
-		FileUtils.createDirectoryReported(tempDirectory);
+		FileUtils.createDirectory(tempDirectory);
 		FileUtils.setTempDirectory(tempDirectory);
 	}
 

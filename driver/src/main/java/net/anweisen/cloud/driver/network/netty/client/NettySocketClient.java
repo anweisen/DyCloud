@@ -46,8 +46,7 @@ public class NettySocketClient extends DefaultSocketComponent implements SocketC
 				.connect(address.getHost(), address.getPort())
 				.addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE)
 				.addListener(ChannelFutureListener.CLOSE_ON_FAILURE)
-				.sync()
-				.channel();
+				.sync().channel();
 		} catch (InterruptedException ex) {
 			ex.printStackTrace();
 		}

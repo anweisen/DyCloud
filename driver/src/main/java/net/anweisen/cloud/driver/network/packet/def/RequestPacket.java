@@ -17,8 +17,7 @@ public class RequestPacket extends Packet {
 
 	public RequestPacket(@Nonnull RequestType type, @Nullable Consumer<? super Buffer> modifier) {
 		super(PacketConstants.REQUEST_API_CHANNEL, Buffer.create().writeEnumConstant(type));
-		if (modifier != null) {
-			modifier.accept(super.body);
-		}
+		if (modifier != null)
+			modifier.accept(body);
 	}
 }

@@ -15,9 +15,9 @@ import java.util.Map;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public final class RequestPacketListener implements PacketListener {
+public class RequestPacketListener implements PacketListener {
 
-	protected final Map<RequestType, RequestHandler> handlers = new LinkedHashMap<>();
+	private final Map<RequestType, RequestHandler> handlers = new LinkedHashMap<>();
 
 	public RequestPacketListener(@Nonnull CategorizedRequestHandler... handlers) {
 		for (CategorizedRequestHandler handler : handlers)

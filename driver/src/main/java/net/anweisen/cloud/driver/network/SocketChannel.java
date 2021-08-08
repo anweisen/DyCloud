@@ -25,6 +25,9 @@ public interface SocketChannel extends PacketSender {
 	@Nonnull
 	Task<Packet> sendQueryAsync(@Nonnull Packet packet);
 
+	@Nullable
+	Packet sendQuery(@Nonnull Packet packet);
+
 	@Nonnull
 	Task<ChunkedQueryResponse> sendChunkedPacketQuery(@Nonnull Packet packet);
 
@@ -33,9 +36,6 @@ public interface SocketChannel extends PacketSender {
 	boolean sendChunkedPackets(@Nonnull Document header, @Nonnull InputStream inputStream, int channel) throws IOException;
 
 	boolean sendChunkedPackets(@Nonnull UUID uniqueId, @Nonnull Document header, @Nonnull InputStream inputStream, int channel) throws IOException;
-
-	@Nullable
-	Packet sendQuery(@Nonnull Packet packet);
 
 	void close() throws Exception;
 

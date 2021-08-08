@@ -38,7 +38,7 @@ public class DefaultModuleManager implements ModuleManager, LoggingApiUser {
 		modules.clear();
 
 		info("Resolving modules..");
-		FileUtils.createDirectoryReported(modulesFolder);
+		FileUtils.createDirectory(modulesFolder);
 
 		List<DefaultModuleController> modules = new CopyOnWriteArrayList<>();
 

@@ -14,16 +14,13 @@ import java.util.function.Consumer;
 public class AuthenticationPacket extends Packet {
 
 	public AuthenticationPacket(@Nonnull AuthenticationType authenticationType, @Nonnull Consumer<? super Buffer> modifier) {
-		super(PacketConstants.AUTH_CHANNEL, Buffer.create());
-		body.writeEnumConstant(authenticationType);
+		super(PacketConstants.AUTH_CHANNEL, Buffer.create().writeEnumConstant(authenticationType));
 		modifier.accept(body);
 	}
 
 	public enum AuthenticationType {
-
 		NODE,
 		SERVICE
-
 	}
 
 }
