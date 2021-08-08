@@ -265,5 +265,13 @@ public final class CloudWrapper extends CloudDriver {
 	@Override
 	public String getComponentName() {
 		return config.getName();
+
+	private static CloudWrapper instance;
+
+	public static CloudWrapper getInstance() {
+		if (instance == null)
+			instance = (CloudWrapper) CloudDriver.getInstance();
+
+		return instance;
 	}
 }
