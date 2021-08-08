@@ -33,4 +33,12 @@ public enum ServiceEnvironment {
 	public String[] getConfigs() {
 		return defaultConfig;
 	}
+
+	public boolean isProxy() {
+		return serviceType == ServiceType.PROXY;
+	}
+
+	public boolean isServer() {
+		return serviceType == ServiceType.SERVER;
+	}
 }
