@@ -26,6 +26,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.instrument.Instrumentation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -33,6 +34,7 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -50,6 +52,9 @@ public final class CloudWrapper extends CloudDriver {
 	private final WrapperConfig config = new WrapperConfig();
 
 	private final DatabaseManager databaseManager = new RemoteDatabaseManager();
+	private final List<String> commandlineArguments;
+	private final Instrumentation instrumentation;
+
 
 	private final Thread mainThread = Thread.currentThread();
 	private Thread applicationThread;
@@ -58,9 +63,12 @@ public final class CloudWrapper extends CloudDriver {
 
 	private SocketClient socketClient;
 
-	public CloudWrapper(@Nonnull ILogger logger) {
+	CloudWrapper(@Nonnull ILogger logger, @Nonnull List<String> commandlineArguments, @Nonnull Instrumentation instrumentation) {
 		super(logger, DriverEnvironment.WRAPPER);
 		setInstance(this);
+
+		this.commandlineArguments = commandlineArguments;
+		this.instrumentation = instrumentation;
 	}
 
 	public synchronized void start() throws Exception {
@@ -206,6 +214,9 @@ public final class CloudWrapper extends CloudDriver {
 
 		shutdownDriver();
 
+	@Nonnull
+	public Instrumentation getInstrumentation() {
+		return instrumentation;
 	}
 
 	@Nonnull

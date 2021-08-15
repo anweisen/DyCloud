@@ -4,6 +4,9 @@ import net.anweisen.cloud.wrapper.console.DefaultLogger;
 import net.anweisen.utilities.common.logging.ILogger;
 
 import javax.annotation.Nonnull;
+import java.lang.instrument.Instrumentation;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -21,7 +24,7 @@ public final class Launcher {
 		ILogger logger = new DefaultLogger();
 		init(logger);
 
-		CloudWrapper cloud = new CloudWrapper(logger);
+		CloudWrapper cloud = new CloudWrapper(logger, new ArrayList<>(Arrays.asList(args)), instrumentationInstance);
 		cloud.start();
 	}
 
