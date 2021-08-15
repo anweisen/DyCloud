@@ -12,7 +12,8 @@ import javax.annotation.Nonnull;
 public interface LoggingApiUser extends net.anweisen.utilities.common.logging.LoggingApiUser {
 
 	@Nonnull
-	default ILogger getLogger() {
+	@Override
+	default ILogger getTargetLogger() {
 		return CloudDriver.getInstance().getLogger();
 	}
 
