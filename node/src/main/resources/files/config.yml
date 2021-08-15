@@ -1,9 +1,9 @@
-forge_support: true
+forge_support: false
 online_mode: true
 log_commands: true
 listeners:
 - query_port: 25577
-  motd: '&bMinecraft&3Cloud &8| &7github.com/anweisen/&eMinecraftCloud'
+  motd: '&bMinecraft&3Cloud &8| &7github.com/anweisen/&e&lMinecraftCloud'
   tab_list: GLOBAL_PING
   query_enabled: false
   proxy_protocol: false
@@ -32,10 +32,10 @@ disabled_commands:
 - disabledcommandhere
 timeout: 30000
 permissions:
-  default:
+  default: []
+  admin:
   - bungeecord.command.server
   - bungeecord.command.list
-  admin:
   - bungeecord.command.alert
   - bungeecord.command.end
   - bungeecord.command.ip
