@@ -11,6 +11,12 @@ import javax.annotation.Nonnull;
  */
 public final class Launcher {
 
+	private static Instrumentation instrumentationInstance;
+
+	public static void agentmain(String agentArgs, Instrumentation instrumentation) {
+		instrumentationInstance = instrumentation;
+	}
+
 	public static void main(String[] args) throws Exception {
 		ILogger logger = new DefaultLogger();
 		init(logger);
