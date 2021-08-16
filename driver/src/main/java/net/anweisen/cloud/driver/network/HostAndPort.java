@@ -6,6 +6,7 @@ import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -20,6 +21,9 @@ public final class HostAndPort implements SerializableObject {
 
 	private String host;
 	private int port;
+
+	private HostAndPort() {
+	}
 
 	public HostAndPort(@Nonnull String host, int port) {
 		Preconditions.checkNotNull(host, "Host cannot be null");
@@ -48,6 +52,12 @@ public final class HostAndPort implements SerializableObject {
 	public static HostAndPort fromSocketAddress(@Nonnull SocketAddress address) {
 		Preconditions.checkArgument(address instanceof InetSocketAddress, "Cannot convert " + address.getClass().getSimpleName() + " to InetSocketAddress");
 		return new HostAndPort((InetSocketAddress) address);
+	}
+
+	@Nullable
+	@CheckReturnValue
+	public static HostAndPort fromSocketAddressOrNull(@Nullable SocketAddress address) {
+		return address instanceof InetSocketAddress ? fromSocketAddress(address) : null;
 	}
 
 	@Nonnull
