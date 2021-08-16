@@ -20,7 +20,7 @@ import java.util.Objects;
  */
 public class RemoteDatabaseInsertionOrUpdate implements DatabaseInsertionOrUpdate {
 
-	private final Document document = Document.newJsonDocument();
+	private final Document document = Document.create();
 	private final String table;
 
 	public RemoteDatabaseInsertionOrUpdate(@Nonnull String table) {

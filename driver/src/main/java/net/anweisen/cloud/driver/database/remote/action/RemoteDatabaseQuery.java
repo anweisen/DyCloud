@@ -22,7 +22,7 @@ import java.util.Objects;
  */
 public class RemoteDatabaseQuery implements DatabaseQuery {
 
-	private final Document document = Document.newJsonDocument();
+	private final Document document = Document.create();
 	private final String table;
 
 	public RemoteDatabaseQuery(@Nonnull String table) {

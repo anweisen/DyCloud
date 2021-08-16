@@ -18,7 +18,7 @@ import java.util.Objects;
  */
 public class RemoteDatabaseDeletion implements DatabaseDeletion {
 
-	private final Document document = Document.newJsonDocument();
+	private final Document document = Document.create();
 	private final String table;
 
 	public RemoteDatabaseDeletion(@Nonnull String table) {

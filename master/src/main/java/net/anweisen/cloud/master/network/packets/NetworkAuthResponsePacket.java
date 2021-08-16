@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 public class NetworkAuthResponsePacket extends Packet {
 
 	public NetworkAuthResponsePacket(boolean access, @Nonnull String message) {
-		super(PacketConstants.AUTH_CHANNEL, Document.newJsonDocument().set("access", access).set("message", message));
+		super(PacketConstants.AUTH_CHANNEL, Document.create().set("access", access).set("message", message));
 	}
 
 }

@@ -18,7 +18,7 @@ import java.util.Objects;
  */
 public class RemoteDatabaseUpdate implements DatabaseUpdate {
 
-	private final Document document = Document.newJsonDocument();
+	private final Document document = Document.create();
 	private final String table;
 
 	public RemoteDatabaseUpdate(@Nonnull String table) {

@@ -65,7 +65,7 @@ public abstract class CategorizedRequestHandler implements LoggingApiUser {
 			}
 
 			try {
-				channel.sendChunkedPacketsResponse(packet.getUniqueId(), Document.newJsonDocument().set("response", response), inputStream);
+				channel.sendChunkedPacketsResponse(packet.getUniqueId(), Document.create().set("response", response), inputStream);
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
