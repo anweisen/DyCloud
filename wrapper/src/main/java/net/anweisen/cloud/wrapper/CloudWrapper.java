@@ -171,13 +171,26 @@ public final class CloudWrapper extends CloudDriver {
 			}
 		}
 
+		Attributes manifestAttributes = getManifestAttributes(applicationFile);
 
+		String mainClassName = manifestAttributes.getValue("Main-Class");
+		String agentClassName = manifestAttributes.getValue("Launcher-Agent-Class");
+		logger.debug("Found attributes main:{} agent:{}", mainClassName, agentClassName);
 
-		String mainClassName = getMainClass(applicationFile);
-		if (mainClassName == null) throw new IllegalStateException("Cannot extract main class from manifest");
-		logger.debug("Using '{}' as main class..", mainClassName);
+		if (agentClassName != null) {
+			try {
+				Class<?> agentClass = Class.forName(agentClassName, true, applicationClassLoader);
+				Method agentMethod = agentClass.getMethod("agentmain", String.class, Instrumentation.class);
+				logger.trace("Invoking agentmain method..");
+				agentMethod.invoke(null, null, instrumentation);
+				logger.trace("Successfully invoked agentmain method");
+			} catch (ClassNotFoundException ex) {
+			} catch (Throwable ex) {
+				logger.error("Unable to execute agentmain", ex);
+			}
+		}
 
-		Class<?> mainClass = applicationClassLoader.loadClass(mainClassName);
+		Class<?> mainClass = Class.forName(mainClassName, true, applicationClassLoader);
 		Method mainMethod = mainClass.getMethod("main", String[].class);
 
 		applicationThread = new Thread(() -> {
@@ -188,14 +201,14 @@ public final class CloudWrapper extends CloudDriver {
 					new Object[] { new String[0] }
 				);
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				logger.error("Unable to start application..", ex);
 			}
 		}, "Application-Thread");
 
 		applicationThread.setContextClassLoader(applicationClassLoader);
 		applicationThread.start();
 
-	}
+		executor.scheduleAtFixedRate(this::updateServiceInfo, 0, 3, TimeUnit.MINUTES);
 
 	}
 
@@ -203,6 +216,8 @@ public final class CloudWrapper extends CloudDriver {
 	public synchronized void shutdown() throws Exception {
 
 		shutdownDriver();
+
+	}
 
 	@Nonnull
 	public Instrumentation getInstrumentation() {
