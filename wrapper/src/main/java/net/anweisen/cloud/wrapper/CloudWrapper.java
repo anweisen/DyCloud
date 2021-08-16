@@ -129,11 +129,13 @@ public final class CloudWrapper extends CloudDriver {
 
 	public synchronized void startApplication() throws Exception {
 
-		Path applicationFile = getApplicationFile();
-		if (applicationFile == null) throw new IllegalStateException("Unable to locate application file");
-		logger.debug("Using {} to launch application..", applicationFile);
+		String applicationFileName = commandlineArguments.remove(0);
+		logger.debug("Using '{}' as application file..", applicationFileName);
 
 		applicationClassLoader = new URLClassLoader(new URL[] { applicationFile.toUri().toURL() }, this.getClass().getClassLoader());
+		Path applicationFile = Paths.get(applicationFileName);
+		if (Files.notExists(applicationFile)) throw new IllegalStateException("Application file " + applicationFileName + " does not exist");
+		URL applicationFileUrl = applicationFile.toUri().toURL();
 
 		// https://stackoverflow.com/questions/5380275/replacement-system-classloader-for-classes-in-jars-containing-jars
 		try {
@@ -174,23 +176,6 @@ public final class CloudWrapper extends CloudDriver {
 
 	}
 
-	@Nullable
-	private String getMainClass(@Nonnull Path applicationFile) {
-		try (JarFile jarFile = new JarFile(applicationFile.toFile())) {
-			Manifest manifest = jarFile.getManifest();
-			return manifest == null ? null : manifest.getMainAttributes().getValue("Main-Class");
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-		return null;
-	}
-
-	@Nullable
-	private Path getApplicationFile() throws IOException {
-		return Files.list(workDirectory)
-			.filter(path -> path.toString().endsWith(".jar"))
-			.filter(path -> !path.toString().endsWith("wrapper.jar"))
-			.findFirst().orElse(null);
 	}
 
 	@Override
