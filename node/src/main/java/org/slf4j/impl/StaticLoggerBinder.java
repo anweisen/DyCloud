@@ -5,6 +5,8 @@ import org.slf4j.helpers.NOPLoggerFactory;
 import org.slf4j.spi.LoggerFactoryBinder;
 
 /**
+ * Slf4j NOP implementation needed for the java docker api
+ *
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
