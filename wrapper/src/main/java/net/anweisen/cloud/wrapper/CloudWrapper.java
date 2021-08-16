@@ -219,6 +219,30 @@ public final class CloudWrapper extends CloudDriver {
 
 	}
 
+	public void updateServiceInfo() {
+		ServiceInfo serviceInfo = this.createServiceInfo();
+		eventManager.callEvent(new ServiceInfoConfigureEvent(serviceInfo));
+		socketClient.sendPacket(new ServiceUpdateSelfInfoPacket(serviceInfo));
+		logger.trace("Updating service info to {}", serviceInfo);
+		this.serviceInfo = serviceInfo;
+	}
+
+	private ServiceInfo createServiceInfo() {
+		return new ServiceInfo(
+			serviceInfo.getUniqueId(),
+			serviceInfo.getDockerContainerId(),
+			serviceInfo.getTaskName(),
+			serviceInfo.getServiceNumber(),
+			serviceInfo.getEnvironment(),
+			ServiceState.RUNNING,
+			serviceInfo.getNodeName(),
+			serviceInfo.getNodeAddress(),
+			serviceInfo.getPort(),
+			serviceInfo.isStatic(),
+			serviceInfo.getProperties()
+		);
+	}
+
 	@Nonnull
 	private Attributes getManifestAttributes(@Nonnull Path applicationFile) {
 		try (JarFile jarFile = new JarFile(applicationFile.toFile())) {
