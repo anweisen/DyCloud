@@ -11,7 +11,7 @@ server:
   online-mode: false
   max-players: 20
   whitelisted: false
-  motd: '&bMinecraft&3Cloud &8| &7github.com/anweisen/&e&lMinecraftCloud'
+  motd: '&8» &7github.com/anweisen/&e&lMinecraftCloud'
   shutdown-message: Server shutting down..
   allow-client-mods: true
   snooper-enabled: false

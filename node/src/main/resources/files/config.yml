@@ -3,7 +3,7 @@ online_mode: true
 log_commands: true
 listeners:
 - query_port: 25577
-  motd: '&bMinecraft&3Cloud &8| &7github.com/anweisen/&e&lMinecraftCloud'
+  motd: '&8» &7github.com/anweisen/&e&lMinecraftCloud'
   tab_list: GLOBAL_PING
   query_enabled: false
   proxy_protocol: false
