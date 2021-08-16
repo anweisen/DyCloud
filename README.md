@@ -40,12 +40,12 @@ I would recommend you to use one of the **following cloud systems**:
 ✔️ | ServiceInfo publish
 🚧 | Basic Service Events
 ❌ | Service auto start (minCount & maxCount)
-🚧 | Shutdown mechanism
+🧪 | Shutdown mechanism
 ❌ | Template Cache
 🚧 | Proxy Bridge
-🚧 | Dynamic Proxy Server Registry
+🧪 | Dynamic Proxy Server Registry
 ❌ | MultiProxy Cord
-❌ | Lobby Balancing
+🧪 | Lobby Balancing
 ✔️ | Remote Database API
 ❌ | Messenger System for Modules
 🚧 | Bukkit Bridge
@@ -55,15 +55,18 @@ I would recommend you to use one of the **following cloud systems**:
 ❌ | Permission System
 ❌ | Permission Chat & Tab Extension
 ✔️ | Module System (Master, Node?, Wrapper?)
-✔️ | Module Copy
+🧪 | Module Copy
 ❌ | Cloud Commands
 ❌ | Service Screens
 ❌ | Proxy Commands (+ Cloud Command API?)
 ⚠️ | Service Deployments
 ⚠️ | Static Services
+⚠️ | NPC Module
+⚠️ | Signs Module
 ⚠️ | [CloudAPI](https://github.com/anweisen/CloudAPI) Implementation
 
 ``✔️`` Finished - Implemented <br>
+``🧪`` Experimental - Implemented <br>
 ``🚧`` Current Goal - In Progress <br>
 ``❌`` Planned <br>
 ``⚠️`` Not important - Long time planned goals 
