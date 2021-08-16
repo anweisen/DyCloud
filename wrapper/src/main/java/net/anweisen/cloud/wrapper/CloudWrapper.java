@@ -21,11 +21,6 @@ import net.anweisen.utilities.common.logging.ILogger;
 import net.anweisen.utilities.common.misc.FileUtils;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.lang.instrument.Instrumentation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -79,13 +74,6 @@ public final class CloudWrapper extends CloudDriver {
 		connectAndAwaitAuthentication();
 
 		try {
-			logger.debug("Copying server configs..");
-			copyConfig();
-		} catch (Exception ex) {
-			logger.error("Unable to copy server configs");
-		}
-
-		try {
 			startApplication();
 		} catch (Exception ex) {
 			logger.error("Unable to start application", ex);
@@ -129,18 +117,6 @@ public final class CloudWrapper extends CloudDriver {
 		socketClient.sendPacket(new AuthenticationPacket(AuthenticationType.SERVICE, buffer -> {
 			buffer.writeUUID(config.getIdentity()).writeString(config.getName());
 		}));
-	}
-
-	private void copyConfig() throws IOException {
-
-		ServiceEnvironment environment = config.getTask().getEnvironment();
-		for (String config : environment.getConfigs()) {
-			FileUtils.copy(
-				new BufferedInputStream(getClass().getClassLoader().getResourceAsStream("files/" + config)),
-				new BufferedOutputStream(new FileOutputStream(Paths.get(config).toFile()))
-			);
-		}
-
 	}
 
 	public synchronized void startApplication() throws Exception {
