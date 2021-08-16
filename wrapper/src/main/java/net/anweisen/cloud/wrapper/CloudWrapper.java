@@ -132,25 +132,46 @@ public final class CloudWrapper extends CloudDriver {
 		String applicationFileName = commandlineArguments.remove(0);
 		logger.debug("Using '{}' as application file..", applicationFileName);
 
-		applicationClassLoader = new URLClassLoader(new URL[] { applicationFile.toUri().toURL() }, this.getClass().getClassLoader());
 		Path applicationFile = Paths.get(applicationFileName);
 		if (Files.notExists(applicationFile)) throw new IllegalStateException("Application file " + applicationFileName + " does not exist");
 		URL applicationFileUrl = applicationFile.toUri().toURL();
 
-		// https://stackoverflow.com/questions/5380275/replacement-system-classloader-for-classes-in-jars-containing-jars
+		// Inject the classpath into current class loader
+		// This eliminates the need of creating a new class loader and setting it as the system class loader which does not work properly with java16
+		// TODO just use the instrumentation?
 		try {
-			Field loaderField = ClassLoader.class.getDeclaredField("scl");
-			loaderField.setAccessible(true);
-			loaderField.set(null, applicationClassLoader);
+			ClassLoader loader = this.getClass().getClassLoader();
+			Class<?> loaderClass = loader.getClass();
+			Field ucpField = ReflectionUtils.getInheritedPrivateField(loaderClass, "ucp");
+			ucpField.setAccessible(true);
+			Object ucp = ucpField.get(loader);
 
-			Field setField = ClassLoader.class.getDeclaredField("sclSet");
-			setField.setAccessible(true);
-			setField.set(null, true);
+			Class<?> ucpClass = ucp.getClass();
+			Method addUrlMethod = ucpClass.getDeclaredMethod("addURL", URL.class);
+			addUrlMethod.setAccessible(true);
+			addUrlMethod.invoke(ucp, applicationFileUrl);
 
-			logger.debug("Successfully injected system class loader");
-		} catch (Throwable ex) {
-			logger.error("Unable to replace system class loader", ex);
+			applicationClassLoader = loader;
+		} catch (Throwable exInjectClassPath) {
+			logger.error("Unable to inject application file to ucp (class path) of current class loader. Fallbacking to an URLClassLoader.", exInjectClassPath);
+			applicationClassLoader = new URLClassLoader(new URL[] { applicationFileUrl }, this.getClass().getClassLoader());
+
+			// https://stackoverflow.com/questions/5380275/replacement-system-classloader-for-classes-in-jars-containing-jars
+			// Replace system class loader with created URLCLassLoader
+			try {
+				Field loaderField = ClassLoader.class.getDeclaredField("scl");
+				loaderField.setAccessible(true);
+				loaderField.set(null, applicationClassLoader);
+
+				// field in pre java9 that indicated whether a system class loader is set
+				Field setField = ClassLoader.class.getDeclaredField("sclSet");
+				setField.setAccessible(true);
+				setField.set(null, true);
+			} catch (Throwable exReplaceSystemLoader) {
+			}
 		}
+
+
 
 		String mainClassName = getMainClass(applicationFile);
 		if (mainClassName == null) throw new IllegalStateException("Cannot extract main class from manifest");
