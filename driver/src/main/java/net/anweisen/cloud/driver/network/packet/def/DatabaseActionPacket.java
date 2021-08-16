@@ -23,8 +23,7 @@ public class DatabaseActionPacket extends Packet {
 		DELETE(true),
 
 		CREATE_TABLE(false),
-		LIST_TABLES(false),
-		;
+		LIST_TABLES(false);
 
 		private final boolean specific;
 
