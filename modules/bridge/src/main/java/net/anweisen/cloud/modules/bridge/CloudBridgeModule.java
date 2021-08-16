@@ -1,4 +1,4 @@
-package net.anweisen.cloud.bridge;
+package net.anweisen.cloud.modules.bridge;
 
 import net.anweisen.cloud.base.module.CloudModule;
 

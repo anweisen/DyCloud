@@ -5,11 +5,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<artifactId>root</artifactId>
+		<artifactId>modules</artifactId>
 		<groupId>net.anweisen.cloud</groupId>
 		<version>1.0</version>
 	</parent>
 
+	<groupId>net.anweisen.cloud.modules</groupId>
 	<artifactId>bridge</artifactId>
 
 	<properties>
@@ -104,7 +105,7 @@
 
 	<distributionManagement>
 		<repository>
-			<id>anweisen</id>
+			<id>github</id>
 			<name>GitHub anweisen Apache Maven Packages</name>
 			<url>https://maven.pkg.github.com/anweisen/MinecraftCloud</url>
 		</repository>

@@ -26,7 +26,7 @@
 		<module>master</module>
 		<module>node</module>
 		<module>wrapper</module>
-		<module>bridge</module>
+		<module>modules</module>
 	</modules>
 
 	<distributionManagement>
