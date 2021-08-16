@@ -5,12 +5,13 @@ import net.anweisen.cloud.base.module.ModuleManager;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.DriverEnvironment;
 import net.anweisen.cloud.driver.console.Console;
+import net.anweisen.cloud.driver.network.SocketChannel;
+import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket;
+import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.PublishType;
+import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.utilities.common.logging.ILogger;
-import net.anweisen.utilities.common.misc.FileUtils;
 
 import javax.annotation.Nonnull;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -31,6 +32,10 @@ public abstract class CloudBase extends CloudDriver {
 
 		console.close();
 
+	}
+
+	public void publishUpdate(@Nonnull PublishType publishType, @Nonnull ServiceInfo serviceInfo, @Nonnull SocketChannel... skipChannels) {
+		getSocketComponent().sendPacket(new ServiceInfoPublishPacket(publishType, serviceInfo), skipChannels);
 	}
 
 	@Nonnull
