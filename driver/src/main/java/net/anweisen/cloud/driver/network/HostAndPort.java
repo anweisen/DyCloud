@@ -73,6 +73,12 @@ public final class HostAndPort implements SerializableObject {
 	}
 
 	@Nonnull
+	@CheckReturnValue
+	public InetSocketAddress toInetSocketAddress() {
+		return new InetSocketAddress(host, port);
+	}
+
+	@Nonnull
 	public String getHost() {
 		return host;
 	}
@@ -109,5 +115,21 @@ public final class HostAndPort implements SerializableObject {
 	@Override
 	public int hashCode() {
 		return Objects.hash(host, port);
+	}
+
+	@Nonnull
+	@Override
+	public HostAndPort clone() {
+		return new HostAndPort(host, port);
+	}
+
+	@Nonnull
+	public HostAndPort withPort(int port) {
+		return new HostAndPort(host, port);
+	}
+
+	@Nonnull
+	public HostAndPort withHost(@Nonnull String host) {
+		return new HostAndPort(host, port);
 	}
 }
