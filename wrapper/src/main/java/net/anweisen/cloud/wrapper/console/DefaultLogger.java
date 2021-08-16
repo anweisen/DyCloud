@@ -36,7 +36,7 @@ public class DefaultLogger implements ILogger {
 			.append(" ");
 		SpacePadder.leftPad(format, Thread.currentThread().getName(), 18);
 		format.append("] ");
-		SpacePadder.rightPad(format, level.getUpperCaseName() + ":", 9);
+		SpacePadder.rightPad(format, level.getUpperCaseName() + ":", 10);
 		format.append(FallbackLogger.formatMessage(message, args));
 
 		Throwable ex = null;

@@ -44,13 +44,15 @@ public class ConsoleLogger implements ILogger {
 			.append(dateFormat.format(Date.from(Instant.now())))
 			.append(" ");
 
-		SpacePadder.leftPad(format, Thread.currentThread().getName(), 18);
+		String name = Thread.currentThread().getName();
+		if (name.length() > 18) name = name.substring(name.length() - 18);
+		SpacePadder.leftPad(format, name, 18);
 
 		format.append(ConsoleColor.DARK_GRAY)
 			.append("] ")
 			.append(level.isColorized() ? ConsoleColor.RED : ConsoleColor.GRAY);
 
-		SpacePadder.rightPad(format, level.getUpperCaseName() + ConsoleColor.DARK_GRAY + ":", 9 + (ConsoleColor.DARK_GRAY + ":").length());
+		SpacePadder.rightPad(format, level.getUpperCaseName() + ConsoleColor.DARK_GRAY + ":", 10 + ConsoleColor.DARK_GRAY.toString().length());
 
 		format.append(level.isColorized() ? ConsoleColor.YELLOW : ConsoleColor.DEFAULT)
 			.append(FallbackLogger.formatMessage(message, args));
