@@ -2,6 +2,7 @@ package net.anweisen.cloud.driver.network.handler;
 
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.event.network.PacketReceiveEvent;
+import net.anweisen.cloud.driver.event.network.SocketChannelCloseEvent;
 import net.anweisen.cloud.driver.event.network.SocketChannelConnectEvent;
 import net.anweisen.cloud.driver.network.InternalQueryResponseManager;
 import net.anweisen.cloud.driver.network.SocketChannel;
@@ -30,7 +31,6 @@ public class SocketChannelClientHandler implements SocketChannelHandler {
 		}
 
 		driver.getLogger().info("Channel[client={} server={}] to network was successfully created", channel.getClientAddress(), channel.getServerAddress());
-
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class SocketChannelClientHandler implements SocketChannelHandler {
 	public void handleChannelClose(@Nonnull SocketChannel channel) throws Exception {
 		CloudDriver driver = CloudDriver.getInstance();
 
-		driver.getEventManager().callEvent(new SocketChannelConnectEvent(channel));
+		driver.getEventManager().callEvent(new SocketChannelCloseEvent(channel));
 		driver.getLogger().info("Channel[client={} server={}] to network was closed", channel.getClientAddress(), channel.getServerAddress());
 	}
 }
