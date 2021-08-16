@@ -34,11 +34,11 @@ I would recommend you to use one of the **following cloud systems**:
 ✔️ | Master TemplateStorage -> Download
 ✔️ | Docker: Wrapper Setup
 🚧 | Service Start / Stop
-🚧 | Wrapper Authentication
+✔️ | Wrapper Authentication
 ❌ | Proper Docker Connection (Not Legacy)
 ❌ | Node Information Cycle & Timeout
-🚧 | ServiceInfo publish
-❌ | Basic Service Events
+✔️ | ServiceInfo publish
+🚧 | Basic Service Events
 ❌ | Service auto start (minCount & maxCount)
 🚧 | Shutdown mechanism
 ❌ | Template Cache
@@ -48,8 +48,8 @@ I would recommend you to use one of the **following cloud systems**:
 ❌ | Lobby Balancing
 ✔️ | Remote Database API
 ❌ | Messenger System for Modules
-❌ | Bukkit Bridge
-❌ | Implement all driver functions for wrapper & node (remote)
+🚧 | Bukkit Bridge
+🚧 | Implement all driver functions for wrapper & node (remote)
 ❌ | Wrapper & Node to Master Logging
 ❌ | Player Executor
 ❌ | Permission System
