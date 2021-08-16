@@ -6,6 +6,7 @@ import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.util.ByteProcessor;
 import net.anweisen.cloud.driver.network.netty.NettyUtils;
+import net.anweisen.utilities.common.collection.WrappedException;
 import net.anweisen.utilities.common.config.Document;
 
 import javax.annotation.Nonnull;
@@ -262,9 +263,8 @@ public class DefaultBuffer extends Buffer {
 	@Nonnull
 	public Buffer writeOptionalDocument(@Nullable Document document) {
 		this.writeBoolean(document != null);
-		if (document != null) {
+		if (document != null)
 			this.writeDocument(document);
-		}
 		return this;
 	}
 
@@ -272,10 +272,12 @@ public class DefaultBuffer extends Buffer {
 	@Override
 	public <T extends SerializableObject> T readObject(@Nonnull Class<T> objectClass) {
 		try {
-			T t = objectClass.getDeclaredConstructor().newInstance();
+			Constructor<T> constructor = objectClass.getDeclaredConstructor();
+			constructor.setAccessible(true);
+			T t = constructor.newInstance();
 			return this.readObject(t);
 		} catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
-			throw new Error(ex);
+			throw new WrappedException(ex);
 		}
 	}
 
@@ -321,11 +323,12 @@ public class DefaultBuffer extends Buffer {
 
 		try {
 			Constructor<T> constructor = objectClass.getDeclaredConstructor();
+			constructor.setAccessible(true);
 			for (int i = 0; i < size; i++) {
 				result.add(this.readObject(constructor.newInstance()));
 			}
 		} catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException ex) {
-			throw new Error(ex);
+			throw new WrappedException(ex);
 		}
 
 		return result;
