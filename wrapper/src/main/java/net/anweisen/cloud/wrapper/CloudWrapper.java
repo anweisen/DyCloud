@@ -71,6 +71,7 @@ public final class CloudWrapper extends CloudDriver {
 
 		socketClient = new NettySocketClient(SocketChannelClientHandler::new);
 
+		loadNetworkListeners(socketClient.getListenerRegistry());
 		connectAndAwaitAuthentication();
 
 		try {
@@ -110,6 +111,13 @@ public final class CloudWrapper extends CloudDriver {
 
 		logger.debug("Network authentication was successful");
 
+	}
+
+	private void loadNetworkListeners(@Nonnull PacketListenerRegistry registry) {
+		logger.info("Registering network listeners..");
+
+		registry.addListener(PacketConstants.PUBLISH_CONFIG_CHANNEL, new PublishConfigListener());
+		registry.addListener(PacketConstants.SERVICE_INFO_PUBLISH_CHANNEL, new ServiceInfoUpdateListener());
 	}
 
 	private void sendAuthentication() {
