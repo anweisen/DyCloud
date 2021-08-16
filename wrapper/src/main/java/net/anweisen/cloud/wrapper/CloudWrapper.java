@@ -220,6 +220,17 @@ public final class CloudWrapper extends CloudDriver {
 	}
 
 	@Nonnull
+	private Attributes getManifestAttributes(@Nonnull Path applicationFile) {
+		try (JarFile jarFile = new JarFile(applicationFile.toFile())) {
+			Manifest manifest = jarFile.getManifest();
+			if (manifest == null) throw new IllegalStateException("Manifest is null");
+			return manifest.getMainAttributes();
+		} catch (Exception ex) {
+			throw new WrappedException("Unable to extract manifest attributes from jarfile", ex);
+		}
+	}
+
+	@Nonnull
 	public Instrumentation getInstrumentation() {
 		return instrumentation;
 	}
