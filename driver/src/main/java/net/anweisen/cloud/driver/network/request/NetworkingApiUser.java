@@ -1,5 +1,6 @@
 package net.anweisen.cloud.driver.network.request;
 
+import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.chunk.ChunkedQueryResponse;
@@ -23,7 +24,9 @@ import java.util.function.Consumer;
 public interface NetworkingApiUser {
 
 	@Nonnull
-	SocketChannel getChannel();
+	default SocketChannel getChannel() {
+		return CloudDriver.getInstance().getSocketComponent().getFirstChannel();
+	}
 
 	@Nonnull
 	default Task<Packet> sendRequest(@Nonnull RequestType requestType, @Nullable Consumer<? super Buffer> modifier) {
