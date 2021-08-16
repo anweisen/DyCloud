@@ -85,7 +85,7 @@ public class DefaultModuleManager implements ModuleManager, LoggingApiUser {
 				module.initModule();
 			} catch (Throwable ex) {
 				modules.remove(module);
-				error("An error occurred while initializing {}", module.getModuleConfig());
+				error("An error occurred while initializing {}", module.getModuleConfig(), ex);
 			}
 		}
 
