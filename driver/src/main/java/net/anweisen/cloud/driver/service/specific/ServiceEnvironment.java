@@ -8,25 +8,32 @@ import javax.annotation.Nonnull;
  */
 public enum ServiceEnvironment {
 
-	MINECRAFT   (ServiceType.SERVER,    "server.properties"),
-	BUKKIT      (ServiceType.SERVER,    "server.properties", "bukkit.yml"),
-	SPIGOT      (ServiceType.SERVER,    "server.properties", "bukkit.yml", "spigot.yml"),
-	PAPER       (ServiceType.SERVER,    "server.properties", "bukkit.yml", "spigot.yml", "paper.yml"),
-	GLOWSTONE   (ServiceType.SERVER,    "server.properties", "glowstone.yml"),
-	BUNGEECORD  (ServiceType.PROXY,     "config.yml"),
-	VELOCITY    (ServiceType.PROXY,     "velocity.toml");
+	MINECRAFT   (ServiceType.SERVER,    "plugins",  "server.properties"),
+	BUKKIT      (ServiceType.SERVER,    "plugins",  "server.properties", "bukkit.yml"),
+	SPIGOT      (ServiceType.SERVER,    "plugins",  "server.properties", "bukkit.yml", "spigot.yml"),
+	PAPER       (ServiceType.SERVER,    "plugins",  "server.properties", "bukkit.yml", "spigot.yml", "paper.yml"),
+	GLOWSTONE   (ServiceType.SERVER,    "plugins",  "server.properties", "glowstone.yml"),
+	BUNGEECORD  (ServiceType.PROXY,     "plugins",  "config.yml"),
+	VELOCITY    (ServiceType.PROXY,     "plugins",  "velocity.toml");
 
 	private final ServiceType serviceType;
+	private final String pluginsFolder;
 	private final String[] defaultConfig;
 
-	ServiceEnvironment(@Nonnull ServiceType serviceType, @Nonnull String... configs) {
+	ServiceEnvironment(@Nonnull ServiceType serviceType, @Nonnull String pluginsFolder, @Nonnull String... configs) {
 		this.serviceType = serviceType;
+		this.pluginsFolder = pluginsFolder;
 		this.defaultConfig = configs;
 	}
 
 	@Nonnull
 	public ServiceType getServiceType() {
 		return serviceType;
+	}
+
+	@Nonnull
+	public String getPluginsFolder() {
+		return pluginsFolder;
 	}
 
 	@Nonnull
