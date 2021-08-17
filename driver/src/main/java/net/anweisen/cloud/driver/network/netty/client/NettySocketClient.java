@@ -13,6 +13,7 @@ import net.anweisen.cloud.driver.network.handler.SocketChannelHandler;
 import net.anweisen.cloud.driver.network.netty.NettyUtils;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.function.Supplier;
 
@@ -31,12 +32,13 @@ public class NettySocketClient extends DefaultSocketComponent implements SocketC
 	}
 
 	@Override
-	public void connect(@Nonnull HostAndPort address) {
+	public void connect(@Nonnull HostAndPort address, @Nullable String localAddress) {
 		Preconditions.checkNotNull(address, "Address cannot be null");
 
 		try {
 			new Bootstrap()
-				.group(this.eventLoopGroup)
+				.localAddress(localAddress == null ? null : HostAndPort.create(localAddress, 0).toInetSocketAddress())
+				.group(eventLoopGroup)
 				.option(ChannelOption.AUTO_READ, true)
 				.option(ChannelOption.IP_TOS, 24)
 				.option(ChannelOption.TCP_NODELAY, true)
