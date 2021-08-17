@@ -15,6 +15,7 @@ import net.anweisen.cloud.driver.service.ServiceFactory;
 import net.anweisen.cloud.driver.service.ServiceManager;
 import net.anweisen.cloud.driver.service.config.ServiceConfigManager;
 import net.anweisen.cloud.driver.service.specific.ServiceEnvironment;
+import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.wrapper.config.WrapperConfig;
 import net.anweisen.cloud.wrapper.listeners.AuthenticationResponseListener;
 import net.anweisen.utilities.common.logging.ILogger;
@@ -57,6 +58,7 @@ public final class CloudWrapper extends CloudDriver {
 	private ClassLoader applicationClassLoader;
 
 	private SocketClient socketClient;
+	private ServiceInfo serviceInfo;
 
 	CloudWrapper(@Nonnull ILogger logger, @Nonnull List<String> commandlineArguments, @Nonnull Instrumentation instrumentation) {
 		super(logger, DriverEnvironment.WRAPPER);
@@ -68,6 +70,10 @@ public final class CloudWrapper extends CloudDriver {
 
 	public synchronized void start() throws Exception {
 		logger.info("Launching the CloudWrapper..");
+
+		logger.debug("Loading wrapper configuration..");
+		config.load();
+		serviceInfo = config.getServiceInfo();
 
 		socketClient = new NettySocketClient(SocketChannelClientHandler::new);
 
@@ -121,9 +127,9 @@ public final class CloudWrapper extends CloudDriver {
 	}
 
 	private void sendAuthentication() {
-		logger.debug("Sending authentication to master.. Service: '{}'", config.getName());
+		logger.debug("Sending authentication to master.. Service: '{}'", serviceInfo.getName());
 		socketClient.sendPacket(new AuthenticationPacket(AuthenticationType.SERVICE, buffer -> {
-			buffer.writeUUID(config.getIdentity()).writeString(config.getName());
+			buffer.writeUUID(config.getIdentity()).writeString(serviceInfo.getName());
 		}));
 	}
 
@@ -318,7 +324,13 @@ public final class CloudWrapper extends CloudDriver {
 	@Nonnull
 	@Override
 	public String getComponentName() {
-		return config.getName();
+		return serviceInfo.getName();
+	}
+
+	@Nonnull
+	public ServiceInfo getServiceInfo() {
+		return serviceInfo;
+	}
 
 	private static CloudWrapper instance;
 
