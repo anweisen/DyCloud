@@ -28,7 +28,7 @@ public final class ServiceTask implements SerializableObject {
 	private int fallbackPriority;
 	private String permission;
 
-	private int maxMemory;
+	private int memoryLimit;
 
 	private int minCount;
 	private int maxCount;
@@ -47,7 +47,7 @@ public final class ServiceTask implements SerializableObject {
 		buffer.writeBoolean(fallback);
 		buffer.writeInt(fallbackPriority);
 		buffer.writeOptionalString(permission);
-		buffer.writeInt(maxMemory);
+		buffer.writeInt(memoryLimit);
 		buffer.writeInt(minCount);
 		buffer.writeInt(maxCount);
 		buffer.writeStringCollection(nodes);
@@ -62,7 +62,7 @@ public final class ServiceTask implements SerializableObject {
 		fallback = buffer.readBoolean();
 		fallbackPriority = buffer.readInt();
 		permission = buffer.readOptionalString();
-		maxMemory = buffer.readInt();
+		memoryLimit = buffer.readInt();
 		minCount = buffer.readInt();
 		maxCount = buffer.readInt();
 		nodes = buffer.readStringCollection();
@@ -116,8 +116,8 @@ public final class ServiceTask implements SerializableObject {
 		return javaVersion;
 	}
 
-	public int getMaxMemory() {
-		return maxMemory;
+	public int getMemoryLimit() {
+		return memoryLimit;
 	}
 
 	@Nonnull
@@ -127,8 +127,8 @@ public final class ServiceTask implements SerializableObject {
 
 	@Override
 	public String toString() {
-		return "ServiceTask[name=" + name + " environment=" + environment + " javaVersion=" + javaVersion + " memory=" + maxMemory + "MB "
-			+ "fallback=" + fallback + (fallback ? "@" + fallbackPriority : "") + " minCount=" + minCount + " maxCount=" + maxCount + " nodes=" + nodes
+		return "ServiceTask[name=" + name + " environment=" + environment + " javaVersion=" + javaVersion + " memory=" + (memoryLimit < 1 ? "unlimited" : memoryLimit + "MB")
+			+ " fallback=" + fallback + (fallback ? "@" + fallbackPriority : "") + " minCount=" + minCount + " maxCount=" + maxCount + " nodes=" + nodes
 			+ " templates=" + templates.stream().map(ServiceTemplate::toShortString).collect(Collectors.joining()) + "]";
 	}
 
@@ -140,7 +140,7 @@ public final class ServiceTask implements SerializableObject {
 		return javaVersion == task.javaVersion
 			&& fallback == task.fallback
 			&& fallbackPriority == task.fallbackPriority
-			&& maxMemory == task.maxMemory
+			&& memoryLimit == task.memoryLimit
 			&& minCount == task.minCount
 			&& maxCount == task.maxCount
 			&& environment == task.environment
@@ -152,6 +152,6 @@ public final class ServiceTask implements SerializableObject {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(name, environment, javaVersion, fallback, fallbackPriority, permission, maxMemory, minCount, maxCount, nodes, templates);
+		return Objects.hash(name, environment, javaVersion, fallback, fallbackPriority, permission, memoryLimit, minCount, maxCount, nodes, templates);
 	}
 }
