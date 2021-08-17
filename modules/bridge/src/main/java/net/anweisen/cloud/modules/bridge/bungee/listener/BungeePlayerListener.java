@@ -50,6 +50,7 @@ public class BungeePlayerListener implements Listener, LoggingApiUser {
 	@EventHandler
 	public void onServerSwitch(@Nonnull ServerSwitchEvent event) {
 
+		if (event.getFrom() == null) return;
 		ServiceInfo from = BridgeHelper.getCachedService(event.getFrom().getName());
 		ServiceInfo to = BridgeHelper.getCachedService(event.getPlayer().getServer().getInfo().getName());
 		if (from != null && to != null) {
