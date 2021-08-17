@@ -65,7 +65,7 @@ public final class CloudWrapper extends CloudDriver {
 
 	private final Thread mainThread = Thread.currentThread();
 	private Thread applicationThread;
-
+	private Path applicationFile;
 	private ClassLoader applicationClassLoader;
 
 	private SocketClient socketClient;
@@ -149,7 +149,7 @@ public final class CloudWrapper extends CloudDriver {
 		String applicationFileName = commandlineArguments.remove(0);
 		logger.debug("Using '{}' as application file..", applicationFileName);
 
-		Path applicationFile = Paths.get(applicationFileName);
+		applicationFile = Paths.get(applicationFileName);
 		if (Files.notExists(applicationFile)) throw new IllegalStateException("Application file " + applicationFileName + " does not exist");
 		URL applicationFileUrl = applicationFile.toUri().toURL();
 
@@ -289,6 +289,11 @@ public final class CloudWrapper extends CloudDriver {
 	@Nonnull
 	public Thread getMainThread() {
 		return mainThread;
+	}
+
+	@Nonnull
+	public Path getApplicationFile() {
+		return applicationFile;
 	}
 
 	@Nonnull
