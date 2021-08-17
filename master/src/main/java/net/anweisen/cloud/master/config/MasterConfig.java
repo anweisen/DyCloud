@@ -44,6 +44,7 @@ public class MasterConfig {
 			document.set("database.type", "sqlite")
 					.set("database.config.file", "database.db")
 					.set("database.config.host", "127.0.0.1")
+					.set("database.config.port", 23764587)
 					.set("database.config.database", "cloud")
 					.set("database.config.auth-database", "admin")
 					.set("database.config.user", "root")
