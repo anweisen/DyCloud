@@ -33,7 +33,7 @@ import java.util.concurrent.*;
 public final class NettyUtils {
 
 	private static final ThreadFactory EVENT_LOOP_THREAD_FACTORY = new NamedThreadFactory("EventLoopGroup");
-	private static final RejectedExecutionHandler DEFAULT_REJECT_HANDLER = new ThreadPoolExecutor.CallerRunsPolicy();
+	private static final RejectedExecutionHandler DEFAULT_REJECTED_HANDLER = new ThreadPoolExecutor.CallerRunsPolicy();
 
 	static {
 		// use jdk logger to prevent issues with older slf4j versions
@@ -43,6 +43,12 @@ public final class NettyUtils {
 		// may be useful for debugging of the network
 		if (System.getProperty("io.netty.leakDetection.level") == null) {
 			ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.DISABLED);
+		}
+
+		if (KQueue.isAvailable()) {
+			CloudDriver.getInstance().getLogger().info("KQueue is available, utilising it..");
+		} else if (Epoll.isAvailable()) {
+			CloudDriver.getInstance().getLogger().info("Epoll is available, utilising it..");
 		}
 	}
 
@@ -68,7 +74,7 @@ public final class NettyUtils {
 			TimeUnit.SECONDS,
 			new SynchronousQueue<>(true),
 			new NamedThreadFactory("PacketDispatcher"),
-			DEFAULT_REJECT_HANDLER
+			DEFAULT_REJECTED_HANDLER
 		);
 	}
 
