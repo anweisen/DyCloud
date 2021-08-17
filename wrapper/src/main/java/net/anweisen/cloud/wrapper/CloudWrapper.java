@@ -58,10 +58,12 @@ public final class CloudWrapper extends CloudDriver {
 
 	private final WrapperConfig config = new WrapperConfig();
 
-	private final DatabaseManager databaseManager = new RemoteDatabaseManager();
 	private final List<String> commandlineArguments;
 	private final Instrumentation instrumentation;
 
+	private final DatabaseManager databaseManager;
+	private final ServiceManager serviceManager;
+	private final ServiceConfigManager serviceConfigManager;
 
 	private final Thread mainThread = Thread.currentThread();
 	private Thread applicationThread;
@@ -77,6 +79,10 @@ public final class CloudWrapper extends CloudDriver {
 
 		this.commandlineArguments = commandlineArguments;
 		this.instrumentation = instrumentation;
+
+		databaseManager = new RemoteDatabaseManager();
+		serviceManager = new RemoteServiceManager();
+		serviceConfigManager = new RemoteServiceConfigManager();
 	}
 
 	public synchronized void start() throws Exception {
@@ -316,7 +322,7 @@ public final class CloudWrapper extends CloudDriver {
 	@Nonnull
 	@Override
 	public ServiceConfigManager getServiceConfigManager() {
-		return null;
+		return serviceConfigManager;
 	}
 
 	@Nonnull
@@ -328,12 +334,18 @@ public final class CloudWrapper extends CloudDriver {
 	@Nonnull
 	@Override
 	public ServiceManager getServiceManager() {
-		return null;
+		return serviceManager;
 	}
 
 	@Nonnull
 	@Override
 	public NodeManager getNodeManager() {
+		return null;
+	}
+
+	@Nonnull
+	@Override
+	public PlayerManager getPlayerManager() {
 		return null;
 	}
 
