@@ -1,5 +1,6 @@
 package net.anweisen.cloud.driver.database.remote;
 
+import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.database.DatabaseManager;
 import net.anweisen.utilities.database.Database;
 
@@ -11,12 +12,18 @@ import javax.annotation.Nonnull;
  */
 public class RemoteDatabaseManager implements DatabaseManager {
 
-	private final Database database = new RemoteDatabase();
+	private Database database = new RemoteDatabase();
 
 	@Nonnull
 	@Override
 	public Database getDatabase() {
 		return database;
+	}
+
+	@Override
+	public void setDatabase(@Nonnull Database database) {
+		Preconditions.checkNotNull(database, "Database cannot be null");
+		this.database = database;
 	}
 
 }

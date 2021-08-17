@@ -14,6 +14,8 @@ public interface DatabaseManager {
 	@Nonnull
 	Database getDatabase();
 
+	void setDatabase(@Nonnull Database database);
+
 	@Nonnull
 	default SpecificDatabase getDatabase(@Nonnull String name) {
 		return getDatabase().getSpecificDatabase(name);
