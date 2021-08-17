@@ -5,6 +5,7 @@ import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
 import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket.AuthenticationType;
 import net.anweisen.cloud.driver.network.packet.def.ConfigInitPacket;
+import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.PublishType;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.node.NodeInfo;
 import net.anweisen.cloud.master.CloudMaster;
@@ -22,14 +23,9 @@ import java.util.UUID;
  */
 public class AuthenticationListener implements PacketListener {
 
-	private final CloudMaster cloud;
-
-	public AuthenticationListener(@Nonnull CloudMaster cloud) {
-		this.cloud = cloud;
-	}
-
 	@Override
 	public void handlePacket(@Nonnull SocketChannel channel, @Nonnull Packet packet) throws Exception {
+		CloudMaster cloud = CloudMaster.getInstance();
 
 		Buffer buffer = packet.getBuffer();
 
@@ -37,7 +33,7 @@ public class AuthenticationListener implements PacketListener {
 		UUID identity = buffer.readUUID();
 		String name = buffer.readString();
 
-		cloud.getLogger().trace("Received authentication from {}: type={}, name={}", channel, type, name);
+		cloud.getLogger().debug("Received authentication from {}: type={}, name={}", channel, type, name);
 
 		if (!cloud.getConfig().getIdentity().equals(identity)) {
 			cloud.getLogger().info("Authentication for node {} with identity {} was rejected: {}", name, identity, channel);
@@ -49,7 +45,7 @@ public class AuthenticationListener implements PacketListener {
 		switch (type) {
 
 			case NODE: {
-				if (cloud.getNodeManager().getNodeInfos().stream().anyMatch(info -> info.getName().equalsIgnoreCase(name))) {
+				if (cloud.getNodeManager().getNodeInfos().stream().anyMatch(info -> info.getAddress().equals(channel.getClientAddress()))) {
 					cloud.getLogger().warn("{} tried to authenticate again with node name '{}'", channel, name);
 					channel.sendPacket(new NetworkAuthResponsePacket(false, "node address already registered"));
 					return;
@@ -70,7 +66,9 @@ public class AuthenticationListener implements PacketListener {
 				channel.sendPacket(ConfigInitPacket.create());
 
 				// TODO
-				Thread.sleep(3000);
+				Thread.sleep(500);
+				cloud.getServiceFactory().createService(cloud.getServiceConfigManager().getTask("Lobby"));
+				cloud.getServiceFactory().createService(cloud.getServiceConfigManager().getTask("Lobby"));
 				cloud.getServiceFactory().createService(cloud.getServiceConfigManager().getTask("Proxy"));
 
 				return;
@@ -86,9 +84,12 @@ public class AuthenticationListener implements PacketListener {
 				}
 
 				service.setChannel(channel);
+				cloud.publishUpdate(PublishType.CONNECTED, service.getInfo());
+				cloud.getServiceManager().handleServiceUpdate(PublishType.CONNECTED, service.getInfo());
 
 				cloud.getLogger().info("Service '{}' has connected successfully", name);
 				channel.sendPacket(new NetworkAuthResponsePacket(true, "successful"));
+				channel.sendPacket(ConfigInitPacket.create());
 
 				return;
 			}

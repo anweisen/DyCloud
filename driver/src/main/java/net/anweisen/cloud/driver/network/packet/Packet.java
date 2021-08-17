@@ -112,10 +112,6 @@ public class Packet {
 		return this.creationMillis;
 	}
 
-	public boolean isShowDebug() {
-		return true;
-	}
-
 	@Override
 	public String toString() {
 		return "Packet[channel=" + channel + " uuid=" + uniqueId + " header=" + header.toJson() + " buffer=" + (body != null ? body.readableBytes() : 0) + "]";

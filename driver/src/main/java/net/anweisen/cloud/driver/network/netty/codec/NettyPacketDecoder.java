@@ -41,9 +41,9 @@ public final class NettyPacketDecoder extends ByteToMessageDecoder {
 	}
 
 	protected void showDebug(@Nonnull Packet packet) {
-		if (packet.isShowDebug() && CloudDriver.getInstance() != null && CloudDriver.getInstance().getLogger().isLevelEnabled(LogLevel.DEBUG)) {
+		if (CloudDriver.getInstance() != null && CloudDriver.getInstance().getLogger().isLevelEnabled(LogLevel.DEBUG)) {
 			CloudDriver.getInstance().getLogger().trace(
-					"Successfully decoded packet on channel {} with id {}, header={};body={}",
+					"Successfully decoded packet on channel {} with id={} header={} body={}",
 					packet.getChannel(),
 					packet.getUniqueId(),
 					packet.getHeader().toJson(),

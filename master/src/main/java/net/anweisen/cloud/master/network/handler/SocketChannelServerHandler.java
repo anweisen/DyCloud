@@ -30,6 +30,7 @@ public class SocketChannelServerHandler implements SocketChannelHandler {
 		cloud.getLogger().debug("Currently there {} {} channel{} connected to this socket", cloud.getSocketComponent().getChannels().size() == 1 ? "is" : "are", cloud.getSocketComponent().getChannels().size(), cloud.getSocketComponent().getChannels().size() == 1 ? "" : "s");
 
 		if (!inWhitelist(channel)) {
+			cloud.getLogger().info("{} is not in the ip whitelist {}! Closing channel..", channel.getClientAddress().getHost(), cloud.getConfig().getIpWhitelist());
 			try {
 				channel.close();
 			} catch (Exception ex) {
@@ -40,6 +41,7 @@ public class SocketChannelServerHandler implements SocketChannelHandler {
 
 		SocketChannelConnectEvent event = cloud.getEventManager().callEvent(new SocketChannelConnectEvent(channel));
 		if (event.isCancelled()) {
+			cloud.getLogger().info("Connect event of {} was cancelled! Closing channel..", channel.getClientAddress());
 			try {
 				channel.close();
 			} catch (Exception ex) {
@@ -81,17 +83,14 @@ public class SocketChannelServerHandler implements SocketChannelHandler {
 		}
 
 		cloud.getLogger().warn("Channel[client={} server={}] was neither a node or service", channel.getClientAddress(), channel.getServerAddress());
-		cloud.getLogger().extended("Nodes: {}", cloud.getNodeManager().getNodeServers().stream().map(current -> current.getInfo().getName() + " | " + current.getChannel()).collect(Collectors.joining("   ")));
-		cloud.getLogger().extended("Services: {}", cloud.getServiceManager().getServices().stream().map(current -> current.getInfo().getName() + " | " + current.getChannel()).collect(Collectors.joining("   ")));
+		cloud.getLogger().extended("Nodes:");
+		cloud.getNodeManager().getNodeServers().stream().map(current -> current.getInfo().getName() + " | " + current.getChannel()).forEach(line -> cloud.getLogger().extended("=> {}", line));
+		cloud.getLogger().extended("Services:");
+		cloud.getServiceManager().getServices().stream().map(current -> current.getInfo().getName() + " | " + current.getChannel()).forEach(line -> cloud.getLogger().extended("=> {}", line));
 	}
 
 	protected boolean inWhitelist(@Nonnull SocketChannel channel) {
-		for (String whitelistedIp : CloudMaster.getInstance().getConfig().getIpWhitelist()) {
-			if (channel.getClientAddress().getHost().equals(whitelistedIp))
-				return true;
-		}
-
-		return false;
+		return CloudMaster.getInstance().getConfig().getIpWhitelist().contains(channel.getClientAddress().getHost());
 	}
 
 }
