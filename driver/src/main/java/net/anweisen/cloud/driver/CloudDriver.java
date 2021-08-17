@@ -112,6 +112,10 @@ public abstract class CloudDriver {
 		return permissionManager;
 	}
 
+	public void setPermissionManager(@Nonnull PermissionManager manager) {
+		this.permissionManager = manager;
+	}
+
 	@Nonnull
 	public abstract String getComponentName();
 
