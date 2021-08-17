@@ -40,8 +40,6 @@ permissions:
   - bungeecord.command.end
   - bungeecord.command.ip
   - bungeecord.command.reload
-  - reportsystem.goto
-  - reportsystem.show
 servers:
   fallback:
     motd: '&7Just another Server &8| &c&lForced Host'
