@@ -20,6 +20,7 @@ public class NodeConfig {
 	private UUID identity;
 	private HostAndPort masterAddress;
 	private String dockerHost;
+	private String dockerNetworkMode;
 
 	public void load() {
 
@@ -37,9 +38,13 @@ public class NodeConfig {
 		if (masterAddress == null)
 			document.set("masterAddress", masterAddress = HostAndPort.localhost(DEFAULT_PORT));
 
-		dockerHost = document.getString("dockerHost");
+		dockerHost = document.getString("docker.host");
 		if (dockerHost == null)
-			document.set("dockerHost", dockerHost = "tcp://localhost:2375");
+			document.set("docker.host", dockerHost = "tcp://localhost:2375");
+
+		dockerNetworkMode = document.getString("docker.networkMode");
+		if (dockerNetworkMode == null)
+			document.set("docker.networkMode", dockerNetworkMode = "host");
 
 		document.save();
 	}
@@ -57,6 +62,11 @@ public class NodeConfig {
 	@Nonnull
 	public String getDockerHost() {
 		return dockerHost;
+	}
+
+	@Nonnull
+	public String getDockerNetworkMode() {
+		return dockerNetworkMode;
 	}
 
 	@Nonnull
