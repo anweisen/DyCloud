@@ -1,4 +1,4 @@
-name: Bridge
+name: Cloud-Bridge
 author: anweisen
 version: 1.0
-main: net.anweisen.cloud.bridge.bungee.BungeeCloudBridgePlugin
+main: net.anweisen.cloud.modules.bridge.bungee.BungeeCloudBridgePlugin
