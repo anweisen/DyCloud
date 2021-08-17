@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -20,7 +19,8 @@ public final class HeaderPrinter {
 
 	public static void printHeader(@Nonnull Console console, @Nonnull CloudDriver driver) {
 		InputStream stream = driver.getClass().getClassLoader().getResourceAsStream("header.txt");
-		try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(stream), StandardCharsets.UTF_8))) {
+		if (stream == null) return;
+		try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
 			String input;
 			while ((input = bufferedReader.readLine()) != null) {
 				console.writeLine(input);
