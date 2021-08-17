@@ -81,6 +81,10 @@ public final class CloudMaster extends CloudBase {
 		loadNetworkListeners(socketServer.getListenerRegistry());
 		initModules();
 
+		logger.info("Loading database..");
+		databaseManager.loadDatabase();
+		enableModules();
+
 		logger.info("The cloud master is ready and running!");
 
 	}
@@ -98,6 +102,9 @@ public final class CloudMaster extends CloudBase {
 	private void initModules() {
 		moduleManager.resolveModules();
 		moduleManager.loadModules();
+	}
+
+	private void enableModules() {
 		moduleManager.enableModules();
 	}
 
