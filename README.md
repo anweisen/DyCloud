@@ -16,9 +16,9 @@ I would recommend you to use one of the **following cloud systems**:
   - **base**
 	- **master**: Manager of the cloud, commander of nodes <br>
 	  			  *Maybe known as manager or base from other cloud systems*
-	- **node** (*semi remote*): Responsible for starting & stopping of services (minecraft servers, bungee proxies). <br>
+	- **node** (*semi remote*): Responsible for starting & stopping of services (minecraft servers, bungee proxies), connects to the master. <br>
 	            *Probably known as wrapper or slave from other cloud system*
-  - **wrapper** (*remote*): Runs on a service, connects to the master. <br>
+  - **wrapper** (*remote*): Runs a service, connects to the master. <br>
 				*Probably known as runner or bridge from other cloud systems*
 
 ## Progress
@@ -37,6 +37,7 @@ I would recommend you to use one of the **following cloud systems**:
 ✔️ | Wrapper Authentication
 ❌ | Proper Docker Connection (Not Legacy)
 ❌ | Node Information Cycle & Timeout
+❌ | Node Load Balancing
 ✔️ | ServiceInfo publish
 🚧 | Basic Service Events
 ❌ | Service auto start (minCount & maxCount)
@@ -52,6 +53,7 @@ I would recommend you to use one of the **following cloud systems**:
 🚧 | Implement all driver functions for wrapper & node (remote)
 ❌ | Wrapper & Node to Master Logging
 ❌ | Player Executor
+🚧 | Global Player Management
 ❌ | Permission System
 ❌ | Permission Chat & Tab Extension
 ✔️ | Module System (Master, Node?, Wrapper?)
