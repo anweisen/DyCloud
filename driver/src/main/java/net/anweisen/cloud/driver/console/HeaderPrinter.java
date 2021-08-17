@@ -25,8 +25,8 @@ public final class HeaderPrinter {
 			while ((input = bufferedReader.readLine()) != null) {
 				console.writeLine(input);
 			}
-		} catch (IOException exception) {
-			exception.printStackTrace();
+		} catch (IOException ex) {
+			ex.printStackTrace();
 		}
 	}
 
