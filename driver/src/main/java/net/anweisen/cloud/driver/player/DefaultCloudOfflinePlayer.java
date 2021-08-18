@@ -27,6 +27,7 @@ public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer {
 		this.uuid = uuid;
 		this.name = name;
 		this.lastNetworkConnection = lastNetworkConnection;
+		this.permissionData = permissionData;
 		this.firstLogin = firstLogin;
 		this.lastOnline = lastOnline;
 		this.properties = properties;

@@ -1,5 +1,6 @@
 package net.anweisen.cloud.driver.player.permission;
 
+import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.player.CloudOfflinePlayer;
 import net.anweisen.cloud.driver.player.permission.PermissionData.PlayerGroupData;
 
@@ -7,6 +8,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -35,15 +37,14 @@ public interface PermissionPlayer {
 	boolean hasPermissionDirectly(@Nonnull String permission);
 
 	default boolean hasPermission(@Nonnull String permission) {
-		if (hasPermissionDirectly(permission))
+		if (hasPermissionDirectly(permission) || hasPermissionDirectly("*"))
 			return true;
 
-		for (PermissionGroup group : getGroups()) {
-			if (group.hasPermission(permission))
-				return true;
-		}
+		PermissionGroup highestGroup = getHighestGroup();
+		if (highestGroup == null)
+			return false;
 
-		return true;
+		return highestGroup.hasPermission(permission);
 	}
 
 	boolean testGroups();
@@ -56,6 +57,11 @@ public interface PermissionPlayer {
 
 	@Nullable
 	PermissionGroup getHighestGroup();
+
+	@Nonnull
+	default Optional<PermissionGroup> getHighestGroupOptional() {
+		return Optional.ofNullable(getHighestGroup());
+	}
 
 	void addGroup(@Nonnull String name);
 

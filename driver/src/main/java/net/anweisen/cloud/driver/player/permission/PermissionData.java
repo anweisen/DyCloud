@@ -39,6 +39,9 @@ public final class PermissionData {
 		private String name;
 		private long timeout;
 
+		private PlayerGroupData() {
+		}
+
 		public PlayerGroupData(@Nonnull String name, long timeout) {
 			this.name = name;
 			this.timeout = timeout;

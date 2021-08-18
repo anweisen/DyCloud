@@ -81,7 +81,7 @@ public class DefaultPermissionPlayer implements PermissionPlayer {
 		if (testGroups())
 			save();
 
-		return player.getStoredPermissionData().getGroups();
+		return Collections.unmodifiableCollection(player.getStoredPermissionData().getGroups());
 	}
 
 	@Nonnull
@@ -101,7 +101,7 @@ public class DefaultPermissionPlayer implements PermissionPlayer {
 	@Nullable
 	@Override
 	public PermissionGroup getHighestGroup() {
-		return streamGroups().max(Comparator.comparingInt(PermissionGroup::getSortId)).orElse(null);
+		return streamGroups().max(Comparator.comparingInt(PermissionGroup::getSortId)).orElse(CloudDriver.getInstance().getPermissionManager().getDefaultGroup());
 	}
 
 	@Override

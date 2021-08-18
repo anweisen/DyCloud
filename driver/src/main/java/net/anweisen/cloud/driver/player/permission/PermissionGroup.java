@@ -62,6 +62,8 @@ public interface PermissionGroup {
 
 	void removePermission(@Nonnull String permission);
 
+	boolean hasPermissionDirectly(@Nonnull String permission);
+
 	@Nonnull
 	Collection<String> getDeniedPermissions();
 
@@ -69,8 +71,10 @@ public interface PermissionGroup {
 
 	void removeDeniedPermission(@Nonnull String permission);
 
+	boolean hasDeniedPermissions(@Nonnull String permission);
+
 	default boolean hasPermission(@Nonnull String permission) {
-		if (getDeniedPermissions().contains(permission))
+		if (hasDeniedPermissions(permission))
 			return false;
 
 		Collection<PermissionGroup> groups = findInheritedGroups();

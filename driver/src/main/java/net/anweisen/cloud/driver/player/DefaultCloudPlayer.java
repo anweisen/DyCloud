@@ -2,6 +2,7 @@ package net.anweisen.cloud.driver.player;
 
 import net.anweisen.cloud.driver.network.HostAndPort;
 import net.anweisen.cloud.driver.player.data.PlayerNetworkProxyConnection;
+import net.anweisen.cloud.driver.player.permission.PermissionData;
 import net.anweisen.utilities.common.config.Document;
 
 import javax.annotation.Nonnull;
@@ -44,6 +45,12 @@ public class DefaultCloudPlayer implements CloudPlayer {
 	@Override
 	public PlayerNetworkProxyConnection getLastNetworkConnection() {
 		return offlinePlayer.getLastNetworkConnection();
+	}
+
+	@Nonnull
+	@Override
+	public PermissionData getStoredPermissionData() {
+		return offlinePlayer.getStoredPermissionData();
 	}
 
 	@Override

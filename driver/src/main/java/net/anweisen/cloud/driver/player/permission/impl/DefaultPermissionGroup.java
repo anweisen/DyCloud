@@ -113,6 +113,11 @@ public class DefaultPermissionGroup implements PermissionGroup {
 		permissions.remove(permission);
 	}
 
+	@Override
+	public boolean hasPermissionDirectly(@Nonnull String permission) {
+		return permissions.contains(permission);
+	}
+
 	@Nonnull
 	@Override
 	public Collection<String> getDeniedPermissions() {
@@ -130,6 +135,11 @@ public class DefaultPermissionGroup implements PermissionGroup {
 	}
 
 	@Override
+	public boolean hasDeniedPermissions(@Nonnull String permission) {
+		return deniedPermissions.contains(permission);
+	}
+
+	@Override
 	public void save() {
 		try {
 			Document.of(this).saveToFile(CloudPermissionManager.directory.resolve(name + ".json"));
@@ -140,7 +150,7 @@ public class DefaultPermissionGroup implements PermissionGroup {
 
 	@Override
 	public String toString() {
-		return "PermissionGroup[name=" + name + " sortId=" + sortId + "defaultGroup=" + defaultGroup + "]";
+		return "PermissionGroup[name=" + name + " sortId=" + sortId + " defaultGroup=" + defaultGroup + "]";
 	}
 
 	@Override
