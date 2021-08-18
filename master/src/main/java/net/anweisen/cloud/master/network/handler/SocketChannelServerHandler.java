@@ -14,7 +14,6 @@ import net.anweisen.cloud.master.node.NodeServer;
 import net.anweisen.cloud.master.service.specific.CloudService;
 
 import javax.annotation.Nonnull;
-import java.util.stream.Collectors;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -90,7 +89,16 @@ public class SocketChannelServerHandler implements SocketChannelHandler {
 	}
 
 	protected boolean inWhitelist(@Nonnull SocketChannel channel) {
-		return CloudMaster.getInstance().getConfig().getIpWhitelist().contains(channel.getClientAddress().getHost());
+		String ipAddress = channel.getClientAddress().getHost();
+		if (CloudMaster.getInstance().getConfig().getIpWhitelist().contains(ipAddress))
+			return true;
+
+		for (NodeServer node : CloudMaster.getInstance().getNodeManager().getNodeServers()) {
+			if (node.getSubnetIps().contains(ipAddress))
+				return true;
+		}
+
+		return false;
 	}
 
 }
