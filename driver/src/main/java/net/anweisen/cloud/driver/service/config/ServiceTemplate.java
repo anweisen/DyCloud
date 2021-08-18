@@ -11,12 +11,12 @@ import javax.annotation.Nullable;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class ServiceTemplate implements SerializableObject {
+public final class ServiceTemplate implements SerializableObject {
 
 	private String storage;
 	private String name;
 
-	public ServiceTemplate() {
+	private ServiceTemplate() {
 	}
 
 	public ServiceTemplate(@Nonnull String storage, @Nonnull String name) {
