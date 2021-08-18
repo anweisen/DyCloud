@@ -15,6 +15,7 @@ import net.anweisen.cloud.master.node.NodeServer;
 import net.anweisen.cloud.master.service.specific.CloudService;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
 import java.util.UUID;
 
 /**
@@ -61,6 +62,9 @@ public class AuthenticationListener implements PacketListener {
 				NodeServer server = new DefaultNodeServer(info, channel);
 				cloud.getNodeManager().getNodeServers().add(server);
 
+				Collection<String> subnetIps = buffer.readStringCollection();
+				server.getSubnetIps().addAll(subnetIps);
+
 				cloud.getLogger().info("Node '{}' has connected successfully", name);
 				channel.sendPacket(new NetworkAuthResponsePacket(true, "successful"));
 				channel.sendPacket(ConfigInitPacket.create());
@@ -71,7 +75,7 @@ public class AuthenticationListener implements PacketListener {
 				cloud.getServiceFactory().createService(cloud.getServiceConfigManager().getTask("Lobby"));
 				cloud.getServiceFactory().createService(cloud.getServiceConfigManager().getTask("Proxy"));
 
-				return;
+				break;
 			}
 
 			case SERVICE: {
@@ -91,7 +95,7 @@ public class AuthenticationListener implements PacketListener {
 				channel.sendPacket(new NetworkAuthResponsePacket(true, "successful"));
 				channel.sendPacket(ConfigInitPacket.create());
 
-				return;
+				break;
 			}
 
 		}

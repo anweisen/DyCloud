@@ -1,6 +1,9 @@
 package net.anweisen.cloud.node;
 
 import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.model.Network;
+import com.github.dockerjava.api.model.Network.Ipam;
+import com.github.dockerjava.api.model.Network.Ipam.Config;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
@@ -42,6 +45,9 @@ import javax.annotation.Nonnull;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -161,8 +167,30 @@ public final class CloudNode extends CloudBase {
 
 	private void sendAuthentication() {
 		logger.info("Sending authentication to master..");
-		socketClient.sendPacket(new AuthenticationPacket(AuthenticationType.NODE, buffer -> {
-			buffer.writeUUID(config.getIdentity()).writeString(config.getNodeName());
+
+		List<String> subnetIps = dockerClient.listNetworksCmd()
+			.withNameFilter(this.config.getDockerNetworkMode())
+			.exec().stream().findFirst()
+			.map(Network::getIpam)
+			.map(Ipam::getConfig)
+			.map(configs -> configs.isEmpty() ? null : configs.get(0))
+			.map(Config::getSubnet)
+			.map(subnet -> {
+				String[] split = subnet.split("/");
+				String originIp = split[0];
+				int range = Integer.parseInt(split[1]);
+
+				List<String> ips = new ArrayList<>(range + 1);
+				for (int i = 0; i <= range; i++) {
+					int index = originIp.lastIndexOf('.');
+					String ip = originIp.substring(0, index + 1) + i;
+					ips.add(ip);
+				}
+				return ips;
+			}).orElse(Collections.emptyList());
+
+		socketClient.sendPacket(new AuthenticationPacket(AuthenticationType.NODE, config.getIdentity(), buffer -> {
+			buffer.writeString(config.getNodeName()).writeStringCollection(subnetIps);
 		}));
 	}
 
