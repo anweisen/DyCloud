@@ -8,6 +8,7 @@ import net.anweisen.cloud.driver.console.Console;
 import net.anweisen.cloud.driver.console.HeaderPrinter;
 import net.anweisen.cloud.driver.database.DatabaseManager;
 import net.anweisen.cloud.driver.network.SocketComponent;
+import net.anweisen.cloud.driver.network.HostAndPort;
 import net.anweisen.cloud.driver.network.SocketServer;
 import net.anweisen.cloud.driver.network.netty.server.NettySocketServer;
 import net.anweisen.cloud.driver.network.packet.PacketConstants;
@@ -63,6 +64,7 @@ public final class CloudMaster extends CloudBase {
 
 	public synchronized void start() throws Exception {
 		logger.info("Launching the CloudMaster..");
+		logger.extended("Localhost IP: {}", HostAndPort.localhost());
 
 		logger.info("Loading cloud configuration..");
 		config.load();

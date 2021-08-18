@@ -17,6 +17,7 @@ import net.anweisen.cloud.driver.console.Console;
 import net.anweisen.cloud.driver.console.HeaderPrinter;
 import net.anweisen.cloud.driver.database.DatabaseManager;
 import net.anweisen.cloud.driver.database.remote.RemoteDatabaseManager;
+import net.anweisen.cloud.driver.network.HostAndPort;
 import net.anweisen.cloud.driver.network.SocketClient;
 import net.anweisen.cloud.driver.network.SocketComponent;
 import net.anweisen.cloud.driver.network.handler.SocketChannelClientHandler;
@@ -87,6 +88,7 @@ public final class CloudNode extends CloudBase {
 
 	public synchronized void start() throws Exception {
 		logger.info("Launching the CloudNode..");
+		logger.extended("Localhost IP: {}", HostAndPort.localhost());
 
 		logger.info("Loading cloud configuration..");
 		config.load();

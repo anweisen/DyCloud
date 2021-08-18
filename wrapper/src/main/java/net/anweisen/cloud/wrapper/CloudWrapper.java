@@ -4,6 +4,7 @@ import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.DriverEnvironment;
 import net.anweisen.cloud.driver.database.DatabaseManager;
 import net.anweisen.cloud.driver.database.remote.RemoteDatabaseManager;
+import net.anweisen.cloud.driver.network.HostAndPort;
 import net.anweisen.cloud.driver.network.SocketClient;
 import net.anweisen.cloud.driver.network.handler.SocketChannelClientHandler;
 import net.anweisen.cloud.driver.network.listener.PublishConfigListener;
@@ -87,6 +88,7 @@ public final class CloudWrapper extends CloudDriver {
 
 	public synchronized void start() throws Exception {
 		logger.info("Launching the CloudWrapper..");
+		logger.extended("Localhost IP: {}", HostAndPort.localhost());
 
 		logger.debug("Loading wrapper configuration..");
 		config.load();
