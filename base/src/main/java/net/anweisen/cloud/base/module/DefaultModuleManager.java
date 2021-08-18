@@ -18,12 +18,12 @@ import java.util.stream.Collectors;
  */
 public class DefaultModuleManager implements ModuleManager, LoggingApiUser {
 
-	private final Path modulesFolder = Paths.get("modules");
+	private final Path directory = Paths.get("modules");
 	private List<DefaultModuleController> modules = Collections.emptyList();
 
 	@Nonnull
 	public Path getModulesFolder() {
-		return modulesFolder;
+		return directory;
 	}
 
 	@Override
@@ -38,12 +38,12 @@ public class DefaultModuleManager implements ModuleManager, LoggingApiUser {
 		modules.clear();
 
 		info("Resolving modules..");
-		FileUtils.createDirectory(modulesFolder);
+		FileUtils.createDirectory(directory);
 
 		List<DefaultModuleController> modules = new CopyOnWriteArrayList<>();
 
 		// Resolve modules and load configs
-		for (Path file : FileUtils.list(modulesFolder).filter(path -> path.toString().endsWith(".jar")).collect(Collectors.toList())) {
+		for (Path file : FileUtils.list(directory).filter(path -> path.toString().endsWith(".jar")).collect(Collectors.toList())) {
 			try {
 				info("Resolving module {}..", file.getFileName());
 				DefaultModuleController module = new DefaultModuleController(this, file);
