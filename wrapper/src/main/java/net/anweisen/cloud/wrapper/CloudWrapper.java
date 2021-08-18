@@ -145,9 +145,7 @@ public final class CloudWrapper extends CloudDriver {
 
 	private void sendAuthentication() {
 		logger.debug("Sending authentication to master.. Service: '{}'", serviceInfo.getName());
-		socketClient.sendPacket(new AuthenticationPacket(AuthenticationType.SERVICE, buffer -> {
-			buffer.writeUUID(config.getIdentity()).writeString(serviceInfo.getName());
-		}));
+		socketClient.sendPacket(new AuthenticationPacket(AuthenticationType.SERVICE, config.getIdentity(), serviceInfo.getName(), buffer -> {}));
 	}
 
 	public synchronized void startApplication() throws Exception {

@@ -189,8 +189,8 @@ public final class CloudNode extends CloudBase {
 				return ips;
 			}).orElse(Collections.emptyList());
 
-		socketClient.sendPacket(new AuthenticationPacket(AuthenticationType.NODE, config.getIdentity(), buffer -> {
-			buffer.writeString(config.getNodeName()).writeStringCollection(subnetIps);
+		socketClient.sendPacket(new AuthenticationPacket(AuthenticationType.NODE, config.getIdentity(), config.getNodeName(), buffer -> {
+			buffer.writeStringCollection(subnetIps);
 		}));
 	}
 
