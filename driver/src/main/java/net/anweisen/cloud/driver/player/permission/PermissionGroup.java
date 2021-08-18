@@ -1,0 +1,87 @@
+package net.anweisen.cloud.driver.player.permission;
+
+import net.anweisen.cloud.driver.CloudDriver;
+
+import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.stream.Collectors;
+
+/**
+ * @author anweisen | https://github.com/anweisen
+ * @since 1.0
+ */
+public interface PermissionGroup {
+
+	@Nonnull
+	String getName();
+
+	void setName(@Nonnull String name);
+
+	@Nonnull
+	default String getDisplayName() {
+		return getColor() + getName();
+	}
+
+	@Nonnull
+	String getColor();
+
+	void setColor(@Nonnull String color);
+
+	@Nonnull
+	String getPrefix();
+
+	void setPrefix(@Nonnull String prefix);
+
+	int getSortId();
+
+	void setSortId(int sortId);
+
+	boolean isDefaultGroup();
+
+	void setDefaultGroup(boolean defaultGroup);
+
+	@Nonnull
+	Collection<String> getInheritedGroups();
+
+	void addInheritedGroup(@Nonnull String group);
+
+	void removeInheritedGroup(@Nonnull String group);
+
+	@Nonnull
+	default Collection<PermissionGroup> findInheritedGroups() {
+		return Collections.unmodifiableCollection(
+			getInheritedGroups().stream().map(CloudDriver.getInstance().getPermissionManager()::getGroupByName).collect(Collectors.toList())
+		);
+	}
+
+	@Nonnull
+	Collection<String> getPermissions();
+
+	void addPermission(@Nonnull String permission);
+
+	void removePermission(@Nonnull String permission);
+
+	@Nonnull
+	Collection<String> getDeniedPermissions();
+
+	void addDeniedPermission(@Nonnull String permission);
+
+	void removeDeniedPermission(@Nonnull String permission);
+
+	default boolean hasPermission(@Nonnull String permission) {
+		if (getDeniedPermissions().contains(permission))
+			return false;
+
+		Collection<PermissionGroup> groups = findInheritedGroups();
+		for (PermissionGroup group : groups) { // TODO may overflow
+			if (group.hasPermission(permission))
+				return true;
+		}
+
+		return getPermissions().contains(permission);
+	}
+
+	void save();
+
+}

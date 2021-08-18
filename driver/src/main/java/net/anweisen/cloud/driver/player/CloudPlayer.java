@@ -3,7 +3,6 @@ package net.anweisen.cloud.driver.player;
 import net.anweisen.cloud.driver.network.HostAndPort;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author anweisen | https://github.com/anweisen

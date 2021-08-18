@@ -2,6 +2,7 @@ package net.anweisen.cloud.driver.player;
 
 import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.player.data.PlayerNetworkProxyConnection;
+import net.anweisen.cloud.driver.player.permission.PermissionData;
 import net.anweisen.utilities.common.config.Document;
 
 import javax.annotation.Nonnull;
@@ -17,11 +18,12 @@ public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer {
 	private UUID uuid;
 	private String name;
 	private PlayerNetworkProxyConnection lastNetworkConnection;
+	private PermissionData permissionData;
 	private long firstLogin;
 	private long lastOnline;
 	private Document properties;
 
-	public DefaultCloudOfflinePlayer(@Nonnull UUID uuid, @Nonnull String name, @Nonnull PlayerNetworkProxyConnection lastNetworkConnection, long firstLogin, long lastOnline, @Nonnull Document properties) {
+	public DefaultCloudOfflinePlayer(@Nonnull UUID uuid, @Nonnull String name, @Nonnull PlayerNetworkProxyConnection lastNetworkConnection, @Nonnull PermissionData permissionData, long firstLogin, long lastOnline, @Nonnull Document properties) {
 		this.uuid = uuid;
 		this.name = name;
 		this.lastNetworkConnection = lastNetworkConnection;
@@ -52,6 +54,12 @@ public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer {
 	@Override
 	public PlayerNetworkProxyConnection getLastNetworkConnection() {
 		return lastNetworkConnection;
+	}
+
+	@Nonnull
+	@Override
+	public PermissionData getStoredPermissionData() {
+		return permissionData;
 	}
 
 	@Override
