@@ -54,8 +54,8 @@ I would recommend you to use one of the **following cloud systems**:
 ❌ | Wrapper & Node to Master Logging
 ❌ | Player Executor
 🚧 | Global Player Management
-❌ | Permission System
-❌ | Permission Chat & Tab Extension
+🚧 | Permission System
+🚧 | Permission Chat & Tab Extension
 ✔️ | Module System (Master, Node?, Wrapper?)
 🧪 | Module Copy
 ❌ | Cloud Commands
