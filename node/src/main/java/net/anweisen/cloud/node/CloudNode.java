@@ -158,15 +158,6 @@ public final class CloudNode extends CloudBase {
 
 	}
 
-	private void loadNetworkListeners(@Nonnull PacketListenerRegistry registry) {
-		logger.info("Registering network listeners..");
-
-		registry.addListener(PacketConstants.PUBLISH_CONFIG_CHANNEL, new PublishConfigListener(this));
-		registry.addListener(PacketConstants.REQUEST_API_CHANNEL, new RequestPacketListener(
-			new ServiceFactoryRequestHandlers()
-		));
-	}
-
 	private void sendAuthentication() {
 		logger.info("Sending authentication to master..");
 
@@ -194,6 +185,16 @@ public final class CloudNode extends CloudBase {
 		socketClient.sendPacket(new AuthenticationPacket(AuthenticationType.NODE, config.getIdentity(), config.getNodeName(), buffer -> {
 			buffer.writeStringCollection(subnetIps);
 		}));
+	}
+
+	private void loadNetworkListeners(@Nonnull PacketListenerRegistry registry) {
+		logger.info("Registering network listeners..");
+
+		registry.addListener(PacketConstants.PUBLISH_CONFIG_CHANNEL, new PublishConfigListener());
+		registry.addListener(PacketConstants.SERVICE_INFO_PUBLISH_CHANNEL, new ServiceInfoUpdateListener());
+		registry.addListener(PacketConstants.REQUEST_API_CHANNEL, new RequestPacketListener(
+			new ServiceFactoryRequestHandlers()
+		));
 	}
 
 	private void initModules() {
