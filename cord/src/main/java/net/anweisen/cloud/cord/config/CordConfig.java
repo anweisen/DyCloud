@@ -18,13 +18,19 @@ public final class CordConfig implements RemoteConfig {
 
 	private static final Path path = Paths.get("config.json");
 
+	private String cordName;
 	private UUID identity;
 	private HostAndPort masterAddress;
+	private HostAndPort bindAddress;
 
 	@Override
 	public void load() {
 
 		FileDocument document = FileDocument.readJsonFile(path);
+
+		cordName = document.getString("name");
+		if (cordName == null)
+			document.set("name", cordName = "Cord-1");
 
 		identity = document.getUUID("identity");
 		if (identity == null)
@@ -33,6 +39,10 @@ public final class CordConfig implements RemoteConfig {
 		masterAddress = document.getDocument("masterAddress").toInstanceOf(HostAndPort.class);
 		if (masterAddress == null)
 			document.set("masterAddress", masterAddress = HostAndPort.localhost(CloudDriver.DEFAULT_PORT));
+
+		bindAddress = document.getDocument("bindAddress").toInstanceOf(HostAndPort.class);
+		if (bindAddress == null)
+			document.set("bindAddress", bindAddress = HostAndPort.localhost(25565));
 
 		document.save();
 	}
@@ -47,5 +57,15 @@ public final class CordConfig implements RemoteConfig {
 	@Override
 	public HostAndPort getMasterAddress() {
 		return masterAddress;
+	}
+
+	@Nonnull
+	public HostAndPort getBindAddress() {
+		return bindAddress;
+	}
+
+	@Nonnull
+	public String getCordName() {
+		return cordName;
 	}
 }
