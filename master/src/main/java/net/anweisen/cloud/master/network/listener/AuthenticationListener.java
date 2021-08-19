@@ -37,7 +37,7 @@ public class AuthenticationListener implements PacketListener {
 		cloud.getLogger().debug("Received authentication from {}: type={}, name={}", channel, type, name);
 
 		if (!cloud.getConfig().getIdentity().equals(identity)) {
-			cloud.getLogger().info("Authentication for node {} with identity {} was rejected: {}", name, identity, channel);
+			cloud.getLogger().info("Authentication for '{}' with identity {} was rejected: {}", name, identity, channel);
 			channel.sendPacket(new NetworkAuthResponsePacket(false, "authentication failed"));
 			channel.close();
 			return;
@@ -97,6 +97,12 @@ public class AuthenticationListener implements PacketListener {
 
 				break;
 			}
+
+			default:
+				cloud.getLogger().info("Authentication for '{}' with identity {} was a invalid type: {}", name, identity, channel);
+				channel.sendPacket(new NetworkAuthResponsePacket(false, "invalid type"));
+				channel.close();
+				return;
 
 		}
 
