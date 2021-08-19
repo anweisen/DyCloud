@@ -1,20 +1,22 @@
 package net.anweisen.cloud.node.config;
 
+import net.anweisen.cloud.driver.CloudDriver;
+import net.anweisen.cloud.driver.config.RemoteConfig;
 import net.anweisen.cloud.driver.network.HostAndPort;
 import net.anweisen.utilities.common.config.FileDocument;
 
 import javax.annotation.Nonnull;
-import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class NodeConfig {
+public final class NodeConfig implements RemoteConfig {
 
-	public static final File FILE = new File("config.json");
-	public static final int DEFAULT_PORT = 3507;
+	private static final Path path = Paths.get("config.json");
 
 	private String nodeName;
 	private UUID identity;
@@ -24,7 +26,7 @@ public class NodeConfig {
 
 	public void load() {
 
-		FileDocument document = FileDocument.readJsonFile(FILE);
+		FileDocument document = FileDocument.readJsonFile(path);
 
 		nodeName = document.getString("name");
 		if (nodeName ==  null)
@@ -36,7 +38,7 @@ public class NodeConfig {
 
 		masterAddress = document.getDocument("masterAddress").toInstanceOf(HostAndPort.class);
 		if (masterAddress == null)
-			document.set("masterAddress", masterAddress = HostAndPort.localhost(DEFAULT_PORT));
+			document.set("masterAddress", masterAddress = HostAndPort.localhost(CloudDriver.DEFAULT_PORT));
 
 		dockerHost = document.getString("docker.host");
 		if (dockerHost == null)
@@ -50,8 +52,15 @@ public class NodeConfig {
 	}
 
 	@Nonnull
+	@Override
 	public UUID getIdentity() {
 		return identity;
+	}
+
+	@Nonnull
+	@Override
+	public HostAndPort getMasterAddress() {
+		return masterAddress;
 	}
 
 	@Nonnull
@@ -67,11 +76,6 @@ public class NodeConfig {
 	@Nonnull
 	public String getDockerNetworkMode() {
 		return dockerNetworkMode;
-	}
-
-	@Nonnull
-	public HostAndPort getMasterAddress() {
-		return masterAddress;
 	}
 
 }

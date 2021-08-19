@@ -1,11 +1,17 @@
 package net.anweisen.cloud.master.config;
 
+import net.anweisen.cloud.driver.CloudDriver;
+import net.anweisen.cloud.driver.config.DriverConfig;
+import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.network.HostAndPort;
+import net.anweisen.cloud.driver.service.specific.ServiceType;
 import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.common.config.FileDocument;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
@@ -14,10 +20,9 @@ import java.util.UUID;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class MasterConfig {
+public final class MasterConfig implements DriverConfig, LoggingApiUser {
 
-	public static final File FILE = new File("config.json");
-	public static final int DEFAULT_PORT = 3507;
+	private static final Path path = Paths.get("config.json");
 
 	private UUID identity;
 	private HostAndPort hostAddress;
@@ -26,7 +31,7 @@ public class MasterConfig {
 
 	public void load() {
 
-		FileDocument document = FileDocument.readJsonFile(FILE);
+		FileDocument document = FileDocument.readJsonFile(path);
 
 		identity = document.getUUID("identity");
 		if (identity == null)
@@ -34,27 +39,39 @@ public class MasterConfig {
 
 		hostAddress = document.get("address", HostAndPort.class);
 		if (hostAddress == null)
-			document.set("address", hostAddress = HostAndPort.localhost(DEFAULT_PORT));
+			document.set("address", hostAddress = HostAndPort.localhost(CloudDriver.DEFAULT_PORT));
 
 		ipWhitelist = document.getStringList("ipWhitelist");
 		if (!document.contains("ipWhitelist"))
 			document.set("ipWhitelist", Collections.singletonList(HostAndPort.localhost()));
 
 		if (!document.contains("database"))
-			document.set("database.type", "sqlite")
-					.set("database.config.file", "database.db")
-					.set("database.config.host", "127.0.0.1")
-					.set("database.config.port", 23764587)
-					.set("database.config.database", "cloud")
-					.set("database.config.auth-database", "admin")
-					.set("database.config.user", "root")
-					.set("database.config.password", "secret");
+			document.getDocument("database")
+				.set("type", "sqlite")
+				.set("config.file", "database.db")
+				.set("config.host", "127.0.0.1")
+				.set("config.port", 23764587)
+				.set("config.database", "cloud")
+				.set("config.auth-database", "admin")
+				.set("config.user", "root")
+				.set("config.password", "secret");
 		databaseConfig = document.getDocument("database");
+
+		Document startPorts = document.getDocument("startPorts");
+		for (ServiceType type : ServiceType.values()) {
+			if (!startPorts.contains(type.name()))
+				startPorts.set(type.name(), type.getStartPort());
+			else
+				type.setStartPort(startPorts.getInt(type.name()));
+
+			debug("Startport for {} = {}", type, type.getStartPort());
+		}
 
 		document.save();
 	}
 
 	@Nonnull
+	@Override
 	public UUID getIdentity() {
 		return identity;
 	}

@@ -166,6 +166,7 @@ public final class CloudMaster extends CloudBase {
 	}
 
 	@Nonnull
+	@Override
 	public MasterConfig getConfig() {
 		return config;
 	}

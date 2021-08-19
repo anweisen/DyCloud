@@ -278,6 +278,12 @@ public final class CloudWrapper extends CloudDriver {
 	}
 
 	@Nonnull
+	@Override
+	public WrapperConfig getConfig() {
+		return config;
+	}
+
+	@Nonnull
 	public Instrumentation getInstrumentation() {
 		return instrumentation;
 	}

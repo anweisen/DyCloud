@@ -1,6 +1,7 @@
 package net.anweisen.cloud.driver;
 
 import com.google.common.base.Preconditions;
+import net.anweisen.cloud.driver.config.DriverConfig;
 import net.anweisen.cloud.driver.database.DatabaseManager;
 import net.anweisen.cloud.driver.event.EventManager;
 import net.anweisen.cloud.driver.event.defaults.DefaultEventManager;
@@ -27,6 +28,8 @@ import java.util.concurrent.ScheduledExecutorService;
  * @since 1.0
  */
 public abstract class CloudDriver {
+
+	public static final int DEFAULT_PORT = 3507;
 
 	protected final ScheduledExecutorService executor = Executors.newScheduledThreadPool(4, new NamedThreadFactory("CloudTask"));
 	protected final EventManager eventManager = new DefaultEventManager();
@@ -84,6 +87,9 @@ public abstract class CloudDriver {
 	public DriverEnvironment getEnvironment() {
 		return environment;
 	}
+
+	@Nonnull
+	public abstract DriverConfig getConfig();
 
 	@Nonnull
 	public abstract SocketComponent getSocketComponent();

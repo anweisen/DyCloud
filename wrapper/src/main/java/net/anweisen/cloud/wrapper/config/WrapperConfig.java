@@ -1,5 +1,6 @@
 package net.anweisen.cloud.wrapper.config;
 
+import net.anweisen.cloud.driver.config.RemoteConfig;
 import net.anweisen.cloud.driver.network.HostAndPort;
 import net.anweisen.cloud.driver.service.config.ServiceTask;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
@@ -14,9 +15,9 @@ import java.util.UUID;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class WrapperConfig {
+public final class WrapperConfig implements RemoteConfig {
 
-	private static final Path configPath = Paths.get(".cloud", "config.json");
+	private static final Path path = Paths.get(".cloud", "config.json");
 
 	private HostAndPort masterAddress;
 	private UUID identity;
@@ -25,7 +26,7 @@ public class WrapperConfig {
 
 	public void load() {
 
-		Document document = Document.readJsonFile(configPath.toFile());
+		Document document = Document.readJsonFile(path);
 
 		masterAddress = document.get("master", HostAndPort.class);
 		identity = document.getUUID("identity");
@@ -35,18 +36,20 @@ public class WrapperConfig {
 	}
 
 	@Nonnull
+	@Override
 	public UUID getIdentity() {
 		return identity;
 	}
 
 	@Nonnull
-	public ServiceTask getTask() {
-		return task;
+	@Override
+	public HostAndPort getMasterAddress() {
+		return masterAddress;
 	}
 
 	@Nonnull
-	public HostAndPort getMasterAddress() {
-		return masterAddress;
+	public ServiceTask getTask() {
+		return task;
 	}
 
 	@Nonnull

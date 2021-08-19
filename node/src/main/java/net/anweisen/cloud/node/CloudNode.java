@@ -263,6 +263,7 @@ public final class CloudNode extends CloudBase {
 	}
 
 	@Nonnull
+	@Override
 	public NodeConfig getConfig() {
 		return config;
 	}
