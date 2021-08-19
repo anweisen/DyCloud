@@ -97,7 +97,6 @@ public final class CloudNode extends CloudBase {
 		logger.info("Connecting to docker daemon..");
 		initDocker();
 
-		logger.info("Connecting to master socket on {}..", config.getMasterAddress());
 		socketClient = new NettySocketClient(SocketChannelClientHandler::new);
 
 		loadNetworkListeners(socketClient.getListenerRegistry());
@@ -139,6 +138,7 @@ public final class CloudNode extends CloudBase {
 			Condition condition = lock.newCondition();
 			listener = new AuthenticationResponseListener(lock, condition);
 
+			logger.info("Connecting to master socket on {}..", config.getMasterAddress());
 			socketClient.getListenerRegistry().addListener(PacketConstants.AUTH_CHANNEL, listener);
 			socketClient.connect(config.getMasterAddress());
 
