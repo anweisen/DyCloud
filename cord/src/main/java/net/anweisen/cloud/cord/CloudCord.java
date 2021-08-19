@@ -155,8 +155,8 @@ public final class CloudCord extends CloudDriver {
 
 	@Nonnull
 	@Override
-	public SocketComponent getSocketComponent() {
-		return null;
+	public SocketClient getSocketComponent() {
+		return socketClient;
 	}
 
 	@Nonnull
