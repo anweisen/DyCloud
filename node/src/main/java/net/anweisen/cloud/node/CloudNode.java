@@ -121,10 +121,9 @@ public final class CloudNode extends CloudBase {
 			.withDockerHttpClient(httpClient)
 			.build();
 
-		// Test connection
+		// Test connection with a ping
 		dockerClient.pingCmd().exec();
-		logger.debug("Successfully pinged docker daemon");
-
+		logger.info("Successfully pinged docker daemon");
 	}
 
 	private void connectAndAwaitAuthentication() throws InterruptedException {
