@@ -9,9 +9,8 @@ package net.anweisen.cloud.driver;
 public enum DriverEnvironment {
 
 	MASTER(true, false),
-
 	NODE(true, true),
-
+	CORD(false, true),
 	WRAPPER(false, true);
 
 	private final boolean base;
