@@ -1,4 +1,4 @@
-package net.anweisen.cloud.wrapper.listeners;
+package net.anweisen.cloud.driver.network.listener;
 
 import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.network.SocketChannel;
