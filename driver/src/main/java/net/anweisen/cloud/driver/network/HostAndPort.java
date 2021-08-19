@@ -72,6 +72,7 @@ public final class HostAndPort implements SerializableObject {
 		try {
 			return InetAddress.getLocalHost().getHostAddress();
 		} catch (UnknownHostException ex) {
+			ex.printStackTrace();
 			return "127.0.0.1";
 		}
 	}
