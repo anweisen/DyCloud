@@ -13,6 +13,7 @@ public final class PacketConstants {
 	public static final int SERVICE_INFO_PUBLISH_CHANNEL = 5;       // master   -> node, wrapper, cord
 	public static final int SERVICE_UPDATE_SELF_INFO_CHANNEL = 6;   // wrapper  -> master
 	public static final int PLAYER_API_CHANNEL = 7;                 // node    <-  master  <-> wrapper
+	public static final int CORD_CHANNEL = 9;                       // cord     -> master   -> wrapper
 
 	private PacketConstants() {}
 
