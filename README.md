@@ -13,13 +13,17 @@ I would recommend you to use one of the **following cloud systems**:
 ## Structure
 
 - **driver**
-  - **base**
-	- **master**: Manager of the cloud, commander of nodes <br>
-	  			  *Maybe known as manager or base from other cloud systems*
-	- **node** (*semi remote*): Responsible for starting & stopping of services (minecraft servers, bungee proxies), connects to the master. <br>
-	            *Probably known as wrapper or slave from other cloud system*
-  - **wrapper** (*remote*): Runs a service, connects to the master. <br>
-				*Probably known as runner or bridge from other cloud systems*
+  - **master** (*base*): <br>
+    Manager of the cloud, commander of nodes <br>
+    *Maybe known as manager or base from other cloud systems*
+  - **node** (*base, remote*): <br>
+    Responsible for starting & stopping of services (minecraft servers, bungee proxies), connects to the master. <br>
+    *Probably known as wrapper or slave from other cloud system*
+  - **wrapper** (*remote*): <br>
+    Runs a service, connects to the master. <br>
+    *Probably known as runner or bridge from other cloud systems*
+  - **cord** (*remote*): <br>
+    Allows usage of multiproxy, acts as a proxy (client <-> cord <-> bungee), connects to the master. <br>
 
 ## Progress
 
@@ -45,7 +49,7 @@ I would recommend you to use one of the **following cloud systems**:
 ❌ | Template Cache
 🚧 | Proxy Bridge
 🧪 | Dynamic Proxy Server Registry
-❌ | MultiProxy Cord
+🚧 | MultiProxy Cord
 🧪 | Lobby Balancing
 ✔️ | Remote Database API
 ❌ | Messenger System for Modules

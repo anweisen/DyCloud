@@ -25,6 +25,7 @@
 		<module>base</module>
 		<module>master</module>
 		<module>node</module>
+		<module>cord</module>
 		<module>wrapper</module>
 		<module>modules</module>
 	</modules>
