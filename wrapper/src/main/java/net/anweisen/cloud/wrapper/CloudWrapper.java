@@ -7,6 +7,7 @@ import net.anweisen.cloud.driver.database.remote.RemoteDatabaseManager;
 import net.anweisen.cloud.driver.network.HostAndPort;
 import net.anweisen.cloud.driver.network.SocketClient;
 import net.anweisen.cloud.driver.network.handler.SocketChannelClientHandler;
+import net.anweisen.cloud.driver.network.listener.AuthenticationResponseListener;
 import net.anweisen.cloud.driver.network.listener.PublishConfigListener;
 import net.anweisen.cloud.driver.network.listener.ServiceInfoUpdateListener;
 import net.anweisen.cloud.driver.network.netty.client.NettySocketClient;
@@ -26,7 +27,6 @@ import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.driver.service.specific.ServiceState;
 import net.anweisen.cloud.wrapper.config.WrapperConfig;
 import net.anweisen.cloud.wrapper.event.service.ServiceInfoConfigureEvent;
-import net.anweisen.cloud.wrapper.listeners.AuthenticationResponseListener;
 import net.anweisen.utilities.common.collection.WrappedException;
 import net.anweisen.utilities.common.logging.ILogger;
 import net.anweisen.utilities.common.misc.ReflectionUtils;
@@ -103,6 +103,7 @@ public final class CloudWrapper extends CloudDriver {
 			startApplication();
 		} catch (Exception ex) {
 			logger.error("Unable to start application", ex);
+			// TODO stop
 		}
 
 	}
@@ -138,16 +139,16 @@ public final class CloudWrapper extends CloudDriver {
 
 	}
 
+	private void sendAuthentication() {
+		logger.debug("Sending authentication to master.. Service: '{}'", serviceInfo.getName());
+		socketClient.sendPacket(new AuthenticationPacket(AuthenticationType.SERVICE, config.getIdentity(), serviceInfo.getName(), buffer -> {}));
+	}
+
 	private void loadNetworkListeners(@Nonnull PacketListenerRegistry registry) {
 		logger.info("Registering network listeners..");
 
 		registry.addListener(PacketConstants.PUBLISH_CONFIG_CHANNEL, new PublishConfigListener());
 		registry.addListener(PacketConstants.SERVICE_INFO_PUBLISH_CHANNEL, new ServiceInfoUpdateListener());
-	}
-
-	private void sendAuthentication() {
-		logger.debug("Sending authentication to master.. Service: '{}'", serviceInfo.getName());
-		socketClient.sendPacket(new AuthenticationPacket(AuthenticationType.SERVICE, config.getIdentity(), serviceInfo.getName(), buffer -> {}));
 	}
 
 	public synchronized void startApplication() throws Exception {
