@@ -1,5 +1,8 @@
 package net.anweisen.cloud.driver.player.permission;
 
+import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
+
 import javax.annotation.Nonnull;
 import java.util.Collection;
 
@@ -7,9 +10,9 @@ import java.util.Collection;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public final class PermissionData {
+public final class PermissionData implements SerializableObject {
 
-	public static final class TaskPermissionData {
+	public static final class TaskPermissionData implements SerializableObject {
 
 		private String name;
 		private String task;
@@ -20,6 +23,18 @@ public final class PermissionData {
 		public TaskPermissionData(@Nonnull String name, @Nonnull String task) {
 			this.name = name;
 			this.task = task;
+		}
+
+		@Override
+		public void write(@Nonnull Buffer buffer) {
+			buffer.writeString(name);
+			buffer.writeString(task);
+		}
+
+		@Override
+		public void read(@Nonnull Buffer buffer) {
+			name = buffer.readString();
+			task = buffer.readString();
 		}
 
 		@Nonnull
@@ -34,7 +49,7 @@ public final class PermissionData {
 
 	}
 
-	public static final class PlayerGroupData {
+	public static final class PlayerGroupData implements SerializableObject {
 
 		private String name;
 		private long timeout;
@@ -45,6 +60,18 @@ public final class PermissionData {
 		public PlayerGroupData(@Nonnull String name, long timeout) {
 			this.name = name;
 			this.timeout = timeout;
+		}
+
+		@Override
+		public void write(@Nonnull Buffer buffer) {
+			buffer.writeString(name);
+			buffer.writeLong(timeout);
+		}
+
+		@Override
+		public void read(@Nonnull Buffer buffer) {
+			name = buffer.readString();
+			timeout = buffer.readLong();
 		}
 
 		@Nonnull
@@ -84,6 +111,20 @@ public final class PermissionData {
 	@Nonnull
 	public Collection<PlayerGroupData> getGroups() {
 		return groups;
+	}
+
+	@Override
+	public void write(@Nonnull Buffer buffer) {
+		buffer.writeStringCollection(permissions);
+		buffer.writeObjectCollection(taskPermissions);
+		buffer.writeObjectCollection(groups);
+	}
+
+	@Override
+	public void read(@Nonnull Buffer buffer) {
+		permissions = buffer.readStringCollection();
+		taskPermissions = buffer.readObjectCollection(TaskPermissionData.class);
+		groups = buffer.readObjectCollection(PlayerGroupData.class);
 	}
 
 }

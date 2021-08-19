@@ -1,8 +1,11 @@
 package net.anweisen.cloud.driver.player;
 
 import net.anweisen.cloud.driver.network.HostAndPort;
+import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import net.anweisen.cloud.driver.player.data.PlayerNetworkProxyConnection;
 import net.anweisen.cloud.driver.player.permission.PermissionData;
+import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.utilities.common.config.Document;
 
 import javax.annotation.Nonnull;
@@ -13,15 +16,30 @@ import java.util.UUID;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class DefaultCloudPlayer implements CloudPlayer {
+public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 
-	private final CloudOfflinePlayer offlinePlayer;
-	private final PlayerNetworkProxyConnection connection;
+	private DefaultCloudOfflinePlayer offlinePlayer;
+	private PlayerNetworkProxyConnection connection;
+	private ServiceInfo server;
 	private boolean online = true;
 
 	public DefaultCloudPlayer(@Nonnull CloudOfflinePlayer offlinePlayer, @Nonnull PlayerNetworkProxyConnection connection) {
-		this.offlinePlayer = offlinePlayer;
+		this.offlinePlayer = (DefaultCloudOfflinePlayer) offlinePlayer;
 		this.connection = connection;
+	}
+
+	@Override
+	public void write(@Nonnull Buffer buffer) {
+		buffer.writeObject(offlinePlayer);
+		buffer.writeObject(connection);
+		buffer.writeBoolean(online);
+	}
+
+	@Override
+	public void read(@Nonnull Buffer buffer) {
+		offlinePlayer = buffer.readObject(DefaultCloudOfflinePlayer.class);
+		connection = buffer.readObject(PlayerNetworkProxyConnection.class);
+		online = buffer.readBoolean();
 	}
 
 	@Nonnull
@@ -86,6 +104,23 @@ public class DefaultCloudPlayer implements CloudPlayer {
 		return connection.getAddress();
 	}
 
+	@Nonnull
+	@Override
+	public PlayerNetworkProxyConnection getProxyConnection() {
+		return connection;
+	}
+
+	@Nullable
+	@Override
+	public ServiceInfo getServer() {
+		return server;
+	}
+
+	@Override
+	public void setServer(@Nullable ServiceInfo server) {
+		this.server = server;
+	}
+
 	@Override
 	public boolean isOnline() {
 		return online;
@@ -96,13 +131,8 @@ public class DefaultCloudPlayer implements CloudPlayer {
 		this.online = online;
 	}
 
-	@Nonnull
-	public PlayerNetworkProxyConnection getConnection() {
-		return connection;
-	}
-
 	@Override
 	public String toString() {
-		return "CloudOnlinePlayer[name=" + getName() + " uuid=" + getUniqueId() + "]";
+		return "CloudPlayer[name=" + getName() + " uuid=" + getUniqueId() + " address=" + getAddress() + " server=" + (server == null ? null : server.getName()) + "]";
 	}
 }
