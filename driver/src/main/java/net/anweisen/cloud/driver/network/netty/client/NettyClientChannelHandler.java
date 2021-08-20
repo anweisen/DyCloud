@@ -31,8 +31,8 @@ public class NettyClientChannelHandler extends NettyChannelHandler {
 			context.channel(),
 			client.getHandlerSupplier().get(),
 			HostAndPort.fromSocketAddress(context.channel().remoteAddress()),
-			address, // we are the client
-			false
+			HostAndPort.fromSocketAddress(context.channel().localAddress()), // we are the client
+			true
 		);
 
 		getChannels().add(channel);
