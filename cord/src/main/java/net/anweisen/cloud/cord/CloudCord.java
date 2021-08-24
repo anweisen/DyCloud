@@ -210,4 +210,13 @@ public final class CloudCord extends CloudDriver {
 		return config.getCordName();
 	}
 
+	private static CloudCord instance;
+
+	public static CloudCord getInstance() {
+		if (instance == null)
+			instance = (CloudCord) CloudDriver.getInstance();
+
+		return instance;
+	}
+
 }
