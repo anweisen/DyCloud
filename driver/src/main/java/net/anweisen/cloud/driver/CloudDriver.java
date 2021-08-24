@@ -124,6 +124,7 @@ public abstract class CloudDriver {
 
 	public void setPermissionManager(@Nonnull PermissionManager manager) {
 		this.permissionManager = manager;
+		logger.trace("PermissionManager was set to {}", manager.getClass().getName());
 	}
 
 	@Nonnull
