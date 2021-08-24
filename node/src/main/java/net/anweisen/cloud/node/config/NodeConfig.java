@@ -3,6 +3,7 @@ package net.anweisen.cloud.node.config;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.config.RemoteConfig;
 import net.anweisen.cloud.driver.network.HostAndPort;
+import net.anweisen.cloud.node.CloudNode;
 import net.anweisen.utilities.common.config.FileDocument;
 
 import javax.annotation.Nonnull;
@@ -13,6 +14,8 @@ import java.util.UUID;
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
+ *
+ * @see CloudNode#getConfig()
  */
 public final class NodeConfig implements RemoteConfig {
 

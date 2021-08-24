@@ -4,6 +4,7 @@ import net.anweisen.cloud.driver.config.RemoteConfig;
 import net.anweisen.cloud.driver.network.HostAndPort;
 import net.anweisen.cloud.driver.service.config.ServiceTask;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
+import net.anweisen.cloud.wrapper.CloudWrapper;
 import net.anweisen.utilities.common.config.Document;
 
 import javax.annotation.Nonnull;
@@ -14,6 +15,8 @@ import java.util.UUID;
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
+ *
+ * @see CloudWrapper#getConfig()
  */
 public final class WrapperConfig implements RemoteConfig {
 

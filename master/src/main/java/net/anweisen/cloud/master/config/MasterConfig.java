@@ -5,11 +5,11 @@ import net.anweisen.cloud.driver.config.DriverConfig;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.network.HostAndPort;
 import net.anweisen.cloud.driver.service.specific.ServiceType;
+import net.anweisen.cloud.master.CloudMaster;
 import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.common.config.FileDocument;
 
 import javax.annotation.Nonnull;
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
@@ -19,6 +19,8 @@ import java.util.UUID;
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
+ *
+ * @see CloudMaster#getConfig()
  */
 public final class MasterConfig implements DriverConfig, LoggingApiUser {
 
@@ -64,7 +66,7 @@ public final class MasterConfig implements DriverConfig, LoggingApiUser {
 			else
 				type.setStartPort(startPorts.getInt(type.name()));
 
-			debug("Startport for {} = {}", type, type.getStartPort());
+			extended("Startport for {} = {}", type, type.getStartPort());
 		}
 
 		document.save();
