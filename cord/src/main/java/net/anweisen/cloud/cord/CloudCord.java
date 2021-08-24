@@ -5,6 +5,7 @@ import net.anweisen.cloud.cord.socket.NettyCordSocketServer;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.DriverEnvironment;
 import net.anweisen.cloud.driver.console.Console;
+import net.anweisen.cloud.driver.console.HeaderPrinter;
 import net.anweisen.cloud.driver.cord.CordManager;
 import net.anweisen.cloud.driver.database.DatabaseManager;
 import net.anweisen.cloud.driver.network.HostAndPort;
@@ -57,6 +58,8 @@ public final class CloudCord extends CloudDriver {
 
 		serviceManager = new RemoteServiceManager();
 		serviceConfigManager = new RemoteServiceConfigManager();
+
+		HeaderPrinter.printHeader(console, this);
 	}
 
 	public synchronized void start() throws Exception {
@@ -129,7 +132,7 @@ public final class CloudCord extends CloudDriver {
 		logger.info("Starting cord server on {}..", config.getBindAddress());
 		cordServer = new NettyCordSocketServer();
 		cordServer.init(config.getBindAddress());
-		logger.info("Cord server listening on {}.", config.getBindAddress());
+		logger.info("Cord server listening on {}", config.getBindAddress());
 
 	}
 
