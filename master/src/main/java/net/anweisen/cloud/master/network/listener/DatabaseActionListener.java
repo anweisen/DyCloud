@@ -79,11 +79,15 @@ public class DatabaseActionListener implements PacketListener {
 					action.execute();
 					break;
 				}
+				case COUNT_ENTRIES:{
+					DatabaseCountEntries action = manager.getDatabase().countEntries(table);
+					channel.sendPacket(Packet.createResponseFor(packet, Buffer.create().writeLong(action.execute())));
+				}
 			}
 		} else {
 			switch (type) {
 				case LIST_TABLES: {
-					Collection<String> tables = manager.getDatabase().listTables();
+					Collection<String> tables = manager.getDatabase().listTables().execute();
 					channel.sendPacket(Packet.createResponseFor(packet, Buffer.create().writeStringCollection(tables)));
 					break;
 				}

@@ -48,11 +48,6 @@ public class RemoteDatabaseInsertion implements DatabaseInsertion {
 	}
 
 	@Override
-	public boolean equals(@Nonnull DatabaseInsertion other) {
-		return equals((Object) other);
-	}
-
-	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;

@@ -64,16 +64,14 @@ public class RemoteDatabase extends AbstractDatabase {
 
 	@Nonnull
 	@Override
-	public Task<Collection<String>> listTablesAsync() {
-		return CloudDriver.getInstance().getSocketComponent().getFirstChannel().sendQueryAsync(
-			new DatabaseActionPacket(DatabaseActionType.LIST_TABLES, null)).map(packet -> packet.getBuffer().readStringCollection()
-		);
+	public DatabaseListTables listTables() {
+		return new RemoteDatabaseListTables();
 	}
 
 	@Nonnull
 	@Override
-	public Collection<String> listTables() throws DatabaseException {
-		return listTablesAsync().getDefOrThrow(DatabaseException::new, "Operation timed out");
+	public DatabaseCountEntries countEntries(@Nonnull String table) {
+		return new RemoteDatabaseCountEntries(table);
 	}
 
 	@Nonnull

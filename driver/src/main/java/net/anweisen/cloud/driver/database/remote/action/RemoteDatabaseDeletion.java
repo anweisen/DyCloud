@@ -76,11 +76,6 @@ public class RemoteDatabaseDeletion implements DatabaseDeletion {
 	}
 
 	@Override
-	public boolean equals(@Nonnull DatabaseDeletion other) {
-		return equals((Object) other);
-	}
-
-	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;

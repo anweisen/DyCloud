@@ -21,6 +21,7 @@ public class DatabaseActionPacket extends Packet {
 		INSERT(true),
 		INSERT_OR_UPDATE(true),
 		DELETE(true),
+		COUNT_ENTRIES(true),
 
 		CREATE_TABLE(false),
 		LIST_TABLES(false);

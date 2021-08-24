@@ -85,21 +85,6 @@ public class RemoteDatabaseInsertionOrUpdate implements DatabaseInsertionOrUpdat
 	}
 
 	@Override
-	public boolean equals(@Nonnull DatabaseUpdate other) {
-		return equals((Object) other);
-	}
-
-	@Override
-	public boolean equals(@Nonnull DatabaseInsertion other) {
-		return equals((Object) other);
-	}
-
-	@Override
-	public boolean equals(@Nonnull DatabaseInsertionOrUpdate other) {
-		return equals((Object) other);
-	}
-
-	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;

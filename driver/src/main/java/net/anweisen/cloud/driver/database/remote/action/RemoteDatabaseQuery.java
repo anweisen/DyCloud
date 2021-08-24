@@ -93,11 +93,6 @@ public class RemoteDatabaseQuery implements DatabaseQuery {
 	}
 
 	@Override
-	public boolean equals(@Nonnull ExecutedQuery other) {
-		return equals((Object) other);
-	}
-
-	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
