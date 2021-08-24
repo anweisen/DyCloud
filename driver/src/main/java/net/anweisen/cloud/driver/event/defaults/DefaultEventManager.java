@@ -1,17 +1,17 @@
 package net.anweisen.cloud.driver.event.defaults;
 
 import net.anweisen.cloud.driver.CloudDriver;
+import net.anweisen.cloud.driver.event.EventListener;
 import net.anweisen.cloud.driver.event.*;
+import net.anweisen.utilities.common.collection.ClassWalker;
+import net.anweisen.utilities.common.concurrent.task.CompletableTask;
+import net.anweisen.utilities.common.concurrent.task.Task;
 import net.anweisen.utilities.common.misc.ReflectionUtils;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.*;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -19,7 +19,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class DefaultEventManager implements EventManager {
 
-	private final List<RegisteredListener> listeners = new CopyOnWriteArrayList<>();
+	private final Map<Class<? extends Event>, List<RegisteredListener>> listeners = new LinkedHashMap<>();
+
+	@Nonnull
+	@Override
+	public EventManager removeListener(@Nonnull RegisteredListener listener) {
+		listeners.forEach((clazz, listeners) -> listeners.removeIf(current -> current == listener));
+		return this;
+	}
 
 	@Nonnull
 	@Override
@@ -30,8 +37,11 @@ public class DefaultEventManager implements EventManager {
 	@Nonnull
 	@Override
 	public EventManager addListeners(@Nonnull Collection<? extends RegisteredListener> listeners) {
-		this.listeners.addAll(listeners);
-		this.listeners.sort(Comparator.comparingInt(value -> value.getPriority().ordinal()));
+		for (RegisteredListener listener : listeners) {
+			List<RegisteredListener> registeredListeners = this.listeners.computeIfAbsent(listener.getEventClass(), key -> new LinkedList<>());
+			registeredListeners.add(listener);
+			registeredListeners.sort(Comparator.comparingInt(value -> value.getPriority().ordinal()));
+		}
 		return this;
 	}
 
@@ -68,21 +78,21 @@ public class DefaultEventManager implements EventManager {
 	@Nonnull
 	@Override
 	public EventManager unregisterListener(@Nonnull Object holder) {
-		listeners.removeIf(listener -> listener.getHolder() == listener);
+		listeners.forEach((eventClass, listeners) -> listeners.removeIf(listener -> listener.getHolder() == listener));
 		return this;
 	}
 
 	@Nonnull
 	@Override
 	public EventManager unregisterListener(@Nonnull Class<?> listenerClass) {
-		listeners.removeIf(listener -> listener.getHolder().getClass() == listenerClass);
+		listeners.forEach((eventClass, listeners) -> listeners.removeIf(listener -> listener.getHolder().getClass() == listenerClass));
 		return this;
 	}
 
 	@Nonnull
 	@Override
 	public EventManager unregisterListeners(@Nonnull ClassLoader loader) {
-		listeners.removeIf(listener -> listener.getHolder().getClass().getClassLoader().equals(loader));
+		listeners.forEach((eventClass, listeners) -> listeners.removeIf(listener -> listener.getHolder().getClass().getClassLoader().equals(loader)));
 		return this;
 	}
 
@@ -98,14 +108,29 @@ public class DefaultEventManager implements EventManager {
 	public <E extends Event> E callEvent(@Nonnull E event) {
 		CloudDriver.getInstance().getLogger().trace("Calling event {}", event.getClass().getSimpleName());
 
-		for (RegisteredListener listener : listeners) {
-			if (!listener.getEventClass().isAssignableFrom(event.getClass())) continue;
-			if (listener.getIgnoreCancelled() && event instanceof Cancelable && ((Cancelable)event).isCancelled()) continue;
-
-			listener.execute(event);
+		for (Class<?> clazz : ClassWalker.walk(event.getClass())) {
+			List<RegisteredListener> listeners = this.listeners.get(clazz);
+			if (listeners == null) continue;
+			for (RegisteredListener listener : listeners) {
+				if (listener.getIgnoreCancelled() && event instanceof Cancelable && ((Cancelable)event).isCancelled()) continue;
+				listener.execute(event);
+			}
 		}
 
+		if (event instanceof Cancelable)
+			CloudDriver.getInstance().getLogger().trace("=> {}: cancelled={}", event.getClass().getSimpleName(), ((Cancelable)event).isCancelled());
+
 		return event;
+	}
+
+	@Nonnull
+	@Override
+	public <E extends Event> Task<E> nextEvent(@Nonnull Class<E> eventClass) {
+		CompletableTask<E> task = Task.completable();
+		RegisteredListener listener = new ActionRegisteredListener<>(eventClass, task::complete);
+		addListener(listener);
+		task.onComplete(() -> removeListener(listener));
+		return task;
 	}
 
 }
