@@ -58,7 +58,7 @@ public abstract class CloudDriver {
 
 		FileUtils.delete(tempDirectory);
 
-		executor.shutdown();
+		executor.shutdownNow();
 
 	}
 
