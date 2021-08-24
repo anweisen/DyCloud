@@ -1,6 +1,8 @@
 package net.anweisen.cloud.cord;
 
 import net.anweisen.cloud.cord.config.CordConfig;
+import net.anweisen.cloud.cord.reporter.CordTrafficReporter;
+import net.anweisen.cloud.cord.reporter.DefaultTrafficReporter;
 import net.anweisen.cloud.cord.socket.NettyCordSocketServer;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.DriverEnvironment;
@@ -49,6 +51,7 @@ public final class CloudCord extends CloudDriver {
 
 	private SocketClient socketClient;
 	private NettyCordSocketServer cordServer;
+	private CordTrafficReporter trafficReporter;
 
 	CloudCord(@Nonnull ILogger logger, @Nonnull Console console) {
 		super(logger, DriverEnvironment.CORD);
@@ -130,9 +133,12 @@ public final class CloudCord extends CloudDriver {
 	public synchronized void startCord() throws Exception {
 
 		logger.info("Starting cord server on {}..", config.getBindAddress());
+		trafficReporter = new DefaultTrafficReporter();
 		cordServer = new NettyCordSocketServer();
 		cordServer.init(config.getBindAddress());
 		logger.info("Cord server listening on {}", config.getBindAddress());
+
+		trafficReporter.start();
 
 	}
 
@@ -202,6 +208,11 @@ public final class CloudCord extends CloudDriver {
 	@Override
 	public PlayerManager getPlayerManager() {
 		return null;
+	}
+
+	@Nonnull
+	public CordTrafficReporter getTrafficReporter() {
+		return trafficReporter;
 	}
 
 	@Nonnull
