@@ -35,8 +35,8 @@ public abstract class CloudDriver {
 	protected final ScheduledExecutorService executor = Executors.newScheduledThreadPool(4, new NamedThreadFactory("CloudTask"));
 	protected final EventManager eventManager = new DefaultEventManager();
 
-	protected final ILogger logger;
 	protected final DriverEnvironment environment;
+	protected final ILogger logger;
 	protected final Path tempDirectory;
 
 	protected PermissionManager permissionManager;
