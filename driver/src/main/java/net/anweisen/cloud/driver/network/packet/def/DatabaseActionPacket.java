@@ -14,6 +14,16 @@ import java.util.function.Consumer;
  */
 public class DatabaseActionPacket extends Packet {
 
+	public DatabaseActionPacket(@Nonnull DatabaseActionType type) {
+		this(type, null);
+	}
+
+	public DatabaseActionPacket(@Nonnull DatabaseActionType type, @Nullable Consumer<? super Buffer> modifier) {
+		super(PacketConstants.DATABASE_CHANNEL, Buffer.create().writeEnumConstant(type));
+		if (modifier != null)
+			modifier.accept(body);
+	}
+
 	public enum DatabaseActionType {
 
 		QUERY(true),
@@ -22,8 +32,8 @@ public class DatabaseActionPacket extends Packet {
 		INSERT_OR_UPDATE(true),
 		DELETE(true),
 		COUNT_ENTRIES(true),
+		CREATE_TABLE(true),
 
-		CREATE_TABLE(false),
 		LIST_TABLES(false);
 
 		private final boolean specific;
@@ -34,13 +44,6 @@ public class DatabaseActionPacket extends Packet {
 
 		public boolean isSpecific() {
 			return specific;
-		}
-	}
-
-	public DatabaseActionPacket(@Nonnull DatabaseActionType type, @Nullable Consumer<? super Buffer> modifier) {
-		super(PacketConstants.DATABASE_CHANNEL, Buffer.create().writeEnumConstant(type));
-		if (modifier != null) {
-			modifier.accept(super.body);
 		}
 	}
 

@@ -83,18 +83,17 @@ public class DatabaseActionListener implements PacketListener {
 					DatabaseCountEntries action = manager.getDatabase().countEntries(table);
 					channel.sendPacket(Packet.createResponseFor(packet, Buffer.create().writeLong(action.execute())));
 				}
+				case CREATE_TABLE: {
+					SQLColumn[] columns = buffer.readObjectCollection(SerializableSQLColumn.class).stream().map(SerializableSQLColumn::getColumn).toArray(SQLColumn[]::new);
+					manager.getDatabase().createTable(table, columns);
+					break;
+				}
 			}
 		} else {
 			switch (type) {
 				case LIST_TABLES: {
 					Collection<String> tables = manager.getDatabase().listTables().execute();
 					channel.sendPacket(Packet.createResponseFor(packet, Buffer.create().writeStringCollection(tables)));
-					break;
-				}
-				case CREATE_TABLE: {
-					String name = buffer.readString();
-					Collection<SQLColumn> columns = buffer.readObjectCollection(SerializableSQLColumn.class).stream().map(SerializableSQLColumn::getColumn).collect(Collectors.toList());
-					manager.getDatabase().createTable(name, columns.toArray(new SQLColumn[0]));
 					break;
 				}
 			}
