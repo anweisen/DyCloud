@@ -4,14 +4,18 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import net.anweisen.cloud.cord.CloudCord;
+import net.anweisen.cloud.driver.console.LoggingApiUser;
 
 import javax.annotation.Nonnull;
 
 /**
+ * Client <-> Cord
+ *
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class ProxyUpstreamHandler extends SimpleChannelInboundHandler<ByteBuf> {
+public class ProxyUpstreamHandler extends SimpleChannelInboundHandler<ByteBuf> implements LoggingApiUser {
 
 	private final ProxyDownstreamHandler downstreamHandler;
 	private Channel channel;
@@ -23,11 +27,14 @@ public class ProxyUpstreamHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
 	@Override
 	protected void channelRead0(ChannelHandlerContext context, ByteBuf buffer) throws Exception {
+//		CloudCord.getInstance().getLogger().trace("Forwarding upstream packet from {} to proxy", downstreamHandler.getClientAddress());
+		CloudCord.getInstance().getTrafficReporter().reportUpstreamPacket(buffer.readableBytes());
 		channel.writeAndFlush(buffer.retain());
 	}
 
 	@Override
 	public void channelInactive(ChannelHandlerContext context) throws Exception {
+		CloudCord.getInstance().getLogger().info("[{}] Upstream got disconnected", downstreamHandler.getClientAddress());
 		channel.close();
 	}
 
@@ -37,5 +44,10 @@ public class ProxyUpstreamHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
 	public void setChannel(@Nonnull Channel channel) {
 		this.channel = channel;
+	}
+
+	@Nonnull
+	public Channel getChannel() {
+		return channel;
 	}
 }

@@ -2,8 +2,10 @@ package net.anweisen.cloud.cord.socket;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.channel.ChannelHandler.Sharable;
+import net.anweisen.cloud.cord.CloudCord;
 import net.anweisen.cloud.cord.socket.stream.ProxyDownstreamHandler;
 import net.anweisen.cloud.cord.socket.stream.ProxyUpstreamHandler;
 import net.anweisen.cloud.driver.CloudDriver;
@@ -27,7 +29,7 @@ import java.util.regex.Pattern;
  * @since 1.0
  */
 @Sharable
-public class NettyMinecraftDecoder extends SimpleChannelInboundHandler<ByteBuf> {
+public class NettyMinecraftDecoder extends SimpleChannelInboundHandler<ByteBuf> implements LoggingApiUser {
 
 	private final NettyCordSocketServer server;
 
@@ -40,41 +42,68 @@ public class NettyMinecraftDecoder extends SimpleChannelInboundHandler<ByteBuf> 
 		try {
 			int packetLength = NettyUtils.readVarInt(buffer);
 			int packetId = NettyUtils.readVarInt(buffer);
-			if (packetId == 0) {
-				int clientVersion = NettyUtils.readVarInt(buffer);
+
+			// https://wiki.vg/Protocol#Handshake
+			if (packetId == 0x00) {
+				int protocolVersion = NettyUtils.readVarInt(buffer);
 				String hostname = NettyUtils.readString(buffer);
 				int port = buffer.readUnsignedShort();
-				int state = NettyUtils.readVarInt(buffer);
+				int nextState = NettyUtils.readVarInt(buffer);
 
 				connectClient(context.channel(), hostname, buffer.retain());
 			}
 
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			buffer.resetReaderIndex(); // Wait until we receive the full packet
 		}
 	}
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext context, Throwable ex) throws Exception {
-		CloudDriver.getInstance().getLogger().error("Exception caught in MinecraftDecoder", ex);
+		error("Exception caught in MinecraftDecoder", ex);
+
+		ProxyUpstreamHandler upstreamHandler = context.channel().attr(PacketUtils.UPSTREAM_HANDLER).get();
+		ProxyDownstreamHandler downstreamHandler = context.channel().attr(PacketUtils.DOWNSTREAM_HANDLER).get();
+		if (upstreamHandler != null)
+			upstreamHandler.getChannel().close();
+		if (downstreamHandler != null)
+			downstreamHandler.getChannel().close();
 	}
 
-	public void connectClient(@Nonnull Channel channel, @Nonnull String hostname, @Nonnull ByteBuf loginPacket) throws Exception {
+	@Override
+	public void channelActive(ChannelHandlerContext context) throws Exception {
+		CloudCord.getInstance().getTrafficReporter().reportNewConnection();
+	}
+
+	@Override
+	public void channelInactive(ChannelHandlerContext context) throws Exception {
+		debug("Some channel got disconnected from the MinecraftDecoder");
+		context.channel().close();
+	}
+
+	public void connectClient(@Nonnull Channel channel, @Nonnull String hostname, @Nonnull ByteBuf handshakePacket) throws Exception {
 		ServiceInfo proxyService = findProxyForHostName(hostname);
 		if (proxyService == null) {
-			CloudDriver.getInstance().getLogger().warn("Unable to find proxy @ hostname {}", hostname);
+			warn("Unable to find proxy @ hostname {}", hostname);
 			channel.close();
 			return;
 		}
+//		// TODO
+//		ServiceInfo proxyService = new ServiceInfo(
+//			UUID.randomUUID(), null, "Proxy", 1, ServiceEnvironment.BUNGEECORD,
+//			ServiceState.RUNNING, "Node-1", "45.13.227.194", 25565, true, Document.create()
+//		);
 
-		connectClient(channel, proxyService, hostname, loginPacket);
+		connectClient(channel, proxyService, hostname, handshakePacket);
 	}
 
-	public void connectClient(@Nonnull Channel channel, @Nonnull ServiceInfo proxyService, @Nonnull String hostname, @Nonnull ByteBuf loginPacket) throws Exception {
+	public void connectClient(@Nonnull Channel clientChannel, @Nonnull ServiceInfo proxyService, @Nonnull String hostname, @Nonnull ByteBuf handshakePacket) throws Exception {
 
-		ProxyDownstreamHandler downstreamHandler = channel.attr(PacketUtils.DOWNSTREAM_HANDLER) == null ? new ProxyDownstreamHandler(channel) : channel.attr(PacketUtils.DOWNSTREAM_HANDLER).get();
-		channel.attr(PacketUtils.DOWNSTREAM_HANDLER).set(downstreamHandler);
-		channel.attr(PacketUtils.CONNECTION_STATE).set(ConnectionState.HANDSHAKE);
+		ProxyDownstreamHandler downstreamHandler = clientChannel.attr(PacketUtils.DOWNSTREAM_HANDLER).get() == null ? new ProxyDownstreamHandler(clientChannel) : clientChannel.attr(PacketUtils.DOWNSTREAM_HANDLER).get();
+		clientChannel.attr(PacketUtils.DOWNSTREAM_HANDLER).set(downstreamHandler);
+		clientChannel.attr(PacketUtils.CONNECTION_STATE).set(ConnectionState.HANDSHAKE);
+		info("[{}] -> Upstream has successfully connected. Connecting Downstream to '{}' | {}..", downstreamHandler.getClientAddress(), proxyService.getName(), proxyService.getAddress());
 
 		Bootstrap bootstrap = new Bootstrap()
 			.group(server.getWorkerEventLoopGroup())
@@ -88,33 +117,43 @@ public class NettyMinecraftDecoder extends SimpleChannelInboundHandler<ByteBuf> 
 			});
 
 		ChannelFuture connectFuture = bootstrap.connect(proxyService.getAddress().toInetSocketAddress());
+		debug("Connecting for client {} for hostname {} to '{}': {}..", clientChannel.remoteAddress(), hostname, proxyService.getName(), proxyService.getAddress());
 		connectFuture.addListener((ChannelFutureListener) future -> {
+			Channel serverChannel = future.channel();
 			if (future.isSuccess()) {
-				CloudDriver.getInstance().getLogger().info("[{}] successfully connected to '{}' using proxy '{}'", channel.remoteAddress(), hostname, proxyService.getName());
+				debug("Successfully connected for {} to hostname '{}' using proxy '{}'@{} (cord <-> proxy: {})", clientChannel.remoteAddress(), hostname, proxyService.getName(), proxyService.getAddress(), serverChannel.localAddress());
 
-				if (channel.attr(PacketUtils.UPSTREAM_HANDLER).get() == null) {
-					ProxyUpstreamHandler upstreamHandler = new ProxyUpstreamHandler(connectFuture.channel(), downstreamHandler);
-					channel.pipeline().addLast(upstreamHandler);
-					channel.attr(PacketUtils.UPSTREAM_HANDLER).set(upstreamHandler);
+				if (clientChannel.pipeline().get("minecraft-decoder") != null)
+					clientChannel.pipeline().remove("minecraft-decoder");
+
+				if (clientChannel.attr(PacketUtils.UPSTREAM_HANDLER).get() == null) {
+					ProxyUpstreamHandler upstreamHandler = new ProxyUpstreamHandler(serverChannel, downstreamHandler);
+					clientChannel.pipeline().addLast(upstreamHandler);
+					clientChannel.attr(PacketUtils.UPSTREAM_HANDLER).set(upstreamHandler);
 				} else {
-					channel.attr(PacketUtils.UPSTREAM_HANDLER).get().setChannel(connectFuture.channel());
+					clientChannel.attr(PacketUtils.UPSTREAM_HANDLER).get().setChannel(serverChannel);
 				}
+				info("[{}] <- Proxy Downstream has successfully connected to '{}'", downstreamHandler.getClientAddress(), proxyService.getName());
 
-				if (channel.pipeline().get("minecraft-decoder") != null)
-					channel.pipeline().remove("minecraft-decoder");
+//				CloudDriver.getInstance().getSocketComponent().sendPacketSync(
+//					new Packet(PacketConstants.CORD_CHANNEL, Buffer.create()
+//						.writeString(proxyService.getName())
+//						.writeObject(HostAndPort.fromSocketAddress(clientChannel.remoteAddress()))
+//						.writeObject(HostAndPort.fromSocketAddress(serverChannel.localAddress()))
+//					)
+//				); // TODO wait for callback
 
-				loginPacket.resetReaderIndex();
-				future.channel().writeAndFlush(loginPacket.retain());
-				channel.attr(PacketUtils.CONNECTION_STATE).set(ConnectionState.PROXY);
+				serverChannel.writeAndFlush(Unpooled.copiedBuffer(handshakePacket.resetReaderIndex().retain()));
+				trace("Sent handshake packet for {} to proxy..", downstreamHandler.getClientAddress());
+				clientChannel.attr(PacketUtils.CONNECTION_STATE).set(ConnectionState.PROXY);
 			} else {
-				channel.close();
-				connectFuture.channel().close();
+				warn("[{}] Proxy Downstream was not connected successfully", downstreamHandler.getClientAddress());
+				clientChannel.close();
+				serverChannel.close();
 			}
 		});
 
 	}
-
-
 
 	// TODO max players
 	// TODO move to helper class
