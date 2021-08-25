@@ -1,7 +1,9 @@
 package net.anweisen.cloud.driver.player;
 
+import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.network.HostAndPort;
-import net.anweisen.cloud.driver.player.data.PlayerNetworkProxyConnection;
+import net.anweisen.cloud.driver.player.data.PlayerProxyConnectionData;
+import net.anweisen.cloud.driver.player.data.PlayerServerConnectionData;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 
 import javax.annotation.Nonnull;
@@ -14,18 +16,28 @@ import javax.annotation.Nullable;
 public interface CloudPlayer extends CloudOfflinePlayer {
 
 	@Nonnull
-	PlayerExecutor getExecutor();
+	default PlayerExecutor getExecutor() {
+		return CloudDriver.getInstance().getPlayerManager().getPlayerExecutor(getUniqueId());
+	}
 
 	@Nonnull
 	HostAndPort getAddress();
 
 	@Nonnull
-	PlayerNetworkProxyConnection getProxyConnection();
+	PlayerProxyConnectionData getProxyConnectionData();
+
+	@Nonnull
+	ServiceInfo getCurrentProxy();
 
 	@Nullable
-	ServiceInfo getServer();
+	PlayerServerConnectionData getServerConnectionData();
 
-	void setServer(@Nullable ServiceInfo server);
+	void setServerConnectionData(@Nonnull PlayerServerConnectionData serverConnection);
+
+	@Nullable
+	ServiceInfo getCurrentServer();
+
+	void setCurrentServer(@Nonnull ServiceInfo server);
 
 	boolean isOnline();
 
