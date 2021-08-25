@@ -19,9 +19,11 @@ public class NettyCordSocketServer {
 	protected final EventLoopGroup bossEventLoopGroup = NettyUtils.newEventLoopGroup();
 	protected final EventLoopGroup workerEventLoopGroup = NettyUtils.newEventLoopGroup();
 
+	protected Channel channel;
+
 	public void init(@Nonnull HostAndPort address) throws Exception {
 
-		new ServerBootstrap()
+		channel = new ServerBootstrap()
 				.group(this.bossEventLoopGroup, this.workerEventLoopGroup)
 				.childOption(ChannelOption.TCP_NODELAY, true)
 				.childOption(ChannelOption.IP_TOS, 24)
@@ -30,9 +32,18 @@ public class NettyCordSocketServer {
 				.childHandler(new NettyCordServerInitializer(this))
 				.bind(address.getHost(), address.getPort())
 				.addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE)
-//	    		.addListener(ChannelFutureListener.CLOSE_ON_FAILURE)
+	    		.addListener(ChannelFutureListener.CLOSE_ON_FAILURE)
 				.sync()
 				.channel();
+
+	}
+
+	public void close() {
+
+		channel.close();
+
+		bossEventLoopGroup.shutdownGracefully();
+		workerEventLoopGroup.shutdownGracefully();
 
 	}
 
