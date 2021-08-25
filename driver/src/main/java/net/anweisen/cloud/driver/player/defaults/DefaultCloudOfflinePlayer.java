@@ -4,7 +4,7 @@ import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import net.anweisen.cloud.driver.player.CloudOfflinePlayer;
-import net.anweisen.cloud.driver.player.data.PlayerNetworkProxyConnection;
+import net.anweisen.cloud.driver.player.data.PlayerProxyConnectionData;
 import net.anweisen.cloud.driver.player.permission.PermissionData;
 import net.anweisen.utilities.common.config.Document;
 
@@ -20,13 +20,13 @@ public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer, Serializab
 
 	private UUID uuid;
 	private String name;
-	private PlayerNetworkProxyConnection lastNetworkConnection;
+	private PlayerProxyConnectionData lastNetworkConnection;
 	private PermissionData permissionData;
 	private long firstLogin;
 	private long lastOnline;
 	private Document properties;
 
-	public DefaultCloudOfflinePlayer(@Nonnull UUID uuid, @Nonnull String name, @Nonnull PlayerNetworkProxyConnection lastNetworkConnection,
+	public DefaultCloudOfflinePlayer(@Nonnull UUID uuid, @Nonnull String name, @Nonnull PlayerProxyConnectionData lastNetworkConnection,
 	                                 @Nonnull PermissionData permissionData, long firstLogin, long lastOnline, @Nonnull Document properties) {
 		this.uuid = uuid;
 		this.name = name;
@@ -57,7 +57,7 @@ public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer, Serializab
 
 	@Nullable
 	@Override
-	public PlayerNetworkProxyConnection getLastNetworkConnection() {
+	public PlayerProxyConnectionData getLastProxyConnectionData() {
 		return lastNetworkConnection;
 	}
 
@@ -103,7 +103,7 @@ public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer, Serializab
 	public void read(@Nonnull Buffer buffer) {
 		uuid = buffer.readUUID();
 		name = buffer.readString();
-		lastNetworkConnection = buffer.readObject(PlayerNetworkProxyConnection.class);
+		lastNetworkConnection = buffer.readObject(PlayerProxyConnectionData.class);
 		permissionData = buffer.readObject(PermissionData.class);
 		firstLogin = buffer.readLong();
 		lastOnline = buffer.readLong();
