@@ -23,7 +23,7 @@ public final class HeaderPrinter {
 		try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
 			String input;
 			while ((input = bufferedReader.readLine()) != null) {
-				console.writeLine(input);
+				console.writeLine(ConsoleColor.toColoredString('&', input));
 			}
 		} catch (IOException ex) {
 			ex.printStackTrace();
