@@ -1,6 +1,5 @@
 package net.anweisen.cloud.driver.player.permission;
 
-import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.player.CloudOfflinePlayer;
 import net.anweisen.cloud.driver.player.permission.PermissionData.PlayerGroupData;
 

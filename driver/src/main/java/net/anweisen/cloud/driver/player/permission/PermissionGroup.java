@@ -5,6 +5,7 @@ import net.anweisen.cloud.driver.CloudDriver;
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -12,6 +13,9 @@ import java.util.stream.Collectors;
  * @since 1.0
  */
 public interface PermissionGroup {
+
+	@Nonnull
+	UUID getUniqueId();
 
 	@Nonnull
 	String getName();
@@ -86,6 +90,8 @@ public interface PermissionGroup {
 		return getPermissions().contains(permission);
 	}
 
-	void save();
+	default void save() {
+		CloudDriver.getInstance().getPermissionManager().saveGroup(this);
+	}
 
 }

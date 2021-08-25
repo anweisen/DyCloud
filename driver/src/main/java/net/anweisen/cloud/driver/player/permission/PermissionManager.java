@@ -2,9 +2,11 @@ package net.anweisen.cloud.driver.player.permission;
 
 import net.anweisen.cloud.driver.player.CloudOfflinePlayer;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.UUID;
 
 /**
@@ -13,7 +15,7 @@ import java.util.UUID;
  */
 public interface PermissionManager {
 
-	void init();
+	void reload();
 
 	@Nonnull
 	Collection<PermissionGroup> getGroups();
@@ -25,7 +27,44 @@ public interface PermissionManager {
 	PermissionGroup getHighestGroup();
 
 	@Nullable
+	PermissionGroup getGroupByUniqueId(@Nonnull UUID uniqueId);
+
+	@Nullable
 	PermissionGroup getGroupByName(@Nonnull String name);
+
+	// TODO comments
+	@Nonnull
+	@CheckReturnValue
+	default PermissionGroup createGroup(@Nonnull String name, int sortId) {
+		return createGroup(name, "", "", sortId, false);
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	default PermissionGroup createGroup(@Nonnull String name, @Nonnull String color, @Nonnull String prefix, int sortId, boolean defaultGroup) {
+		return createGroup(name, color, prefix, sortId, defaultGroup, Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
+	}
+
+	@Nonnull
+	@CheckReturnValue
+	PermissionGroup createGroup(@Nonnull String name, @Nonnull String color, @Nonnull String prefix, int sortId, boolean defaultGroup,
+	                            @Nonnull Collection<String> groups, @Nonnull Collection<String> permissions, @Nonnull Collection<String> deniedPermissions);
+
+	void setGroupsCache(@Nonnull Collection<? extends PermissionGroup> groups);
+
+	void removeGroup(@Nonnull UUID uniqueId);
+
+	default void removeGroup(@Nonnull String name) {
+		PermissionGroup group = getGroupByName(name);
+		if (group != null)
+			removeGroup(group);
+	}
+
+	default void removeGroup(@Nonnull PermissionGroup group) {
+		removeGroup(group.getUniqueId());
+	}
+
+	void saveGroup(@Nonnull PermissionGroup group);
 
 	@Nonnull
 	PermissionPlayer getPlayer(@Nonnull CloudOfflinePlayer player);

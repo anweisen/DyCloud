@@ -1,14 +1,10 @@
 package net.anweisen.cloud.driver.player.permission.impl;
 
+import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.player.permission.PermissionGroup;
-import net.anweisen.utilities.common.collection.WrappedException;
-import net.anweisen.utilities.common.config.Document;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -16,6 +12,7 @@ import java.util.Objects;
  */
 public class DefaultPermissionGroup implements PermissionGroup {
 
+	private UUID uniqueId;
 	private String name;
 	private String color;
 	private String prefix;
@@ -25,7 +22,34 @@ public class DefaultPermissionGroup implements PermissionGroup {
 	private Collection<String> permissions;
 	private Collection<String> deniedPermissions;
 
-	public DefaultPermissionGroup() {
+	private DefaultPermissionGroup() {
+	}
+
+	public DefaultPermissionGroup(@Nonnull String name, @Nonnull String color, @Nonnull String prefix, int sortId, boolean defaultGroup,
+	                              @Nonnull Collection<String> groups, @Nonnull Collection<String> permissions, @Nonnull Collection<String> deniedPermissions) {
+		Preconditions.checkNotNull(name, "Name cannot be null");
+		Preconditions.checkNotNull(color, "Color cannot be null");
+		Preconditions.checkNotNull(prefix, "Prefix cannot be null");
+		Preconditions.checkArgument(sortId >= 0, "SortId cannot be negative");
+		Preconditions.checkNotNull(groups, "Groups cannot be null");
+		Preconditions.checkNotNull(permissions, "Permissions cannot be null");
+		Preconditions.checkNotNull(deniedPermissions, "DeniedPermissions cannot be null");
+
+		this.uniqueId = UUID.randomUUID();
+		this.name = name;
+		this.color = color;
+		this.prefix = prefix;
+		this.sortId = sortId;
+		this.defaultGroup = defaultGroup;
+		this.groups = new ArrayList<>(groups);
+		this.permissions = new ArrayList<>(permissions);
+		this.deniedPermissions = new ArrayList<>(deniedPermissions);
+	}
+
+	@Nonnull
+	@Override
+	public UUID getUniqueId() {
+		return uniqueId;
 	}
 
 	@Nonnull
@@ -137,15 +161,6 @@ public class DefaultPermissionGroup implements PermissionGroup {
 	@Override
 	public boolean hasDeniedPermissions(@Nonnull String permission) {
 		return deniedPermissions.contains(permission);
-	}
-
-	@Override
-	public void save() {
-		try {
-			Document.of(this).saveToFile(CloudPermissionManager.directory.resolve(name + ".json"));
-		} catch (IOException ex) {
-			throw new WrappedException(ex);
-		}
 	}
 
 	@Override
