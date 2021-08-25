@@ -87,8 +87,8 @@ public class DefaultPermissionPlayer implements PermissionPlayer {
 	@Nonnull
 	protected Stream<PermissionGroup> streamGroups() {
 		return getPlayerGroups().stream()
-			.map(PlayerGroupData::getName)
-			.map(CloudDriver.getInstance().getPermissionManager()::getGroupByName)
+			.map(PlayerGroupData::getUniqueId)
+			.map(CloudDriver.getInstance().getPermissionManager()::getGroupByUniqueId)
 			.filter(Objects::nonNull);
 	}
 
@@ -106,7 +106,7 @@ public class DefaultPermissionPlayer implements PermissionPlayer {
 
 	@Override
 	public void addGroup(@Nonnull String name) {
-		player.getStoredPermissionData().getGroups().add(new PlayerGroupData(name, -1));
+		addGroup(name, -1);
 	}
 
 	@Override
@@ -116,17 +116,61 @@ public class DefaultPermissionPlayer implements PermissionPlayer {
 
 	@Override
 	public void addGroup(@Nonnull String name, long timeoutTimeMillis) {
-		player.getStoredPermissionData().getGroups().add(new PlayerGroupData(name, timeoutTimeMillis));
+		PermissionGroup group = CloudDriver.getInstance().getPermissionManager().getGroupByName(name);
+		if (group != null)
+			addGroup(group, timeoutTimeMillis);
+	}
+
+	@Override
+	public void addGroup(@Nonnull PermissionGroup group) {
+		addGroup(group, -1);
+	}
+
+	@Override
+	public void addGroup(@Nonnull PermissionGroup group, long time, @Nonnull TimeUnit unit) {
+		addGroup(group, System.currentTimeMillis() + unit.toMillis(time));
+	}
+
+	@Override
+	public void addGroup(@Nonnull PermissionGroup group, long timeoutTimeMillis) {
+		player.getStoredPermissionData().getGroups().add(new PlayerGroupData(group.getUniqueId(), timeoutTimeMillis));
 	}
 
 	@Override
 	public void removeGroup(@Nonnull String name) {
-		player.getStoredPermissionData().getGroups().removeIf(group -> group.getName().equals(name));
+		PermissionGroup group = CloudDriver.getInstance().getPermissionManager().getGroupByName(name);
+		if (group != null)
+			removeGroup(group);
+	}
+
+	@Override
+	public void removeGroup(@Nonnull UUID uniqueId) {
+		player.getStoredPermissionData().getGroups().removeIf(group -> group.getUniqueId().equals(uniqueId));
+	}
+
+	@Override
+	public void removeGroup(@Nonnull PermissionGroup group) {
+		removeGroup(group.getUniqueId());
 	}
 
 	@Override
 	public boolean hasGroup(@Nonnull String name) {
-		return player.getStoredPermissionData().getPermissions().contains(name);
+		PermissionGroup group = CloudDriver.getInstance().getPermissionManager().getGroupByName(name);
+		return group != null && hasGroup(group);
+	}
+
+	@Override
+	public boolean hasGroup(@Nonnull UUID uniqueId) {
+		for (PlayerGroupData group : player.getStoredPermissionData().getGroups()) {
+			if (group.getUniqueId().equals(uniqueId))
+				return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean hasGroup(@Nonnull PermissionGroup group) {
+		return hasGroup(group.getUniqueId());
 	}
 
 	@Nonnull

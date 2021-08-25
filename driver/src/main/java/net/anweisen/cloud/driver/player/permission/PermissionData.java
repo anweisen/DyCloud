@@ -5,6 +5,7 @@ import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
+import java.util.UUID;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -51,32 +52,32 @@ public final class PermissionData implements SerializableObject {
 
 	public static final class PlayerGroupData implements SerializableObject {
 
-		private String name;
+		private UUID uniqueId;
 		private long timeout;
 
 		private PlayerGroupData() {
 		}
 
-		public PlayerGroupData(@Nonnull String name, long timeout) {
-			this.name = name;
+		public PlayerGroupData(@Nonnull UUID uniqueId, long timeout) {
+			this.uniqueId = uniqueId;
 			this.timeout = timeout;
 		}
 
 		@Override
 		public void write(@Nonnull Buffer buffer) {
-			buffer.writeString(name);
+			buffer.writeUUID(uniqueId);
 			buffer.writeLong(timeout);
 		}
 
 		@Override
 		public void read(@Nonnull Buffer buffer) {
-			name = buffer.readString();
+			uniqueId = buffer.readUUID();
 			timeout = buffer.readLong();
 		}
 
 		@Nonnull
-		public String getName() {
-			return name;
+		public UUID getUniqueId() {
+			return uniqueId;
 		}
 
 		public long getTimeoutTime() {

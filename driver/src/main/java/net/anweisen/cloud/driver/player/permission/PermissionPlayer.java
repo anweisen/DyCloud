@@ -68,9 +68,23 @@ public interface PermissionPlayer {
 
 	void addGroup(@Nonnull String name, long timeoutTimeMillis);
 
+	void addGroup(@Nonnull PermissionGroup group);
+
+	void addGroup(@Nonnull PermissionGroup group, long time, @Nonnull TimeUnit unit);
+
+	void addGroup(@Nonnull PermissionGroup group, long timeoutTimeMillis);
+
 	void removeGroup(@Nonnull String name);
 
+	void removeGroup(@Nonnull UUID uniqueId);
+
+	void removeGroup(@Nonnull PermissionGroup group);
+
 	boolean hasGroup(@Nonnull String name);
+
+	boolean hasGroup(@Nonnull UUID uniqueId);
+
+	boolean hasGroup(@Nonnull PermissionGroup group);
 
 	@Nonnull
 	Map<String, Collection<String>> getTaskPermissions();
