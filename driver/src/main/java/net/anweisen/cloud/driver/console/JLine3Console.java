@@ -49,7 +49,7 @@ public class JLine3Console implements Console {
 			.variable(LineReader.BELL_STYLE, "off")
 			.build();
 
-		this.updatePrompt();
+		this.resetPrompt();
 		this.consoleReadThread.start();
 	}
 
@@ -77,8 +77,8 @@ public class JLine3Console implements Console {
 	@Nonnull
 	@Override
 	public Console write(@Nonnull String text) {
-		if (this.printingEnabled) {
-			this.forceWrite(text);
+		if (printingEnabled) {
+			forceWrite(text);
 		}
 
 		return this;
@@ -87,8 +87,8 @@ public class JLine3Console implements Console {
 	@Nonnull
 	@Override
 	public Console writeLine(@Nonnull String text) {
-		if (this.printingEnabled) {
-			this.forceWriteLine(text);
+		if (printingEnabled) {
+			forceWriteLine(text);
 		}
 
 		return this;
@@ -97,59 +97,58 @@ public class JLine3Console implements Console {
 	@Nonnull
 	@Override
 	public Console forceWrite(@Nonnull String text) {
-		return this.writeRaw(Ansi.ansi().eraseLine(Ansi.Erase.ALL).toString() + '\r' + text + ConsoleColor.DEFAULT);
+		return writeRaw(Ansi.ansi().eraseLine(Ansi.Erase.ALL).toString() + '\r' + text + ConsoleColor.DEFAULT);
 	}
 
 	@Nonnull
 	@Override
 	public Console writeRaw(@Nonnull String rawText) {
-		this.print(ConsoleColor.toColoredString('&', rawText));
+		print(rawText);
 		return this;
 	}
 
 	@Nonnull
 	@Override
 	public Console forceWriteLine(@Nonnull String text) {
-		text = ConsoleColor.toColoredString('&', text);
 		if (!text.endsWith(System.lineSeparator())) {
 			text += System.lineSeparator();
 		}
 
-		this.print(Ansi.ansi().eraseLine(Ansi.Erase.ALL).toString() + '\r' + text + Ansi.ansi().reset().toString());
+		print(Ansi.ansi().eraseLine(Ansi.Erase.ALL).toString() + '\r' + text + Ansi.ansi().reset().toString());
 		return this;
 	}
 
 	@Override
 	public void resetPrompt() {
-		this.prompt = System.getProperty("cloudnet.console.prompt", "&c%user%&r@&7%screen% &f=> &r");
-		this.updatePrompt();
+		prompt = promptTemplate;
+		updatePrompt();
 	}
 
 	@Override
 	public void removePrompt() {
-		this.prompt = null;
-		this.updatePrompt();
+		prompt = null;
+		updatePrompt();
 	}
 
 	@Override
 	public void emptyPrompt() {
-		this.prompt = ConsoleColor.DEFAULT.toString();
-		this.updatePrompt();
+		prompt = ConsoleColor.DEFAULT.toString();
+		updatePrompt();
 	}
 
 	@Override
 	public void clearScreen() {
-		this.terminal.puts(InfoCmp.Capability.clear_screen);
-		this.terminal.flush();
+		terminal.puts(InfoCmp.Capability.clear_screen);
+		terminal.flush();
 	}
 
 	@Override
 	public void close() throws Exception {
-		this.animationThreadPool.shutdownNow();
-		this.consoleReadThread.interrupt();
+		animationThreadPool.shutdownNow();
+		consoleReadThread.interrupt();
 
-		this.terminal.flush();
-		this.terminal.close();
+		terminal.flush();
+		terminal.close();
 
 		AnsiConsole.systemUninstall();
 	}
@@ -157,13 +156,13 @@ public class JLine3Console implements Console {
 	@Nonnull
 	@Override
 	public String getPrompt() {
-		return this.prompt;
+		return prompt;
 	}
 
 	@Override
 	public void setPrompt(@Nonnull String prompt) {
-		this.prompt = prompt;
-		this.updatePrompt();
+		prompt = prompt;
+		updatePrompt();
 	}
 
 	@Nonnull
@@ -174,37 +173,35 @@ public class JLine3Console implements Console {
 
 	@Override
 	public void setScreenName(@Nonnull String screenName) {
-		this.screenName = screenName;
-		this.updatePrompt();
+		screenName = screenName;
+		updatePrompt();
 	}
 
 	private void updatePrompt() {
-		this.prompt = ConsoleColor.toColoredString('&', this.promptTemplate)
-			.replace("%screen%", this.screenName);
-		this.lineReader.setPrompt(this.prompt);
+		prompt = ConsoleColor.toColoredString('&', prompt).replace("%screen%", screenName);
+		lineReader.setPrompt(this.prompt);
 	}
 
 	private void print(@Nonnull String text) {
-		this.lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
-		this.lineReader.getTerminal().puts(InfoCmp.Capability.clr_eol);
-		this.lineReader.getTerminal().writer().print(text);
-		this.lineReader.getTerminal().writer().flush();
+		lineReader.getTerminal().puts(InfoCmp.Capability.carriage_return);
+		lineReader.getTerminal().writer().print(text);
+		lineReader.getTerminal().writer().flush();
 
-		this.redisplay();
+		redisplay();
 	}
 
 	private void redisplay() {
-		if (!this.lineReader.isReading()) {
+		if (!lineReader.isReading()) {
 			return;
 		}
 
-		this.lineReader.callWidget(LineReader.REDRAW_LINE);
-		this.lineReader.callWidget(LineReader.REDISPLAY);
+		lineReader.callWidget(LineReader.REDRAW_LINE);
+		lineReader.callWidget(LineReader.REDISPLAY);
 	}
 
 	@Nonnull
 	protected LineReader getLineReader() {
-		return this.lineReader;
+		return lineReader;
 	}
 
 	private final class InternalLineReader extends LineReaderImpl {
@@ -215,8 +212,8 @@ public class JLine3Console implements Console {
 
 		@Override
 		protected boolean historySearchBackward() {
-			if (this.history.previous()) {
-				this.setBuffer(this.history.current());
+			if (history.previous()) {
+				setBuffer(this.history.current());
 				return true;
 			} else {
 				return false;
@@ -225,8 +222,8 @@ public class JLine3Console implements Console {
 
 		@Override
 		protected boolean historySearchForward() {
-			if (this.history.next()) {
-				this.setBuffer(this.history.current());
+			if (history.next()) {
+				setBuffer(this.history.current());
 				return true;
 			} else {
 				return false;
@@ -235,12 +232,12 @@ public class JLine3Console implements Console {
 
 		@Override
 		protected boolean upLineOrSearch() {
-			return this.historySearchBackward();
+			return historySearchBackward();
 		}
 
 		@Override
 		protected boolean downLineOrSearch() {
-			return this.historySearchForward();
+			return historySearchForward();
 		}
 	}
 
@@ -257,13 +254,13 @@ public class JLine3Console implements Console {
 
 		@Nonnull
 		public InternalLineReaderBuilder variable(@Nonnull String name, @Nonnull Object value) {
-			this.variables.put(name, value);
+			variables.put(name, value);
 			return this;
 		}
 
 		@Nonnull
 		public InternalLineReaderBuilder option(@Nonnull LineReader.Option option, boolean value) {
-			this.options.put(option, value);
+			options.put(option, value);
 			return this;
 		}
 
@@ -275,12 +272,12 @@ public class JLine3Console implements Console {
 
 		@Nonnull
 		public InternalLineReader build() {
-			InternalLineReader reader = new InternalLineReader(this.terminal, "CloudConsole", this.variables);
-			if (this.completer != null) {
-				reader.setCompleter(this.completer);
+			InternalLineReader reader = new InternalLineReader(terminal, "CloudConsole", variables);
+			if (completer != null) {
+				reader.setCompleter(completer);
 			}
 
-			for (Map.Entry<LineReader.Option, Boolean> e : this.options.entrySet()) {
+			for (Map.Entry<LineReader.Option, Boolean> e : options.entrySet()) {
 				reader.option(e.getKey(), e.getValue());
 			}
 
