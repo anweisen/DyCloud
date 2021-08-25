@@ -207,4 +207,40 @@ public abstract class Buffer extends ByteBuf {
 	@Override
 	public abstract Buffer writeDouble(double value);
 
+	@Override
+	public abstract Buffer clear();
+
+	@Override
+	public abstract Buffer markReaderIndex();
+
+	@Override
+	public abstract Buffer resetReaderIndex();
+
+	@Override
+	public abstract Buffer markWriterIndex();
+
+	@Override
+	public abstract Buffer resetWriterIndex();
+
+	@Override
+	public abstract Buffer discardReadBytes();
+
+	@Override
+	public abstract Buffer discardSomeReadBytes();
+
+	@Override
+	public abstract Buffer ensureWritable(int minWritableBytes);
+
+	@Override
+	public abstract Buffer retain(int increment);
+
+	@Override
+	public abstract Buffer retain();
+
+	@Override
+	public abstract Buffer touch();
+
+	@Override
+	public abstract Buffer touch(Object hint);
+
 }
