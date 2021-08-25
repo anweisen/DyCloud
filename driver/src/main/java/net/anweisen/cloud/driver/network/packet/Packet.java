@@ -114,6 +114,6 @@ public class Packet {
 
 	@Override
 	public String toString() {
-		return "Packet[channel=" + channel + " uuid=" + uniqueId + " header=" + header.toJson() + " buffer=" + (body != null ? body.readableBytes() : 0) + "]";
+		return "Packet[channel=" + PacketConstants.getChannelName(channel) + " uuid=" + uniqueId + " header=" + header.toJson() + " buffer=" + (body != null ? body.readableBytes() : 0) + "]";
 	}
 }

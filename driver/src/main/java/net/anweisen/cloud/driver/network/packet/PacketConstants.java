@@ -15,6 +15,27 @@ public final class PacketConstants {
 	public static final int PLAYER_API_CHANNEL = 7;                 // node    <-  master  <-> wrapper
 	public static final int CORD_CHANNEL = 9;                       // cord     -> master   -> wrapper
 
+	private static final Map<Integer, String> channelNames = new LinkedHashMap<>();
+	static {
+		for (Field field : PacketConstants.class.getFields()) {
+			try {
+				int channel = field.getInt(null);
+				String name = field.getName().toLowerCase();
+				if (name.endsWith("channel"))
+					name = name.substring(0, name.indexOf("channel") - 1);
+
+				channelNames.put(channel, name);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	@Nonnull
+	public static String getChannelName(int channel) {
+		return channelNames.getOrDefault(channel, channel + "");
+	}
+
 	private PacketConstants() {}
 
 }
