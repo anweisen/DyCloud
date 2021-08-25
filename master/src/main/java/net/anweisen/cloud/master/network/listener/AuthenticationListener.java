@@ -74,7 +74,31 @@ public class AuthenticationListener implements PacketListener {
 				cloud.getServiceFactory().createService(cloud.getServiceConfigManager().getTask("Lobby"));
 				cloud.getServiceFactory().createService(cloud.getServiceConfigManager().getTask("Lobby"));
 				cloud.getServiceFactory().createService(cloud.getServiceConfigManager().getTask("Proxy"));
+				break;
+			}
 
+			case CORD: {
+				if (cloud.getCordManager().getCordInfos().stream().anyMatch(info -> info.getClientAddress().equals(channel.getClientAddress()))) {
+					cloud.getLogger().warn("{} tried to authenticate again with cord name '{}'", channel, name);
+					channel.sendPacket(new NetworkAuthResponsePacket(false, "cord address already registered"));
+					return;
+				}
+				if (cloud.getCordManager().getCordInfos().stream().anyMatch(info -> info.getName().equalsIgnoreCase(name))) {
+					cloud.getLogger().warn("{} tried to register with duplicate cord name '{}'", channel, name);
+					channel.sendPacket(new NetworkAuthResponsePacket(false, "cord already registered"));
+					channel.close();
+					return;
+				}
+
+				HostAndPort proxyAddress = buffer.readObject(HostAndPort.class);
+
+				CordInfo info = new CordInfo(name, channel.getClientAddress(), proxyAddress);
+				CordServer server = new DefaultCordServer(info, channel);
+				cloud.getCordManager().getCordServers().add(server);
+
+				cloud.getLogger().info("Cord '{}' has connected successfully", name);
+				channel.sendPacket(new NetworkAuthResponsePacket(true, "successful"));
+				channel.sendPacket(ConfigInitPacket.create());
 				break;
 			}
 
