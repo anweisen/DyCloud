@@ -14,7 +14,7 @@ public class Packet {
 	 * An one length size byte[] for empty packet bodies
 	 */
 	public static final byte[] EMPTY_PACKET_BYTE_ARRAY = new byte[] { 0 };
-	public static final Packet EMPTY = new Packet(-1, Document.empty(), EMPTY_PACKET_BYTE_ARRAY);
+	public static final Packet EMPTY_RESPONSE = new Packet(PacketConstants.RESPONSE_CHANNEL, Document.empty(), EMPTY_PACKET_BYTE_ARRAY);
 
 	protected final long creationMillis = System.currentTimeMillis();
 
@@ -63,25 +63,25 @@ public class Packet {
 	@Nonnull
 	@CheckReturnValue
 	public static Packet createResponseFor(@Nonnull Packet packet, @Nullable Document header, @Nullable Buffer body) {
-		return new Packet(-1, packet.getUniqueId(), header, body);
+		return new Packet(PacketConstants.RESPONSE_CHANNEL, packet.getUniqueId(), header, body);
 	}
 
 	@Nonnull
 	@CheckReturnValue
 	public static Packet createResponseFor(@Nonnull Packet packet, @Nullable Document header) {
-		return new Packet(-1, packet.getUniqueId(), header);
+		return new Packet(PacketConstants.RESPONSE_CHANNEL, packet.getUniqueId(), header);
 	}
 
 	@Nonnull
 	@CheckReturnValue
 	public static Packet createResponseFor(@Nonnull Packet packet, @Nullable Buffer body) {
-		return new Packet(-1, packet.getUniqueId(), Document.empty(), body);
+		return new Packet(PacketConstants.RESPONSE_CHANNEL, packet.getUniqueId(), Document.empty(), body);
 	}
 
 	@Nonnull
 	@CheckReturnValue
 	public static Packet createResponseFor(@Nonnull Packet packet) {
-		return new Packet(-1, packet.getUniqueId(), Document.empty());
+		return new Packet(PacketConstants.RESPONSE_CHANNEL, packet.getUniqueId(), Document.empty());
 	}
 
 	public int getChannel() {

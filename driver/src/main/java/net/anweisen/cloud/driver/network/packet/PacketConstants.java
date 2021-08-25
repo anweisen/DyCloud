@@ -6,6 +6,7 @@ package net.anweisen.cloud.driver.network.packet;
  */
 public final class PacketConstants {
 
+	public static final int RESPONSE_CHANNEL = -1;
 	public static final int AUTH_CHANNEL = 1;                       // master  <-| node, wrapper, cord
 	public static final int PUBLISH_CONFIG_CHANNEL = 2;             // master   -> node
 	public static final int DATABASE_CHANNEL = 3;                   // master  <-| node, wrapper, cord
