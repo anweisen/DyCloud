@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -54,6 +55,11 @@ public interface NetworkingApiUser {
 	@Nonnull
 	default Task<Packet> sendQueryAsync(@Nonnull Packet packet) {
 		return getChannel().sendQueryAsync(packet);
+	}
+
+	@Nonnull
+	default <R> Task<R> sendQueryAsync(@Nonnull Packet packet, @Nonnull Function<? super Buffer, ? extends R> mapper) {
+		return getChannel().sendQueryAsync(packet).map(response -> mapper.apply(response.getBuffer()));
 	}
 
 	@Nonnull
