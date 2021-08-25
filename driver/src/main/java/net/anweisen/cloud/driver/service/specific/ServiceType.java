@@ -16,13 +16,17 @@ public enum ServiceType {
 	SERVER(30000),
 	PROXY(25565);
 
-	private final int startPort;
+	private int startPort;
 
-	ServiceType(int startPort) {
-		this.startPort = startPort;
+	ServiceType(int defaultStartPort) {
+		this.startPort = defaultStartPort;
 	}
 
 	public int getStartPort() {
 		return startPort;
+	}
+
+	public void setStartPort(int startPort) {
+		this.startPort = startPort;
 	}
 }
