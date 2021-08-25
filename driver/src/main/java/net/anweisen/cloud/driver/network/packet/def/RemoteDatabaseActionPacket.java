@@ -12,13 +12,13 @@ import java.util.function.Consumer;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class DatabaseActionPacket extends Packet {
+public class RemoteDatabaseActionPacket extends Packet {
 
-	public DatabaseActionPacket(@Nonnull DatabaseActionType type) {
+	public RemoteDatabaseActionPacket(@Nonnull DatabaseActionType type) {
 		this(type, null);
 	}
 
-	public DatabaseActionPacket(@Nonnull DatabaseActionType type, @Nullable Consumer<? super Buffer> modifier) {
+	public RemoteDatabaseActionPacket(@Nonnull DatabaseActionType type, @Nullable Consumer<? super Buffer> modifier) {
 		super(PacketConstants.DATABASE_CHANNEL, Buffer.create().writeEnumConstant(type));
 		if (modifier != null)
 			modifier.accept(body);
