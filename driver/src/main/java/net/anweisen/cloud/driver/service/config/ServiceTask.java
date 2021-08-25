@@ -24,8 +24,13 @@ public final class ServiceTask implements SerializableObject {
 	private ServiceEnvironment environment;
 	private int javaVersion;
 
+	// Servers
 	private boolean fallback;
 	private int fallbackPriority;
+
+	// Proxies
+	private Collection<String> cordHostnames;
+
 	private String permission;
 
 	private int memoryLimit;
@@ -46,6 +51,7 @@ public final class ServiceTask implements SerializableObject {
 		buffer.writeInt(javaVersion);
 		buffer.writeBoolean(fallback);
 		buffer.writeInt(fallbackPriority);
+		buffer.writeStringCollection(cordHostnames);
 		buffer.writeOptionalString(permission);
 		buffer.writeInt(memoryLimit);
 		buffer.writeInt(minCount);
@@ -61,6 +67,7 @@ public final class ServiceTask implements SerializableObject {
 		javaVersion = buffer.readInt();
 		fallback = buffer.readBoolean();
 		fallbackPriority = buffer.readInt();
+		cordHostnames = buffer.readStringCollection();
 		permission = buffer.readOptionalString();
 		memoryLimit = buffer.readInt();
 		minCount = buffer.readInt();
@@ -95,6 +102,11 @@ public final class ServiceTask implements SerializableObject {
 
 	public int getFallbackPriority() {
 		return fallbackPriority;
+	}
+
+	@Nonnull
+	public Collection<String> getCordHostnames() {
+		return cordHostnames;
 	}
 
 	@Nullable
@@ -145,6 +157,7 @@ public final class ServiceTask implements SerializableObject {
 			&& maxCount == task.maxCount
 			&& environment == task.environment
 			&& Objects.equals(name, task.name)
+			&& Objects.equals(cordHostnames, task.cordHostnames)
 			&& Objects.equals(permission, task.permission)
 			&& Objects.equals(nodes, task.nodes)
 			&& Objects.equals(templates, task.templates);
@@ -152,6 +165,6 @@ public final class ServiceTask implements SerializableObject {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(name, environment, javaVersion, fallback, fallbackPriority, permission, memoryLimit, minCount, maxCount, nodes, templates);
+		return Objects.hash(name, environment, javaVersion, fallback, fallbackPriority, cordHostnames, permission, memoryLimit, minCount, maxCount, nodes, templates);
 	}
 }
