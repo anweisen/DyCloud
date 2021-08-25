@@ -1,7 +1,7 @@
 package net.anweisen.cloud.driver.player;
 
 import net.anweisen.cloud.driver.CloudDriver;
-import net.anweisen.cloud.driver.player.data.PlayerNetworkProxyConnection;
+import net.anweisen.cloud.driver.player.data.PlayerProxyConnectionData;
 import net.anweisen.cloud.driver.player.permission.PermissionData;
 import net.anweisen.cloud.driver.player.permission.PermissionPlayer;
 import net.anweisen.utilities.common.config.Document;
@@ -25,7 +25,7 @@ public interface CloudOfflinePlayer {
 	void setName(@Nonnull String name);
 
 	@Nullable
-	PlayerNetworkProxyConnection getLastNetworkConnection();
+	PlayerProxyConnectionData getLastProxyConnectionData();
 
 	long getFirstLoginTime();
 
@@ -39,6 +39,11 @@ public interface CloudOfflinePlayer {
 	@Nonnull
 	default PermissionPlayer getPermissionPlayer() {
 		return CloudDriver.getInstance().getPermissionManager().getPlayer(this);
+	}
+
+	@Nullable
+	default CloudPlayer findOnlinePlayer() {
+		return CloudDriver.getInstance().getPlayerManager().getOnlinePlayerByUniqueId(getUniqueId());
 	}
 
 	@Nonnull
