@@ -203,6 +203,13 @@ public final class ServiceInfo implements SerializableObject {
 			&& Objects.equals(properties, that.properties);
 	}
 
+	public boolean isSameService(@Nullable ServiceInfo that) {
+		return that != null
+			&& uniqueId.equals(that.uniqueId)
+			&& taskName.equals(that.taskName)
+			&& serviceNumber == that.serviceNumber;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(uniqueId, dockerContainerId, taskName, serviceNumber, environment, state, ready, nodeName, nodeAddress, port, staticService, properties);
