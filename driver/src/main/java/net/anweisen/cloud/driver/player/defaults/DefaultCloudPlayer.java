@@ -5,7 +5,8 @@ import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import net.anweisen.cloud.driver.player.CloudOfflinePlayer;
 import net.anweisen.cloud.driver.player.CloudPlayer;
-import net.anweisen.cloud.driver.player.data.PlayerNetworkProxyConnection;
+import net.anweisen.cloud.driver.player.data.PlayerProxyConnectionData;
+import net.anweisen.cloud.driver.player.data.PlayerServerConnectionData;
 import net.anweisen.cloud.driver.player.permission.PermissionData;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.utilities.common.config.Document;
@@ -21,28 +22,35 @@ import java.util.UUID;
 public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 
 	private DefaultCloudOfflinePlayer offlinePlayer;
-	private PlayerNetworkProxyConnection connection;
-	private ServiceInfo server;
+	private PlayerProxyConnectionData proxyConnection;
 	private ServiceInfo proxy;
+	private PlayerServerConnectionData serverConnection;
+	private ServiceInfo server;
 	private boolean online = true;
 
-	public DefaultCloudPlayer(@Nonnull CloudOfflinePlayer offlinePlayer, @Nonnull PlayerNetworkProxyConnection connection, @Nonnull ServiceInfo proxy) {
+	public DefaultCloudPlayer(@Nonnull CloudOfflinePlayer offlinePlayer, @Nonnull PlayerProxyConnectionData connection, @Nonnull ServiceInfo proxy) {
 		this.offlinePlayer = (DefaultCloudOfflinePlayer) offlinePlayer;
-		this.connection = connection;
+		this.proxyConnection = connection;
 		this.proxy = proxy;
 	}
 
 	@Override
 	public void write(@Nonnull Buffer buffer) {
 		buffer.writeObject(offlinePlayer);
-		buffer.writeObject(connection);
+		buffer.writeObject(proxyConnection);
+		buffer.writeObject(proxy);
+		buffer.writeObject(serverConnection);
+		buffer.writeObject(server);
 		buffer.writeBoolean(online);
 	}
 
 	@Override
 	public void read(@Nonnull Buffer buffer) {
 		offlinePlayer = buffer.readObject(DefaultCloudOfflinePlayer.class);
-		connection = buffer.readObject(PlayerNetworkProxyConnection.class);
+		proxyConnection = buffer.readObject(PlayerProxyConnectionData.class);
+		proxy = buffer.readObject(ServiceInfo.class);
+		serverConnection = buffer.readObject(PlayerServerConnectionData.class);
+		server = buffer.readObject(ServiceInfo.class);
 		online = buffer.readBoolean();
 	}
 
@@ -65,8 +73,8 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 
 	@Nullable
 	@Override
-	public PlayerNetworkProxyConnection getLastNetworkConnection() {
-		return offlinePlayer.getLastNetworkConnection();
+	public PlayerProxyConnectionData getLastProxyConnectionData() {
+		return offlinePlayer.getLastProxyConnectionData();
 	}
 
 	@Nonnull
@@ -99,13 +107,13 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 	@Nonnull
 	@Override
 	public HostAndPort getAddress() {
-		return connection.getAddress();
+		return proxyConnection.getAddress();
 	}
 
 	@Nonnull
 	@Override
-	public PlayerNetworkProxyConnection getProxyConnection() {
-		return connection;
+	public PlayerProxyConnectionData getProxyConnectionData() {
+		return proxyConnection;
 	}
 
 	@Nonnull
@@ -116,12 +124,23 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 
 	@Nullable
 	@Override
+	public PlayerServerConnectionData getServerConnectionData() {
+		return serverConnection;
+	}
+
+	@Override
+	public void setServerConnectionData(@Nonnull PlayerServerConnectionData serverConnection) {
+		this.serverConnection = serverConnection;
+	}
+
+	@Nullable
+	@Override
 	public ServiceInfo getCurrentServer() {
 		return server;
 	}
 
 	@Override
-	public void setCurrentServer(@Nullable ServiceInfo server) {
+	public void setCurrentServer(@Nonnull ServiceInfo server) {
 		this.server = server;
 	}
 
@@ -137,6 +156,6 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 
 	@Override
 	public String toString() {
-		return "CloudPlayer[name=" + getName() + " uuid=" + getUniqueId() + " address=" + getAddress() + " proxy=" + connection.getName() + " server=" + (server == null ? null : server.getName()) + (online ? "" : " online=false") + "]";
+		return "CloudPlayer[name=" + getName() + " uuid=" + getUniqueId() + " address=" + getAddress() + " proxy=" + proxyConnection.getName() + " server=" + (server == null ? null : server.getName()) + (online ? "" : " online=false") + "]";
 	}
 }
