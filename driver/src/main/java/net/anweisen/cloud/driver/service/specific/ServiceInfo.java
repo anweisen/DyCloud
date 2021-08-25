@@ -181,7 +181,7 @@ public final class ServiceInfo implements SerializableObject {
 
 	@Override
 	public String toString() {
-		return "Service[name=" + getName() + " node=" + nodeName + " port=" + port + " static=" + staticService + " state=" + state + (state == ServiceState.RUNNING ? ":" + (ready ? "ready" : "unready") : "") + "]";
+		return "Service[name=" + getName() + " node=" + nodeName + " port=" + port + " state=" + state + (state == ServiceState.RUNNING ? ":" + (ready ? "ready" : "unready") : "") + "]";
 	}
 
 	@Override
