@@ -1,8 +1,9 @@
-package net.anweisen.cloud.driver.player;
+package net.anweisen.cloud.driver.player.defaults;
 
 import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
+import net.anweisen.cloud.driver.player.CloudOfflinePlayer;
 import net.anweisen.cloud.driver.player.data.PlayerNetworkProxyConnection;
 import net.anweisen.cloud.driver.player.permission.PermissionData;
 import net.anweisen.utilities.common.config.Document;

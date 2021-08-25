@@ -1,8 +1,10 @@
-package net.anweisen.cloud.driver.player;
+package net.anweisen.cloud.driver.player.defaults;
 
 import net.anweisen.cloud.driver.network.HostAndPort;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
+import net.anweisen.cloud.driver.player.CloudOfflinePlayer;
+import net.anweisen.cloud.driver.player.CloudPlayer;
 import net.anweisen.cloud.driver.player.data.PlayerNetworkProxyConnection;
 import net.anweisen.cloud.driver.player.permission.PermissionData;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
@@ -21,11 +23,13 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 	private DefaultCloudOfflinePlayer offlinePlayer;
 	private PlayerNetworkProxyConnection connection;
 	private ServiceInfo server;
+	private ServiceInfo proxy;
 	private boolean online = true;
 
-	public DefaultCloudPlayer(@Nonnull CloudOfflinePlayer offlinePlayer, @Nonnull PlayerNetworkProxyConnection connection) {
+	public DefaultCloudPlayer(@Nonnull CloudOfflinePlayer offlinePlayer, @Nonnull PlayerNetworkProxyConnection connection, @Nonnull ServiceInfo proxy) {
 		this.offlinePlayer = (DefaultCloudOfflinePlayer) offlinePlayer;
 		this.connection = connection;
+		this.proxy = proxy;
 	}
 
 	@Override
@@ -94,12 +98,6 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 
 	@Nonnull
 	@Override
-	public PlayerExecutor getExecutor() {
-		return null;
-	}
-
-	@Nonnull
-	@Override
 	public HostAndPort getAddress() {
 		return connection.getAddress();
 	}
@@ -110,14 +108,20 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 		return connection;
 	}
 
+	@Nonnull
+	@Override
+	public ServiceInfo getCurrentProxy() {
+		return proxy;
+	}
+
 	@Nullable
 	@Override
-	public ServiceInfo getServer() {
+	public ServiceInfo getCurrentServer() {
 		return server;
 	}
 
 	@Override
-	public void setServer(@Nullable ServiceInfo server) {
+	public void setCurrentServer(@Nullable ServiceInfo server) {
 		this.server = server;
 	}
 
@@ -133,6 +137,6 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 
 	@Override
 	public String toString() {
-		return "CloudPlayer[name=" + getName() + " uuid=" + getUniqueId() + " address=" + getAddress() + " server=" + (server == null ? null : server.getName()) + "]";
+		return "CloudPlayer[name=" + getName() + " uuid=" + getUniqueId() + " address=" + getAddress() + " proxy=" + connection.getName() + " server=" + (server == null ? null : server.getName()) + (online ? "" : " online=false") + "]";
 	}
 }
