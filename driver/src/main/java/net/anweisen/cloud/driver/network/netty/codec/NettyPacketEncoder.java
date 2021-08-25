@@ -6,7 +6,6 @@ import io.netty.handler.codec.MessageToByteEncoder;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.network.netty.NettyUtils;
 import net.anweisen.cloud.driver.network.packet.Packet;
-import net.anweisen.utilities.common.logging.LogLevel;
 
 import javax.annotation.Nonnull;
 
@@ -14,14 +13,8 @@ public final class NettyPacketEncoder extends MessageToByteEncoder<Packet> {
 
 	@Override
 	protected void encode(@Nonnull ChannelHandlerContext context, @Nonnull Packet packet, @Nonnull ByteBuf buffer) {
-		if (CloudDriver.getInstance() != null && CloudDriver.getInstance().getLogger().isLevelEnabled(LogLevel.DEBUG)) {
-			CloudDriver.getInstance().getLogger().trace(
-				"Successfully encoded packet on channel {} with id={} header={} body={}",
-				packet.getChannel(),
-				packet.getUniqueId(),
-				packet.getHeader().toJson(),
-				packet.getBuffer() != null ? packet.getBuffer().readableBytes() : 0
-			);
+		if (CloudDriver.getInstance() != null) {
+			CloudDriver.getInstance().getLogger().trace("Successfully encoded {}", packet);
 		}
 
 		// channel
