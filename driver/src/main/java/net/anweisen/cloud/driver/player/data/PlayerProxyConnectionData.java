@@ -12,7 +12,7 @@ import java.util.UUID;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class PlayerNetworkProxyConnection implements SerializableObject, UnspecifiedPlayerNetworkConnection {
+public class PlayerProxyConnectionData implements SerializableObject, UnspecifiedPlayerConnectionData {
 
 	private UUID uniqueId;
 	private String name;
@@ -23,10 +23,10 @@ public class PlayerNetworkProxyConnection implements SerializableObject, Unspeci
 
 	private boolean onlineMode, legacy;
 
-	private PlayerNetworkProxyConnection() {
+	private PlayerProxyConnectionData() {
 	}
 
-	public PlayerNetworkProxyConnection(@Nonnull UUID uniqueId, @Nonnull String name, @Nonnull HostAndPort address, int version, boolean onlineMode, boolean legacy) {
+	public PlayerProxyConnectionData(@Nonnull UUID uniqueId, @Nonnull String name, @Nonnull HostAndPort address, int version, boolean onlineMode, boolean legacy) {
 		this.uniqueId = uniqueId;
 		this.name = name;
 		this.address = address;
@@ -87,14 +87,14 @@ public class PlayerNetworkProxyConnection implements SerializableObject, Unspeci
 
 	@Override
 	public String toString() {
-		return "PlayerNetworkConnection[" + name + ":" + uniqueId + " address=" + address + " version=" + version + " legacy=" + legacy + " online=" + onlineMode + "]";
+		return "PlayerProxyConnectionData[" + name + ":" + uniqueId + " address=" + address + " version=" + version + " legacy=" + legacy + " online=" + onlineMode + "]";
 	}
 
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		PlayerNetworkProxyConnection that = (PlayerNetworkProxyConnection) o;
+		PlayerProxyConnectionData that = (PlayerProxyConnectionData) o;
 		return version == that.version
 			&& onlineMode == that.onlineMode
 			&& legacy == that.legacy

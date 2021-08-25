@@ -10,10 +10,10 @@ import java.util.UUID;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  *
- * @see PlayerNetworkServerConnection
- * @see PlayerNetworkProxyConnection
+ * @see PlayerServerConnectionData
+ * @see PlayerProxyConnectionData
  */
-public interface UnspecifiedPlayerNetworkConnection {
+public interface UnspecifiedPlayerConnectionData {
 
 	@Nonnull
 	UUID getUniqueId();
