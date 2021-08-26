@@ -40,6 +40,9 @@ public interface ServiceConfigManager {
 	@Nonnull
 	Collection<TemplateStorage> getTemplateStorages();
 
+	@Nonnull
+	Collection<String> getTemplateStorageNames();
+
 	@Nullable
 	TemplateStorage getTemplateStorage(@Nonnull String name);
 
