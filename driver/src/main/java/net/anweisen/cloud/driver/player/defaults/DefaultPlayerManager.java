@@ -9,6 +9,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -67,20 +68,33 @@ public abstract class DefaultPlayerManager implements PlayerManager {
 	}
 
 	@Override
+	public void setOnlinePlayerCache(@Nonnull Collection<? extends CloudPlayer> players) {
+		onlinePlayers.clear();
+		for (CloudPlayer player : players) {
+			onlinePlayers.put(player.getUniqueId(), player);
+		}
+	}
+
+	@Override
+	public void registerPlayer(@Nonnull CloudPlayer player) {
+		onlinePlayers.put(player.getUniqueId(), player);
+	}
+
+	@Override
 	public long getRegisteredPlayerCount() {
-		return getRegisteredPlayerCountAsync().getDefOrThrow();
+		return getRegisteredPlayerCountAsync().getBeforeTimeout(15, TimeUnit.SECONDS);
 	}
 
 	@Nonnull
 	@Override
 	public Collection<CloudOfflinePlayer> getRegisteredPlayers() {
-		return getRegisteredPlayersAsync().getDefOrThrow();
+		return getRegisteredPlayersAsync().getBeforeTimeout(15, TimeUnit.SECONDS);
 	}
 
 	@Nullable
 	@Override
 	public CloudOfflinePlayer getOfflinePlayerByName(@Nonnull String playerName) {
-		return getOfflinePlayerByNameAsync(playerName).getDefOrThrow();
+		return getOfflinePlayerByNameAsync(playerName).getBeforeTimeout(15, TimeUnit.SECONDS);
 	}
 
 	@Nonnull
@@ -98,7 +112,7 @@ public abstract class DefaultPlayerManager implements PlayerManager {
 	@Nullable
 	@Override
 	public CloudOfflinePlayer getOfflinePlayerByUniqueId(@Nonnull UUID uniqueId) {
-		return getOfflinePlayerByUniqueIdAsync(uniqueId).getDefOrThrow();
+		return getOfflinePlayerByUniqueIdAsync(uniqueId).getBeforeTimeout(15, TimeUnit.SECONDS);
 	}
 
 	@Nonnull
