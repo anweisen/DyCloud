@@ -52,7 +52,14 @@ public class RemotePlayerManager extends DefaultPlayerManager implements Network
 
 	@Override
 	public void saveOfflinePlayer(@Nonnull CloudOfflinePlayer updatedPlayer) {
-		sendPacket(new PlayerRemoteManagerPacket(PlayerRemoteManagerType.SAVE_OFFLINE_PLAYER, buffer -> buffer.writeObject((SerializableObject) updatedPlayer)));
+		DefaultCloudOfflinePlayer realOfflinePlayer;
+		if (updatedPlayer instanceof DefaultCloudPlayer) {
+			realOfflinePlayer = ((DefaultCloudPlayer)updatedPlayer).getOfflinePlayer();
+		} else {
+			realOfflinePlayer = (DefaultCloudOfflinePlayer) updatedPlayer;
+		}
+
+		sendPacket(new PlayerRemoteManagerPacket(PlayerRemoteManagerType.SAVE_OFFLINE_PLAYER, buffer -> buffer.writeObject(realOfflinePlayer)));
 	}
 
 }
