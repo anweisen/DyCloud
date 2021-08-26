@@ -47,6 +47,15 @@ public final class HostAndPort implements SerializableObject {
 		throw new IllegalStateException("Unable to parse '" + input + "'");
 	}
 
+	@Nullable
+	public static HostAndPort parseOrNull(@Nullable String input) {
+		try {
+			return parse(input);
+		} catch (Exception ex) {
+			return null;
+		}
+	}
+
 	@Nonnull
 	@CheckReturnValue
 	public static HostAndPort fromSocketAddress(@Nonnull SocketAddress address) {
