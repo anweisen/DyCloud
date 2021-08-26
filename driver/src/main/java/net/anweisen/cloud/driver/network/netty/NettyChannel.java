@@ -8,6 +8,7 @@ import net.anweisen.cloud.driver.network.InternalQueryResponseManager;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.handler.SocketChannelHandler;
 import net.anweisen.cloud.driver.network.packet.Packet;
+import net.anweisen.cloud.driver.network.packet.PacketConstants;
 import net.anweisen.cloud.driver.network.packet.chunk.ChunkedPacketBuilder;
 import net.anweisen.cloud.driver.network.packet.chunk.ChunkedQueryResponse;
 import net.anweisen.utilities.common.concurrent.task.CompletableTask;
@@ -19,6 +20,7 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -67,7 +69,7 @@ public class NettyChannel implements SocketChannel {
 	@Nullable
 	@Override
 	public Packet sendQuery(@Nonnull Packet packet) {
-		return sendQueryAsync(packet).getDef(null);
+		return sendQueryAsync(packet).getOrDefault(5, TimeUnit.SECONDS, null);
 	}
 
 	@Nonnull
@@ -93,7 +95,7 @@ public class NettyChannel implements SocketChannel {
 
 	@Override
 	public boolean sendChunkedPacketsResponse(@Nonnull UUID uniqueId, @Nonnull Document header, @Nonnull InputStream inputStream) throws IOException {
-		return sendChunkedPackets(uniqueId, header, inputStream, -1);
+		return sendChunkedPackets(uniqueId, header, inputStream, PacketConstants.RESPONSE_CHANNEL);
 	}
 
 	@Override
