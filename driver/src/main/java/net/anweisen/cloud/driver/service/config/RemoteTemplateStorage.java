@@ -45,13 +45,13 @@ public class RemoteTemplateStorage implements TemplateStorage, NetworkingApiUser
 	@Nonnull
 	@Override
 	public Collection<ServiceTemplate> getTemplates() {
-		return getTemplatesAsync().getDefOrThrow();
+		return getTemplatesAsync().getBeforeTimeout(5, TimeUnit.SECONDS);
 	}
 
 	@Nullable
 	@Override
 	public InputStream zipTemplate(@Nonnull ServiceTemplate template) {
-		return zipTemplateAsync(template).get(20, TimeUnit.SECONDS, null);
+		return zipTemplateAsync(template).getOrDefault(20, TimeUnit.SECONDS, null);
 	}
 
 	@Nonnull
@@ -99,7 +99,7 @@ public class RemoteTemplateStorage implements TemplateStorage, NetworkingApiUser
 
 	@Override
 	public boolean hasTemplate(@Nonnull ServiceTemplate template) {
-		return hasTemplateAsync(template).getDef(false);
+		return hasTemplateAsync(template).getBeforeTimeout(5, TimeUnit.SECONDS);
 	}
 
 	@Nonnull
