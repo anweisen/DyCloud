@@ -81,7 +81,7 @@ public final class InternalQueryResponseManager {
 				waitingPackets.remove(entry.getKey());
 
 				try {
-					entry.getValue().action.accept(null, Packet.EMPTY);
+					entry.getValue().action.accept(null, Packet.EMPTY_RESPONSE);
 				} catch (Throwable ex) {
 					ex.printStackTrace();
 				}
