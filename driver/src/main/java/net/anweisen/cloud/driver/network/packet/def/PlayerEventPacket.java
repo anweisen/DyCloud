@@ -13,10 +13,10 @@ import java.util.function.Consumer;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class PlayerApiPacket extends Packet {
+public class PlayerEventPacket extends Packet {
 
-	public PlayerApiPacket(@Nonnull PlayerActionType action, @Nullable Consumer<? super Buffer> modifier) {
-		super(PacketConstants.PLAYER_API_CHANNEL, Buffer.create().writeEnumConstant(action));
+	public PlayerEventPacket(@Nonnull PlayerEventType action, @Nullable Consumer<? super Buffer> modifier) {
+		super(PacketConstants.PLAYER_EVENT_CHANNEL, Buffer.create().writeEnumConstant(action));
 		if (modifier != null)
 			modifier.accept(body);
 	}
@@ -30,7 +30,7 @@ public class PlayerApiPacket extends Packet {
 	 * 5. Proxy Server Switch
 	 * 6. Server Login Success
 	 */
-	public enum PlayerActionType {
+	public enum PlayerEventType {
 
 		PROXY_LOGIN_REQUEST             (ServiceType.PROXY),
 		PROXY_LOGIN_SUCCESS             (ServiceType.PROXY),
@@ -44,7 +44,7 @@ public class PlayerApiPacket extends Packet {
 
 		private final ServiceType type;
 
-		PlayerActionType(@Nonnull ServiceType type) {
+		PlayerEventType(@Nonnull ServiceType type) {
 			this.type = type;
 		}
 
@@ -52,6 +52,7 @@ public class PlayerApiPacket extends Packet {
 		public ServiceType getType() {
 			return type;
 		}
+
 	}
 
 }

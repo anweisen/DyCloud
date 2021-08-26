@@ -1,6 +1,6 @@
 package net.anweisen.cloud.driver.event.player;
 
-import net.anweisen.cloud.driver.network.packet.def.PlayerApiPacket.PlayerActionType;
+import net.anweisen.cloud.driver.network.packet.def.PlayerEventPacket.PlayerEventType;
 import net.anweisen.cloud.driver.player.CloudPlayer;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 
@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 /**
  * Called when a player connected to another minecraft server
  *
- * Triggered by {@link PlayerActionType#PROXY_SERVER_SWITCH}
+ * Triggered by {@link PlayerEventType#PROXY_SERVER_SWITCH}
  *
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
