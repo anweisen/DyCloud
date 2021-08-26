@@ -1,5 +1,10 @@
 package net.anweisen.cloud.driver.network.packet;
 
+import javax.annotation.Nonnull;
+import java.lang.reflect.Field;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
