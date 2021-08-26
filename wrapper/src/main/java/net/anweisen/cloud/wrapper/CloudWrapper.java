@@ -2,6 +2,7 @@ package net.anweisen.cloud.wrapper;
 
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.DriverEnvironment;
+import net.anweisen.cloud.driver.cord.CordManager;
 import net.anweisen.cloud.driver.database.DatabaseManager;
 import net.anweisen.cloud.driver.database.remote.RemoteDatabaseManager;
 import net.anweisen.cloud.driver.network.HostAndPort;
@@ -18,6 +19,8 @@ import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket.Authent
 import net.anweisen.cloud.driver.network.packet.def.ServiceUpdateSelfInfoPacket;
 import net.anweisen.cloud.driver.node.NodeManager;
 import net.anweisen.cloud.driver.player.PlayerManager;
+import net.anweisen.cloud.driver.player.defaults.RemotePlayerManager;
+import net.anweisen.cloud.driver.player.permission.impl.RemotePermissionManager;
 import net.anweisen.cloud.driver.service.RemoteServiceManager;
 import net.anweisen.cloud.driver.service.ServiceFactory;
 import net.anweisen.cloud.driver.service.ServiceManager;
@@ -67,6 +70,7 @@ public final class CloudWrapper extends CloudDriver {
 	private final DatabaseManager databaseManager;
 	private final ServiceManager serviceManager;
 	private final ServiceConfigManager serviceConfigManager;
+	private final PlayerManager playerManager;
 
 	private final Thread mainThread = Thread.currentThread();
 	private Thread applicationThread;
@@ -86,6 +90,8 @@ public final class CloudWrapper extends CloudDriver {
 		databaseManager = new RemoteDatabaseManager();
 		serviceManager = new RemoteServiceManager();
 		serviceConfigManager = new RemoteServiceConfigManager();
+		playerManager = new RemotePlayerManager();
+		permissionManager = new RemotePermissionManager();
 	}
 
 	public synchronized void start() throws Exception {
@@ -354,8 +360,14 @@ public final class CloudWrapper extends CloudDriver {
 
 	@Nonnull
 	@Override
-	public PlayerManager getPlayerManager() {
+	public CordManager getCordManager() {
 		return null;
+	}
+
+	@Nonnull
+	@Override
+	public PlayerManager getPlayerManager() {
+		return playerManager;
 	}
 
 	@Nonnull

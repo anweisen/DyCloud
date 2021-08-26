@@ -10,9 +10,9 @@ import net.anweisen.cloud.driver.console.Console;
 import net.anweisen.cloud.driver.console.HeaderPrinter;
 import net.anweisen.cloud.driver.cord.CordManager;
 import net.anweisen.cloud.driver.database.DatabaseManager;
+import net.anweisen.cloud.driver.database.remote.RemoteDatabaseManager;
 import net.anweisen.cloud.driver.network.HostAndPort;
 import net.anweisen.cloud.driver.network.SocketClient;
-import net.anweisen.cloud.driver.network.SocketComponent;
 import net.anweisen.cloud.driver.network.handler.SocketChannelClientHandler;
 import net.anweisen.cloud.driver.network.listener.AuthenticationResponseListener;
 import net.anweisen.cloud.driver.network.listener.PublishConfigListener;
@@ -24,6 +24,8 @@ import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket;
 import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket.AuthenticationType;
 import net.anweisen.cloud.driver.node.NodeManager;
 import net.anweisen.cloud.driver.player.PlayerManager;
+import net.anweisen.cloud.driver.player.defaults.RemotePlayerManager;
+import net.anweisen.cloud.driver.player.permission.impl.RemotePermissionManager;
 import net.anweisen.cloud.driver.service.RemoteServiceManager;
 import net.anweisen.cloud.driver.service.ServiceFactory;
 import net.anweisen.cloud.driver.service.ServiceManager;
@@ -48,8 +50,10 @@ public final class CloudCord extends CloudDriver {
 
 	private final Console console;
 
+	private final DatabaseManager databaseManager;
 	private final ServiceManager serviceManager;
 	private final ServiceConfigManager serviceConfigManager;
+	private final PlayerManager playerManager;
 
 	private SocketClient socketClient;
 	private NettyCordSocketServer cordServer;
@@ -61,8 +65,11 @@ public final class CloudCord extends CloudDriver {
 
 		this.console = console;
 
+		databaseManager = new RemoteDatabaseManager();
 		serviceManager = new RemoteServiceManager();
 		serviceConfigManager = new RemoteServiceConfigManager();
+		playerManager = new RemotePlayerManager();
+		permissionManager = new RemotePermissionManager();
 
 		HeaderPrinter.printHeader(console, this);
 	}
@@ -176,7 +183,7 @@ public final class CloudCord extends CloudDriver {
 	@Nonnull
 	@Override
 	public DatabaseManager getDatabaseManager() {
-		return null;
+		return databaseManager;
 	}
 
 	@Nonnull
@@ -212,7 +219,7 @@ public final class CloudCord extends CloudDriver {
 	@Nonnull
 	@Override
 	public PlayerManager getPlayerManager() {
-		return null;
+		return playerManager;
 	}
 
 	@Nonnull
