@@ -44,4 +44,9 @@ public final class NodeInfo implements SerializableObject {
 	public HostAndPort getAddress() {
 		return address;
 	}
+
+	@Override
+	public String toString() {
+		return "NodeInfo[name=" + name + " address=" + address + "]";
+	}
 }
