@@ -26,6 +26,9 @@ public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer, Serializab
 	private long lastOnline;
 	private Document properties;
 
+	private DefaultCloudOfflinePlayer() {
+	}
+
 	public DefaultCloudOfflinePlayer(@Nonnull UUID uuid, @Nonnull String name, @Nonnull PlayerProxyConnectionData lastNetworkConnection,
 	                                 @Nonnull PermissionData permissionData, long firstLogin, long lastOnline, @Nonnull Document properties) {
 		this.uuid = uuid;
@@ -35,6 +38,28 @@ public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer, Serializab
 		this.firstLogin = firstLogin;
 		this.lastOnline = lastOnline;
 		this.properties = properties;
+	}
+
+	@Override
+	public void write(@Nonnull Buffer buffer) {
+		buffer.writeUUID(uuid);
+		buffer.writeString(name);
+		buffer.writeObject(lastNetworkConnection);
+		buffer.writeObject(permissionData);
+		buffer.writeLong(firstLogin);
+		buffer.writeLong(lastOnline);
+		buffer.writeDocument(properties);
+	}
+
+	@Override
+	public void read(@Nonnull Buffer buffer) {
+		uuid = buffer.readUUID();
+		name = buffer.readString();
+		lastNetworkConnection = buffer.readObject(PlayerProxyConnectionData.class);
+		permissionData = buffer.readObject(PermissionData.class);
+		firstLogin = buffer.readLong();
+		lastOnline = buffer.readLong();
+		properties = buffer.readDocument();
 	}
 
 	@Nonnull
@@ -86,28 +111,6 @@ public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer, Serializab
 	@Override
 	public Document getProperties() {
 		return properties;
-	}
-
-	@Override
-	public void write(@Nonnull Buffer buffer) {
-		buffer.writeUUID(uuid);
-		buffer.writeString(name);
-		buffer.writeObject(lastNetworkConnection);
-		buffer.writeObject(permissionData);
-		buffer.writeLong(firstLogin);
-		buffer.writeLong(lastOnline);
-		buffer.writeDocument(properties);
-	}
-
-	@Override
-	public void read(@Nonnull Buffer buffer) {
-		uuid = buffer.readUUID();
-		name = buffer.readString();
-		lastNetworkConnection = buffer.readObject(PlayerProxyConnectionData.class);
-		permissionData = buffer.readObject(PermissionData.class);
-		firstLogin = buffer.readLong();
-		lastOnline = buffer.readLong();
-		properties = buffer.readDocument();
 	}
 
 	@Override

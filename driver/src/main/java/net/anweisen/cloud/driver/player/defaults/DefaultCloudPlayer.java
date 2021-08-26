@@ -28,6 +28,9 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 	private ServiceInfo server;
 	private boolean online = true;
 
+	private DefaultCloudPlayer() {
+	}
+
 	public DefaultCloudPlayer(@Nonnull CloudOfflinePlayer offlinePlayer, @Nonnull PlayerProxyConnectionData connection, @Nonnull ServiceInfo proxy) {
 		this.offlinePlayer = (DefaultCloudOfflinePlayer) offlinePlayer;
 		this.proxyConnection = connection;
@@ -39,8 +42,8 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 		buffer.writeObject(offlinePlayer);
 		buffer.writeObject(proxyConnection);
 		buffer.writeObject(proxy);
-		buffer.writeObject(serverConnection);
-		buffer.writeObject(server);
+		buffer.writeOptionalObject(serverConnection);
+		buffer.writeOptionalObject(server);
 		buffer.writeBoolean(online);
 	}
 
@@ -49,8 +52,8 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 		offlinePlayer = buffer.readObject(DefaultCloudOfflinePlayer.class);
 		proxyConnection = buffer.readObject(PlayerProxyConnectionData.class);
 		proxy = buffer.readObject(ServiceInfo.class);
-		serverConnection = buffer.readObject(PlayerServerConnectionData.class);
-		server = buffer.readObject(ServiceInfo.class);
+		serverConnection = buffer.readOptionalObject(PlayerServerConnectionData.class);
+		server = buffer.readOptionalObject(ServiceInfo.class);
 		online = buffer.readBoolean();
 	}
 
@@ -152,6 +155,11 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 	@Override
 	public void setOnline(boolean online) {
 		this.online = online;
+	}
+
+	@Nonnull
+	public DefaultCloudOfflinePlayer getOfflinePlayer() {
+		return offlinePlayer;
 	}
 
 	@Override
