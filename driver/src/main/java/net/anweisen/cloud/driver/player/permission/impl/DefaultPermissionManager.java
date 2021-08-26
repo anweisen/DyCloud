@@ -48,6 +48,14 @@ public abstract class DefaultPermissionManager implements PermissionManager {
 		return groups.values().stream().filter(group -> group.getName().equals(name)).findFirst().orElse(null);
 	}
 
+	@Override
+	public void setGroupsCache(@Nonnull Collection<? extends PermissionGroup> groups) {
+		this.groups.clear();
+		for (PermissionGroup group : groups) {
+			this.groups.put(group.getUniqueId(), group);
+		}
+	}
+
 	@Nonnull
 	@Override
 	public PermissionPlayer getPlayer(@Nonnull CloudOfflinePlayer player) {

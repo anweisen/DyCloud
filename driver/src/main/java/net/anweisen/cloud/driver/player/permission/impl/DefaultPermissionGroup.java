@@ -1,6 +1,8 @@
 package net.anweisen.cloud.driver.player.permission.impl;
 
 import com.google.common.base.Preconditions;
+import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import net.anweisen.cloud.driver.player.permission.PermissionGroup;
 
 import javax.annotation.Nonnull;
@@ -10,7 +12,7 @@ import java.util.*;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class DefaultPermissionGroup implements PermissionGroup {
+public class DefaultPermissionGroup implements PermissionGroup, SerializableObject {
 
 	private UUID uniqueId;
 	private String name;
@@ -44,6 +46,32 @@ public class DefaultPermissionGroup implements PermissionGroup {
 		this.groups = new ArrayList<>(groups);
 		this.permissions = new ArrayList<>(permissions);
 		this.deniedPermissions = new ArrayList<>(deniedPermissions);
+	}
+
+	@Override
+	public void write(@Nonnull Buffer buffer) {
+		buffer.writeUUID(uniqueId);
+		buffer.writeString(name);
+		buffer.writeString(color);
+		buffer.writeString(prefix);
+		buffer.writeVarInt(sortId);
+		buffer.writeBoolean(defaultGroup);
+		buffer.writeStringCollection(groups);
+		buffer.writeStringCollection(permissions);
+		buffer.writeStringCollection(deniedPermissions);
+	}
+
+	@Override
+	public void read(@Nonnull Buffer buffer) {
+		uniqueId = buffer.readUUID();
+		name = buffer.readString();
+		color = buffer.readString();
+		prefix = buffer.readString();
+		sortId = buffer.readVarInt();
+		defaultGroup = buffer.readBoolean();
+		groups = buffer.readStringCollection();
+		permissions = buffer.readStringCollection();
+		deniedPermissions = buffer.readStringCollection();
 	}
 
 	@Nonnull

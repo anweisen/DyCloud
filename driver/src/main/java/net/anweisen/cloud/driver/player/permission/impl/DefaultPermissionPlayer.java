@@ -70,7 +70,7 @@ public class DefaultPermissionPlayer implements PermissionPlayer {
 		long currentTime = System.currentTimeMillis();
 		Collection<PlayerGroupData> groups = player.getStoredPermissionData().getGroups();
 		int sizeBefore = groups.size();
-		groups.removeIf(data -> data.getTimeoutTime() != 1 && currentTime > data.getTimeoutTime());
+		groups.removeIf(data -> data.getTimeoutTime() != -1 && currentTime > data.getTimeoutTime());
 		CloudDriver.getInstance().getLogger().trace("Groups check result for {} = {}", player.getName(), sizeBefore != groups.size());
 		return sizeBefore != groups.size();
 	}

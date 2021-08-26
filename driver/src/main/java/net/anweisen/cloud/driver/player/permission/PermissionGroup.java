@@ -78,8 +78,12 @@ public interface PermissionGroup {
 	boolean hasDeniedPermissions(@Nonnull String permission);
 
 	default boolean hasPermission(@Nonnull String permission) {
+		if (hasPermissionDirectly("*"))
+			return true;
 		if (hasDeniedPermissions(permission))
 			return false;
+		if (hasPermissionDirectly(permission))
+			return true;
 
 		Collection<PermissionGroup> groups = findInheritedGroups();
 		for (PermissionGroup group : groups) { // TODO may overflow
@@ -87,7 +91,7 @@ public interface PermissionGroup {
 				return true;
 		}
 
-		return getPermissions().contains(permission);
+		return false;
 	}
 
 	default void save() {

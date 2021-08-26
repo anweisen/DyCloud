@@ -80,11 +80,4 @@ public class CloudPermissionManager extends DefaultPermissionManager implements 
 		}
 	}
 
-	@Override
-	public void setGroupsCache(@Nonnull Collection<? extends PermissionGroup> groups) {
-		this.groups.clear();
-		for (PermissionGroup group : groups) {
-			this.groups.put(group.getUniqueId(), group);
-		}
-	}
 }

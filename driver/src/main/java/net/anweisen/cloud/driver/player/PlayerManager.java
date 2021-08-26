@@ -32,6 +32,10 @@ public interface PlayerManager {
 	@Nullable
 	CloudPlayer getOnlinePlayerByUniqueId(@Nonnull UUID uniqueId);
 
+	void setOnlinePlayerCache(@Nonnull Collection<? extends CloudPlayer> players);
+
+	void registerPlayer(@Nonnull CloudPlayer player);
+
 	long getRegisteredPlayerCount();
 
 	@Nonnull
