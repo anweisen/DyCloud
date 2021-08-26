@@ -20,7 +20,7 @@ public class PlayerServerDisconnectEvent extends PlayerServerEvent {
 	}
 
 	/**
-	 * @return the online player or {@code null} if the player disconnected from the proxy and got disconnected from the server for that reason
+	 * @return the online player or {@code null} if the player was already disconnected from the proxy (disconnected from the proxy and got disconnected from the server for that reason)
 	 */
 	@Nullable
 	@Override
