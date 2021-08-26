@@ -147,6 +147,9 @@ public final class CloudCord extends CloudDriver {
 	@Override
 	public void shutdown() throws Exception {
 
+		logger.info("Closing CordServer..");
+		cordServer.close();
+
 		console.close();
 
 		shutdownDriver();
