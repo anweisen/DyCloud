@@ -52,8 +52,6 @@ public final class NettyUtils {
 		}
 	}
 
-	private NettyUtils() {}
-
 	@Nonnull
 	@CheckReturnValue
 	public static EventLoopGroup newEventLoopGroup() {
@@ -171,4 +169,6 @@ public final class NettyUtils {
 	public static int getThreadAmount() {
 		return CloudDriver.getInstance().getEnvironment() == DriverEnvironment.WRAPPER ? 8 : Runtime.getRuntime().availableProcessors() * 2;
 	}
+
+	private NettyUtils() {}
 }
