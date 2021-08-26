@@ -19,6 +19,7 @@ import net.anweisen.utilities.common.logging.ILogger;
 import net.anweisen.utilities.common.misc.FileUtils;
 
 import javax.annotation.Nonnull;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.Executors;
@@ -121,6 +122,10 @@ public abstract class CloudDriver {
 	public PermissionManager getPermissionManager() {
 		Preconditions.checkNotNull(permissionManager, "No Permission System available");
 		return permissionManager;
+	}
+
+	public boolean hasPermissionManager() {
+		return permissionManager != null;
 	}
 
 	public void setPermissionManager(@Nonnull PermissionManager manager) {
