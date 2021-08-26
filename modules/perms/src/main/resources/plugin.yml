@@ -1,0 +1,5 @@
+name: Cloud-Perms
+author: anweisen
+version: 1.0
+main: net.anweisen.cloud.modules.perms.bukkit.BukkitCloudPermsPlugin
+api-version: 1.13
