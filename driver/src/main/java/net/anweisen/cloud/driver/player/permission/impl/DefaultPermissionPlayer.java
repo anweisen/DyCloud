@@ -76,7 +76,6 @@ public class DefaultPermissionPlayer implements PermissionPlayer {
 	}
 
 	@Nonnull
-	@Override
 	public Collection<PlayerGroupData> getPlayerGroups() {
 		if (testGroups())
 			save();

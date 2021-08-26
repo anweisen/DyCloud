@@ -49,9 +49,6 @@ public interface PermissionPlayer {
 	boolean testGroups();
 
 	@Nonnull
-	Collection<PlayerGroupData> getPlayerGroups();
-
-	@Nonnull
 	Collection<PermissionGroup> getGroups();
 
 	@Nullable
