@@ -20,7 +20,7 @@ import java.util.Objects;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class RemoteDatabaseQuery implements DatabaseQuery {
+public class RemoteDatabaseQuery implements DatabaseQuery, DefaultRemoteDatabaseCallbackAction<ExecutedQuery> {
 
 	private final Document document = Document.create();
 	private final String table;
@@ -81,7 +81,7 @@ public class RemoteDatabaseQuery implements DatabaseQuery {
 	@Nonnull
 	@Override
 	public ExecutedQuery execute() throws DatabaseException {
-		return executeAsync().getDefOrThrow(DatabaseException::new, "Operation timed out");
+		return DefaultRemoteDatabaseCallbackAction.super.execute();
 	}
 
 	@Nonnull

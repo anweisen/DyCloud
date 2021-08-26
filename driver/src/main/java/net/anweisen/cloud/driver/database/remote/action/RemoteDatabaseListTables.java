@@ -15,13 +15,7 @@ import java.util.List;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class RemoteDatabaseListTables implements DatabaseListTables {
-
-	@Nonnull
-	@Override
-	public List<String> execute() throws DatabaseException {
-		return executeAsync().getDefOrThrow(DatabaseException::new, "Operation timed out");
-	}
+public class RemoteDatabaseListTables implements DatabaseListTables, DefaultRemoteDatabaseCallbackAction<List<String>> {
 
 	@Nonnull
 	@Override
@@ -29,6 +23,12 @@ public class RemoteDatabaseListTables implements DatabaseListTables {
 		return CloudDriver.getInstance().getSocketComponent().getFirstChannel()
 			.sendQueryAsync(new RemoteDatabaseActionPacket(DatabaseActionType.LIST_TABLES))
 			.map(packet -> new ArrayList<>(packet.getBuffer().readStringCollection()));
+	}
+
+	@Nonnull
+	@Override
+	public List<String> execute() throws DatabaseException {
+		return DefaultRemoteDatabaseCallbackAction.super.execute();
 	}
 
 }

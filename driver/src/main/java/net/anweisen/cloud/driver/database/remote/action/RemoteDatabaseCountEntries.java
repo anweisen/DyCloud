@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class RemoteDatabaseCountEntries implements DatabaseCountEntries {
+public class RemoteDatabaseCountEntries implements DatabaseCountEntries, DefaultRemoteDatabaseCallbackAction<Long> {
 
 	private final String table;
 
@@ -23,15 +23,16 @@ public class RemoteDatabaseCountEntries implements DatabaseCountEntries {
 
 	@Nonnull
 	@Override
-	public Long execute() throws DatabaseException {
-		return executeAsync().getDefOrThrow(DatabaseException::new, "Operation timed out");
-	}
-
-	@Nonnull
-	@Override
 	public Task<Long> executeAsync() {
 		return CloudDriver.getInstance().getSocketComponent().getFirstChannel()
 			.sendQueryAsync(new RemoteDatabaseActionPacket(DatabaseActionType.COUNT_ENTRIES, buffer -> buffer.writeString(table)))
 			.map(packet -> packet.getBuffer().readLong());
 	}
+
+	@Nonnull
+	@Override
+	public Long execute() throws DatabaseException {
+		return DefaultRemoteDatabaseCallbackAction.super.execute();
+	}
+
 }
