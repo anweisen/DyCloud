@@ -86,6 +86,11 @@ public final class CloudMaster extends CloudBase {
 
 		logger.info("Loading database..");
 		databaseManager.loadDatabase();
+		if (permissionManager != null) {
+			logger.info("Initializing permission management..");
+			permissionManager.reload();
+		}
+
 		enableModules();
 
 		logger.info("The cloud master is ready and running!");
