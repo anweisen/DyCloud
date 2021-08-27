@@ -21,6 +21,8 @@ public class ServiceInfoPublishPacket extends Packet { // TODO move to base?
 		UPDATE,
 		STARTED,
 		STOPPED,
+		KILLED,
+		RESTARTED,
 		CONNECTED,
 		DISCONNECTED,
 		REGISTER,
