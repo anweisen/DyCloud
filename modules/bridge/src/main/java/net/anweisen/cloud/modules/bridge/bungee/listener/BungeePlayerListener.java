@@ -1,10 +1,13 @@
 package net.anweisen.cloud.modules.bridge.bungee.listener;
 
+import net.anweisen.cloud.driver.CloudDriver;
+import net.anweisen.cloud.driver.console.LoggingApiUser;
+import net.anweisen.cloud.driver.player.CloudPlayer;
+import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.modules.bridge.bungee.BungeeBridgeHelper;
 import net.anweisen.cloud.modules.bridge.bungee.BungeeCloudBridgePlugin;
 import net.anweisen.cloud.modules.bridge.helper.BridgeHelper;
-import net.anweisen.cloud.driver.console.LoggingApiUser;
-import net.anweisen.cloud.driver.service.specific.ServiceInfo;
+import net.anweisen.utilities.common.collection.pair.Tuple;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -25,7 +28,12 @@ public class BungeePlayerListener implements Listener, LoggingApiUser {
 
 	@EventHandler
 	public void onLogin(@Nonnull LoginEvent event) {
-		String kickReason = BridgeHelper.sendProxyLoginRequestPacket(BungeeBridgeHelper.createPlayerConnection(event.getConnection()));
+		Tuple<CloudPlayer, String> response = BridgeHelper.sendProxyLoginRequestPacket(BungeeBridgeHelper.createPlayerConnection(event.getConnection()));
+
+		CloudPlayer player = response.getFirst();
+		CloudDriver.getInstance().getPlayerManager().registerPlayer(player);
+
+		String kickReason = response.getSecond();
 		if (kickReason != null) {
 			event.setCancelled(true);
 			event.setCancelReason(TextComponent.fromLegacyText(kickReason));
