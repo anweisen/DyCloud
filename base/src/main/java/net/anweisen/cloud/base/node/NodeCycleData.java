@@ -24,24 +24,24 @@ public final class NodeCycleData implements SerializableObject {
 		float cpuUsage = (float) (system.getSystemCpuLoad() * 100f);
 		int cores = system.getAvailableProcessors();
 		long maxMemory = system.getTotalPhysicalMemorySize() / 1024 / 1024; // bytes -> kilobytes -> megabytes
-		long ramUsage = (system.getTotalPhysicalMemorySize() - system.getFreePhysicalMemorySize()) / 1024 / 1024; // bytes -> kilobytes -> megabytes
+		long freeRam = system.getFreePhysicalMemorySize() / 1024 / 1024; // bytes -> kilobytes -> megabytes
 
-		return new NodeCycleData(cpuUsage, cores, maxMemory, ramUsage);
+		return new NodeCycleData(cpuUsage, cores, maxMemory, freeRam);
 	}
 
 	private float cpuUsage; // cpu usage in percent
 	private int cores; // the amount of cores the machine of the node has
 	private long maxRam; // the ram the machine of the node has in megabytes
-	private long ramUsage; // the ram the machine of the node is using in megabytes
+	private long freeRam; //the ram the machine of the node has left in megabytes
 
 	private NodeCycleData() {
 	}
 
-	public NodeCycleData(float cpuUsage, int cores, long maxRam, long ramUsage) {
+	public NodeCycleData(float cpuUsage, int cores, long maxRam, long freeRam) {
 		this.cpuUsage = cpuUsage;
 		this.cores = cores;
 		this.maxRam = maxRam;
-		this.ramUsage = ramUsage;
+		this.freeRam = freeRam;
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public final class NodeCycleData implements SerializableObject {
 		buffer.writeFloat(cpuUsage);
 		buffer.writeVarInt(cores);
 		buffer.writeVarLong(maxRam);
-		buffer.writeVarLong(ramUsage);
+		buffer.writeVarLong(freeRam);
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public final class NodeCycleData implements SerializableObject {
 		cpuUsage = buffer.readFloat();
 		cores = buffer.readVarInt();
 		maxRam = buffer.readVarInt();
-		ramUsage = buffer.readVarInt();
+		freeRam = buffer.readVarInt();
 	}
 
 	public float getCpuUsage() {
@@ -72,12 +72,12 @@ public final class NodeCycleData implements SerializableObject {
 		return maxRam;
 	}
 
-	public long getRamUsage() {
-		return ramUsage;
+	public long getFreeRam() {
+		return freeRam;
 	}
 
 	@Override
 	public String toString() {
-		return "NodeCycleData[" + "cpuUsage=" + cpuUsage + " cores=" + cores + " maxRam=" + maxRam + " ramUsage=" + ramUsage + "]";
+		return "NodeCycleData[" + "cpuUsage=" + cpuUsage + " cores=" + cores + " maxRam=" + maxRam + " freeRam=" + freeRam + "]";
 	}
 }
