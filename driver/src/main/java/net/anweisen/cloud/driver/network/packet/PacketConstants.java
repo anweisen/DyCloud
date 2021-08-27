@@ -16,7 +16,7 @@ public final class PacketConstants {
 	public static final int PUBLISH_CONFIG_CHANNEL = 2;             // master   -> node
 	public static final int DATABASE_CHANNEL = 3;                   // master  <-| node, wrapper, cord
 	public static final int REQUEST_API_CHANNEL = 4;                // master  <-> node
-	public static final int NODE_INFO_CYCLE = 5;                    // master  <- node
+	public static final int NODE_DATA_CYCLE = 5;                    // master  <- node
 	public static final int SERVICE_INFO_PUBLISH_CHANNEL = 6;       // node     -> master                -> node, wrapper, cord
 	public static final int SERVICE_UPDATE_SELF_INFO_CHANNEL = 7;   // wrapper  -> master
 	public static final int SERVICE_CONTROL_CHANNEL = 8;            // node    <- master                <- wrapper, node cord
