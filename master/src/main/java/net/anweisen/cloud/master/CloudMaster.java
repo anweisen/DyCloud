@@ -20,8 +20,7 @@ import net.anweisen.cloud.driver.service.config.ServiceConfigManager;
 import net.anweisen.cloud.master.config.MasterConfig;
 import net.anweisen.cloud.master.database.MasterDatabaseManager;
 import net.anweisen.cloud.master.network.handler.SocketChannelServerHandler;
-import net.anweisen.cloud.master.network.listener.AuthenticationListener;
-import net.anweisen.cloud.master.network.listener.DatabaseActionListener;
+import net.anweisen.cloud.master.network.listener.*;
 import net.anweisen.cloud.master.network.requests.TemplateRequestHandlers;
 import net.anweisen.cloud.master.node.DefaultNodeServerManager;
 import net.anweisen.cloud.master.node.NodeServerManager;
@@ -98,6 +97,7 @@ public final class CloudMaster extends CloudBase {
 
 		registry.addListener(PacketConstants.AUTH_CHANNEL, new AuthenticationListener(this));
 		registry.addListener(PacketConstants.DATABASE_CHANNEL, new DatabaseActionListener(databaseManager));
+		registry.addListener(PacketConstants.NODE_DATA_CYCLE, new NodeDataCycleListener());
 		registry.addListener(PacketConstants.PLAYER_EVENT_CHANNEL, new PlayerEventListener());
 		registry.addListener(PacketConstants.PLAYER_EXECUTOR_CHANNEL, new PlayerExecutorListener());
 		registry.addListener(PacketConstants.PLAYER_REMOTE_MANAGER_CHANNEL, new PlayerRemoteManagerListener());
