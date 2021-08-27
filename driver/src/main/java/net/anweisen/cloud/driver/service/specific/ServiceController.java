@@ -3,6 +3,7 @@ package net.anweisen.cloud.driver.service.specific;
 import net.anweisen.utilities.common.concurrent.task.Task;
 
 import javax.annotation.Nonnull;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -13,27 +14,37 @@ public interface ServiceController {
 	@Nonnull
 	ServiceInfo getService();
 
-	void start();
+	default void start() {
+		startAsync().getBeforeTimeout(30, TimeUnit.SECONDS);
+	}
 
 	@Nonnull
 	Task<Void> startAsync();
 
-	void stop();
+	default void stop() {
+		stopAsync().getBeforeTimeout(30, TimeUnit.SECONDS);
+	}
 
 	@Nonnull
 	Task<Void> stopAsync();
 
-	void restart();
+	default void restart() {
+		restartAsync().getBeforeTimeout(30, TimeUnit.SECONDS);
+	}
 
 	@Nonnull
 	Task<Void> restartAsync();
 
-	void kill();
+	default void kill() {
+		killAsync().getBeforeTimeout(30, TimeUnit.SECONDS);
+	}
 
 	@Nonnull
 	Task<Void> killAsync();
 
-	void delete();
+	default void delete() {
+		deleteAsync().getBeforeTimeout(30, TimeUnit.SECONDS);
+	}
 
 	@Nonnull
 	Task<Void> deleteAsync();
