@@ -76,9 +76,6 @@ public final class CloudMaster extends CloudBase {
 		logger.info("Loading cloud configuration..");
 		config.load();
 
-		logger.info("Loading database..");
-		databaseManager.loadDatabase();
-
 		logger.info("Loading service configurations..");
 		serviceConfigManager.loadTasks();
 		serviceConfigManager.registerTemplateStorage(LocalTemplateStorage.createDefault());
@@ -92,6 +89,7 @@ public final class CloudMaster extends CloudBase {
 
 		logger.info("Loading database..");
 		databaseManager.loadDatabase();
+
 		if (permissionManager != null) {
 			logger.info("Initializing permission management..");
 			permissionManager.reload();
