@@ -35,6 +35,7 @@ import net.anweisen.cloud.driver.service.config.ServiceConfigManager;
 import net.anweisen.cloud.node.config.NodeConfig;
 import net.anweisen.cloud.node.listeners.AuthenticationResponseListener;
 import net.anweisen.cloud.node.listeners.PublishConfigListener;
+import net.anweisen.cloud.node.network.listener.ServiceControlListener;
 import net.anweisen.cloud.node.network.requests.ServiceFactoryRequestHandlers;
 import net.anweisen.cloud.node.node.NodeNodeManager;
 import net.anweisen.cloud.node.service.NodeServiceFactory;
@@ -193,6 +194,7 @@ public final class CloudNode extends CloudBase {
 
 		registry.addListener(PacketConstants.PUBLISH_CONFIG_CHANNEL, new PublishConfigListener());
 		registry.addListener(PacketConstants.SERVICE_INFO_PUBLISH_CHANNEL, new ServiceInfoUpdateListener());
+		registry.addListener(PacketConstants.SERVICE_CONTROL_CHANNEL, new ServiceControlListener());
 		registry.addListener(PacketConstants.REQUEST_API_CHANNEL, new RequestPacketListener(
 			new ServiceFactoryRequestHandlers()
 		));
