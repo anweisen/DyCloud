@@ -8,7 +8,7 @@ import net.anweisen.cloud.driver.player.data.PlayerServerConnectionData;
 import net.anweisen.cloud.driver.player.defaults.DefaultCloudPlayer;
 import net.anweisen.cloud.driver.service.config.ServiceTask;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
-import net.anweisen.cloud.driver.service.specific.ServiceProperties;
+import net.anweisen.cloud.driver.service.specific.ServiceProperty;
 import net.anweisen.cloud.modules.bridge.bungee.listener.BungeeCloudListener;
 import net.anweisen.cloud.wrapper.CloudWrapper;
 import net.anweisen.cloud.wrapper.event.service.ServiceInfoConfigureEvent;
@@ -78,8 +78,8 @@ public final class BridgeHelper {
 		if (task1.getFallbackPriority() != task2.getFallbackPriority())
 			return task1.getFallbackPriority() - task2.getFallbackPriority();
 
-		int online1 = service1.getProperties().getInt(ServiceProperties.ONLINE_COUNT);
-		int online2 = service2.getProperties().getInt(ServiceProperties.ONLINE_COUNT);
+		int online1 = service1.get(ServiceProperty.ONLINE_PLAYER_COUNT);
+		int online2 = service2.get(ServiceProperty.ONLINE_PLAYER_COUNT);
 		if (online1 != online2)
 			return online1 - online2; // we prefer fewer players
 
