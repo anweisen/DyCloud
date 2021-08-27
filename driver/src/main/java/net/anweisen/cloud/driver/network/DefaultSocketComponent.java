@@ -1,5 +1,6 @@
 package net.anweisen.cloud.driver.network;
 
+import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.network.handler.SocketChannelHandler;
 import net.anweisen.cloud.driver.network.netty.NettyUtils;
 import net.anweisen.cloud.driver.network.packet.Packet;
@@ -16,7 +17,7 @@ import java.util.function.Supplier;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public abstract class DefaultSocketComponent implements SocketComponent {
+public abstract class DefaultSocketComponent implements SocketComponent, LoggingApiUser {
 
 	protected final Executor packetDispatcher = NettyUtils.newPacketDispatcher();
 	protected final PacketListenerRegistry listenerRegistry = new PacketListenerRegistry();
@@ -33,6 +34,7 @@ public abstract class DefaultSocketComponent implements SocketComponent {
 	public void closeChannels() {
 		for (SocketChannel channel : getChannels()) {
 			try {
+				info("Closing Channel[client={} server{}]..", channel.getClientAddress(), channel.getServerAddress());
 				channel.close();
 			} catch (Exception ex) {
 				ex.printStackTrace();
