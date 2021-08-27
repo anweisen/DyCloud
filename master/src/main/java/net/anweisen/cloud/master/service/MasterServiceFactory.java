@@ -42,6 +42,13 @@ public class MasterServiceFactory implements ServiceFactory {
 	@Nonnull
 	@Override
 	public synchronized Task<ServiceInfo> createServiceAsync(@Nonnull ServiceTask task) {
+		int servicesRunning = task.findServices().size();
+
+		if (task.getMaxCount() > 0 && servicesRunning >= task.getMaxCount()) {
+			cloud.getLogger().warn("The max service count for '{}' of {} is already reached", task.getName(), task.getMaxCount());
+			return Task.empty();
+		}
+
 		Collection<String> nodes = new ArrayList<>(task.getNodes());
 		if (nodes.isEmpty())
 			nodes.addAll(cloud.getNodeManager().getNodeNames());
@@ -62,7 +69,6 @@ public class MasterServiceFactory implements ServiceFactory {
 
 		NodeServer node = allowedNodes.get(0); // TODO choose based on running services and load
 
-		int servicesRunning = task.findServices().size();
 		int port = getNextFreePort(node, task);
 		ServiceInfo info = new ServiceInfo(
 				UUID.randomUUID(), null, task.getName(), servicesRunning + 1, task.getEnvironment(),
