@@ -1,4 +1,4 @@
-package net.anweisen.cloud.modules.bridge.helper.data;
+package net.anweisen.cloud.driver.service.specific.data;
 
 import javax.annotation.Nonnull;
 import java.util.UUID;
@@ -11,6 +11,9 @@ public final class MinecraftPlayerInfo {
 
 	private String name;
 	private UUID uuid;
+
+	private MinecraftPlayerInfo() {
+	}
 
 	public MinecraftPlayerInfo(@Nonnull String name, @Nonnull UUID uuid) {
 		this.name = name;

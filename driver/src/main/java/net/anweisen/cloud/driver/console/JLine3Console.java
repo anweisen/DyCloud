@@ -161,7 +161,7 @@ public class JLine3Console implements Console {
 
 	@Override
 	public void setPrompt(@Nonnull String prompt) {
-		prompt = prompt;
+		this.prompt = prompt;
 		updatePrompt();
 	}
 
@@ -173,7 +173,7 @@ public class JLine3Console implements Console {
 
 	@Override
 	public void setScreenName(@Nonnull String screenName) {
-		screenName = screenName;
+		this.screenName = screenName;
 		updatePrompt();
 	}
 

@@ -1,4 +1,4 @@
-package net.anweisen.cloud.modules.bridge.helper.data;
+package net.anweisen.cloud.driver.service.specific.data;
 
 import net.anweisen.utilities.common.config.Document;
 

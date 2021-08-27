@@ -3,11 +3,11 @@ package net.anweisen.cloud.modules.bridge.bungee.listener;
 import net.anweisen.cloud.driver.event.EventListener;
 import net.anweisen.cloud.driver.event.service.ServiceRegisteredEvent;
 import net.anweisen.cloud.driver.event.service.ServiceUnregisteredEvent;
-import net.anweisen.cloud.driver.service.specific.ServiceProperties;
+import net.anweisen.cloud.driver.service.specific.ServiceProperty;
+import net.anweisen.cloud.driver.service.specific.data.PluginInfo;
+import net.anweisen.cloud.driver.service.specific.data.ProxyPlayerInfo;
 import net.anweisen.cloud.modules.bridge.bungee.BungeeBridgeHelper;
 import net.anweisen.cloud.modules.bridge.helper.BridgeHelper;
-import net.anweisen.cloud.modules.bridge.helper.data.PluginInfo;
-import net.anweisen.cloud.modules.bridge.helper.data.ProxyPlayerInfo;
 import net.anweisen.cloud.wrapper.event.service.ServiceInfoConfigureEvent;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -24,14 +24,14 @@ public class BungeeCloudListener {
 	@EventListener
 	public void onInfoConfigure(@Nonnull ServiceInfoConfigureEvent event) {
 		BridgeHelper.setOnlineCount(ProxyServer.getInstance().getOnlineCount());
-		event.getServiceInfo().getProperties()
-			.set(ServiceProperties.MAX_PLAYER_COUNT, BridgeHelper.getMaxPlayers())
-			.set(ServiceProperties.ONLINE_COUNT, ProxyServer.getInstance().getOnlineCount())
-			.set(ServiceProperties.MESSAGE_CHANNELS, ProxyServer.getInstance().getChannels())
-			.set(ServiceProperties.PLAYERS, ProxyServer.getInstance().getPlayers().stream().map(player -> {
+		event.getServiceInfo()
+			.set(ServiceProperty.MAX_PLAYER_COUNT, BridgeHelper.getMaxPlayers())
+			.set(ServiceProperty.ONLINE_PLAYER_COUNT, ProxyServer.getInstance().getOnlineCount())
+			.set(ServiceProperty.PROXY_MESSAGE_CHANNELS, ProxyServer.getInstance().getChannels())
+			.set(ServiceProperty.PROXY_PLAYER_LIST, ProxyServer.getInstance().getPlayers().stream().map(player -> {
 				return new ProxyPlayerInfo(player.getName(), player.getUniqueId(), player.getServer() != null ? player.getServer().getInfo().getName() : null);
 			}).collect(Collectors.toList()))
-			.set(ServiceProperties.PLUGINS, ProxyServer.getInstance().getPluginManager().getPlugins().stream().map(Plugin::getDescription).map(plugin -> {
+			.set(ServiceProperty.PLUGINS, ProxyServer.getInstance().getPluginManager().getPlugins().stream().map(Plugin::getDescription).map(plugin -> {
 				return new PluginInfo(plugin.getName(), new String[] { plugin.getAuthor() }, plugin.getVersion(), plugin.getMain(), plugin.getDescription());
 			}).collect(Collectors.toList()))
 		;

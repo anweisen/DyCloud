@@ -1,4 +1,4 @@
-package net.anweisen.cloud.modules.bridge.helper.data;
+package net.anweisen.cloud.driver.service.specific.data;
 
 import javax.annotation.Nonnull;
 
@@ -13,6 +13,9 @@ public final class PluginInfo {
 	private String version;
 	private String mainClass;
 	private String description;
+
+	private PluginInfo() {
+	}
 
 	public PluginInfo(String name, String[] author, String version, String mainClass, String description) {
 		this.name = name;

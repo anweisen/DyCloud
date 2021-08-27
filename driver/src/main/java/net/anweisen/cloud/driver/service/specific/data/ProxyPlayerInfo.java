@@ -1,4 +1,4 @@
-package net.anweisen.cloud.modules.bridge.helper.data;
+package net.anweisen.cloud.driver.service.specific.data;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -13,6 +13,9 @@ public final class ProxyPlayerInfo {
 	private String name;
 	private UUID uuid;
 	private String server;
+
+	private ProxyPlayerInfo() {
+	}
 
 	public ProxyPlayerInfo(@Nonnull String name, @Nonnull UUID uuid, @Nullable String server) {
 		this.name = name;

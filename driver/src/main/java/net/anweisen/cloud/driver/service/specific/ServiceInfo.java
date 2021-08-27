@@ -154,6 +154,16 @@ public final class ServiceInfo implements SerializableObject {
 		return properties;
 	}
 
+	public <T> T get(@Nonnull ServiceProperty<T> property) {
+		return property.getProperty(properties);
+	}
+
+	@Nonnull
+	public <T> ServiceInfo set(@Nonnull ServiceProperty<T> property, T value) {
+		property.setProperty(properties, value);
+		return this;
+	}
+
 	@Nonnull
 	public HostAndPort getAddress() {
 		return new HostAndPort(nodeAddress, port);
