@@ -14,7 +14,7 @@ import java.lang.management.ManagementFactory;
 public final class NodeCycleData implements SerializableObject {
 
 	static {
-		current();
+		current(); // init management
 	}
 
 	@Nonnull
