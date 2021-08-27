@@ -1,7 +1,7 @@
 package net.anweisen.cloud.modules.bridge.bungee;
 
 import net.anweisen.cloud.driver.network.HostAndPort;
-import net.anweisen.cloud.driver.player.data.PlayerNetworkProxyConnection;
+import net.anweisen.cloud.driver.player.data.PlayerProxyConnectionData;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.modules.bridge.helper.BridgeHelper;
 import net.anweisen.cloud.wrapper.CloudWrapper;
@@ -22,8 +22,8 @@ public final class BungeeBridgeHelper {
 	private BungeeBridgeHelper() {}
 
 	@Nonnull
-	public static PlayerNetworkProxyConnection createPlayerConnection(@Nonnull PendingConnection connection) {
-		return new PlayerNetworkProxyConnection(
+	public static PlayerProxyConnectionData createPlayerConnection(@Nonnull PendingConnection connection) {
+		return new PlayerProxyConnectionData(
 			connection.getUniqueId(),
 			connection.getName(),
 			HostAndPort.fromSocketAddress(connection.getSocketAddress()),

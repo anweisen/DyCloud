@@ -1,8 +1,7 @@
 package net.anweisen.cloud.modules.bridge.bukkit;
 
 import net.anweisen.cloud.driver.network.HostAndPort;
-import net.anweisen.cloud.driver.player.data.PlayerNetworkServerConnection;
-import net.anweisen.cloud.modules.bridge.helper.BridgeHelper;
+import net.anweisen.cloud.driver.player.data.PlayerServerConnectionData;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
@@ -16,13 +15,11 @@ public final class BukkitBridgeHelper {
 	private BukkitBridgeHelper() {}
 
 	@Nonnull
-	public static PlayerNetworkServerConnection createPlayerConnection(@Nonnull Player player) {
-		return new PlayerNetworkServerConnection(
+	public static PlayerServerConnectionData createPlayerConnection(@Nonnull Player player) {
+		return new PlayerServerConnectionData(
 			player.getUniqueId(),
 			player.getName(),
-			HostAndPort.fromSocketAddressOrNull(player.getAddress()),
-			BridgeHelper.getServiceInfo().getName(),
-			BridgeHelper.getServiceInfo().getUniqueId()
+			HostAndPort.fromSocketAddressOrNull(player.getAddress())
 		);
 	}
 
