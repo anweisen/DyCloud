@@ -11,6 +11,7 @@ import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.Pub
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.service.config.ServiceTask;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
+import net.anweisen.cloud.driver.service.specific.ServiceState;
 import net.anweisen.cloud.node.CloudNode;
 import net.anweisen.cloud.node.service.NodeServiceActor;
 
@@ -46,6 +47,7 @@ public class ServiceControlListener implements PacketListener, LoggingApiUser {
 		Preconditions.checkNotNull(service.getDockerContainerId(), "Docker container id of service for action is null");
 		try {
 			doServiceAction(service, type, actor);
+			service.setState(getServiceState(type));
 			cloud.publishUpdate(getPublishType(type), service);
 		} catch (DockerException ex) {
 			error("Unable to do service action service {}", service, ex);
@@ -70,6 +72,18 @@ public class ServiceControlListener implements PacketListener, LoggingApiUser {
 			case START:
 				actor.startService(service);
 				break;
+		}
+	}
+
+	@Nonnull
+	private ServiceState getServiceState(@Nonnull ServiceControlType type) {
+		switch (type) {
+			case RESTART:
+			case STOP:
+			case KILL:      return ServiceState.STOPPED;
+			case DELETE:    return ServiceState.DELETED;
+			case START:     return ServiceState.RUNNING;
+			default:        throw new IllegalArgumentException(type.name());
 		}
 	}
 
