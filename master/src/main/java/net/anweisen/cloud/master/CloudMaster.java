@@ -27,6 +27,7 @@ import net.anweisen.cloud.master.node.NodeServerManager;
 import net.anweisen.cloud.master.service.MasterServiceFactory;
 import net.anweisen.cloud.master.service.MasterServiceManager;
 import net.anweisen.cloud.master.service.config.MasterServiceConfigManager;
+import net.anweisen.utilities.common.collection.NamedThreadFactory;
 import net.anweisen.utilities.common.logging.ILogger;
 
 import javax.annotation.Nonnull;
@@ -44,7 +45,7 @@ public final class CloudMaster extends CloudBase {
 
 	private final MasterConfig config = new MasterConfig();
 
-	private final ScheduledExecutorService mainLoopExecutor = Executors.newSingleThreadScheduledExecutor();
+	private final ScheduledExecutorService mainLoopExecutor = Executors.newSingleThreadScheduledExecutor(new NamedThreadFactory(id -> "MainLoop"));
 	private final CloudMainLoop mainLoop = new CloudMainLoop(this);
 
 	private final MasterDatabaseManager databaseManager;
