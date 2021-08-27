@@ -25,7 +25,11 @@ public abstract class DefaultServiceManager implements ServiceManager, LoggingAp
 			case STARTED:
 				CloudDriver.getInstance().getEventManager().callEvent(new ServiceStartedEvent(info));
 				break;
+			case RESTARTED:
+				CloudDriver.getInstance().getEventManager().callEvent(new ServiceRestartedEvent(info));
+				break;
 			case STOPPED:
+			case KILLED:
 				CloudDriver.getInstance().getEventManager().callEvent(new ServiceStoppedEvent(info));
 				break;
 			case REGISTER:
