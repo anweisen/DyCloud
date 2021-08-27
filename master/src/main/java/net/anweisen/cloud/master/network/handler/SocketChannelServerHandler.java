@@ -9,7 +9,9 @@ import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.handler.SocketChannelHandler;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.PublishType;
+import net.anweisen.cloud.driver.node.NodeInfo;
 import net.anweisen.cloud.master.CloudMaster;
+import net.anweisen.cloud.master.cord.CordServer;
 import net.anweisen.cloud.master.node.NodeServer;
 import net.anweisen.cloud.master.service.specific.CloudService;
 
@@ -74,27 +76,43 @@ public class SocketChannelServerHandler implements SocketChannelHandler {
 			return;
 		}
 
-		NodeServer nodeServer = cloud.getNodeManager().getNodeServer(channel);
-		if (nodeServer != null) {
-			cloud.getLogger().warn("Node '{}' has disconnected", nodeServer.getInfo().getName());
-			cloud.getNodeManager().getNodeServers().remove(nodeServer);
+		// TODO publish
+		NodeServer node = cloud.getNodeManager().getNodeServer(channel);
+		if (node != null) {
+			cloud.getLogger().warn("Node '{}' has disconnected", node.getInfo().getName());
+			cloud.getNodeManager().getNodeServers().remove(node);
 			return;
 		}
 
-		cloud.getLogger().warn("Channel[client={} server={}] was neither a node or service", channel.getClientAddress(), channel.getServerAddress());
+		// TODO publish
+		CordServer cord = cloud.getCordManager().getCordServer(channel);
+		if (cord != null) {
+			cloud.getLogger().warn("Cord '{}' has disconnected", cord.getInfo().getName());
+			cloud.getCordManager().getCordServers().remove(cord);
+			return;
+		}
+
+		cloud.getLogger().warn("Channel[client={} server={}] was neither a node/service/cord", channel.getClientAddress(), channel.getServerAddress());
 		cloud.getLogger().extended("Nodes:");
 		cloud.getNodeManager().getNodeServers().stream().map(current -> current.getInfo().getName() + " | " + current.getChannel()).forEach(line -> cloud.getLogger().extended("=> {}", line));
+		cloud.getLogger().extended("Cords:");
+		cloud.getCordManager().getCordServers().stream().map(current -> current.getInfo().getName() + " | " + current.getChannel()).forEach(line -> cloud.getLogger().extended("=> {}", line));
 		cloud.getLogger().extended("Services:");
 		cloud.getServiceManager().getServices().stream().map(current -> current.getInfo().getName() + " | " + current.getChannel()).forEach(line -> cloud.getLogger().extended("=> {}", line));
 	}
 
 	protected boolean inWhitelist(@Nonnull SocketChannel channel) {
 		String ipAddress = channel.getClientAddress().getHost();
+		if (ipAddress.equals("0.0.0.0") || ipAddress.equals("127.0.0.1") || ipAddress.equals("localhost"))
+			return true;
+
 		if (CloudMaster.getInstance().getConfig().getIpWhitelist().contains(ipAddress))
 			return true;
 
-		for (NodeServer node : CloudMaster.getInstance().getNodeManager().getNodeServers()) {
+		for (NodeInfo node : CloudMaster.getInstance().getNodeManager().getNodeInfos()) {
 			if (node.getSubnetIps().contains(ipAddress))
+				return true;
+			if (node.getGatewayIp().equals(ipAddress))
 				return true;
 		}
 
