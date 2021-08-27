@@ -1,5 +1,6 @@
 package net.anweisen.cloud.master.node;
 
+import net.anweisen.cloud.base.node.NodeCycleData;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.node.NodeInfo;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
@@ -20,6 +21,11 @@ public interface NodeServer {
 
 	@Nonnull
 	SocketChannel getChannel();
+
+	@Nullable
+	NodeCycleData getLastCycleData();
+
+	void setLastCycleData(@Nonnull NodeCycleData data);
 
 	boolean isAvailable();
 
