@@ -2,6 +2,7 @@ package net.anweisen.cloud.master.service;
 
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.service.ServiceManager;
+import net.anweisen.cloud.driver.service.specific.ServiceController;
 import net.anweisen.cloud.master.service.specific.CloudService;
 
 import javax.annotation.Nonnull;
@@ -14,6 +15,9 @@ import java.util.UUID;
  * @since 1.0
  */
 public interface CloudServiceManager extends ServiceManager {
+
+	@Nonnull
+	ServiceController getController(@Nonnull CloudService service);
 
 	@Nonnull
 	Collection<CloudService> getServices();
