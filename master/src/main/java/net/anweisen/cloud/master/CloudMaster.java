@@ -30,6 +30,9 @@ import net.anweisen.cloud.master.service.config.MasterServiceConfigManager;
 import net.anweisen.utilities.common.logging.ILogger;
 
 import javax.annotation.Nonnull;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -40,6 +43,9 @@ import javax.annotation.Nonnull;
 public final class CloudMaster extends CloudBase {
 
 	private final MasterConfig config = new MasterConfig();
+
+	private final ScheduledExecutorService mainLoopExecutor = Executors.newSingleThreadScheduledExecutor();
+	private final CloudMainLoop mainLoop = new CloudMainLoop(this);
 
 	private final MasterDatabaseManager databaseManager;
 	private final MasterServiceConfigManager serviceConfigManager;
@@ -92,6 +98,9 @@ public final class CloudMaster extends CloudBase {
 		}
 
 		enableModules();
+
+		mainLoopExecutor.scheduleAtFixedRate(mainLoop, 1, 1, TimeUnit.SECONDS);
+		logger.info("Started main loop execution");
 
 		logger.info("The cloud master is ready and running!");
 
