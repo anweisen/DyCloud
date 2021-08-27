@@ -5,7 +5,7 @@ import net.anweisen.cloud.driver.database.remote.SerializableSQLColumn;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
-import net.anweisen.cloud.driver.network.packet.def.DatabaseActionPacket.DatabaseActionType;
+import net.anweisen.cloud.driver.network.packet.def.RemoteDatabaseActionPacket.DatabaseActionType;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.database.Order;
@@ -17,18 +17,17 @@ import net.anweisen.utilities.database.action.hierarchy.WhereAction;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
 @SuppressWarnings("ResultOfMethodCallIgnored")
-public class DatabaseActionListener implements PacketListener {
+public class RemoteDatabaseActionListener implements PacketListener {
 
 	private final DatabaseManager manager;
 
-	public DatabaseActionListener(@Nonnull DatabaseManager manager) {
+	public RemoteDatabaseActionListener(@Nonnull DatabaseManager manager) {
 		this.manager = manager;
 	}
 
@@ -39,9 +38,8 @@ public class DatabaseActionListener implements PacketListener {
 		DatabaseActionType type = buffer.readEnumConstant(DatabaseActionType.class);
 
 		if (type.isSpecific()) {
-
 			String table = buffer.readString();
-			Document document = buffer.readDocument();
+			Document document = buffer.isReadable(1) ? buffer.readDocument() : null;
 
 			switch (type) {
 				case QUERY: {
