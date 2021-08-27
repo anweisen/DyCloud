@@ -107,6 +107,8 @@ public final class CloudNode extends CloudBase {
 
 		initModules();
 
+		executor.scheduleAtFixedRate(this::publishDataCycle, 5, 5, TimeUnit.SECONDS);
+
 	}
 
 	private void initDocker() {
@@ -204,6 +206,10 @@ public final class CloudNode extends CloudBase {
 		moduleManager.resolveModules();
 		moduleManager.loadModules();
 		moduleManager.enableModules();
+	}
+
+	private void publishDataCycle() {
+		socketClient.sendPacket(new Packet(PacketConstants.NODE_DATA_CYCLE, Buffer.create().writeObject(NodeCycleData.current())));
 	}
 
 	@Override
