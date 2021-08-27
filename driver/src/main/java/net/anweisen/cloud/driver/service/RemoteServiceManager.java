@@ -1,13 +1,15 @@
 package net.anweisen.cloud.driver.service;
 
 import net.anweisen.cloud.driver.network.request.NetworkingApiUser;
-import net.anweisen.cloud.driver.network.request.RequestType;
+import net.anweisen.cloud.driver.service.specific.RemoteServiceController;
+import net.anweisen.cloud.driver.service.specific.ServiceController;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
-import net.anweisen.utilities.common.concurrent.task.Task;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -16,6 +18,12 @@ import java.util.*;
 public class RemoteServiceManager extends DefaultServiceManager implements NetworkingApiUser {
 
 	private final Set<ServiceInfo> services = new LinkedHashSet<>();
+
+	@Nonnull
+	@Override
+	public ServiceController getController(@Nonnull ServiceInfo service) {
+		return new RemoteServiceController(service);
+	}
 
 	@Override
 	protected void updateServiceInfoInternally(@Nonnull ServiceInfo newServiceInfo) {
