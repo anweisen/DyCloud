@@ -1,6 +1,7 @@
 package net.anweisen.cloud.node.service;
 
 import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.command.SyncDockerCmd;
 import com.github.dockerjava.api.exception.NotFoundException;
 import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.HostConfig;
@@ -9,7 +10,6 @@ import com.github.dockerjava.api.model.Ports.Binding;
 import net.anweisen.cloud.base.module.ModuleController;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.PublishType;
-import net.anweisen.cloud.driver.service.ServiceFactory;
 import net.anweisen.cloud.driver.service.config.ServiceTask;
 import net.anweisen.cloud.driver.service.config.ServiceTemplate;
 import net.anweisen.cloud.driver.service.config.TemplateStorage;
@@ -17,9 +17,7 @@ import net.anweisen.cloud.driver.service.specific.ServiceEnvironment;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.driver.service.specific.ServiceState;
 import net.anweisen.cloud.node.CloudNode;
-import net.anweisen.utilities.common.concurrent.task.Task;
 import net.anweisen.utilities.common.config.Document;
-import net.anweisen.utilities.common.config.FileDocument;
 import net.anweisen.utilities.common.misc.FileUtils;
 
 import javax.annotation.Nonnull;
@@ -32,31 +30,42 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BiFunction;
 
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class NodeServiceFactory implements ServiceFactory, LoggingApiUser {
+public class NodeServiceActor implements LoggingApiUser {
 
 	private static final String serverDirectory = "/server";
 	private static final int containerPort = 25565;
-//	private static final Path staticDirectory = Paths.get("static");
 
-	@Nullable
-	@Override
-	public ServiceInfo createService(@Nonnull ServiceTask task) {
-		return null; // TODO call to master, just as the wrapper -> combine!
+	public void startService(@Nonnull ServiceInfo service) {
+		execAction(service, DockerClient::startContainerCmd);
 	}
 
-	@Nonnull
-	@Override
-	public Task<ServiceInfo> createServiceAsync(@Nonnull ServiceTask task) {
-		return null; // TODO call to master, just as the wrapper -> combine!
+	public void restartService(@Nonnull ServiceInfo service) {
+		execAction(service, DockerClient::restartContainerCmd);
 	}
 
-	// TODO refactor: move to multiple method calls
-	// TODO make this logic its own class?
+	public void stopService(@Nonnull ServiceInfo service) {
+		execAction(service, DockerClient::stopContainerCmd);
+	}
+
+	public void killService(@Nonnull ServiceInfo service) {
+		execAction(service, DockerClient::killContainerCmd);
+	}
+
+	public void deleteService(@Nonnull ServiceInfo service) {
+		execAction(service, DockerClient::removeConfigCmd);
+	}
+
+	private void execAction(@Nonnull ServiceInfo service, @Nonnull BiFunction<DockerClient, String, SyncDockerCmd<?>> commandCreator) {
+		commandCreator.apply(CloudNode.getInstance().getDockerClient(), service.getDockerContainerId()).exec();
+	}
+
+	// TODO split method up
 	public void createServiceHere(@Nonnull ServiceInfo info, @Nonnull ServiceTask task) throws IOException {
 		CloudNode cloud = CloudNode.getInstance();
 
@@ -157,9 +166,10 @@ public class NodeServiceFactory implements ServiceFactory, LoggingApiUser {
 
 		List<String> arguments = new ArrayList<>(Collections.singletonList("java"));
 		arguments.addAll(Arrays.asList(
-			"-Dfile.encoding=UTF-8"
-//			"-XX:-UseAdaptiveSizePolicy",
-//			"-XX:+UseCompressedOops",
+			"-Dfile.encoding=UTF-8",
+			"-XX:+UseStringDeduplication",
+			"-XX:-UseAdaptiveSizePolicy",
+			"-XX:+UseCompressedOops"
 		));
 		if (task.getJavaVersion() >= 9) {
 			arguments.addAll(Arrays.asList(
