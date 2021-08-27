@@ -42,6 +42,8 @@ public class MasterServiceFactory implements ServiceFactory {
 	@Nonnull
 	@Override
 	public synchronized Task<ServiceInfo> createServiceAsync(@Nonnull ServiceTask task) {
+		cloud.getLogger().debug("Creating new service of '{}'", task.getName());
+
 		int servicesRunning = task.findServices().size();
 
 		if (task.getMaxCount() > 0 && servicesRunning >= task.getMaxCount()) {
