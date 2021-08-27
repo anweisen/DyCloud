@@ -33,7 +33,7 @@ public class DefaultTrafficReporter implements CordTrafficReporter, LoggingApiUs
 		double downstreamPacketMegabytes = downstreamPacketBytes.doubleValue() / 1024 / 1024;
 		double upstreamPacketMegabytes = upstreamPacketBytes.doubleValue() / 1024 / 1024;
 
-		info("============== average activity report of last {} seconds ==============", seconds);
+		info("============== average cord activity report of last {} ==============", (seconds > 60 ? seconds / 60 + " minutes" : seconds + " seconds"));
 		info("New Connections: {}/s, total {}", NumberFormatter.DEFAULT.format(newConnections.doubleValue() / seconds), newConnections);
 		info("Downstream Packets: {}/s {}mb/s, total {} {}mb", NumberFormatter.DEFAULT.format(downstreamPacketCount.doubleValue() / seconds), NumberFormatter.BIG_FLOATING_POINT.format(downstreamPacketMegabytes / seconds), downstreamPacketCount, NumberFormatter.BIG_FLOATING_POINT.format(downstreamPacketMegabytes));
 		info("Upstream Packets: {}/s {}mb/s, total {} {}mb", NumberFormatter.DEFAULT.format(upstreamPacketCount.doubleValue() / seconds), NumberFormatter.BIG_FLOATING_POINT.format(upstreamPacketMegabytes / seconds), upstreamPacketCount, NumberFormatter.BIG_FLOATING_POINT.format(upstreamPacketMegabytes));

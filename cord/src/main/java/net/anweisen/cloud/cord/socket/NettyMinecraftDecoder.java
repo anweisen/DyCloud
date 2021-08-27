@@ -147,7 +147,7 @@ public class NettyMinecraftDecoder extends SimpleChannelInboundHandler<ByteBuf> 
 				trace("Sent handshake packet for {} to proxy..", downstreamHandler.getClientAddress());
 				clientChannel.attr(PacketUtils.CONNECTION_STATE).set(ConnectionState.PROXY);
 			} else {
-				warn("[{}] Proxy Downstream was not connected successfully", downstreamHandler.getClientAddress());
+				warn("[{}] Proxy Downstream could not be connected successfully", downstreamHandler.getClientAddress());
 				clientChannel.close();
 				serverChannel.close();
 			}
