@@ -174,7 +174,7 @@ public class JLine3Console implements Console {
 	@Override
 	public void setScreenName(@Nonnull String screenName) {
 		this.screenName = screenName;
-		updatePrompt();
+		resetPrompt();
 	}
 
 	private void updatePrompt() {
