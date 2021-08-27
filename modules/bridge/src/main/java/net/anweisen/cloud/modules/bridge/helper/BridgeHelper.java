@@ -1,15 +1,18 @@
 package net.anweisen.cloud.modules.bridge.helper;
 
-import net.anweisen.cloud.modules.bridge.bungee.listener.BungeeCloudListener;
-import net.anweisen.cloud.driver.network.packet.def.PlayerApiPacket;
-import net.anweisen.cloud.driver.network.packet.def.PlayerApiPacket.PlayerActionType;
-import net.anweisen.cloud.driver.player.data.PlayerNetworkProxyConnection;
-import net.anweisen.cloud.driver.player.data.PlayerNetworkServerConnection;
+import net.anweisen.cloud.driver.network.packet.def.PlayerEventPacket;
+import net.anweisen.cloud.driver.network.packet.def.PlayerEventPacket.PlayerEventType;
+import net.anweisen.cloud.driver.player.CloudPlayer;
+import net.anweisen.cloud.driver.player.data.PlayerProxyConnectionData;
+import net.anweisen.cloud.driver.player.data.PlayerServerConnectionData;
+import net.anweisen.cloud.driver.player.defaults.DefaultCloudPlayer;
 import net.anweisen.cloud.driver.service.config.ServiceTask;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.driver.service.specific.ServiceProperties;
+import net.anweisen.cloud.modules.bridge.bungee.listener.BungeeCloudListener;
 import net.anweisen.cloud.wrapper.CloudWrapper;
 import net.anweisen.cloud.wrapper.event.service.ServiceInfoConfigureEvent;
+import net.anweisen.utilities.common.collection.pair.Tuple;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -165,48 +168,49 @@ public final class BridgeHelper {
 		return CloudWrapper.getInstance().getServiceInfo();
 	}
 
-	@Nullable
-	public static String sendProxyLoginRequestPacket(@Nonnull PlayerNetworkProxyConnection playerConnection) {
+	@Nonnull
+	public static Tuple<CloudPlayer, String> sendProxyLoginRequestPacket(@Nonnull PlayerProxyConnectionData playerConnection) {
 		return Optional.ofNullable(
 				CloudWrapper.getInstance().getSocketComponent().getFirstChannel()
-				.sendQuery(new PlayerApiPacket(PlayerActionType.PROXY_LOGIN_REQUEST, buffer -> buffer.writeObject(playerConnection))))
-				.map(packet -> packet.getBuffer().readOptionalString()
-			).orElse(null);
+					.sendQuery(new PlayerEventPacket(PlayerEventType.PROXY_LOGIN_REQUEST, buffer -> buffer.writeObject(playerConnection)))
+			)
+			.map(packet -> Tuple.<CloudPlayer, String>of(packet.getBuffer().readObject(DefaultCloudPlayer.class), packet.getBuffer().readOptionalString()))
+			.orElse(Tuple.empty());
 	}
 
-	public static void sendProxyLoginSuccessPacket(@Nonnull PlayerNetworkProxyConnection playerConnection) {
+	public static void sendProxyLoginSuccessPacket(@Nonnull PlayerProxyConnectionData playerConnection) {
 		CloudWrapper.getInstance().getSocketComponent()
-			.sendPacket(new PlayerApiPacket(PlayerActionType.PROXY_LOGIN_SUCCESS, buffer -> buffer.writeObject(playerConnection)));
+			.sendPacket(new PlayerEventPacket(PlayerEventType.PROXY_LOGIN_SUCCESS, buffer -> buffer.writeObject(playerConnection)));
 	}
 
-	public static void sendProxyServerConnectRequestPacket(@Nonnull PlayerNetworkProxyConnection playerConnection, @Nonnull ServiceInfo serviceInfo) {
+	public static void sendProxyServerConnectRequestPacket(@Nonnull PlayerProxyConnectionData playerConnection, @Nonnull ServiceInfo serviceInfo) {
 		CloudWrapper.getInstance().getSocketComponent()
-			.sendPacket(new PlayerApiPacket(PlayerActionType.PROXY_SERVER_CONNECT_REQUEST, buffer -> buffer.writeObject(playerConnection).writeObject(serviceInfo)));
+			.sendPacket(new PlayerEventPacket(PlayerEventType.PROXY_SERVER_CONNECT_REQUEST, buffer -> buffer.writeObject(playerConnection).writeObject(serviceInfo)));
 	}
 
-	public static void sendProxyServerSwitchPacket(@Nonnull PlayerNetworkProxyConnection playerConnection, @Nonnull ServiceInfo from, @Nonnull ServiceInfo to) {
+	public static void sendProxyServerSwitchPacket(@Nonnull PlayerProxyConnectionData playerConnection, @Nonnull ServiceInfo from, @Nonnull ServiceInfo to) {
 		CloudWrapper.getInstance().getSocketComponent()
-			.sendPacket(new PlayerApiPacket(PlayerActionType.PROXY_SERVER_SWITCH, buffer -> buffer.writeObject(playerConnection).writeObject(from).writeObject(to)));
+			.sendPacket(new PlayerEventPacket(PlayerEventType.PROXY_SERVER_SWITCH, buffer -> buffer.writeObject(playerConnection).writeObject(from).writeObject(to)));
 	}
 
-	public static void sendProxyDisconnectPacket(@Nonnull PlayerNetworkProxyConnection playerConnection) {
+	public static void sendProxyDisconnectPacket(@Nonnull PlayerProxyConnectionData playerConnection) {
 		CloudWrapper.getInstance().getSocketComponent()
-			.sendPacket(new PlayerApiPacket(PlayerActionType.PROXY_DISCONNECT, buffer -> buffer.writeObject(playerConnection)));
+			.sendPacket(new PlayerEventPacket(PlayerEventType.PROXY_DISCONNECT, buffer -> buffer.writeObject(playerConnection)));
 	}
 
-	public static void sendServerLoginRequestPacket(@Nonnull PlayerNetworkServerConnection playerConnection) {
+	public static void sendServerLoginRequestPacket(@Nonnull PlayerServerConnectionData playerConnection) {
 		CloudWrapper.getInstance().getSocketComponent()
-			.sendPacket(new PlayerApiPacket(PlayerActionType.SERVER_LOGIN_REQUEST, buffer -> buffer.writeObject(playerConnection)));
+			.sendPacket(new PlayerEventPacket(PlayerEventType.SERVER_LOGIN_REQUEST, buffer -> buffer.writeObject(playerConnection)));
 	}
 
-	public static void sendServerLoginSuccessPacket(@Nonnull PlayerNetworkServerConnection playerConnection) {
+	public static void sendServerLoginSuccessPacket(@Nonnull PlayerServerConnectionData playerConnection) {
 		CloudWrapper.getInstance().getSocketComponent()
-			.sendPacket(new PlayerApiPacket(PlayerActionType.SERVER_LOGIN_SUCCESS, buffer -> buffer.writeObject(playerConnection)));
+			.sendPacket(new PlayerEventPacket(PlayerEventType.SERVER_LOGIN_SUCCESS, buffer -> buffer.writeObject(playerConnection)));
 	}
 
-	public static void sendServerDisconnectPacket(@Nonnull PlayerNetworkServerConnection playerConnection) {
+	public static void sendServerDisconnectPacket(@Nonnull PlayerServerConnectionData playerConnection) {
 		CloudWrapper.getInstance().getSocketComponent()
-			.sendPacket(new PlayerApiPacket(PlayerActionType.SERVER_DISCONNECT, buffer -> buffer.writeObject(playerConnection)));
+			.sendPacket(new PlayerEventPacket(PlayerEventType.SERVER_DISCONNECT, buffer -> buffer.writeObject(playerConnection)));
 	}
 
 	private BridgeHelper() {}
