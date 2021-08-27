@@ -2,6 +2,7 @@ package net.anweisen.cloud.driver.service;
 
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.PublishType;
+import net.anweisen.cloud.driver.service.specific.ServiceController;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 
 import javax.annotation.Nonnull;
@@ -17,6 +18,9 @@ import java.util.stream.Collectors;
  * @see CloudDriver#getServiceManager()
  */
 public interface ServiceManager {
+
+	@Nonnull
+	ServiceController getController(@Nonnull ServiceInfo service);
 
 	@Nonnull
 	Collection<ServiceInfo> getServiceInfos();

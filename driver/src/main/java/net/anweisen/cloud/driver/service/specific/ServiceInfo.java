@@ -88,6 +88,11 @@ public final class ServiceInfo implements SerializableObject {
 	}
 
 	@Nonnull
+	public ServiceController getController() {
+		return CloudDriver.getInstance().getServiceManager().getController(this);
+	}
+
+	@Nonnull
 	public String getName() {
 		return taskName + "-" + serviceNumber;
 	}
