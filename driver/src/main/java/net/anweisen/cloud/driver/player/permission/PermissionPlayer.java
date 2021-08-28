@@ -1,7 +1,8 @@
 package net.anweisen.cloud.driver.player.permission;
 
+import net.anweisen.cloud.driver.CloudDriver;
+import net.anweisen.cloud.driver.DriverEnvironment;
 import net.anweisen.cloud.driver.player.CloudOfflinePlayer;
-import net.anweisen.cloud.driver.player.permission.PermissionData.PlayerGroupData;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,6 +45,16 @@ public interface PermissionPlayer {
 			return false;
 
 		return highestGroup.hasPermission(permission);
+	}
+
+	default boolean hasPermissionHere(@Nonnull String permission) {
+		if (hasPermission(permission)) {
+			return true;
+		} else if (CloudDriver.getInstance().getEnvironment() == DriverEnvironment.WRAPPER) {
+			return hasTaskPermission(CloudDriver.getInstance().getComponentName(), permission);
+		} else {
+			return false;
+		}
 	}
 
 	boolean testGroups();

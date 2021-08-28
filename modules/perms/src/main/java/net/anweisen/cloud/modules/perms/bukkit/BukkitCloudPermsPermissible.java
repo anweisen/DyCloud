@@ -3,7 +3,6 @@ package net.anweisen.cloud.modules.perms.bukkit;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.player.permission.PermissionGroup;
 import net.anweisen.cloud.driver.player.permission.PermissionPlayer;
-import net.anweisen.cloud.modules.perms.helper.PermissionHelper;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissibleBase;
 import org.bukkit.permissions.Permission;
@@ -60,7 +59,7 @@ public class BukkitCloudPermsPermissible extends PermissibleBase {
 	@Override
 	public boolean hasPermission(@Nonnull String permission) {
 		if (getPermissionPlayer() == null) return false;
-		return PermissionHelper.hasPermission(permissionPlayer, permission);
+		return permissionPlayer.hasPermissionHere(permission);
 	}
 
 	@Override
