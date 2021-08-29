@@ -1,0 +1,50 @@
+{
+	"$schema":"http://json-schema.org/draft-07/schema",
+	"$id": "https://raw.githubusercontent.com/anweisen/MinecraftCloud/master/module-config-schema.json",
+	"title": "MinecraftCloud Module Configuration",
+	"description": "Configuration of a MinecraftCloud module",
+	"type":"object",
+	"required": [ "name", "version", "author", "main" ],
+	"properties": {
+		"name": {
+			"type": "string",
+			"description": "The name of this module"
+		},
+		"version": {
+			"type": "string",
+			"description": "The current version of this module. Example: 1.2.7",
+			"pattern": "^(?:(\\d+)\\.)?(?:(\\d+)\\.)?(\\d+)$"
+		},
+		"author": {
+			"type": "string",
+			"description": "The version of this module"
+		},
+		"main": {
+			"type": "string",
+			"description": "The main class name of this module, must extend CloudModule"
+		},
+
+		"description": {
+			"type": "string",
+			"description": "A short, human readable description of what this module does"
+		},
+		"website": {
+			"type": "string",
+			"description": "A url of the website of this module"
+		},
+		"depends": {
+			"type": "array",
+			"description": "A list with modules names which have to be loaded before this"
+		},
+		"environment": {
+			"enum": [ "ALL", "MASTER", "NODE", "NONE" ],
+			"default": "ALL",
+			"description": "The environment on which the module should be run"
+		},
+		"copy": {
+			"enum": [ "ALL", "PROXY", "SERVER", "NONE" ],
+			"default": "NONE",
+			"description": "The type of the service the module should be copied to as plugin"
+		}
+	}
+}
