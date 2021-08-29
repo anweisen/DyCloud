@@ -1,7 +1,6 @@
 package net.anweisen.cloud.modules.perms;
 
 import net.anweisen.cloud.base.module.CloudModule;
-import net.anweisen.cloud.driver.DriverEnvironment;
 import net.anweisen.cloud.driver.player.permission.impl.CloudPermissionManager;
 
 /**
@@ -16,8 +15,6 @@ public final class CloudPermsModule extends CloudModule {
 			getConfig().set("enabled", true).save();
 		}
 		getLogger().debug("CloudPermsModule Status: enabled={}", getConfig().getBoolean("enabled"));
-
-		if (getDriver().getEnvironment() != DriverEnvironment.MASTER) return;
 		if (getConfig().getBoolean("enabled")) {
 			getDriver().setPermissionManager(new CloudPermissionManager());
 		}
