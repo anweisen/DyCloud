@@ -1,10 +1,22 @@
 package net.anweisen.cloud.driver.network.listener;
 
+import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
+import net.anweisen.cloud.driver.network.packet.def.AuthenticationResponsePacket;
+import net.anweisen.cloud.driver.network.packet.def.AuthenticationResponsePacket.PropertySection;
+import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.player.defaults.DefaultCloudPlayer;
+import net.anweisen.cloud.driver.player.permission.impl.DefaultPermissionGroup;
+import net.anweisen.cloud.driver.service.config.RemoteTemplateStorage;
+import net.anweisen.cloud.driver.service.config.ServiceTask;
+import net.anweisen.cloud.driver.service.specific.ServiceInfo;
+import net.anweisen.cloud.driver.service.specific.ServiceType;
+import net.anweisen.utilities.common.collection.ArrayWalker;
 import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utilities.common.logging.LogLevel;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.locks.Condition;
@@ -13,14 +25,19 @@ import java.util.concurrent.locks.Lock;
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
+ *
+ * @see net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket
+ * @see net.anweisen.cloud.driver.network.packet.def.AuthenticationResponsePacket
  */
 public class AuthenticationResponseListener implements PacketListener, LoggingApiUser {
 
 	private final Lock lock;
 	private final Condition condition;
 
+	private SocketChannel channel;
 	private boolean result;
 	private String message;
+	private Buffer configs;
 
 	public AuthenticationResponseListener(@Nonnull Lock lock, @Nonnull Condition condition) {
 		this.lock = lock;
@@ -29,6 +46,7 @@ public class AuthenticationResponseListener implements PacketListener, LoggingAp
 
 	@Override
 	public void handlePacket(@Nonnull SocketChannel channel, @Nonnull Packet packet) throws Exception {
+		this.channel = channel;
 
 		Document header = packet.getHeader();
 		if (!header.contains("access")) return;
@@ -37,6 +55,7 @@ public class AuthenticationResponseListener implements PacketListener, LoggingAp
 
 		result = header.getBoolean("access");
 		message = header.getString("message", "");
+		configs = packet.getBuffer();
 
 		try {
 			lock.lock();
@@ -53,5 +72,56 @@ public class AuthenticationResponseListener implements PacketListener, LoggingAp
 
 	public String getMessage() {
 		return message;
+	}
+
+	/**
+	 * @see AuthenticationResponsePacket#appendConfigProperties()
+	 */
+	public void readConfigProperties() {
+		readConfigProperties0(channel, configs);
+	}
+
+	private void readConfigProperties0(@Nonnull SocketChannel channel, @Nonnull Buffer buffer) {
+		if (buffer.readableBytes() < 1) return;
+
+		PropertySection section = buffer.readEnumConstant(PropertySection.class);
+		readConfigProperty(section, channel, buffer);
+		readConfigProperties0(channel, buffer);
+	}
+
+	private void readConfigProperty(@Nonnull PropertySection section, @Nonnull SocketChannel channel, @Nonnull Buffer buffer) {
+		CloudDriver cloud = CloudDriver.getInstance();
+		switch (section) {
+			case LOG_LEVEL: {
+				cloud.getLogger().setMinLevel(buffer.readEnumConstant(LogLevel.class));
+				break;
+			}
+			case TASKS: {
+				cloud.getServiceConfigManager().setServiceTasks(buffer.readObjectCollection(ServiceTask.class));
+				break;
+			}
+			case SERVICES: {
+				cloud.getServiceManager().setServiceInfos(buffer.readObjectCollection(ServiceInfo.class));
+				break;
+			}
+			case START_PORTS: {
+				ArrayWalker.walk(ServiceType.values()).forEach(type -> type.setStartPort(buffer.readVarInt()));
+				break;
+			}
+			case TEMPLATE_STORAGES: {
+				for (String name : buffer.readStringCollection()) {
+					cloud.getServiceConfigManager().registerTemplateStorage(new RemoteTemplateStorage(name, channel));
+				}
+				break;
+			}
+			case ONLINE_PLAYERS: {
+				cloud.getPlayerManager().setOnlinePlayerCache(buffer.readObjectCollection(DefaultCloudPlayer.class));
+				break;
+			}
+			case PERMISSION_GROUPS: {
+				cloud.getPermissionManager().setGroupsCache(buffer.readObjectCollection(DefaultPermissionGroup.class));
+				break;
+			}
+		}
 	}
 }

@@ -10,7 +10,6 @@ import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.jaxrs.JerseyDockerHttpClient;
 import com.github.dockerjava.transport.DockerHttpClient;
 import net.anweisen.cloud.base.CloudBase;
-import net.anweisen.cloud.base.network.request.RequestPacketListener;
 import net.anweisen.cloud.base.node.NodeCycleData;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.DriverEnvironment;
@@ -23,7 +22,6 @@ import net.anweisen.cloud.driver.network.HostAndPort;
 import net.anweisen.cloud.driver.network.SocketClient;
 import net.anweisen.cloud.driver.network.handler.SocketChannelClientHandler;
 import net.anweisen.cloud.driver.network.listener.AuthenticationResponseListener;
-import net.anweisen.cloud.driver.network.listener.PublishConfigListener;
 import net.anweisen.cloud.driver.network.listener.ServiceInfoUpdateListener;
 import net.anweisen.cloud.driver.network.netty.client.NettySocketClient;
 import net.anweisen.cloud.driver.network.packet.Packet;
@@ -44,7 +42,6 @@ import net.anweisen.cloud.driver.service.config.RemoteServiceConfigManager;
 import net.anweisen.cloud.driver.service.config.ServiceConfigManager;
 import net.anweisen.cloud.node.config.NodeConfig;
 import net.anweisen.cloud.node.network.listener.ServiceControlListener;
-import net.anweisen.cloud.node.network.requests.ServiceFactoryRequestHandlers;
 import net.anweisen.cloud.node.node.NodeNodeManager;
 import net.anweisen.cloud.node.service.NodeServiceActor;
 import net.anweisen.utilities.common.logging.ILogger;
@@ -202,12 +199,8 @@ public final class CloudNode extends CloudBase {
 	private void loadNetworkListeners(@Nonnull PacketListenerRegistry registry) {
 		logger.info("Registering network listeners..");
 
-		registry.addListener(PacketConstants.PUBLISH_CONFIG_CHANNEL, new PublishConfigListener());
 		registry.addListener(PacketConstants.SERVICE_INFO_PUBLISH_CHANNEL, new ServiceInfoUpdateListener());
 		registry.addListener(PacketConstants.SERVICE_CONTROL_CHANNEL, new ServiceControlListener());
-		registry.addListener(PacketConstants.REQUEST_API_CHANNEL, new RequestPacketListener(
-			new ServiceFactoryRequestHandlers()
-		));
 	}
 
 	private void initModules() {

@@ -9,7 +9,6 @@ import net.anweisen.cloud.driver.network.HostAndPort;
 import net.anweisen.cloud.driver.network.SocketClient;
 import net.anweisen.cloud.driver.network.handler.SocketChannelClientHandler;
 import net.anweisen.cloud.driver.network.listener.AuthenticationResponseListener;
-import net.anweisen.cloud.driver.network.listener.PublishConfigListener;
 import net.anweisen.cloud.driver.network.listener.ServiceInfoUpdateListener;
 import net.anweisen.cloud.driver.network.netty.client.NettySocketClient;
 import net.anweisen.cloud.driver.network.packet.PacketConstants;
@@ -143,6 +142,7 @@ public final class CloudWrapper extends CloudDriver {
 		if (!listener.getResult())
 			throw new IllegalStateException("Network authentication failed: " + listener.getMessage());
 
+		listener.readConfigProperties();
 		logger.debug("Network authentication was successful");
 
 	}
@@ -155,7 +155,6 @@ public final class CloudWrapper extends CloudDriver {
 	private void loadNetworkListeners(@Nonnull PacketListenerRegistry registry) {
 		logger.info("Registering network listeners..");
 
-		registry.addListener(PacketConstants.PUBLISH_CONFIG_CHANNEL, new PublishConfigListener());
 		registry.addListener(PacketConstants.SERVICE_INFO_PUBLISH_CHANNEL, new ServiceInfoUpdateListener());
 	}
 
