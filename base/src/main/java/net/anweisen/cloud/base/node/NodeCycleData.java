@@ -32,7 +32,9 @@ public final class NodeCycleData implements SerializableObject {
 	private float cpuUsage; // cpu usage in percent
 	private int cores; // the amount of cores the machine of the node has
 	private long maxRam; // the ram the machine of the node has in megabytes
-	private long freeRam; //the ram the machine of the node has left in megabytes
+	private long freeRam; // the ram the machine of the node has left in megabytes
+	private int latency; // the amount of time it takes to send a packet from the node to the server in ms
+	private long timestamp;
 
 	private NodeCycleData() {
 	}
@@ -42,6 +44,7 @@ public final class NodeCycleData implements SerializableObject {
 		this.cores = cores;
 		this.maxRam = maxRam;
 		this.freeRam = freeRam;
+		this.latency = -1;
 	}
 
 	@Override
@@ -50,6 +53,7 @@ public final class NodeCycleData implements SerializableObject {
 		buffer.writeVarInt(cores);
 		buffer.writeVarLong(maxRam);
 		buffer.writeVarLong(freeRam);
+		buffer.writeLong(System.currentTimeMillis());
 	}
 
 	@Override
@@ -58,6 +62,8 @@ public final class NodeCycleData implements SerializableObject {
 		cores = buffer.readVarInt();
 		maxRam = buffer.readVarInt();
 		freeRam = buffer.readVarInt();
+		timestamp = buffer.readLong();
+		latency = (int) (System.currentTimeMillis() - timestamp);
 	}
 
 	public float getCpuUsage() {
@@ -76,8 +82,16 @@ public final class NodeCycleData implements SerializableObject {
 		return freeRam;
 	}
 
+	public long getTimestamp() {
+		return timestamp;
+	}
+
+	public int getLatency() {
+		return latency;
+	}
+
 	@Override
 	public String toString() {
-		return "NodeCycleData[" + "cpuUsage=" + cpuUsage + " cores=" + cores + " maxRam=" + maxRam + " freeRam=" + freeRam + "]";
+		return "NodeCycleData[" + "cpuUsage=" + cpuUsage + " cores=" + cores + " maxRam=" + maxRam + " freeRam=" + freeRam + " latency=" + latency + "ms]";
 	}
 }
