@@ -13,10 +13,11 @@ public final class ModuleConfig {
 	private final String name, author, description, version, mainClass, website;
 	private final String[] depends;
 	private final ModuleCopyType copyType;
+	private final ModuleEnvironment environment;
 	private final Path jarFile;
 
 	public ModuleConfig(@Nonnull String name, @Nonnull String author, @Nonnull String description, @Nonnull String version, @Nonnull String mainClass,
-	                    @Nullable String website, @Nonnull String[] depends, @Nonnull ModuleCopyType copyType, @Nonnull Path jarFile) {
+	                    @Nullable String website, @Nonnull String[] depends, @Nonnull ModuleCopyType copyType, @Nonnull ModuleEnvironment environment, @Nonnull Path jarFile) {
 		this.name = name;
 		this.author = author;
 		this.description = description;
@@ -26,6 +27,7 @@ public final class ModuleConfig {
 		this.website = website;
 		this.depends = depends;
 		this.copyType = copyType;
+		this.environment = environment;
 	}
 
 	@Nonnull
@@ -71,6 +73,11 @@ public final class ModuleConfig {
 	@Nonnull
 	public ModuleCopyType getCopyType() {
 		return copyType;
+	}
+
+	@Nonnull
+	public ModuleEnvironment getEnvironment() {
+		return environment;
 	}
 
 	@Nonnull

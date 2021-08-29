@@ -31,6 +31,7 @@ import net.anweisen.utilities.common.collection.NamedThreadFactory;
 import net.anweisen.utilities.common.logging.ILogger;
 
 import javax.annotation.Nonnull;
+import java.nio.file.Paths;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -86,6 +87,8 @@ public final class CloudMaster extends CloudBase {
 		socketServer.addListener(config.getHostAddress());
 
 		loadNetworkListeners(socketServer.getListenerRegistry());
+
+		moduleManager.setModulesDirectory(Paths.get("modules"));
 		initModules();
 
 		logger.info("Loading database..");
@@ -114,6 +117,7 @@ public final class CloudMaster extends CloudBase {
 		registry.addListener(PacketConstants.PLAYER_EVENT_CHANNEL, new PlayerEventListener());
 		registry.addListener(PacketConstants.PLAYER_EXECUTOR_CHANNEL, new PlayerExecutorListener());
 		registry.addListener(PacketConstants.PLAYER_REMOTE_MANAGER_CHANNEL, new PlayerRemoteManagerListener());
+		registry.addListener(PacketConstants.MODULE_SYSTEM_CHANNEL, new ModuleSystemListener());
 		registry.addListener(PacketConstants.REQUEST_API_CHANNEL, new RequestPacketListener(
 			new TemplateRequestHandlers()
 		));

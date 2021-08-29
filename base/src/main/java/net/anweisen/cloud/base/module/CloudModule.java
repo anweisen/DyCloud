@@ -16,7 +16,6 @@ import java.nio.file.Path;
  */
 public abstract class CloudModule implements Module {
 
-	FileDocument config;
 	ModuleController controller;
 
 	public CloudModule() {
@@ -68,19 +67,13 @@ public abstract class CloudModule implements Module {
 	}
 
 	@Nonnull
-	@Override
 	public FileDocument getConfig() {
-		if (config == null)
-			return reloadConfig();
-		return config;
+		return controller.getConfig();
 	}
 
 	@Nonnull
-	@Override
 	public FileDocument reloadConfig() {
-		synchronized (this) {
-			return config = FileDocument.readJsonFile(this.getDataFolder().resolve("config.json").toFile());
-		}
+		return controller.reloadConfig();
 	}
 
 	@Override

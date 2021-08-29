@@ -102,7 +102,7 @@ public class NodeServiceActor implements LoggingApiUser {
 		// Copy modules
 		for (ModuleController module : cloud.getModuleManager().getModules()) {
 			if (module.getModuleConfig().getCopyType().applies(task.getEnvironment().getServiceType())) {
-				Document config = module.getModule().getConfig();
+				Document config = module.getConfig();
 				if (config.contains("enabled") && !config.getBoolean("enabled")) {
 					debug("Skipping Module {} for {}, disabled", module.getModuleConfig().getJarFile().getFileName(), info);
 					continue;

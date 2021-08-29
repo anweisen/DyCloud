@@ -19,7 +19,6 @@ import net.anweisen.utilities.common.logging.ILogger;
 import net.anweisen.utilities.common.misc.FileUtils;
 
 import javax.annotation.Nonnull;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.Executors;
@@ -48,7 +47,7 @@ public abstract class CloudDriver {
 		tempDirectory = Paths.get(System.getProperty("cloud.temp", ".temp"));
 		FileUtils.createDirectory(tempDirectory);
 		FileUtils.setTempDirectory(tempDirectory);
-		FileUtils.setAttribute(tempDirectory, "dos:hidden", true, LinkOption.NOFOLLOW_LINKS);
+		FileUtils.setHiddenAttribute(tempDirectory, true);
 	}
 
 	public CloudDriver(@Nonnull ILogger logger, @Nonnull DriverEnvironment environment) {

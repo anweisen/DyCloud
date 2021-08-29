@@ -2,7 +2,7 @@ package net.anweisen.cloud.base.module;
 
 import javax.annotation.Nonnull;
 import java.nio.file.Path;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -19,9 +19,11 @@ public interface ModuleManager {
 	void disableModules();
 
 	@Nonnull
-	Path getModulesFolder();
+	Path getModulesDirectory();
+
+	void setModulesDirectory(@Nonnull Path directory);
 
 	@Nonnull
-	Collection<ModuleController> getModules();
+	List<ModuleController> getModules();
 
 }

@@ -1,11 +1,11 @@
 package net.anweisen.cloud.base.module;
 
+import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.utilities.common.misc.FileUtils;
 
 import javax.annotation.Nonnull;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -18,12 +18,18 @@ import java.util.stream.Collectors;
  */
 public class DefaultModuleManager implements ModuleManager, LoggingApiUser {
 
-	private final Path directory = Paths.get("modules");
+	private Path directory;
 	private List<DefaultModuleController> modules = Collections.emptyList();
 
 	@Nonnull
-	public Path getModulesFolder() {
+	public Path getModulesDirectory() {
 		return directory;
+	}
+
+	@Override
+	public void setModulesDirectory(@Nonnull Path directory) {
+		FileUtils.createDirectory(directory);
+		this.directory = directory;
 	}
 
 	@Override
@@ -82,6 +88,11 @@ public class DefaultModuleManager implements ModuleManager, LoggingApiUser {
 		// Init modules
 		for (DefaultModuleController module : modules) {
 			try {
+				if (!module.getModuleConfig().getEnvironment().applies(CloudDriver.getInstance().getEnvironment())) {
+					info("Skipping initialization of {} (ModuleEnvironment.{}, DriverEnvironment.{})", module, module.getModuleConfig().getEnvironment(), CloudDriver.getInstance().getEnvironment());
+					continue;
+				}
+
 				module.initModule();
 			} catch (Throwable ex) {
 				modules.remove(module);
@@ -132,8 +143,8 @@ public class DefaultModuleManager implements ModuleManager, LoggingApiUser {
 
 	@Nonnull
 	@Override
-	public Collection<ModuleController> getModules() {
-		return Collections.unmodifiableCollection(modules);
+	public List<ModuleController> getModules() {
+		return Collections.unmodifiableList(modules);
 	}
 
 }

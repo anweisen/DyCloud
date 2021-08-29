@@ -2,10 +2,12 @@ package net.anweisen.cloud.base.module;
 
 import net.anweisen.cloud.base.module.config.ModuleConfig;
 import net.anweisen.cloud.base.module.config.ModuleCopyType;
+import net.anweisen.cloud.base.module.config.ModuleEnvironment;
 import net.anweisen.cloud.base.module.config.ModuleState;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utilities.common.config.FileDocument;
 
 import javax.annotation.Nonnull;
 import java.io.InputStream;
@@ -27,6 +29,7 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 	private final Path jarFile;
 
 	private Path dataFolder;
+	private FileDocument config;
 	private ModuleClassLoader classLoader;
 	private ModuleConfig moduleConfig;
 	private CloudModule module;
@@ -36,6 +39,11 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 	public DefaultModuleController(@Nonnull ModuleManager manager, @Nonnull Path jarFile) {
 		this.manager = manager;
 		this.jarFile = jarFile;
+	}
+
+	@Override
+	public boolean isInitialized() {
+		return module != null;
 	}
 
 	public void initConfig() throws Exception {
@@ -70,13 +78,15 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 			document.getString("website", ""),
 			document.getStringArray("depends"),
 			document.getEnum("copy", ModuleCopyType.NONE),
+			document.getEnum("environment", ModuleEnvironment.MASTER),
 			jarFile
 		);
+
+		dataFolder = manager.getModulesDirectory().resolve(moduleConfig.getName());
 	}
 
 	public void initModule() throws Exception {
 
-		dataFolder = manager.getModulesFolder().resolve(moduleConfig.getName());
 
 		Class<?> mainClass = classLoader.loadClass(moduleConfig.getMainClass());
 		Constructor<?> constructor = mainClass.getDeclaredConstructor();
@@ -94,6 +104,7 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 	@Override
 	public ModuleController loadModule() {
 		synchronized (this) {
+			if (module == null) return this; // Was never initialized
 			if (state != ModuleState.DISABLED) return this; // Must be disabled first
 
 			info("Module {} by {} is being loaded..", module, moduleConfig.getAuthor());
@@ -114,6 +125,7 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 	@Override
 	public ModuleController enableModule() {
 		synchronized (this) {
+			if (module == null) return this; // Was never initialized
 			if (state != ModuleState.LOADED) return this; // Must be loaded first
 
 			info("Module {} by {} is being enabled..", module, moduleConfig.getAuthor());
@@ -134,6 +146,9 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 	@Override
 	public ModuleController disableModule() {
 		synchronized (this) {
+			if (module == null) return this; // Was never initialized
+			if (state == ModuleState.DISABLED) return this; // Is already disabled
+
 			info("Module {} by {} is being disabled..", module, moduleConfig.getAuthor());
 			CloudDriver.getInstance().getEventManager().unregisterListeners(classLoader);
 
@@ -146,6 +161,22 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 			state = ModuleState.DISABLED;
 
 			return this;
+		}
+	}
+
+	@Nonnull
+	@Override
+	public FileDocument getConfig() {
+		if (config == null)
+			return reloadConfig();
+		return config;
+	}
+
+	@Nonnull
+	@Override
+	public FileDocument reloadConfig() {
+		synchronized (this) {
+			return config = FileDocument.readJsonFile(this.getDataFolder().resolve("config.json").toFile());
 		}
 	}
 

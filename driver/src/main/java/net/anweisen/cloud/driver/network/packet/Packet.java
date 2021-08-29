@@ -57,9 +57,6 @@ public class Packet {
 		this.body = body;
 	}
 
-	public Packet() {
-	}
-
 	@Nonnull
 	@CheckReturnValue
 	public static Packet createResponseFor(@Nonnull Packet packet, @Nullable Document header, @Nullable Buffer body) {

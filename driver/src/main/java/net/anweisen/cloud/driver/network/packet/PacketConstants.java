@@ -14,7 +14,7 @@ public final class PacketConstants {
 	public static final int RESPONSE_CHANNEL = -1;
 	public static final int AUTH_CHANNEL = 1;                       // master  <-| node, wrapper, cord
 	public static final int DATABASE_CHANNEL = 2;                   // master  <-| node, wrapper, cord
-	public static final int REQUEST_API_CHANNEL = 3;                // master  <-> node
+	public static final int REQUEST_API_CHANNEL = 3;                // master  <-| node, wrapper, cord
 	public static final int NODE_DATA_CYCLE = 4;                    // master  <- node
 	public static final int SERVICE_INFO_PUBLISH_CHANNEL = 5;       // node     -> master                -> node, wrapper, cord
 	public static final int SERVICE_UPDATE_SELF_INFO_CHANNEL = 6;   // wrapper  -> master
@@ -24,6 +24,7 @@ public final class PacketConstants {
 	public static final int PLAYER_EXECUTOR_CHANNEL = 10;           // wrapper <- master                <- wrapper, node, cord
 	public static final int PLAYER_REMOTE_MANAGER_CHANNEL = 11;     // master  <-| wrapper, node, cord
 	public static final int CORD_CHANNEL = 12;                      // cord     -> master                -> wrapper
+	public static final int MODULE_SYSTEM_CHANNEL = 13;             // master  <-> node
 
 	private static final Map<Integer, String> channelNames = new LinkedHashMap<>();
 	static {

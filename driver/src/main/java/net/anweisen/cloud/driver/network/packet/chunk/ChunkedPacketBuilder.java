@@ -49,7 +49,7 @@ public class ChunkedPacketBuilder {
 	}
 
 	public ChunkedPacketBuilder input(Path path) throws IOException {
-		return this.input(Files.newInputStream(path));
+		return input(Files.newInputStream(path));
 	}
 
 	public ChunkedPacketBuilder channel(int channel) {
@@ -67,11 +67,11 @@ public class ChunkedPacketBuilder {
 	}
 
 	public ChunkedPacketBuilder target(@Nonnull SocketChannel channel) {
-		return this.target(Collections.singletonList(channel));
+		return target(Collections.singletonList(channel));
 	}
 
 	public ChunkedPacketBuilder target(@Nonnull Collection<SocketChannel> channels) {
-		return this.target(DefaultChunkedPacketHandler.createHandler(channels));
+		return target(DefaultChunkedPacketHandler.createHandler(channels));
 	}
 
 	public ChunkedPacketBuilder uniqueId(UUID uniqueId) {
@@ -80,7 +80,7 @@ public class ChunkedPacketBuilder {
 	}
 
 	public UUID uniqueId() {
-		return this.uniqueId;
+		return uniqueId;
 	}
 
 	public ChunkedPacketBuilder header(Document header) {
@@ -89,7 +89,7 @@ public class ChunkedPacketBuilder {
 	}
 
 	public Document header() {
-		return this.header;
+		return header;
 	}
 
 	public ChunkedPacketBuilder chunkSize(int chunkSize) {
@@ -98,7 +98,7 @@ public class ChunkedPacketBuilder {
 	}
 
 	public int chunkSize() {
-		return this.chunkSize;
+		return chunkSize;
 	}
 
 	private ChunkedPacket createStartPacket(int channel, UUID uniqueId, Document header, int chunkSize) {
@@ -114,45 +114,43 @@ public class ChunkedPacketBuilder {
 	}
 
 	public ChunkedPacketBuilder complete() throws IOException {
-		this.validate();
+		validate();
 
 		try {
-			this.target.accept(this.createStartPacket(this.channel, this.uniqueId, this.header, this.chunkSize));
+			target.accept(createStartPacket(channel, uniqueId, header, chunkSize));
 
 			int chunkId = 1;
 
 			int read;
-			byte[] buffer = new byte[this.chunkSize];
-			while ((read = this.inputStream.read(buffer)) != -1) {
-				this.target
-					.accept(this.createSegment(this.channel, this.uniqueId, chunkId++,
-						this.chunkSize, read, Arrays.copyOf(buffer, buffer.length)));
+			byte[] buffer = new byte[chunkSize];
+			while ((read = inputStream.read(buffer)) != -1) {
+				target.accept(createSegment(channel, uniqueId, chunkId++, chunkSize, read, Arrays.copyOf(buffer, buffer.length)));
 			}
 
-			this.target.accept(this.createEndPacket(this.channel, this.uniqueId, chunkId, this.chunkSize));
-			this.inputStream.close();
+			target.accept(createEndPacket(channel, uniqueId, chunkId, chunkSize));
+			inputStream.close();
 
-			this.success = true;
+			success = true;
 		} catch (ChunkInterruptException ex) {
 		}
 
-		this.completed = true;
+		completed = true;
 		return this;
 	}
 
 	private void validate() {
-		Preconditions.checkNotNull(this.inputStream, "No input provided");
-		Preconditions.checkNotNull(this.target, "No handler provided");
-		Preconditions.checkNotNull(this.channel, "No channel provided");
-		Preconditions.checkState(!this.completed, "Builder cannot be completed twice");
+		Preconditions.checkNotNull(inputStream, "No input provided");
+		Preconditions.checkNotNull(target, "No handler provided");
+		Preconditions.checkNotNull(channel, "No channel provided");
+		Preconditions.checkState(!completed, "Builder cannot be completed twice");
 	}
 
 	public boolean isCompleted() {
-		return this.completed;
+		return completed;
 	}
 
 	public boolean isSuccess() {
-		return this.success;
+		return success;
 	}
 
 }

@@ -10,6 +10,7 @@ import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.jaxrs.JerseyDockerHttpClient;
 import com.github.dockerjava.transport.DockerHttpClient;
 import net.anweisen.cloud.base.CloudBase;
+import net.anweisen.cloud.base.module.ModuleController;
 import net.anweisen.cloud.base.node.NodeCycleData;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.DriverEnvironment;
@@ -19,6 +20,7 @@ import net.anweisen.cloud.driver.cord.CordManager;
 import net.anweisen.cloud.driver.database.DatabaseManager;
 import net.anweisen.cloud.driver.database.remote.RemoteDatabaseManager;
 import net.anweisen.cloud.driver.network.HostAndPort;
+import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.SocketClient;
 import net.anweisen.cloud.driver.network.handler.SocketChannelClientHandler;
 import net.anweisen.cloud.driver.network.listener.AuthenticationResponseListener;
@@ -29,6 +31,8 @@ import net.anweisen.cloud.driver.network.packet.PacketConstants;
 import net.anweisen.cloud.driver.network.packet.PacketListenerRegistry;
 import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket;
 import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket.AuthenticationType;
+import net.anweisen.cloud.driver.network.packet.def.ModuleSystemPacket;
+import net.anweisen.cloud.driver.network.packet.def.ModuleSystemPacket.ModuleSystemRequestType;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.node.NodeManager;
 import net.anweisen.cloud.driver.player.PlayerManager;
@@ -45,11 +49,15 @@ import net.anweisen.cloud.node.network.listener.ServiceControlListener;
 import net.anweisen.cloud.node.node.NodeNodeManager;
 import net.anweisen.cloud.node.service.NodeServiceActor;
 import net.anweisen.utilities.common.logging.ILogger;
+import net.anweisen.utilities.common.misc.FileUtils;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -110,6 +118,7 @@ public final class CloudNode extends CloudBase {
 		loadNetworkListeners(socketClient.getListenerRegistry());
 		connectAndAwaitAuthentication();
 
+		moduleManager.setModulesDirectory(getTempDirectory().resolve("modules"));
 		initModules();
 
 		executor.scheduleAtFixedRate(this::publishDataCycle, 5, 5, TimeUnit.SECONDS);
@@ -203,8 +212,25 @@ public final class CloudNode extends CloudBase {
 		registry.addListener(PacketConstants.SERVICE_CONTROL_CHANNEL, new ServiceControlListener());
 	}
 
-	private void initModules() {
+	private void initModules() throws IOException {
+		logger.info("Requesting & downloading modules..");
+		SocketChannel channel = socketClient.getFirstChannel();
+
+		String[] names = channel.sendQuery(new ModuleSystemPacket(ModuleSystemRequestType.GET_MODULES)).getBuffer().readStringArray();
+		for (int i = 0; i < names.length; i++) {
+			InputStream input = channel.sendChunkedPacketQuery(new ModuleSystemPacket(ModuleSystemRequestType.GET_MODULE_JAR, i)).getBeforeTimeout(10, TimeUnit.SECONDS).getInputStream();
+			Path file = moduleManager.getModulesDirectory().resolve(names[i]);
+			FileUtils.copy(input, Files.newOutputStream(file, StandardOpenOption.CREATE));
+		}
+
 		moduleManager.resolveModules();
+
+		for (int i = 0; i < names.length; i++) {
+			InputStream input = channel.sendChunkedPacketQuery(new ModuleSystemPacket(ModuleSystemRequestType.GET_MODULE_DATA_FOLDER, i)).getBeforeTimeout(10, TimeUnit.SECONDS).getInputStream();
+			ModuleController module = moduleManager.getModules().get(i);
+			FileUtils.extract(input, module.getDataFolder());
+		}
+
 		moduleManager.loadModules();
 		moduleManager.enableModules();
 	}

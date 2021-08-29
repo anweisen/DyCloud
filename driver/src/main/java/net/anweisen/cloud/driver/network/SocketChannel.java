@@ -7,6 +7,7 @@ import net.anweisen.cloud.driver.network.packet.chunk.ChunkedQueryResponse;
 import net.anweisen.utilities.common.concurrent.task.Task;
 import net.anweisen.utilities.common.config.Document;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -26,6 +27,7 @@ public interface SocketChannel extends PacketSender {
 	Task<Packet> sendQueryAsync(@Nonnull Packet packet);
 
 	@Nullable
+	@CheckReturnValue
 	Packet sendQuery(@Nonnull Packet packet);
 
 	@Nonnull

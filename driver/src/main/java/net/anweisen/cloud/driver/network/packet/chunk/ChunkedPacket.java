@@ -42,74 +42,74 @@ public class ChunkedPacket extends Packet {
 	}
 
 	public ChunkedPacket fillBuffer() {
-		if (super.body != null) { // The buffer is filled already
+		if (body != null) { // The buffer is filled already
 			return this;
 		}
 
-		super.body = Buffer.create().writeVarInt(this.chunkId);
+		body = Buffer.create().writeVarInt(chunkId);
 		if (this.chunkId == 0) {
-			super.body.writeInt(this.chunkSize);
+			body.writeInt(chunkSize);
 			return this;
 		}
 
-		super.body.writeBoolean(this.end);
+		body.writeBoolean(end);
 		if (this.end) {
-			super.body.writeVarInt(this.chunks);
+			body.writeVarInt(chunks);
 			return this;
 		}
 
-		super.body.writeInt(this.dataLength).writeBytes(this.data, 0, this.dataLength);
+		body.writeInt(dataLength).writeBytes(data, 0, dataLength);
 		return this;
 	}
 
 	@Nonnull
 	public ChunkedPacket readBuffer() {
-		this.chunkId = super.body.readVarInt();
-		if (this.chunkId == 0) {
-			this.chunkSize = super.body.readInt();
+		chunkId = body.readVarInt();
+		if (chunkId == 0) {
+			chunkSize = body.readInt();
 			return this;
 		}
 
-		this.end = super.body.readBoolean();
-		if (this.end) {
-			this.chunks = super.body.readVarInt();
+		end = body.readBoolean();
+		if (end) {
+			chunks = body.readVarInt();
 		}
 
 		return this;
 	}
 
 	public void readData(@Nonnull OutputStream outputStream) throws IOException {
-		this.dataLength = this.body.readInt();
-		this.body.readBytes(outputStream, this.dataLength);
+		dataLength = body.readInt();
+		body.readBytes(outputStream, dataLength);
 	}
 
 	public int getChunks() {
-		return this.chunks;
+		return chunks;
 	}
 
 	public int getChunkId() {
-		return this.chunkId;
+		return chunkId;
 	}
 
 	public int getDataLength() {
-		return this.dataLength;
+		return dataLength;
 	}
 
 	public boolean isEnd() {
-		return this.end;
+		return end;
 	}
 
 	public byte[] getData() {
-		return this.data;
+		return data;
 	}
 
 	public void clearData() {
-		if (super.body != null) {
-			while (super.body.refCnt() > 0) {
-				super.body.release();
+		if (body != null) {
+			while (body.refCnt() > 0) {
+				body.release();
 			}
 		}
 
-		this.data = null;
+		data = null;
 	}
 }

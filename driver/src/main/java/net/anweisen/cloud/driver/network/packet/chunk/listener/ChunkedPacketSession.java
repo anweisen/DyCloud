@@ -114,7 +114,7 @@ public class ChunkedPacketSession implements LoggingApiUser {
 
 		System.gc();
 
-		trace("Closing session of ChunkedPacket consisting of {} chunks", chunkId);
+		trace("Closing session of ChunkedPacket consisting of {} chunks", chunkId+1);
 
 		this.listener.getSessions().remove(this.sessionUniqueId);
 		this.listener.handleComplete(this);
