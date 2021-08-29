@@ -121,7 +121,7 @@ public final class CloudNode extends CloudBase {
 		moduleManager.setModulesDirectory(getTempDirectory().resolve("modules"));
 		initModules();
 
-		executor.scheduleAtFixedRate(this::publishDataCycle, 5, 5, TimeUnit.SECONDS);
+		executor.scheduleAtFixedRate(this::publishDataCycle, NodeCycleData.PERIOD, NodeCycleData.PERIOD, TimeUnit.MILLISECONDS);
 
 	}
 

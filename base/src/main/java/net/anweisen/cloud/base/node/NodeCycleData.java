@@ -13,6 +13,8 @@ import java.lang.management.ManagementFactory;
  */
 public final class NodeCycleData implements SerializableObject {
 
+	public static final int PERIOD = 5_000;
+
 	static {
 		current(); // init management
 	}
