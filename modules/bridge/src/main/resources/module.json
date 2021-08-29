@@ -4,5 +4,6 @@
 	"version": "1.0",
 	"main": "net.anweisen.cloud.modules.bridge.CloudBridgeModule",
 	"website": "https://github.com/anweisen/MinecraftCloud",
+	"environment": "NONE",
 	"copy": "ALL"
 }

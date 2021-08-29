@@ -13,7 +13,8 @@ public enum ModuleEnvironment {
 
 	ALL(environment -> true),
 	MASTER,
-	NODE;
+	NODE,
+	NONE(environment -> false);
 
 	private final Predicate<DriverEnvironment> filter;
 

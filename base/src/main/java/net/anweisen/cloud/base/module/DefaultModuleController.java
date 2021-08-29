@@ -78,7 +78,7 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 			document.getString("website", ""),
 			document.getStringArray("depends"),
 			document.getEnum("copy", ModuleCopyType.NONE),
-			document.getEnum("environment", ModuleEnvironment.MASTER),
+			document.getEnum("environment", ModuleEnvironment.ALL),
 			jarFile
 		);
 
