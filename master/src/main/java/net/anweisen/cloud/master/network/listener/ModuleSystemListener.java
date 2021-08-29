@@ -1,6 +1,8 @@
 package net.anweisen.cloud.master.network.listener;
 
 import net.anweisen.cloud.base.module.ModuleController;
+import net.anweisen.cloud.base.module.config.ModuleCopyType;
+import net.anweisen.cloud.driver.DriverEnvironment;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
@@ -11,9 +13,9 @@ import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.common.misc.FileUtils;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -29,19 +31,19 @@ public class ModuleSystemListener implements PacketListener {
 		switch (type) {
 			case GET_MODULES: {
 				channel.sendPacket(Packet.createResponseFor(packet, Buffer.create().writeStringArray(
-					CloudMaster.getInstance().getModuleManager().getModules().stream().map(module -> module.getModuleConfig().getJarFile().getFileName().toString()).toArray(String[]::new)
+					getModules().stream().map(module -> module.getModuleConfig().getJarFile().getFileName().toString()).toArray(String[]::new)
 				)));
 				break;
 			}
 			case GET_MODULE_JAR: {
 				int index = buffer.readInt();
-				ModuleController module = CloudMaster.getInstance().getModuleManager().getModules().get(index);
+				ModuleController module = getModules().get(index);
 				channel.sendChunkedPacketsResponse(packet.getUniqueId(), Document.empty(), Files.newInputStream(module.getModuleConfig().getJarFile()));
 				break;
 			}
 			case GET_MODULE_DATA_FOLDER: {
 				int index = buffer.readInt();
-				ModuleController module = CloudMaster.getInstance().getModuleManager().getModules().get(index);
+				ModuleController module = getModules().get(index);
 				channel.sendChunkedPacketsResponse(packet.getUniqueId(), Document.empty(), FileUtils.zipToStream(module.getDataFolder()));
 				break;
 			}
@@ -49,15 +51,12 @@ public class ModuleSystemListener implements PacketListener {
 
 	}
 
-	private void sendModules(@Nonnull SocketChannel channel, @Nonnull Packet packet) throws IOException {
-
-		for (ModuleController module : CloudMaster.getInstance().getModuleManager().getModules()) {
-			InputStream jarInputStream = Files.newInputStream(module.getModuleConfig().getJarFile());
-			InputStream dataInputStream = FileUtils.zipToStream(module.getDataFolder());
-
-
-		}
-
-//		channel.sendChunkedPacketsResponse(packet.getUniqueId(), Document.empty(), inputStream);
+	@Nonnull
+	private List<ModuleController> getModules() {
+		List<ModuleController> modules = new ArrayList<>(CloudMaster.getInstance().getModuleManager().getModules());
+		modules.removeIf(module -> module.getModuleConfig().getEnvironment().applies(DriverEnvironment.NODE) || module.getModuleConfig().getCopyType() != ModuleCopyType.NONE);
+		return modules;
 	}
+
+
 }
