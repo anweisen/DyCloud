@@ -21,8 +21,10 @@ I would recommend you to use one of the **following cloud systems**:
 - **wrapper** (*remote*): <br>
   Runs a service, connects to the master. <br>
   *Probably known as runner or bridge from other cloud systems*
-- **cord** (*remote*): <br>
-  Allows usage of multiproxy, acts as a proxy (client <-> cord <-> bungee), connects to the master. <br>
+- ~~**cord** (*remote*)~~: <br>
+  A really simple multi proxy cord. When a client connect to the cord all its packets will be forwarded (client <-> cord <-> proxy). <br>
+  But using this cord basically is of no use and as you then just have one big proxy which is the cord which can then be easily crashed. <br>
+  **For a multiproxy setup you should use something like a rotating dns system and not this**
 
 ## Progress
 
@@ -36,14 +38,14 @@ I would recommend you to use one of the **following cloud systems**:
 ✔️ | Event System
 ✔️ | Master TemplateStorage -> Download
 ✔️ | Docker: Wrapper Setup
-🚧 | Service Start / Stop
+✔️ | Service Start / Stop
 ✔️ | Wrapper Authentication
 ❌ | Proper Docker Connection (Not Legacy)
 ❌ | Node Information Cycle & Timeout
 ❌ | Node Load Balancing
 ✔️ | ServiceInfo publish
 🚧 | Basic Service Events
-❌ | Service auto start (minCount & maxCount)
+🚧 | Service auto start (minCount & maxCount)
 🧪 | Shutdown mechanism
 ❌ | Template Cache
 🚧 | Proxy Bridge
@@ -55,9 +57,9 @@ I would recommend you to use one of the **following cloud systems**:
 🚧 | Bukkit Bridge
 🚧 | Implement all driver functions for wrapper & node (remote)
 ❌ | Wrapper & Node to Master Logging
-❌ | Player Executor
-🚧 | Global Player Management
-🚧 | Permission System
+✔️ | Player Executor
+🧪 | Global Player Management
+🧪 | Permission System
 🚧 | Permission Chat & Tab Extension
 ✔️ | Module System (Master, Node?, Wrapper?)
 🧪 | Module Copy
