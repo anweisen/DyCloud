@@ -1,5 +1,5 @@
 # MinecraftCloud
-A simple minecraft cloud system using docker & netty supporting multiroot & multiproxy for learning purpose
+A minecraft cloud system using docker & netty supporting multiroot & multiproxy for learning purpose
 
 **This project is only intended as a learning experience**.
 You should **not use this cloud system for production**, as no support will be given and the project may be very inactive and lack features.
@@ -72,8 +72,8 @@ I would recommend you to use one of the **following cloud systems**:
 ⚠️ | Signs Module
 ⚠️ | [CloudAPI](https://github.com/anweisen/CloudAPI) Implementation
 
-``✔️`` Finished - Implemented <br>
-``🧪`` Experimental - Implemented <br>
-``🚧`` Current Goal - In Progress <br>
-``❌`` Planned <br>
-``⚠️`` Not important - Long time planned goals 
+``✔️`` **Finished** <br>
+``🧪`` **Experimental** <br>
+``🚧`` **In Progress** <br>
+``❌`` **Planned** <br>
+``⚠️`` **Planned (Unimportant)**
