@@ -38,7 +38,6 @@ public class FileLogHandler implements LogHandler {
 
 			if (Files.notExists(file))
 				return file;
-
 		}
 	}
 
@@ -56,7 +55,7 @@ public class FileLogHandler implements LogHandler {
 	}
 
 	private void write(@Nonnull OutputStream stream, @Nonnull LogEntry entry) throws Exception {
-		stream.write(MessageFormatter.formatUncolored(entry).getBytes(StandardCharsets.UTF_8));
+		stream.write((System.lineSeparator() + MessageFormatter.formatUncolored(entry)).getBytes(StandardCharsets.UTF_8));
 		stream.flush();
 		stream.close();
 	}
