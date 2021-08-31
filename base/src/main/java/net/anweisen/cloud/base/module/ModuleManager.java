@@ -18,6 +18,8 @@ public interface ModuleManager {
 
 	void disableModules();
 
+	void unregisterModules();
+
 	@Nonnull
 	Path getModulesDirectory();
 

@@ -33,16 +33,20 @@ public class DefaultModuleManager implements ModuleManager, LoggingApiUser {
 	}
 
 	@Override
-	public synchronized void resolveModules() {
+	public synchronized void unregisterModules() {
 		for (DefaultModuleController module : modules) {
 			try {
-				module.getClassLoader().close();
+				module.unregisterModule();
 			} catch (Throwable ex) {
 				error("An error occurred while closing class loader", ex);
 			}
 		}
 		modules.clear();
+	}
 
+	@Override
+	public synchronized void resolveModules() {
+		unregisterModules();
 		info("Resolving modules..");
 		FileUtils.createDirectory(directory);
 
@@ -89,7 +93,8 @@ public class DefaultModuleManager implements ModuleManager, LoggingApiUser {
 		for (DefaultModuleController module : modules) {
 			try {
 				if (!module.getModuleConfig().getEnvironment().applies(CloudDriver.getInstance().getEnvironment())) {
-					info("Skipping initialization of {} (ModuleEnvironment.{}, DriverEnvironment.{})", module, module.getModuleConfig().getEnvironment(), CloudDriver.getInstance().getEnvironment());
+					info("Skipping initialization of {} (ModuleEnvironment.{}, DriverEnvironment.{})",
+						 module, module.getModuleConfig().getEnvironment(), CloudDriver.getInstance().getEnvironment());
 					continue;
 				}
 
@@ -101,7 +106,6 @@ public class DefaultModuleManager implements ModuleManager, LoggingApiUser {
 		}
 
 		this.modules = modules;
-
 	}
 
 	private boolean hasModule(@Nonnull Collection<DefaultModuleController> modules, @Nonnull String depend) {

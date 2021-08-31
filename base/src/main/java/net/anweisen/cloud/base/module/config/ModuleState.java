@@ -10,6 +10,8 @@ public enum ModuleState {
 
 	ENABLED,
 
-	DISABLED
+	DISABLED,
+
+	UNREGISTERED
 
 }

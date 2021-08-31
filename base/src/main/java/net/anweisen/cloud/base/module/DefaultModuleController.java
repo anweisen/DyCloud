@@ -107,7 +107,7 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 			if (module == null) return this; // Was never initialized
 			if (state != ModuleState.DISABLED) return this; // Must be disabled first
 
-			info("Module {} by {} is being loaded..", module, moduleConfig.getAuthor());
+			info("Module {} is being loaded..", module);
 
 			try {
 				module.onLoad();
@@ -128,7 +128,7 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 			if (module == null) return this; // Was never initialized
 			if (state != ModuleState.LOADED) return this; // Must be loaded first
 
-			info("Module {} by {} is being enabled..", module, moduleConfig.getAuthor());
+			info("Module {} is being enabled..", module);
 
 			try {
 				module.onEnable();
@@ -149,7 +149,7 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 			if (module == null) return this; // Was never initialized
 			if (state == ModuleState.DISABLED) return this; // Is already disabled
 
-			info("Module {} by {} is being disabled..", module, moduleConfig.getAuthor());
+			info("Module {} is being disabled..", module);
 			CloudDriver.getInstance().getEventManager().unregisterListeners(classLoader);
 
 			try {
@@ -159,7 +159,22 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 			}
 
 			state = ModuleState.DISABLED;
+			return this;
+		}
+	}
 
+	@Nonnull
+	@Override
+	public ModuleController unregisterModule() {
+		synchronized (this) {
+
+			try {
+				classLoader.close();
+			} catch (Exception ex) {
+				error("Unable to close classloader", ex);
+			}
+
+			state = ModuleState.UNREGISTERED;
 			return this;
 		}
 	}

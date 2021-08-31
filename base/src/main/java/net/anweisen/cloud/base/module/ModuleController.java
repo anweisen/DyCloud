@@ -28,6 +28,9 @@ public interface ModuleController {
 	ModuleController disableModule();
 
 	@Nonnull
+	ModuleController unregisterModule();
+
+	@Nonnull
 	ModuleManager getManager();
 
 	@Nonnull
