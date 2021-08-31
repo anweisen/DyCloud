@@ -1,7 +1,10 @@
 package net.anweisen.cloud.wrapper;
 
-import net.anweisen.cloud.wrapper.console.DefaultLogger;
+import net.anweisen.cloud.driver.console.handler.DefaultLogHandler;
 import net.anweisen.utilities.common.logging.ILogger;
+import net.anweisen.utilities.common.logging.LogLevel;
+import net.anweisen.utilities.common.logging.handler.HandledAsyncLogger;
+import net.anweisen.utilities.common.logging.handler.HandledLogger;
 
 import javax.annotation.Nonnull;
 import java.lang.instrument.Instrumentation;
@@ -21,14 +24,16 @@ public final class Launcher {
 	}
 
 	public static void main(String[] args) throws Exception {
-		ILogger logger = new DefaultLogger();
+		HandledLogger logger = new HandledAsyncLogger(LogLevel.TRACE);
 		init(logger);
 
 		CloudWrapper cloud = new CloudWrapper(logger, new ArrayList<>(Arrays.asList(args)), instrumentationInstance);
 		cloud.start();
 	}
 
-	private static void init(@Nonnull ILogger logger) {
+	private static void init(@Nonnull HandledLogger logger) {
+		logger.addHandler(new DefaultLogHandler());
+
 		ILogger.setConstantFactory(logger);
 	}
 

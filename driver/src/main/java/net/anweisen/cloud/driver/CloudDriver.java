@@ -16,6 +16,7 @@ import net.anweisen.cloud.driver.service.config.ServiceConfigManager;
 import net.anweisen.utilities.common.collection.NamedThreadFactory;
 import net.anweisen.utilities.common.function.ExceptionallyRunnable;
 import net.anweisen.utilities.common.logging.ILogger;
+import net.anweisen.utilities.common.logging.handler.HandledLogger;
 import net.anweisen.utilities.common.misc.FileUtils;
 
 import javax.annotation.Nonnull;
@@ -36,7 +37,7 @@ public abstract class CloudDriver {
 	protected final EventManager eventManager = new DefaultEventManager();
 
 	protected final DriverEnvironment environment;
-	protected final ILogger logger;
+	protected final HandledLogger logger;
 	protected final Path tempDirectory;
 
 	protected PermissionManager permissionManager;
@@ -50,7 +51,7 @@ public abstract class CloudDriver {
 		FileUtils.setHiddenAttribute(tempDirectory, true);
 	}
 
-	public CloudDriver(@Nonnull ILogger logger, @Nonnull DriverEnvironment environment) {
+	protected CloudDriver(@Nonnull HandledLogger logger, @Nonnull DriverEnvironment environment) {
 		this.logger = logger;
 		this.environment = environment;
 	}

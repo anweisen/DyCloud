@@ -68,20 +68,20 @@ public enum ConsoleColor {
 	@Nonnull
 	@Override
 	public String toString() {
-		return this.ansiCode;
+		return ansiCode;
 	}
 
 	@Nonnull
 	public String getName() {
-		return this.name;
+		return name;
 	}
 
 	@Nonnull
 	public String getAnsiCode() {
-		return this.ansiCode;
+		return ansiCode;
 	}
 
 	public char getIndex() {
-		return this.index;
+		return index;
 	}
 }
