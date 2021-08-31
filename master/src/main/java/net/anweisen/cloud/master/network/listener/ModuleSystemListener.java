@@ -54,9 +54,8 @@ public class ModuleSystemListener implements PacketListener {
 	@Nonnull
 	private List<ModuleController> getModules() {
 		List<ModuleController> modules = new ArrayList<>(CloudMaster.getInstance().getModuleManager().getModules());
-		modules.removeIf(module -> module.getModuleConfig().getEnvironment().applies(DriverEnvironment.NODE) || module.getModuleConfig().getCopyType() != ModuleCopyType.NONE);
+		modules.removeIf(module -> !module.getModuleConfig().getEnvironment().applies(DriverEnvironment.NODE) && module.getModuleConfig().getCopyType() == ModuleCopyType.NONE);
 		return modules;
 	}
-
 
 }

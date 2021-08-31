@@ -23,5 +23,5 @@ public class NodeDataCycleListener implements PacketListener, LoggingApiUser {
 		node.setLastCycleData(data);
 		debug("{} -> {}", node, data);
 	}
-	
+
 }
