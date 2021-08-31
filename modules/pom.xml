@@ -16,6 +16,7 @@
 	<modules>
 		<module>bridge</module>
 		<module>perms</module>
+		<module>cloudflare</module>
 	</modules>
 
 	<distributionManagement>

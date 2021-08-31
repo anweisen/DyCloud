@@ -1,0 +1,9 @@
+{
+	"name": "Cloud-Cloudflare",
+	"author": "anweisen",
+	"version": "1.0",
+	"main": "net.anweisen.cloud.modules.cloudflare.CloudCloudflareModule",
+	"website": "https://github.com/anweisen/MinecraftCloud",
+	"description": "Runtime module to enable the use of a multiproxy setup using round-robin dns load balancing",
+	"environment": "MASTER"
+}
