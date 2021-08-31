@@ -15,7 +15,7 @@ import java.util.List;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class RemoteDatabaseListTables implements DatabaseListTables, DefaultRemoteDatabaseCallbackAction<List<String>> {
+public class RemoteDatabaseListTables implements DatabaseListTables, RemoteDatabaseCallbackAction<List<String>> {
 
 	@Nonnull
 	@Override
@@ -28,7 +28,7 @@ public class RemoteDatabaseListTables implements DatabaseListTables, DefaultRemo
 	@Nonnull
 	@Override
 	public List<String> execute() throws DatabaseException {
-		return DefaultRemoteDatabaseCallbackAction.super.execute();
+		return RemoteDatabaseCallbackAction.super.execute();
 	}
 
 }

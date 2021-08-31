@@ -11,7 +11,7 @@ import java.util.concurrent.TimeoutException;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public interface DefaultRemoteDatabaseCallbackAction<R> extends DatabaseAction<R> {
+public interface RemoteDatabaseCallbackAction<R> extends DatabaseAction<R> {
 
 	@Override
 	default R execute() throws DatabaseException {
@@ -24,10 +24,8 @@ public interface DefaultRemoteDatabaseCallbackAction<R> extends DatabaseAction<R
 		} catch (ExecutionException ex) {
 			if (ex.getCause() instanceof DatabaseException)
 				throw (DatabaseException) ex.getCause();
-
 			throw new DatabaseException(ex);
 		}
 	}
-
 
 }

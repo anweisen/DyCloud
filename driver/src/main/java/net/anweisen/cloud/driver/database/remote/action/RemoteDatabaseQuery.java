@@ -20,7 +20,7 @@ import java.util.Objects;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class RemoteDatabaseQuery implements DatabaseQuery, DefaultRemoteDatabaseCallbackAction<ExecutedQuery> {
+public class RemoteDatabaseQuery implements DatabaseQuery, RemoteDatabaseCallbackAction<ExecutedQuery> {
 
 	private final Document document = Document.create();
 	private final String table;
@@ -81,7 +81,7 @@ public class RemoteDatabaseQuery implements DatabaseQuery, DefaultRemoteDatabase
 	@Nonnull
 	@Override
 	public ExecutedQuery execute() throws DatabaseException {
-		return DefaultRemoteDatabaseCallbackAction.super.execute();
+		return RemoteDatabaseCallbackAction.super.execute();
 	}
 
 	@Nonnull

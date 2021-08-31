@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class RemoteDatabaseCountEntries implements DatabaseCountEntries, DefaultRemoteDatabaseCallbackAction<Long> {
+public class RemoteDatabaseCountEntries implements DatabaseCountEntries, RemoteDatabaseCallbackAction<Long> {
 
 	private final String table;
 
@@ -32,7 +32,7 @@ public class RemoteDatabaseCountEntries implements DatabaseCountEntries, Default
 	@Nonnull
 	@Override
 	public Long execute() throws DatabaseException {
-		return DefaultRemoteDatabaseCallbackAction.super.execute();
+		return RemoteDatabaseCallbackAction.super.execute();
 	}
 
 }
