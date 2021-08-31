@@ -47,4 +47,9 @@ public class RemoteServiceManager extends DefaultServiceManager implements Netwo
 		this.services.clear();
 		this.services.addAll(services);
 	}
+
+	@Override
+	public void registerService(@Nonnull ServiceInfo service) {
+		services.add(service);
+	}
 }

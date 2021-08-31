@@ -4,6 +4,7 @@ import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketConstants;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.service.config.ServiceTask;
+import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 
 import javax.annotation.Nonnull;
 import java.util.UUID;
@@ -17,6 +18,10 @@ public class ServiceControlPacket extends Packet {
 	/** @see net.anweisen.cloud.driver.service.RemoteServiceFactory#createServiceAsync(ServiceTask) */
 	public ServiceControlPacket(@Nonnull ServiceControlType type, @Nonnull ServiceTask task) {
 		super(PacketConstants.SERVICE_CONTROL_CHANNEL, Buffer.create().writeEnumConstant(type).writeObject(task));
+	}
+
+	public ServiceControlPacket(@Nonnull ServiceControlType type, @Nonnull ServiceInfo service) {
+		super(PacketConstants.SERVICE_CONTROL_CHANNEL, Buffer.create().writeEnumConstant(type).writeObject(service));
 	}
 
 	public ServiceControlPacket(@Nonnull ServiceControlType type, @Nonnull UUID service) {

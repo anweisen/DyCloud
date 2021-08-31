@@ -1,7 +1,7 @@
 package net.anweisen.cloud.driver.service;
 
 import net.anweisen.cloud.driver.CloudDriver;
-import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.PublishType;
+import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.ServicePublishType;
 import net.anweisen.cloud.driver.service.specific.ServiceController;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 
@@ -45,8 +45,10 @@ public interface ServiceManager {
 		return getServiceInfos().stream().filter(info -> info.getUniqueId().equals(uniqueId)).findFirst().orElse(null);
 	}
 
-	void handleServiceUpdate(@Nonnull PublishType type, @Nonnull ServiceInfo info);
+	void handleServiceUpdate(@Nonnull ServicePublishType type, @Nonnull ServiceInfo info);
 
 	void setServiceInfos(@Nonnull Collection<? extends ServiceInfo> services);
+
+	void registerService(@Nonnull ServiceInfo service);
 
 }

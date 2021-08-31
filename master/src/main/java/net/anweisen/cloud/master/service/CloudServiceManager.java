@@ -3,6 +3,7 @@ package net.anweisen.cloud.master.service;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.service.ServiceManager;
 import net.anweisen.cloud.driver.service.specific.ServiceController;
+import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.master.service.specific.CloudService;
 
 import javax.annotation.Nonnull;
@@ -36,5 +37,12 @@ public interface CloudServiceManager extends ServiceManager {
 
 	@Nullable
 	CloudService getServiceByChannel(@Nonnull SocketChannel channel);
+
+	void registerService(@Nonnull CloudService service);
+
+	@Override
+	default void registerService(@Nonnull ServiceInfo service) {
+		throw new UnsupportedOperationException("Use registerService(CloudService) on the master");
+	}
 
 }

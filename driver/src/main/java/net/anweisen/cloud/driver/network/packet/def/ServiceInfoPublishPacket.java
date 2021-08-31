@@ -11,13 +11,13 @@ import javax.annotation.Nonnull;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class ServiceInfoPublishPacket extends Packet { // TODO move to base?
+public class ServiceInfoPublishPacket extends Packet {
 
-	public ServiceInfoPublishPacket(@Nonnull PublishType publishType, @Nonnull ServiceInfo info) {
+	public ServiceInfoPublishPacket(@Nonnull ServicePublishType publishType, @Nonnull ServiceInfo info) {
 		super(PacketConstants.SERVICE_INFO_PUBLISH_CHANNEL, Buffer.create().writeEnumConstant(publishType).writeObject(info));
 	}
 
-	public enum PublishType {
+	public enum ServicePublishType {
 		UPDATE,
 		STARTED,
 		STOPPED,

@@ -3,7 +3,7 @@ package net.anweisen.cloud.driver.service;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.event.service.*;
-import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.PublishType;
+import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.ServicePublishType;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 
 import javax.annotation.Nonnull;
@@ -15,8 +15,14 @@ import javax.annotation.Nonnull;
 public abstract class DefaultServiceManager implements ServiceManager, LoggingApiUser {
 
 	@Override
-	public void handleServiceUpdate(@Nonnull PublishType type, @Nonnull ServiceInfo info) {
-		debug("{} -> {}", type, info);
+	public void handleServiceUpdate(@Nonnull ServicePublishType type, @Nonnull ServiceInfo info) {
+		debug("{} -> {}:{}", type, info, info.getUniqueId());
+
+		if (type == ServicePublishType.UNREGISTER) {
+			unregisterServiceInfoInternally(info);
+		} else {
+			updateServiceInfoInternally(info);
+		}
 
 		switch (type) {
 			case UPDATE:
@@ -45,8 +51,6 @@ public abstract class DefaultServiceManager implements ServiceManager, LoggingAp
 				CloudDriver.getInstance().getEventManager().callEvent(new ServiceDisconnectedEvent(info));
 				break;
 		}
-
-		updateServiceInfoInternally(info);
 	}
 
 	protected abstract void updateServiceInfoInternally(@Nonnull ServiceInfo newServiceInfo);
