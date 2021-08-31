@@ -2,4 +2,6 @@ name: Cloud-Bridge
 author: anweisen
 version: 1.0
 main: net.anweisen.cloud.modules.bridge.bukkit.BukkitCloudBridgePlugin
+description: Runtime module to enable the use of player management possible
+website: https://github.com/anweisen/MinecraftCloud
 api-version: 1.13
