@@ -6,12 +6,18 @@ import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
 public final class ServiceTemplate implements SerializableObject {
+
+	@Nonnull
+	public static ServiceTemplate getDefault(@Nonnull String name) {
+		return new ServiceTemplate("default", name);
+	}
 
 	private String storage;
 	private String name;
@@ -60,5 +66,18 @@ public final class ServiceTemplate implements SerializableObject {
 	@Nonnull
 	public String toShortString() {
 		return storage + "/" + name;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ServiceTemplate that = (ServiceTemplate) o;
+		return Objects.equals(storage, that.storage) && Objects.equals(name, that.name);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(storage, name);
 	}
 }
