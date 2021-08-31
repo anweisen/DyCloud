@@ -21,7 +21,9 @@ public interface ServiceProperty<T> {
 	ServiceProperty<List<MinecraftPlayerInfo>> MINECRAFT_PLAYER_LIST = newServiceListProperty("players", MinecraftPlayerInfo.class);
 	ServiceProperty<List<ProxyPlayerInfo>> PROXY_PLAYER_LIST = newServiceListProperty("players", ProxyPlayerInfo.class);
 	ServiceProperty<List<PluginInfo>> PLUGINS = newServiceListProperty("plugins", PluginInfo.class);
-	ServiceProperty<Collection<String>> PROXY_MESSAGE_CHANNELS = newServiceProperty("channels", Document::getStringList);
+	ServiceProperty<Collection<String>> MESSAGING_CHANNELS = newServiceProperty("channels", Document::getStringList);
+	ServiceProperty<String> EXTRA = newServiceProperty("extra", Document::getString);
+	ServiceProperty<String> MOTD = newServiceProperty("motd", Document::getString);
 
 	@Nonnull
 	String getPropertyName();

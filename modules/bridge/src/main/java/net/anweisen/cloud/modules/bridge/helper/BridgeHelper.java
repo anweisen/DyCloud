@@ -9,6 +9,7 @@ import net.anweisen.cloud.driver.player.defaults.DefaultCloudPlayer;
 import net.anweisen.cloud.driver.service.config.ServiceTask;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.driver.service.specific.ServiceProperty;
+import net.anweisen.cloud.modules.bridge.bukkit.listener.BukkitCloudListener;
 import net.anweisen.cloud.modules.bridge.bungee.listener.BungeeCloudListener;
 import net.anweisen.cloud.wrapper.CloudWrapper;
 import net.anweisen.cloud.wrapper.event.service.ServiceInfoConfigureEvent;
@@ -88,8 +89,10 @@ public final class BridgeHelper {
 
 	/**
 	 *  @see BungeeCloudListener#onInfoConfigure(ServiceInfoConfigureEvent)
+	 *  @see BukkitCloudListener#onInfoConfigure(ServiceInfoConfigureEvent)
 	 */
 	private static int maxPlayers, lastOnlineCount;
+	private static String motd, extra;
 
 	public static void removeCachedService(@Nonnull String name) {
 		cachedServices.remove(name);
@@ -157,6 +160,22 @@ public final class BridgeHelper {
 
 	public static void setOnlineCount(int lastOnlineCount) {
 		BridgeHelper.lastOnlineCount = lastOnlineCount;
+	}
+
+	public static String getMotd() {
+		return motd;
+	}
+
+	public static void setMotd(@Nonnull String motd) {
+		BridgeHelper.motd = motd;
+	}
+
+	public static String getExtra() {
+		return extra;
+	}
+
+	public static void setExtra(@Nullable String extra) {
+		BridgeHelper.extra = extra;
 	}
 
 	public static void updateServiceInfo() {
