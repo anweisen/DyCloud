@@ -34,7 +34,7 @@ public abstract class CachedChunkedPacketListener extends ChunkedPacketListener 
 		Path path = (Path) session.getProperties().get("path");
 		Preconditions.checkArgument(Files.exists(path), "Path of the cache doesn't exist");
 
-		this.handleComplete(session, Files.newInputStream(path, StandardOpenOption.DELETE_ON_CLOSE));
+		handleComplete(session, Files.newInputStream(path, StandardOpenOption.DELETE_ON_CLOSE));
 	}
 
 	protected abstract void handleComplete(@Nonnull ChunkedPacketSession session, @Nonnull InputStream inputStream) throws IOException;

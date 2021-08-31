@@ -82,11 +82,11 @@ public final class ModuleConfig {
 
 	@Nonnull
 	public String getFullName() {
-		return getName() + " v" + getVersion();
+		return name + " v" + version + " by " + author;
 	}
 
 	@Override
 	public String toString() {
-		return "ModuleConfig[" + getName() + " v" + getVersion() + " by " + getAuthor() + ": " + getJarFile().getFileName() + " copy=" + copyType + "]";
+		return "ModuleConfig[" + name + " v" + version + " by " + author + ": " + jarFile.getFileName() + " copy=" + copyType + " environment=" + environment + "]";
 	}
 }

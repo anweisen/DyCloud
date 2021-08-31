@@ -9,7 +9,7 @@ import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports.Binding;
 import net.anweisen.cloud.base.module.ModuleController;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
-import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.PublishType;
+import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.ServicePublishType;
 import net.anweisen.cloud.driver.service.config.ServiceTask;
 import net.anweisen.cloud.driver.service.config.ServiceTemplate;
 import net.anweisen.cloud.driver.service.config.TemplateStorage;
@@ -193,7 +193,7 @@ public class NodeServiceActor implements LoggingApiUser {
 				.withMemory(task.getMemoryLimit() < 1 ? null : 1024L * 1024L * task.getMemoryLimit()) // bytes -> kilobytes -> megabytes
 			).exec().getId();
 		info.setDockerContainerId(containerId);
-		cloud.publishUpdate(PublishType.UPDATE, info);
+		cloud.publishUpdate(ServicePublishType.UPDATE, info);
 		trace("Created docker container {} for {}", containerId, info);
 		trace("=> Applied memory limit of {} bytes = {} kilobytes = {} megabytes", 1024L * 1024L * task.getMemoryLimit(), 1024L * task.getMemoryLimit(), task.getMemoryLimit());
 
@@ -220,7 +220,7 @@ public class NodeServiceActor implements LoggingApiUser {
 		trace("Successfully transferred archives to docker container of {}", info);
 
 		info.setState(ServiceState.PREPARED);
-		cloud.publishUpdate(PublishType.UPDATE, info);
+		cloud.publishUpdate(ServicePublishType.UPDATE, info);
 
 		FileUtils.delete(tempTemplateDirectory);
 	}

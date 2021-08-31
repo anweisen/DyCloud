@@ -52,7 +52,7 @@ public abstract class CategorizedRequestHandler implements LoggingApiUser {
 			try {
 				inputStream = function.apply(input);
 				if (inputStream == null) {
-					response = RequestResponseType.EXCEPTION; // TODO something else
+					response = RequestResponseType.EXCEPTION; // TODO something else (resource probably not found)
 					inputStream = FileUtils.EMPTY_STREAM;
 				}
 

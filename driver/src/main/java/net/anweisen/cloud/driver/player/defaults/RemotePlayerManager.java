@@ -2,9 +2,9 @@ package net.anweisen.cloud.driver.player.defaults;
 
 import net.anweisen.cloud.driver.network.packet.def.PlayerRemoteManagerPacket;
 import net.anweisen.cloud.driver.network.packet.def.PlayerRemoteManagerPacket.PlayerRemoteManagerType;
-import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import net.anweisen.cloud.driver.network.request.NetworkingApiUser;
 import net.anweisen.cloud.driver.player.CloudOfflinePlayer;
+import net.anweisen.cloud.driver.player.CloudPlayer;
 import net.anweisen.cloud.driver.player.PlayerExecutor;
 import net.anweisen.utilities.common.concurrent.task.Task;
 
@@ -34,7 +34,7 @@ public class RemotePlayerManager extends DefaultPlayerManager implements Network
 	@Nonnull
 	@Override
 	public Task<Collection<CloudOfflinePlayer>> getRegisteredPlayersAsync() {
-		return sendQueryAsync(new PlayerRemoteManagerPacket(PlayerRemoteManagerType.GET_OFFLINE_PLAYERS, null), buffer -> buffer.readObjectCollection(DefaultCloudOfflinePlayer.class))
+		return sendQueryAsync(new PlayerRemoteManagerPacket(PlayerRemoteManagerType.GET_REGISTERED_PLAYERS, null), buffer -> buffer.readObjectCollection(DefaultCloudOfflinePlayer.class))
 			.map(Collections::unmodifiableCollection);
 	}
 
@@ -53,7 +53,7 @@ public class RemotePlayerManager extends DefaultPlayerManager implements Network
 	@Override
 	public void saveOfflinePlayer(@Nonnull CloudOfflinePlayer updatedPlayer) {
 		DefaultCloudOfflinePlayer realOfflinePlayer;
-		if (updatedPlayer instanceof DefaultCloudPlayer) {
+		if (updatedPlayer instanceof CloudPlayer) {
 			realOfflinePlayer = ((DefaultCloudPlayer)updatedPlayer).getOfflinePlayer();
 		} else {
 			realOfflinePlayer = (DefaultCloudOfflinePlayer) updatedPlayer;

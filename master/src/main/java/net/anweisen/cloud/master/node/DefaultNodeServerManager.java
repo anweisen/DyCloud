@@ -1,6 +1,7 @@
 package net.anweisen.cloud.master.node;
 
 import net.anweisen.cloud.driver.network.SocketChannel;
+import net.anweisen.cloud.driver.node.DefaultNodeManager;
 import net.anweisen.cloud.driver.node.NodeInfo;
 
 import javax.annotation.Nonnull;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class DefaultNodeServerManager implements NodeServerManager {
+public class DefaultNodeServerManager extends DefaultNodeManager implements NodeServerManager {
 
 	private final Set<NodeServer> servers = new CopyOnWriteArraySet<>();
 

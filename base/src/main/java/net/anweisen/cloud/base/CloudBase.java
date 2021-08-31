@@ -7,9 +7,9 @@ import net.anweisen.cloud.driver.DriverEnvironment;
 import net.anweisen.cloud.driver.console.Console;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket;
-import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.PublishType;
+import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.ServicePublishType;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
-import net.anweisen.utilities.common.logging.ILogger;
+import net.anweisen.utilities.common.logging.handler.HandledLogger;
 
 import javax.annotation.Nonnull;
 
@@ -23,18 +23,21 @@ public abstract class CloudBase extends CloudDriver {
 
 	protected final Console console;
 
-	public CloudBase(@Nonnull ILogger logger, @Nonnull Console console, @Nonnull DriverEnvironment environment) {
+	public CloudBase(@Nonnull HandledLogger logger, @Nonnull Console console, @Nonnull DriverEnvironment environment) {
 		super(logger, environment);
 		this.console = console;
 	}
 
 	protected final void shutdownBase() throws Exception {
 
+		moduleManager.disableModules();
+		moduleManager.unregisterModules();
+
 		console.close();
 
 	}
 
-	public void publishUpdate(@Nonnull PublishType publishType, @Nonnull ServiceInfo serviceInfo, @Nonnull SocketChannel... skipChannels) {
+	public void publishUpdate(@Nonnull ServicePublishType publishType, @Nonnull ServiceInfo serviceInfo, @Nonnull SocketChannel... skipChannels) {
 		getSocketComponent().sendPacket(new ServiceInfoPublishPacket(publishType, serviceInfo), skipChannels);
 	}
 

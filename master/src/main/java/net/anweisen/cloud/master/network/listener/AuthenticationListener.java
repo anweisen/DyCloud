@@ -7,7 +7,8 @@ import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
 import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket.AuthenticationType;
 import net.anweisen.cloud.driver.network.packet.def.AuthenticationResponsePacket;
-import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.PublishType;
+import net.anweisen.cloud.driver.network.packet.def.NodeInfoPublishPacket.NodePublishType;
+import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.ServicePublishType;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.node.NodeInfo;
 import net.anweisen.cloud.master.CloudMaster;
@@ -68,6 +69,8 @@ public class AuthenticationListener implements PacketListener {
 				cloud.getLogger().extended("Gateway ip for {}: {}", name, info.getGatewayIp());
 
 				cloud.getLogger().info("Node '{}' has connected successfully", name);
+				cloud.getNodeManager().handleNodeUpdate(NodePublishType.CONNECTED, info);
+				cloud.publishUpdate(NodePublishType.CONNECTED, info);
 				channel.sendPacket(new AuthenticationResponsePacket(true, "successful"));
 				break;
 			}
@@ -106,8 +109,8 @@ public class AuthenticationListener implements PacketListener {
 				}
 
 				service.setChannel(channel);
-				cloud.publishUpdate(PublishType.CONNECTED, service.getInfo());
-				cloud.getServiceManager().handleServiceUpdate(PublishType.CONNECTED, service.getInfo());
+				cloud.publishUpdate(ServicePublishType.CONNECTED, service.getInfo());
+				cloud.getServiceManager().handleServiceUpdate(ServicePublishType.CONNECTED, service.getInfo());
 
 				cloud.getLogger().info("Service '{}' has connected successfully", name);
 				channel.sendPacket(new AuthenticationResponsePacket(true, "successful"));

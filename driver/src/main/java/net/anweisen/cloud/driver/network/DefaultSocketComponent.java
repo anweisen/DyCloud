@@ -9,6 +9,7 @@ import net.anweisen.cloud.driver.network.packet.PacketListenerRegistry;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
@@ -63,11 +64,23 @@ public abstract class DefaultSocketComponent implements SocketComponent, Logging
 
 	@Override
 	public void sendPacket(@Nonnull Packet packet, @Nonnull SocketChannel... skipChannels) {
+		List<SocketChannel> channelList = Arrays.asList(skipChannels);
 		for (SocketChannel channel : channels) {
-			if (Arrays.asList(skipChannels).contains(channel))
+			if (channelList.contains(channel))
 				continue;
 
 			channel.sendPacket(packet);
+		}
+	}
+
+	@Override
+	public void sendPacketSync(@Nonnull Packet packet, @Nonnull SocketChannel... skipChannels) {
+		List<SocketChannel> channelList = Arrays.asList(skipChannels);
+		for (SocketChannel channel : channels) {
+			if (channelList.contains(channel))
+				continue;
+
+			channel.sendPacketSync(packet);
 		}
 	}
 

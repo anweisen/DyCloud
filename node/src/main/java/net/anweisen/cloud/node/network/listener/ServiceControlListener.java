@@ -3,11 +3,12 @@ package net.anweisen.cloud.node.network.listener;
 import com.github.dockerjava.api.exception.DockerException;
 import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
+import net.anweisen.cloud.driver.event.service.ServiceRestartedEvent;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
 import net.anweisen.cloud.driver.network.packet.def.ServiceControlPacket.ServiceControlType;
-import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.PublishType;
+import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.ServicePublishType;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.service.config.ServiceTask;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
@@ -27,30 +28,39 @@ public class ServiceControlListener implements PacketListener, LoggingApiUser {
 	@Override
 	public void handlePacket(@Nonnull SocketChannel channel, @Nonnull Packet packet) throws Exception {
 		CloudNode cloud = CloudNode.getInstance();
+		NodeServiceActor actor = cloud.getServiceActor();
 		Buffer buffer = packet.getBuffer();
 
 		ServiceControlType type = buffer.readEnumConstant(ServiceControlType.class);
-		UUID uuid = buffer.readUUID();
-		ServiceInfo service = cloud.getServiceManager().getServiceInfoByUUID(uuid);
-		debug("{} -> {}", type, service);
-		Preconditions.checkNotNull(service, "Service for action is null");
-		ServiceTask task = service.findTask();
-		Preconditions.checkNotNull(task, "ServiceTask of service is null");
-		NodeServiceActor actor = cloud.getServiceActor();
 
  		if (type == ServiceControlType.CREATE) {
-			actor.createServiceHere(service, task);
+		    ServiceInfo service = buffer.readObject(ServiceInfo.class);
+			cloud.getServiceManager().registerService(service);
+			cloud.getEventManager().callEvent(new ServiceRestartedEvent(service));
+
+		    debug("{} -> {}", type, service);
+		    ServiceTask task = service.findTask();
+		    Preconditions.checkNotNull(task, "ServiceTask of service for action " + type + " is null (" + service.getTaskName() + ")");
+
+		    actor.createServiceHere(service, task);
 			channel.sendPacket(Packet.createResponseFor(packet));
 			return;
 	    }
 
+		UUID uuid = buffer.readUUID();
+		ServiceInfo service = cloud.getServiceManager().getServiceInfoByUUID(uuid);
+		debug("{} -> {}", type, service);
+		Preconditions.checkNotNull(service, "Service for action " + type + " is null (" + uuid + ")");
+		ServiceTask task = service.findTask();
+		Preconditions.checkNotNull(task, "ServiceTask of service for action " + type + " is null (" + service.getTaskName() + ")");
 		Preconditions.checkNotNull(service.getDockerContainerId(), "Docker container id of service for action is null");
+
 		try {
 			doServiceAction(service, type, actor);
 			service.setState(getServiceState(type));
 			cloud.publishUpdate(getPublishType(type), service);
 		} catch (DockerException ex) {
-			error("Unable to do service action service {}", service, ex);
+			error("Unable to do service action {} on {}", type, service, ex);
 		}
 		channel.sendPacket(Packet.createResponseFor(packet));
 	}
@@ -87,13 +97,13 @@ public class ServiceControlListener implements PacketListener, LoggingApiUser {
 		}
 	}
 
-	private PublishType getPublishType(@Nonnull ServiceControlType type) {
+	private ServicePublishType getPublishType(@Nonnull ServiceControlType type) {
 		switch (type) {
-			case START:     return PublishType.STARTED;
-			case RESTART:   return PublishType.RESTARTED;
-			case KILL:      return PublishType.KILLED;
-			case DELETE:    return PublishType.UNREGISTER;
-			case STOP:      return PublishType.STOPPED;
+			case START:     return ServicePublishType.STARTED;
+			case RESTART:   return ServicePublishType.RESTARTED;
+			case KILL:      return ServicePublishType.KILLED;
+			case DELETE:    return ServicePublishType.UNREGISTER;
+			case STOP:      return ServicePublishType.STOPPED;
 			default:        throw new IllegalArgumentException(type.name());
 		}
 	}

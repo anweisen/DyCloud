@@ -19,6 +19,8 @@ public interface SocketComponent extends PacketSender {
 
 	void sendPacket(@Nonnull Packet packet, @Nonnull SocketChannel... skipChannels);
 
+	void sendPacketSync(@Nonnull Packet packet, @Nonnull SocketChannel... skipChannels);
+
 	@Nonnull
 	Executor getPacketDispatcher();
 

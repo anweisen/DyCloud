@@ -3,7 +3,7 @@ package net.anweisen.cloud.master.network.listener;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
-import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.PublishType;
+import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.ServicePublishType;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.master.CloudMaster;
 
@@ -21,8 +21,8 @@ public class ServiceUpdateSelfInfoListener implements PacketListener {
 		ServiceInfo serviceInfo = packet.getBuffer().readObject(ServiceInfo.class);
 
 		CloudMaster cloud = CloudMaster.getInstance();
-		cloud.publishUpdate(PublishType.UPDATE, serviceInfo);
-		cloud.getServiceManager().handleServiceUpdate(PublishType.UPDATE, serviceInfo);
+		cloud.publishUpdate(ServicePublishType.UPDATE, serviceInfo);
+		cloud.getServiceManager().handleServiceUpdate(ServicePublishType.UPDATE, serviceInfo);
 
 	}
 

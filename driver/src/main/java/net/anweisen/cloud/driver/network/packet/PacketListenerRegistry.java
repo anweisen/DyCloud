@@ -21,9 +21,7 @@ public class PacketListenerRegistry {
 
 	public void addListener(int channel, @Nonnull PacketListener listener) {
 		Preconditions.checkNotNull(listeners, "Listener cannot be null");
-
-		List<PacketListener> list = this.listeners.computeIfAbsent(channel, key -> new CopyOnWriteArrayList<>());
-		list.add(listener);
+		addListeners(channel, listener);
 	}
 
 	public void addListeners(int channel, @Nonnull PacketListener... listeners) {

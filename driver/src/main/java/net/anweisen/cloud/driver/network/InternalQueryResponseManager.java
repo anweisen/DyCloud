@@ -91,7 +91,7 @@ public final class InternalQueryResponseManager {
 
 	private static final class Callback {
 
-		private final long timeout = System.currentTimeMillis() + 30_000;
+		private final long timeout = System.currentTimeMillis() + 60_000;
 		private final boolean autoRemove;
 		private final BiConsumer<? super SocketChannel, ? super Packet> action;
 

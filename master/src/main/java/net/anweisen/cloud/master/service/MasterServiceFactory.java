@@ -2,7 +2,7 @@ package net.anweisen.cloud.master.service;
 
 import net.anweisen.cloud.driver.network.packet.def.ServiceControlPacket;
 import net.anweisen.cloud.driver.network.packet.def.ServiceControlPacket.ServiceControlType;
-import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.PublishType;
+import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.ServicePublishType;
 import net.anweisen.cloud.driver.service.ServiceFactory;
 import net.anweisen.cloud.driver.service.config.ServiceTask;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
@@ -76,11 +76,11 @@ public class MasterServiceFactory implements ServiceFactory {
 				UUID.randomUUID(), null, task.getName(), servicesRunning + 1, task.getEnvironment(),
 				ServiceState.DEFINED, node.getInfo().getName(), node.getInfo().getAddress().getHost(), port, true, Document.create()
 		);
-		cloud.publishUpdate(PublishType.REGISTER, info);
-		cloud.getServiceManager().handleServiceUpdate(PublishType.REGISTER, info);
+		cloud.publishUpdate(ServicePublishType.REGISTER, info, node.getChannel());
+		cloud.getServiceManager().handleServiceUpdate(ServicePublishType.REGISTER, info);
 
 		CloudService service = new DefaultCloudService(info);
-		cloud.getServiceManager().getServices().add(service);
+		cloud.getServiceManager().registerService(service);
 
 		cloud.getLogger().info("Told '{}' to create '{}'", node.getInfo().getName(), info.getName());
 		cloud.getLogger().extended("- {}", node);
@@ -88,7 +88,7 @@ public class MasterServiceFactory implements ServiceFactory {
 		cloud.getLogger().extended("- {}", task);
 
 		// TODO handle response?
-		return node.getChannel().sendQueryAsync(new ServiceControlPacket(ServiceControlType.CREATE, info.getUniqueId())).map(packet -> info);
+		return node.getChannel().sendQueryAsync(new ServiceControlPacket(ServiceControlType.CREATE, info)).map(packet -> info);
 	}
 
 	private int getNextFreePort(@Nonnull NodeServer node, @Nonnull ServiceTask task) {

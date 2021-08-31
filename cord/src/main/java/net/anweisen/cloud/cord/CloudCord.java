@@ -15,7 +15,8 @@ import net.anweisen.cloud.driver.network.HostAndPort;
 import net.anweisen.cloud.driver.network.SocketClient;
 import net.anweisen.cloud.driver.network.handler.SocketChannelClientHandler;
 import net.anweisen.cloud.driver.network.listener.AuthenticationResponseListener;
-import net.anweisen.cloud.driver.network.listener.ServiceInfoUpdateListener;
+import net.anweisen.cloud.driver.network.listener.NodeInfoPublishListener;
+import net.anweisen.cloud.driver.network.listener.ServiceInfoPublishListener;
 import net.anweisen.cloud.driver.network.netty.client.NettySocketClient;
 import net.anweisen.cloud.driver.network.packet.PacketConstants;
 import net.anweisen.cloud.driver.network.packet.PacketListenerRegistry;
@@ -30,7 +31,7 @@ import net.anweisen.cloud.driver.service.ServiceFactory;
 import net.anweisen.cloud.driver.service.ServiceManager;
 import net.anweisen.cloud.driver.service.config.RemoteServiceConfigManager;
 import net.anweisen.cloud.driver.service.config.ServiceConfigManager;
-import net.anweisen.utilities.common.logging.ILogger;
+import net.anweisen.utilities.common.logging.handler.HandledLogger;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.locks.Condition;
@@ -58,7 +59,7 @@ public final class CloudCord extends CloudDriver {
 	private NettyCordSocketServer cordServer;
 	private CordTrafficReporter trafficReporter;
 
-	CloudCord(@Nonnull ILogger logger, @Nonnull Console console) {
+	CloudCord(@Nonnull HandledLogger logger, @Nonnull Console console) {
 		super(logger, DriverEnvironment.CORD);
 		setInstance(this);
 
@@ -135,7 +136,8 @@ public final class CloudCord extends CloudDriver {
 	private void loadNetworkListeners(@Nonnull PacketListenerRegistry registry) {
 		logger.info("Registering network listeners..");
 
-		registry.addListener(PacketConstants.SERVICE_INFO_PUBLISH_CHANNEL, new ServiceInfoUpdateListener());
+		registry.addListener(PacketConstants.SERVICE_INFO_PUBLISH_CHANNEL, new ServiceInfoPublishListener());
+		registry.addListener(PacketConstants.NODE_INFO_PUBLISH_CHANNEL, new NodeInfoPublishListener());
 	}
 
 	public synchronized void startCord() throws Exception {

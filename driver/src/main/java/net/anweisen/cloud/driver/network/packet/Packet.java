@@ -82,35 +82,35 @@ public class Packet {
 	}
 
 	public int getChannel() {
-		return this.channel;
+		return channel;
 	}
 
 	@Nonnull
 	public UUID getUniqueId() {
-		if (this.uniqueId == null) {
-			this.uniqueId = UUID.randomUUID();
+		if (uniqueId == null) {
+			uniqueId = UUID.randomUUID();
 		}
-		return this.uniqueId;
+		return uniqueId;
 	}
 
 	public Document getHeader() {
-		return this.header;
+		return header;
 	}
 
 	public Buffer getBuffer() {
-		return this.body;
+		return body;
 	}
 
 	public byte[] getBodyAsArray() {
-		return this.body == null ? EMPTY_PACKET_BYTE_ARRAY : this.body.toArray();
+		return body == null ? EMPTY_PACKET_BYTE_ARRAY : body.toArray();
 	}
 
 	public long getCreationMillis() {
-		return this.creationMillis;
+		return creationMillis;
 	}
 
 	@Override
 	public String toString() {
-		return "Packet[channel=" + PacketConstants.getChannelName(channel) + " uuid=" + uniqueId + " header=" + header.toJson() + " buffer=" + (body != null ? body.readableBytes() : 0) + "]";
+		return "Packet[channel=" + PacketConstants.getChannelName(channel) + " uuid=" + uniqueId + " header=" + header.toJson() + " buffer=" + (body != null ? body.readableBytes() + body.readerIndex() : 0) + "]";
 	}
 }

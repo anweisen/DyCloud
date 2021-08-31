@@ -21,9 +21,9 @@ public abstract class CloudModule implements Module {
 	public CloudModule() {
 	}
 
-	protected void onLoad() throws Exception {}
-	protected void onEnable() throws Exception {}
-	protected void onDisable() throws Exception {}
+	protected void onLoad() {}
+	protected void onEnable() {}
+	protected void onDisable() {}
 
 	@Nonnull
 	public final CloudDriver getDriver() {
@@ -76,9 +76,20 @@ public abstract class CloudModule implements Module {
 		return controller.reloadConfig();
 	}
 
+	protected boolean getEnabled(boolean defaultValue) {
+		FileDocument config = getConfig();
+		if (!config.contains("enabled")) {
+			config.set("enabled", defaultValue).save();
+		}
+
+		boolean enabled = config.getBoolean("enabled");
+		getLogger().debug("'{}' Status: enabled={}", getModuleConfig().getFullName(), enabled);
+		return enabled;
+	}
+
 	@Override
 	public String toString() {
-		return getModuleConfig().getFullName();
+		return getModuleConfig().getFullName() + " (" + getModuleConfig().getJarFile().getFileName() + ")";
 	}
 
 }

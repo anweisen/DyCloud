@@ -11,11 +11,7 @@ public final class CloudPermsModule extends CloudModule {
 
 	@Override
 	protected void onLoad() {
-		if (!getConfig().contains("enabled")) {
-			getConfig().set("enabled", true).save();
-		}
-		getLogger().debug("CloudPermsModule Status: enabled={}", getConfig().getBoolean("enabled"));
-		if (getConfig().getBoolean("enabled")) {
+		if (getEnabled(true)) {
 			getDriver().setPermissionManager(new CloudPermissionManager());
 		}
 	}

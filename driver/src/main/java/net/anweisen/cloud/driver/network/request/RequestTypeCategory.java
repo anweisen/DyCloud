@@ -6,4 +6,6 @@ package net.anweisen.cloud.driver.network.request;
  */
 public enum RequestTypeCategory {
 
+	TEMPLATE_STORAGE,
+
 }
