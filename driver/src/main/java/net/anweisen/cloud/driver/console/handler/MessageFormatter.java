@@ -16,10 +16,11 @@ import java.util.Date;
  */
 public final class MessageFormatter {
 
+	@Nonnull
 	public static String formatUncolored(@Nonnull LogEntry entry) {
 		StringBuilder builder = new StringBuilder()
 			.append("[")
-			.append(LogHandler.DATE_FORMAT.format(Date.from(entry.getTimestamp())))
+			.append(LogHandler.TIME_FORMAT.format(Date.from(entry.getTimestamp())))
 			.append(" ")
 			.append(entry.getThreadName())
 			.append("] ")
@@ -36,12 +37,13 @@ public final class MessageFormatter {
 		return builder.toString();
 	}
 
+	@Nonnull
 	public static String formatColored(@Nonnull LogEntry entry) {
 		StringBuilder builder = new StringBuilder()
 			.append(ConsoleColor.DARK_GRAY)
 			.append("[")
 			.append(ConsoleColor.WHITE)
-			.append(LogHandler.DATE_FORMAT.format(Date.from(entry.getTimestamp())))
+			.append(LogHandler.TIME_FORMAT.format(Date.from(entry.getTimestamp())))
 			.append(" ");
 
 		String name = entry.getThreadName();
