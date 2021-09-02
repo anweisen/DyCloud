@@ -90,6 +90,7 @@ public class NodeServiceActor implements LoggingApiUser {
 			InputStream stream = storage.zipTemplate(template);
 			if (stream == null) {
 				warn("{} could not be found / get", template);
+				storage.getTemplates().forEach(current -> extended("=> {}", current));
 				continue;
 			}
 
@@ -102,7 +103,7 @@ public class NodeServiceActor implements LoggingApiUser {
 		// Copy modules
 		for (ModuleController module : cloud.getModuleManager().getModules()) {
 			if (module.getModuleConfig().getCopyType().applies(task.getEnvironment().getServiceType())) {
-				if (module.isEnabled()) {
+				if (!module.isEnabled()) {
 					debug("Skipping Module {} for {}, disabled", module.getModuleConfig().getJarFile().getFileName(), info);
 					continue;
 				}
@@ -115,14 +116,13 @@ public class NodeServiceActor implements LoggingApiUser {
 		ServiceEnvironment environment = task.getEnvironment();
 		for (String config : environment.getConfigs()) {
 			trace("Copying config resource '{}'", config);
-			InputStream stream = getClass().getClassLoader().getResourceAsStream("files/" + config);
-			if (stream == null) {
+			InputStream input = getClass().getClassLoader().getResourceAsStream("files/" + config);
+			if (input == null) {
 				warn("Unable to find config resource '{}'", config);
 				continue;
 			}
 
-			BufferedInputStream input = new BufferedInputStream(stream);
-			BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(tempTemplateDirectory.resolve(config).toFile()));
+			OutputStream output = new FileOutputStream(tempTemplateDirectory.resolve(config).toFile());
 			FileUtils.copy(input, output);
 			input.close();
 			output.close();
@@ -138,7 +138,8 @@ public class NodeServiceActor implements LoggingApiUser {
 
 		Path applicationFile = getApplicationFile(tempTemplateDirectory);
 		if (applicationFile == null) {
-			warn("Unable to locate application file for '{}': Used templates: {}");
+			warn("Unable to locate application file for '{}': Used templates: {}", info.getName(), task.getTemplates());
+			FileUtils.list(tempTemplateDirectory).forEach(path -> extended("=> {}", path.toString()));
 			return;
 		}
 
