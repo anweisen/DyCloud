@@ -18,17 +18,13 @@ public interface ModuleController {
 	@Nonnull
 	Module getModule();
 
-	@Nonnull
-	ModuleController loadModule();
+	void loadModule();
 
-	@Nonnull
-	ModuleController enableModule();
+	void enableModule();
 
-	@Nonnull
-	ModuleController disableModule();
+	void disableModule();
 
-	@Nonnull
-	ModuleController unregisterModule();
+	void unregisterModule();
 
 	@Nonnull
 	ModuleManager getManager();

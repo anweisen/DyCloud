@@ -94,7 +94,7 @@ public abstract class CloudModule implements Module {
 	}
 
 	public boolean isEnabled() {
-		return getConfig().getBoolean("enabled");
+		return !getConfig().contains("enabled") || getConfig().getBoolean("enabled");
 	}
 
 	@Override

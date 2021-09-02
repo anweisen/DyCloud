@@ -100,12 +100,11 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 
 	}
 
-	@Nonnull
 	@Override
-	public ModuleController loadModule() {
+	public void loadModule() {
 		synchronized (this) {
-			if (module == null) return this; // Was never initialized
-			if (state != ModuleState.DISABLED) return this; // Must be disabled first
+			if (module == null) return; // Was never initialized
+			if (state != ModuleState.DISABLED) return; // Must be disabled first
 
 			info("Module {} is being loaded..", module);
 
@@ -116,17 +115,14 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 				error("An error occurred while loading module {}", module, ex);
 				disableModule();
 			}
-
-			return this;
 		}
 	}
 
-	@Nonnull
 	@Override
-	public ModuleController enableModule() {
+	public void enableModule() {
 		synchronized (this) {
-			if (module == null) return this; // Was never initialized
-			if (state != ModuleState.LOADED) return this; // Must be loaded first
+			if (module == null) return; // Was never initialized
+			if (state != ModuleState.LOADED) return; // Must be loaded first
 
 			info("Module {} is being enabled..", module);
 
@@ -137,17 +133,14 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 				error("An error occurred while enabling module {}", module, ex);
 				disableModule();
 			}
-
-			return this;
 		}
 	}
 
-	@Nonnull
 	@Override
-	public ModuleController disableModule() {
+	public void disableModule() {
 		synchronized (this) {
-			if (module == null) return this; // Was never initialized
-			if (state == ModuleState.DISABLED) return this; // Is already disabled
+			if (module == null) return; // Was never initialized
+			if (state == ModuleState.DISABLED) return; // Is already disabled
 
 			info("Module {} is being disabled..", module);
 			CloudDriver.getInstance().getEventManager().unregisterListeners(classLoader);
@@ -159,13 +152,11 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 			}
 
 			state = ModuleState.DISABLED;
-			return this;
 		}
 	}
 
-	@Nonnull
 	@Override
-	public ModuleController unregisterModule() {
+	public void unregisterModule() {
 		synchronized (this) {
 
 			try {
@@ -175,7 +166,6 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 			}
 
 			state = ModuleState.UNREGISTERED;
-			return this;
 		}
 	}
 
@@ -197,7 +187,7 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 
 	@Override
 	public boolean isEnabled() {
-		return module == null ? getConfig().getBoolean("enabled") : module.isEnabled();
+		return module == null ? !getConfig().contains("enabled") || getConfig().getBoolean("enabled") : module.isEnabled();
 	}
 
 	@Nonnull
