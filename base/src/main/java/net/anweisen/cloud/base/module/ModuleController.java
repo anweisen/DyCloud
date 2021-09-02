@@ -42,6 +42,8 @@ public interface ModuleController {
 	@Nonnull
 	FileDocument reloadConfig();
 
+	boolean isEnabled();
+
 	@Nonnull
 	ModuleState getState();
 

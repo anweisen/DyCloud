@@ -195,6 +195,11 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 		}
 	}
 
+	@Override
+	public boolean isEnabled() {
+		return module == null ? getConfig().getBoolean("enabled") : module.isEnabled();
+	}
+
 	@Nonnull
 	@Override
 	public ModuleState getState() {

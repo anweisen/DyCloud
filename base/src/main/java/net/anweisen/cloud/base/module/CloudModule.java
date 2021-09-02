@@ -93,6 +93,10 @@ public abstract class CloudModule implements Module {
 		return enabled;
 	}
 
+	public boolean isEnabled() {
+		return getConfig().getBoolean("enabled");
+	}
+
 	@Override
 	public String toString() {
 		return getModuleConfig().getFullName() + " (" + getModuleConfig().getJarFile().getFileName() + ")";
