@@ -135,14 +135,6 @@ public class NettyMinecraftDecoder extends SimpleChannelInboundHandler<ByteBuf> 
 				}
 				info("[{}] <- Proxy Downstream has successfully connected to '{}'", downstreamHandler.getClientAddress(), proxyService.getName());
 
-//				CloudDriver.getInstance().getSocketComponent().sendPacketSync(
-//					new Packet(PacketConstants.CORD_CHANNEL, Buffer.create()
-//						.writeString(proxyService.getName())
-//						.writeObject(HostAndPort.fromSocketAddress(clientChannel.remoteAddress()))
-//						.writeObject(HostAndPort.fromSocketAddress(serverChannel.localAddress()))
-//					)
-//				); // TODO wait for callback
-
 				serverChannel.writeAndFlush(Unpooled.copiedBuffer(handshakePacket.resetReaderIndex().retain()));
 				trace("Sent handshake packet for {} to proxy..", downstreamHandler.getClientAddress());
 				clientChannel.attr(PacketUtils.CONNECTION_STATE).set(ConnectionState.PROXY);
