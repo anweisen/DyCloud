@@ -1,6 +1,7 @@
 package net.anweisen.cloud.driver.node;
 
 import net.anweisen.cloud.driver.CloudDriver;
+import net.anweisen.cloud.driver.network.packet.def.NodeInfoPublishPacket.NodePublishType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,5 +29,7 @@ public interface NodeManager {
 	default Collection<String> getNodeNames() {
 		return getNodeInfos().stream().map(NodeInfo::getName).collect(Collectors.toList());
 	}
+
+	void handleNodeUpdate(@Nonnull NodePublishType publishType, @Nonnull NodeInfo info);
 
 }
