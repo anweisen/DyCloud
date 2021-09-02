@@ -1,0 +1,7 @@
+name: Cloud-ChatTab
+author: anweisen
+version: 1.0
+main: net.anweisen.cloud.modules.chattab.bukkit.BukkitCloudChatTabPlugin
+description: Runtime module to enable the use of chat formatting & name tags
+website: https://github.com/anweisen/MinecraftCloud
+api-version: 1.13

@@ -1,0 +1,10 @@
+{
+	"name": "Cloud-ChatTab",
+	"author": "anweisen",
+	"version": "1.0",
+	"main": "net.anweisen.cloud.modules.chattab.CloudChatTabModule",
+	"website": "https://github.com/anweisen/MinecraftCloud",
+	"description": "Runtime module to enable the use of chat formatting & name tags",
+	"environment": "MASTER",
+	"copy": "SERVER"
+}
