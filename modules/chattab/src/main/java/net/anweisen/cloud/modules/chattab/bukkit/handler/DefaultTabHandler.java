@@ -59,8 +59,6 @@ public class DefaultTabHandler implements TabHandler {
 			} catch (Throwable ex) {
 			}
 
-			System.out.println(player.getName() + " - " + teamName);
-
 		}
 	}
 }
