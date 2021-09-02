@@ -52,7 +52,7 @@ public abstract class AbstractCloudProxyManager {
 	protected String replaceDefault(@Nonnull String content, @Nonnull UUID playerUniqueId) {
 		if (CloudDriver.getInstance().hasPermissionManager()) {
 			PermissionPlayer permissionPlayer = CloudDriver.getInstance().getPermissionManager().getPlayerByUniqueId(playerUniqueId);
-			PermissionGroup group = permissionPlayer.getHighestGroupOptional().orElseGet(() -> CloudDriver.getInstance().getPermissionManager().getDefaultGroup());
+			PermissionGroup group = permissionPlayer.getHighestGroup();
 			if (group != null) {
 				content = content
 					.replace("{group.name}", group.getName())
