@@ -28,13 +28,8 @@ public abstract class AbstractCloudProxyManager {
 
 	public abstract void schedule(@Nonnull Runnable command, long millis);
 
-	public final void requestConfig() {
-		config = ProxyHelper.requestProxyConfig();
-		ProxyHelper.listenForProxyConfigUpdates(newConfig -> {
-			config = newConfig;
-			updateTabList();
-		});
-
+	public void init() {
+		config = CloudDriver.getInstance().getGlobalConfig().get("proxyConfig", ProxyConfig.class);
 		scheduleTabList();
 	}
 

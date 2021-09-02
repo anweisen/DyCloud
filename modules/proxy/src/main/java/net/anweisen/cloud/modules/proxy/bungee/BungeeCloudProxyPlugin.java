@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class BungeeCloudProxyPlugin extends Plugin {
+public final class BungeeCloudProxyPlugin extends Plugin {
 
 	private static BungeeCloudProxyPlugin instance;
 
@@ -20,7 +20,7 @@ public class BungeeCloudProxyPlugin extends Plugin {
 		instance = this;
 
 		manager = new BungeeCloudProxyManager(this);
-		manager.requestConfig();
+		manager.init();
 
 		getProxy().getPluginManager().registerListener(this, new BungeeCloudProxyListener());
 	}

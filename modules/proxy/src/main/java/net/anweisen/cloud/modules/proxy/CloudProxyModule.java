@@ -4,7 +4,6 @@ import net.anweisen.cloud.base.module.CloudModule;
 import net.anweisen.cloud.modules.proxy.config.ProxyConfig;
 import net.anweisen.cloud.modules.proxy.config.ProxyTabListConfig;
 import net.anweisen.cloud.modules.proxy.config.ProxyTabListEntryConfig;
-import net.anweisen.cloud.modules.proxy.module.listener.CloudProxyPacketListener;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -26,7 +25,6 @@ public final class CloudProxyModule extends CloudModule {
 
 		loadConfig();
 		if (!getEnabled(true)) return;
-		initListeners();
 	}
 
 	private void loadConfig() {
@@ -53,10 +51,7 @@ public final class CloudProxyModule extends CloudModule {
 					1
 				)
 			)).save();
-	}
-
-	private void initListeners() {
-		getDriver().getSocketComponent().getListenerRegistry().addListener(ProxyConstants.CHANNEL, new CloudProxyPacketListener());
+		getGlobalConfig().set("proxyConfig", config).update();
 	}
 
 	@Nonnull
