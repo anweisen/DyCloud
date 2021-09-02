@@ -57,7 +57,7 @@ public class DefaultNodeServer implements NodeServer {
 
 	@Override
 	public boolean isAvailable() {
-		return true;
+		return cycleData != null;
 	}
 
 	@Nonnull
