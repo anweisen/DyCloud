@@ -42,6 +42,7 @@ public class AuthenticationResponsePacket extends Packet {
 		append(PropertySection.START_PORTS, buffer -> ArrayWalker.walk(ServiceType.values()).forEach(type -> buffer.writeVarInt(type.getStartPort())));
 		append(PropertySection.PERMISSION_GROUPS, driver.hasPermissionManager(), buffer -> buffer.writeObjectCollection((Collection<? extends SerializableObject>) (Collection<?>) driver.getPermissionManager().getGroups()));
 		append(PropertySection.ONLINE_PLAYERS, buffer -> buffer.writeObjectCollection((Collection<? extends SerializableObject>) (Collection<?>) driver.getPlayerManager().getOnlinePlayers()));
+		append(PropertySection.GLOBAL_CONFIG, buffer -> buffer.writeDocument(driver.getGlobalConfig().getRawData()));
 	}
 
 	private void append(@Nonnull PropertySection section, boolean condition, @Nonnull Consumer<? super Buffer> modifier) {
@@ -61,6 +62,7 @@ public class AuthenticationResponsePacket extends Packet {
 		SERVICES,
 		START_PORTS,
 		PERMISSION_GROUPS,
-		ONLINE_PLAYERS
+		ONLINE_PLAYERS,
+		GLOBAL_CONFIG
 	}
 }

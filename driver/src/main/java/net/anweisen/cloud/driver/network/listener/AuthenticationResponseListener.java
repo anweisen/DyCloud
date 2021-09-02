@@ -91,6 +91,7 @@ public class AuthenticationResponseListener implements PacketListener, LoggingAp
 
 	private void readConfigProperty(@Nonnull PropertySection section, @Nonnull SocketChannel channel, @Nonnull Buffer buffer) {
 		CloudDriver cloud = CloudDriver.getInstance();
+		cloud.getLogger().debug("=> PropertySection.{}", section);
 		switch (section) {
 			case LOG_LEVEL: {
 				cloud.getLogger().setMinLevel(buffer.readEnumConstant(LogLevel.class));
@@ -120,6 +121,10 @@ public class AuthenticationResponseListener implements PacketListener, LoggingAp
 			}
 			case PERMISSION_GROUPS: {
 				cloud.getPermissionManager().setGroupsCache(buffer.readObjectCollection(DefaultPermissionGroup.class));
+				break;
+			}
+			case GLOBAL_CONFIG: {
+				cloud.getGlobalConfig().setRawData(buffer.readDocument());
 				break;
 			}
 		}
