@@ -17,6 +17,7 @@
 		<module>bridge</module>
 		<module>perms</module>
 		<module>cloudflare</module>
+		<module>notify</module>
 		<module>proxy</module>
 	</modules>
 

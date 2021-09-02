@@ -1,4 +1,4 @@
-package net.anweisen.cloud.driver.console;
+package net.anweisen.cloud.driver.console.jline3;
 
 import org.jline.reader.Candidate;
 import org.jline.reader.Completer;

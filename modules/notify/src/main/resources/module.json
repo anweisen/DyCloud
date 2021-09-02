@@ -1,0 +1,9 @@
+{
+	"name": "Cloud-Notify",
+	"author": "anweisen",
+	"version": "1.0",
+	"main": "net.anweisen.cloud.modules.notify.CloudNotifyModule",
+	"website": "https://github.com/anweisen/MinecraftCloud",
+	"description": "Runtime module to send service update messages to players",
+	"environment": "MASTER"
+}

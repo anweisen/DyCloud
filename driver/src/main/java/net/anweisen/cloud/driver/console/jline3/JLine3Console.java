@@ -1,5 +1,7 @@
-package net.anweisen.cloud.driver.console;
+package net.anweisen.cloud.driver.console.jline3;
 
+import net.anweisen.cloud.driver.console.Console;
+import net.anweisen.cloud.driver.console.ConsoleColor;
 import net.anweisen.utilities.common.concurrent.task.Task;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
