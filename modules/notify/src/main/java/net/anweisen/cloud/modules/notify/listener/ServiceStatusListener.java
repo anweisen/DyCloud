@@ -7,7 +7,7 @@ import net.anweisen.cloud.driver.event.service.ServiceStartedEvent;
 import net.anweisen.cloud.driver.event.service.ServiceStoppedEvent;
 import net.anweisen.cloud.driver.player.CloudPlayer;
 import net.anweisen.cloud.driver.player.chat.ChatText;
-import net.anweisen.cloud.driver.player.chat.ClickEvent;
+import net.anweisen.cloud.driver.player.chat.ChatClickEvent;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.modules.notify.CloudNotifyModule;
 
@@ -40,7 +40,7 @@ public class ServiceStatusListener {
 		ChatText text = new ChatText(message
 			.replace("{service}", service.getName())
 			.replace("{node}", service.getNodeName())
-		).addClick(ClickEvent.RUN_COMMAND, "/server " + service.getName())
+		).addClick(ChatClickEvent.RUN_COMMAND, "/server " + service.getName())
 		.addHover(CloudNotifyModule.getInstance().getNotifyConfig().getHoverMessage());
 
 		for (CloudPlayer player : CloudDriver.getInstance().getPlayerManager().getOnlinePlayers()) {
