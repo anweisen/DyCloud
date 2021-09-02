@@ -3,6 +3,7 @@ package net.anweisen.cloud.base.module;
 import net.anweisen.cloud.base.module.config.ModuleConfig;
 import net.anweisen.cloud.base.module.config.ModuleState;
 import net.anweisen.cloud.driver.CloudDriver;
+import net.anweisen.cloud.driver.config.global.GlobalConfig;
 import net.anweisen.cloud.driver.event.EventManager;
 import net.anweisen.utilities.common.config.FileDocument;
 import net.anweisen.utilities.common.logging.ILogger;
@@ -64,6 +65,11 @@ public abstract class CloudModule implements Module {
 	@Nonnull
 	public final ModuleState getState() {
 		return getController().getState();
+	}
+
+	@Nonnull
+	public GlobalConfig getGlobalConfig() {
+		return getDriver().getGlobalConfig();
 	}
 
 	@Nonnull
