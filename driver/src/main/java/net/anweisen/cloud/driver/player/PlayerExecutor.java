@@ -1,5 +1,7 @@
 package net.anweisen.cloud.driver.player;
 
+import net.anweisen.cloud.driver.player.chat.ChatText;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -17,31 +19,40 @@ public interface PlayerExecutor {
 	UUID getPlayerUniqueId();
 
 	/**
-	 * Sends a message to the player.
+	 * Sends the message to the player.
 	 *
-	 * @param message the message
+	 * @param message the message to send
 	 */
 	default void sendMessage(@Nonnull String message) {
-		sendMessages(message);
+		sendMessage(null, message);
 	}
 
 	/**
-	 * Sends messages to the player.
+	 * Sends the message to the player.
 	 *
-	 * @param messages the message lines to send
+	 * @param message the message to send
 	 */
-	default void sendMessages(@Nonnull String... messages) {
-		sendConditionalMessage(null, messages);
+	default void sendMessage(@Nullable String permission, @Nonnull String message) {
+		sendMessage(permission, new ChatText(message));
 	}
 
 	/**
-	 * Sends messages to the player if the player has the given permission.
+	 * Sends the message to the player.
+	 *
+	 * @param message the message components to send
+	 */
+	default void sendMessage(@Nonnull ChatText... message) {
+		sendMessage(null, message);
+	}
+
+	/**
+	 * Sends the messages to the player if the player has the given permission.
 	 * The permission check will be done on the proxy the player is on.
 	 *
 	 * @param permission the permission the player must have
-	 * @param messages the message lines to send
+	 * @param message the message components to send
 	 */
-	void sendConditionalMessage(@Nullable String permission, @Nonnull String... messages);
+	void sendMessage(@Nullable String permission, @Nonnull ChatText... message);
 
 	/**
 	 * Sends an action to the player.

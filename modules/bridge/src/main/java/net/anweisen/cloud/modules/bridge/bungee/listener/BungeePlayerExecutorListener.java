@@ -6,6 +6,8 @@ import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
 import net.anweisen.cloud.driver.network.packet.def.PlayerExecutorPacket.PlayerExecutorType;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.player.chat.ChatText;
+import net.anweisen.cloud.modules.bridge.bungee.BungeeBridgeHelper;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -34,12 +36,10 @@ public class BungeePlayerExecutorListener implements PacketListener, LoggingApiU
 		switch (type) {
 			case SEND_MESSAGE: {
 				String permission = buffer.readOptionalString();
-				String[] messages = buffer.readStringArray();
+				ChatText[] messages = buffer.readObjectArray(ChatText.class);
 
 				if (permission != null && !player.hasPermission(permission)) break;
-				for (String message : messages) {
-					player.sendMessage(TextComponent.fromLegacyText(message));
-				}
+				player.sendMessage(BungeeBridgeHelper.buildChatTextComponents(messages));
 				break;
 			}
 			case SEND_ACTIONBAR: {

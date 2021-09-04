@@ -5,6 +5,7 @@ import net.anweisen.cloud.driver.network.packet.def.PlayerExecutorPacket;
 import net.anweisen.cloud.driver.network.packet.def.PlayerExecutorPacket.PlayerExecutorType;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.player.PlayerExecutor;
+import net.anweisen.cloud.driver.player.chat.ChatText;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,8 +31,8 @@ public abstract class DefaultPlayerExecutor implements PlayerExecutor {
 	}
 
 	@Override
-	public void sendConditionalMessage(@Nullable String permission, @Nonnull String... messages) {
-		sendPacket(PlayerExecutorType.SEND_MESSAGE, buffer -> buffer.writeOptionalString(permission).writeStringArray(messages));
+	public void sendMessage(@Nullable String permission, @Nonnull ChatText... message) {
+		sendPacket(PlayerExecutorType.SEND_MESSAGE, buffer -> buffer.writeOptionalString(permission).writeObjectArray(message));
 	}
 
 	@Override
