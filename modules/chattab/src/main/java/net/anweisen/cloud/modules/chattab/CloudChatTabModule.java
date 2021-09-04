@@ -27,7 +27,7 @@ public final class CloudChatTabModule extends CloudModule {
 		getLogger().debug("Loaded config {}", config);
 		if (config == null)
 			getConfig().set(config = new ChatTabConfig(
-				new TabConfig(true, ""),
+				new TabConfig(true, "", ""),
 				new ChatConfig(true, "{player.display} §8» §7{message}")
 			)).save();
 		getGlobalConfig().set("chattabConfig", config).update();

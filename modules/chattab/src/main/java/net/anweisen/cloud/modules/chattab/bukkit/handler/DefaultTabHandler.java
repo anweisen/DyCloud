@@ -4,6 +4,7 @@ import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.player.permission.PermissionGroup;
 import net.anweisen.cloud.driver.player.permission.PermissionPlayer;
 import net.anweisen.cloud.modules.chattab.bukkit.BukkitCloudChatTabPlugin;
+import net.anweisen.cloud.modules.chattab.config.TabConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -34,6 +35,8 @@ public class DefaultTabHandler implements TabHandler {
 		PermissionPlayer permissionPlayer = CloudDriver.getInstance().getPermissionManager().getPlayerByUniqueId(player.getUniqueId());
 		PermissionGroup permissionGroup = permissionPlayer.getHighestGroup();
 
+		TabConfig tablistConfig = BukkitCloudChatTabPlugin.getInstance().getChatTabConfig().getTablist();
+
 		for (Player observator : Bukkit.getOnlinePlayers()) {
 			Scoreboard scoreboard = observator.getScoreboard();
 			if (scoreboard == Bukkit.getScoreboardManager().getMainScoreboard())
@@ -47,17 +50,16 @@ public class DefaultTabHandler implements TabHandler {
 			if (team == null)
 				team = scoreboard.registerNewTeam(teamName);
 
-			String displayName = permissionGroup.getColor() + player.getName();
-			player.setDisplayName(displayName);
-			player.setPlayerListName(BukkitCloudChatTabPlugin.getInstance().getChatTabConfig().getTablist().getPrefix() + displayName);
-
 			team.addEntry(player.getName());
-
 			team.setDisplayName(permissionGroup.getDisplayName());
 			try {
 				team.setColor(ChatColor.getByChar(permissionGroup.getColor().replace("§", "")));
 			} catch (Throwable ex) {
 			}
+
+			String displayName = permissionGroup.getColor() + player.getName();
+			player.setDisplayName(displayName);
+			player.setPlayerListName(tablistConfig.getPrefix() + displayName + tablistConfig.getSuffix());
 
 		}
 	}
