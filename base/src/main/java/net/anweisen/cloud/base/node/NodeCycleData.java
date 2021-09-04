@@ -1,6 +1,7 @@
 package net.anweisen.cloud.base.node;
 
 import com.sun.management.OperatingSystemMXBean;
+import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 
@@ -13,7 +14,8 @@ import java.lang.management.ManagementFactory;
  */
 public final class NodeCycleData implements SerializableObject {
 
-	public static final int PERIOD = 5_000;
+	public static final int PUBLISH_INTERVAL = 5_000; // publish all 5 seconds
+	public static final int CYCLE_TIMEOUT = 5; // node time-outs after 25 seconds
 
 	static {
 		current(); // init management
@@ -23,7 +25,7 @@ public final class NodeCycleData implements SerializableObject {
 	public static NodeCycleData current() {
 		OperatingSystemMXBean system = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
 
-		float cpuUsage = (float) (system.getSystemCpuLoad() * 100f);
+		float cpuUsage = (float) system.getSystemCpuLoad() * 100f;
 		int cores = system.getAvailableProcessors();
 		long maxMemory = system.getTotalPhysicalMemorySize() / 1024 / 1024; // bytes -> kilobytes -> megabytes
 		long freeRam = system.getFreePhysicalMemorySize() / 1024 / 1024; // bytes -> kilobytes -> megabytes
@@ -90,6 +92,13 @@ public final class NodeCycleData implements SerializableObject {
 
 	public int getLatency() {
 		return latency;
+	}
+
+	public boolean hasTimeouted() {
+		long lastCycleDelay = System.currentTimeMillis() - timestamp;
+		int lostCycles = (int) lastCycleDelay / PUBLISH_INTERVAL;
+		CloudDriver.getInstance().getLogger().trace("Node timeout: lost {} cycles ({}ms)", lostCycles, lastCycleDelay);
+		return lostCycles >= CYCLE_TIMEOUT;
 	}
 
 	@Override
