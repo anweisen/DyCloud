@@ -36,7 +36,7 @@ public final class CloudProxyModule extends CloudModule {
 					Collections.singletonList(new ProxyTabListEntryConfig(
 						Arrays.asList(
 							"§7                                                              ",
-							"§e§lMinecraftCloud §8» §7Dockerize your network",
+							"§e§lMinecraftCloud §8⏹ §7Dockerize your network",
 							"§8§l► §a{players.online} §7/ §c{players.max} §8§l┃ §7Server §8» §e{service} §8§l◄",
 							"§7"
 						),
