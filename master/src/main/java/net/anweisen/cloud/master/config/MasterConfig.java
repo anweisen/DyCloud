@@ -66,7 +66,7 @@ public final class MasterConfig implements DriverConfig, LoggingApiUser {
 			else
 				type.setStartPort(startPorts.getInt(type.name()));
 
-			extended("Startport for {} = {}", type, type.getStartPort());
+			extended("=> Startport for {} = {}", type, type.getStartPort());
 		}
 
 		document.save();
