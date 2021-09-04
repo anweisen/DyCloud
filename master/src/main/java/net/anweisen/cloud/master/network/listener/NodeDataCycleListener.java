@@ -20,8 +20,8 @@ public class NodeDataCycleListener implements PacketListener, LoggingApiUser {
 	public void handlePacket(@Nonnull SocketChannel channel, @Nonnull Packet packet) throws Exception {
 		NodeCycleData data = packet.getBuffer().readObject(NodeCycleData.class);
 		NodeServer node = CloudMaster.getInstance().getNodeManager().getNodeServer(channel);
-		node.setLastCycleData(data);
 		debug("{} -> {}", node, data);
+		node.setLastCycleData(data);
 	}
 
 }
