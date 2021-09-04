@@ -39,6 +39,8 @@ public interface CloudPlayer extends CloudOfflinePlayer {
 
 	void setCurrentServer(@Nonnull ServiceInfo server);
 
+	long getJoinTime();
+
 	boolean isOnline();
 
 	void setOnline(boolean online);

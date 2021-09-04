@@ -27,6 +27,7 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 	private ServiceInfo proxy;
 	private PlayerServerConnectionData serverConnection;
 	private ServiceInfo server;
+	private long joinTime;
 	private boolean online = true;
 
 	private DefaultCloudPlayer() {
@@ -36,6 +37,7 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 		this.offlinePlayer = (DefaultCloudOfflinePlayer) offlinePlayer;
 		this.proxyConnection = connection;
 		this.proxy = proxy;
+		this.joinTime = System.currentTimeMillis();
 	}
 
 	@Override
@@ -45,6 +47,7 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 		buffer.writeObject(proxy);
 		buffer.writeOptionalObject(serverConnection);
 		buffer.writeOptionalObject(server);
+		buffer.writeLong(joinTime);
 		buffer.writeBoolean(online);
 	}
 
@@ -56,6 +59,7 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 		serverConnection = buffer.readOptionalObject(PlayerServerConnectionData.class);
 		server = buffer.readOptionalObject(ServiceInfo.class);
 		online = buffer.readBoolean();
+		joinTime = buffer.readLong();
 	}
 
 	@Nonnull
@@ -151,6 +155,11 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 	@Override
 	public void setCurrentServer(@Nonnull ServiceInfo server) {
 		this.server = server;
+	}
+
+	@Override
+	public long getJoinTime() {
+		return joinTime;
 	}
 
 	@Override
