@@ -1,5 +1,6 @@
 package net.anweisen.cloud.modules.perms.bukkit;
 
+import net.anweisen.cloud.driver.player.permission.Permissions;
 import net.anweisen.utilities.common.misc.ReflectionUtils;
 import org.bukkit.entity.Player;
 
@@ -22,7 +23,7 @@ public class BukkitCloudPermsHelper {
 			ex.printStackTrace();
 		}
 
-		if (player.hasPermission("cloud.auto.op"))
+		if (player.hasPermission(Permissions.AUTO_OP))
 			player.setOp(true);
 	}
 
