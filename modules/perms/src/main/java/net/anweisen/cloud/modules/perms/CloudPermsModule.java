@@ -11,9 +11,8 @@ public final class CloudPermsModule extends CloudModule {
 
 	@Override
 	protected void onLoad() {
-		if (getEnabled(true)) {
-			getDriver().setPermissionManager(new CloudPermissionManager());
-		}
+		if (!getEnabled(true)) return;
+		getDriver().setPermissionManager(new CloudPermissionManager());
 	}
 
 }

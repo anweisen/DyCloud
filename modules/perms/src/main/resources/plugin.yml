@@ -2,6 +2,6 @@ name: Cloud-Perms
 author: anweisen
 version: 1.0
 main: net.anweisen.cloud.modules.perms.bukkit.BukkitCloudPermsPlugin
-description: Runtime module to enable to use of an integrated permission system
+description: Runtime module to enable the use of an integrated permission system
 website: https://github.com/anweisen/MinecraftCloud
 api-version: 1.13

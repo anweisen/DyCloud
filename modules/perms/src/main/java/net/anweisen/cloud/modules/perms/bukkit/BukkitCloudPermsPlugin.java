@@ -9,7 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class BukkitCloudPermsPlugin extends JavaPlugin {
+public final class BukkitCloudPermsPlugin extends JavaPlugin {
 
 	@Override
 	public void onEnable() {

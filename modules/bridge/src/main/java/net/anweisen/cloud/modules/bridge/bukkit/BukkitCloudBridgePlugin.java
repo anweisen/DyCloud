@@ -12,7 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class BukkitCloudBridgePlugin extends JavaPlugin {
+public final class BukkitCloudBridgePlugin extends JavaPlugin {
 
 	private static BukkitCloudBridgePlugin instance;
 

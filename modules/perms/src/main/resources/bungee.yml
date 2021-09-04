@@ -2,4 +2,4 @@ name: Cloud-Perms
 author: anweisen
 version: 1.0
 main: net.anweisen.cloud.modules.perms.bungee.BungeeCloudPermsPlugin
-description: Runtime module to enable to use of an integrated permission system
+description: Runtime module to enable the use of an integrated permission system

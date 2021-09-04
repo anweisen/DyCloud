@@ -8,7 +8,7 @@ import net.md_5.bungee.api.plugin.Plugin;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class BungeeCloudPermsPlugin extends Plugin {
+public final class BungeeCloudPermsPlugin extends Plugin {
 
 	@Override
 	public void onEnable() {

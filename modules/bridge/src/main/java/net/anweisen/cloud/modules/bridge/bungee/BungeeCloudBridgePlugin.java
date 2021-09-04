@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class BungeeCloudBridgePlugin extends Plugin implements LoggingApiUser {
+public final class BungeeCloudBridgePlugin extends Plugin implements LoggingApiUser {
 
 	private static BungeeCloudBridgePlugin instance;
 
