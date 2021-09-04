@@ -23,7 +23,7 @@ public interface SocketChannelHandler {
 	 *
 	 * @param channel the providing channel on that this handler is sets on this
 	 * @param packet the packet, that was received from the remote component
-	 * @return whether the packet that was received is allowed to handle from the packet listeners at the packetListenerRegistry
+	 * @return whether the received packet is allowed to be handled by the {@link net.anweisen.cloud.driver.network.packet.PacketListenerRegistry}
 	 */
 	boolean handlePacketReceive(@Nonnull SocketChannel channel, @Nonnull Packet packet) throws Exception;
 

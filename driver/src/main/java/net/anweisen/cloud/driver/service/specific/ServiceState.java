@@ -3,12 +3,14 @@ package net.anweisen.cloud.driver.service.specific;
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
+ *
+ * @see ServiceInfo#getState()
  */
 public enum ServiceState {
 
 	/**
 	 * The request to create this service was sent
-	 * The service is being prepared..
+	 * The service is being prepared/created and is in {@link ServiceControlState#CREATING}..
 	 */
 	DEFINED,
 
@@ -23,7 +25,7 @@ public enum ServiceState {
 	RUNNING,
 
 	/**
-	 * The service was stopped and may be restarted at some point
+	 * The service was stopped and may be started again at some point
 	 */
 	STOPPED,
 

@@ -1,15 +1,10 @@
 package net.anweisen.cloud.driver.service.specific;
 
-import net.anweisen.cloud.driver.service.config.ServiceTask;
-
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  *
- * @see ServiceEnvironment
- *
- * @see ServiceTask#getEnvironment()
- * @see ServiceInfo#getEnvironment()
+ * @see ServiceEnvironment#getServiceType()
  */
 public enum ServiceType {
 
