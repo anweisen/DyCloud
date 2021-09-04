@@ -1,6 +1,5 @@
 package net.anweisen.cloud.driver.console.handler;
 
-import net.anweisen.utilities.common.logging.LogLevel;
 import net.anweisen.utilities.common.logging.handler.LogEntry;
 import net.anweisen.utilities.common.logging.handler.LogHandler;
 import net.anweisen.utilities.common.misc.FileUtils;
@@ -43,7 +42,7 @@ public class FileLogHandler implements LogHandler {
 
 	@Override
 	public void handle(@Nonnull LogEntry entry) throws Exception {
-		if (entry.getLevel() == LogLevel.ERROR) {
+		if (entry.getLevel().isColorized()) {
 			write(initStream(errorFile), entry);
 		}
 		write(initStream(outFile), entry);
@@ -51,6 +50,7 @@ public class FileLogHandler implements LogHandler {
 
 	@Nonnull
 	private OutputStream initStream(@Nonnull Path file) throws IOException {
+		if (!Files.exists(directory)) FileUtils.createDirectory(directory);
 		return Files.newOutputStream(file, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 	}
 
