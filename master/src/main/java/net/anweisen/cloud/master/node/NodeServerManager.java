@@ -13,6 +13,10 @@ import java.util.Collection;
  */
 public interface NodeServerManager extends NodeManager {
 
+	void registerNode(@Nonnull NodeServer node);
+
+	void unregisterNode(@Nonnull NodeServer node);
+
 	@Nonnull
 	Collection<NodeServer> getNodeServers();
 

@@ -7,6 +7,7 @@ import net.anweisen.cloud.driver.node.NodeInfo;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -20,10 +21,20 @@ public class DefaultNodeServerManager extends DefaultNodeManager implements Node
 
 	private final Set<NodeServer> servers = new CopyOnWriteArraySet<>();
 
+	@Override
+	public void registerNode(@Nonnull NodeServer node) {
+		servers.add(node);
+	}
+
+	@Override
+	public void unregisterNode(@Nonnull NodeServer node) {
+		servers.remove(node);
+	}
+
 	@Nonnull
 	@Override
 	public Collection<NodeServer> getNodeServers() {
-		return servers;
+		return Collections.unmodifiableCollection(servers);
 	}
 
 	@Nullable

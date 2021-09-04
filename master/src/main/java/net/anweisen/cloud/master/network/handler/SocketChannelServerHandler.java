@@ -82,7 +82,7 @@ public class SocketChannelServerHandler implements SocketChannelHandler {
 			cloud.getLogger().warn("Node '{}' has disconnected", node.getInfo().getName());
 			cloud.publishUpdate(NodePublishType.DISCONNECTED, node.getInfo());
 			cloud.getNodeManager().handleNodeUpdate(NodePublishType.DISCONNECTED, node.getInfo());
-			cloud.getNodeManager().getNodeServers().remove(node);
+			cloud.getNodeManager().unregisterNode(node);
 			return;
 		}
 

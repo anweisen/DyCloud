@@ -63,7 +63,7 @@ public class AuthenticationListener implements PacketListener {
 
 				NodeInfo info = new NodeInfo(name, channel.getClientAddress(), buffer.readStringCollection(), buffer.readString());
 				NodeServer server = new DefaultNodeServer(info, channel);
-				cloud.getNodeManager().getNodeServers().add(server);
+				cloud.getNodeManager().registerNode(server);
 
 				cloud.getLogger().extended("Subnet ips for {}: {}", name, info.getSubnetIps());
 				cloud.getLogger().extended("Gateway ip for {}: {}", name, info.getGatewayIp());
