@@ -6,6 +6,7 @@ import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 /**
  * Triggered by {@link PlayerEventType#SERVER_DISCONNECT}
@@ -15,8 +16,25 @@ import javax.annotation.Nullable;
  */
 public class PlayerServerDisconnectEvent extends PlayerServerEvent {
 
-	public PlayerServerDisconnectEvent(@Nullable CloudPlayer player, @Nonnull ServiceInfo service) {
+	protected final String name;
+	protected final UUID uuid;
+
+	public PlayerServerDisconnectEvent(@Nullable CloudPlayer player, @Nonnull ServiceInfo service, @Nonnull String name, @Nonnull UUID uuid) {
 		super(player, service);
+		this.name = name;
+		this.uuid = uuid;
+	}
+
+	@Nonnull
+	@Override
+	public String getPlayerName() {
+		return name;
+	}
+
+	@Nonnull
+	@Override
+	public UUID getPlayerUniqueId() {
+		return uuid;
 	}
 
 	/**
