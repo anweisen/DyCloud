@@ -35,7 +35,7 @@ public class BungeeCloudProxyManager extends AbstractCloudProxyManager {
 	@Nonnull
 	public String replace(@Nonnull String content, @Nonnull ProxiedPlayer player) {
 		return replaceDefault(content, player.getUniqueId())
-			.replace("{service}", player.getServer().getInfo().getName())
+			.replace("{service}", player.getServer() == null ? "N/A" : player.getServer().getInfo().getName())
 			.replace("{proxy}", CloudWrapper.getInstance().getServiceInfo().getName())
 			.replace("{node}", CloudWrapper.getInstance().getServiceInfo().getNodeName())
 			.replace("{name}", player.getName())
