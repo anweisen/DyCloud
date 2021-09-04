@@ -2,6 +2,7 @@ package net.anweisen.cloud.modules.bridge.bungee.listener;
 
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
+import net.anweisen.cloud.driver.event.player.PlayerProxyLoginRequestEvent;
 import net.anweisen.cloud.driver.player.CloudPlayer;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.modules.bridge.bungee.BungeeBridgeHelper;
@@ -30,14 +31,16 @@ public class BungeePlayerListener implements Listener, LoggingApiUser {
 	public void onLogin(@Nonnull LoginEvent event) {
 		Tuple<CloudPlayer, String> response = BridgeHelper.sendProxyLoginRequestPacket(BungeeBridgeHelper.createPlayerConnection(event.getConnection()));
 
-		CloudPlayer player = response.getFirst();
-		CloudDriver.getInstance().getPlayerManager().registerPlayer(player);
-
 		String kickReason = response.getSecond();
 		if (kickReason != null) {
 			event.setCancelled(true);
 			event.setCancelReason(TextComponent.fromLegacyText(kickReason));
+			return;
 		}
+
+		CloudPlayer player = response.getFirst();
+		CloudDriver.getInstance().getPlayerManager().registerPlayer(player);
+		CloudDriver.getInstance().getEventManager().callEvent(new PlayerProxyLoginRequestEvent(player));
 	}
 
 	@EventHandler
