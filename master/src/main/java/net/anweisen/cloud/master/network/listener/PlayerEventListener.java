@@ -6,13 +6,16 @@ import net.anweisen.cloud.driver.event.player.*;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
+import net.anweisen.cloud.driver.network.packet.def.PlayerEventPacket;
 import net.anweisen.cloud.driver.network.packet.def.PlayerEventPacket.PlayerEventType;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
+import net.anweisen.cloud.driver.player.CloudOfflinePlayer;
 import net.anweisen.cloud.driver.player.CloudPlayer;
 import net.anweisen.cloud.driver.player.data.PlayerProxyConnectionData;
 import net.anweisen.cloud.driver.player.data.PlayerServerConnectionData;
 import net.anweisen.cloud.driver.player.data.UnspecifiedPlayerConnectionData;
+import net.anweisen.cloud.driver.player.permission.Permissions;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.driver.service.specific.ServiceType;
 import net.anweisen.cloud.master.CloudMaster;
@@ -44,25 +47,36 @@ public class PlayerEventListener implements PacketListener, LoggingApiUser {
 
 			switch (type) {
 				case PROXY_LOGIN_REQUEST: {
-					info("Player[name={} uuid={}] requested to login on Proxy '{}'", playerConnection.getName(), playerConnection.getUniqueId(), serviceInfo.getName());
+					info("Player[name={} uuid={}] requested to login on proxy '{}'", playerConnection.getName(), playerConnection.getUniqueId(), serviceInfo.getName());
 					CloudPlayer player = cloud.getPlayerManager().getOnlinePlayerByUniqueId(playerConnection.getUniqueId());
 					final String reason;
 					if (player != null) {
 						debug("Player[name={} uuid={}] is already connected to the network!", playerConnection.getName(), playerConnection.getUniqueId());
 						reason = "§cAlready connected to the network";
 					} else {
-						player = cloud.getPlayerManager().registerOnlinePlayer(playerConnection, serviceInfo);
-						PlayerProxyLoginRequestEvent event = cloud.getEventManager().callEvent(new PlayerProxyLoginRequestEvent(player));
-						reason = event.isCancelled() ? (event.getCancelledReason() != null ? event.getCancelledReason() : "§cNo kick reason given") : null;
+						CloudOfflinePlayer offlinePlayer = cloud.getPlayerManager().getOrCreateOfflinePlayer(playerConnection);
+						if (cloud.getGlobalConfig().getMaintenance() && !offlinePlayer.getPermissionPlayer().hasPermission(Permissions.JOIN_MAINTENANCE)) {
+							reason = "§cThe network is currently in maintenance";
+						} else if (cloud.getGlobalConfig().getMaxPlayers() > 0 && cloud.getPlayerManager().getOnlinePlayerCount() >= cloud.getGlobalConfig().getMaxPlayers() && !offlinePlayer.getPermissionPlayer().hasPermission(Permissions.JOIN_FULL)) {
+							reason = "§cThe network is currently full";
+						} else {
+							player = cloud.getPlayerManager().registerOnlinePlayer(offlinePlayer, serviceInfo);
+							PlayerProxyLoginRequestEvent event = cloud.getEventManager().callEvent(new PlayerProxyLoginRequestEvent(player));
+							reason = event.isCancelled() ? (event.getCancelledReason() != null ? event.getCancelledReason() : "§cNo kick reason given") : null;
+						}
 					}
 
-					channel.sendPacket(Packet.createResponseFor(packet, Buffer.create().writeObject((SerializableObject) player).writeOptionalString(reason)));
+					channel.sendPacket(Packet.createResponseFor(packet, Buffer.create().writeOptionalObject((SerializableObject) player).writeOptionalString(reason)));
+					if (player != null) {
+						cloud.getSocketComponent().sendPacket(new PlayerEventPacket(type, (SerializableObject) player), channel);
+					}
 					break;
 				}
 				case PROXY_LOGIN_SUCCESS: {
 					info("Player[name={} uuid={}] successfully joined the network on '{}'", playerConnection.getName(), playerConnection.getUniqueId(), serviceInfo.getName());
 					CloudPlayer player = findPlayer(playerConnection);
 					cloud.getEventManager().callEvent(new PlayerProxyLoginSuccessEvent(player));
+					cloud.getSocketComponent().sendPacket(new PlayerEventPacket(type, player.getUniqueId()));
 					break;
 				}
 				case PROXY_SERVER_CONNECT_REQUEST: {
@@ -70,6 +84,7 @@ public class PlayerEventListener implements PacketListener, LoggingApiUser {
 					info("Player[name={} uuid={}] requested to connect to the Minecraftserver '{}' on '{}'", playerConnection.getName(), playerConnection.getUniqueId(), target.getName(), serviceInfo.getName());
 					CloudPlayer player = findPlayer(playerConnection);
 					cloud.getEventManager().callEvent(new PlayerProxyServerConnectRequestEvent(player, target));
+					cloud.getSocketComponent().sendPacket(new PlayerEventPacket(type, player.getUniqueId(), target.getUniqueId()));
 					break;
 				}
 				case PROXY_SERVER_SWITCH: {
@@ -79,6 +94,7 @@ public class PlayerEventListener implements PacketListener, LoggingApiUser {
 					CloudPlayer player = findPlayer(playerConnection);
 					player.setCurrentServer(to);
 					cloud.getEventManager().callEvent(new PlayerProxyServerSwitchEvent(player, from, to));
+					cloud.getSocketComponent().sendPacket(new PlayerEventPacket(type, player.getUniqueId(), from.getUniqueId(), to.getUniqueId()));
 					break;
 				}
 				case PROXY_DISCONNECT: {
@@ -86,8 +102,9 @@ public class PlayerEventListener implements PacketListener, LoggingApiUser {
 					CloudPlayer player = findPlayer(playerConnection);
 					player.setOnline(false);
 					player.setLastOnlineTime(System.currentTimeMillis());
-					cloud.getPlayerManager().unregisterOnlinePlayer(player);
+					cloud.getPlayerManager().unregisterPlayer(player.getUniqueId());
 					cloud.getEventManager().callEvent(new PlayerProxyDisconnectEvent(player));
+					cloud.getSocketComponent().sendPacket(new PlayerEventPacket(type, player.getUniqueId()));
 					player.save();
 					break;
 				}
@@ -100,17 +117,20 @@ public class PlayerEventListener implements PacketListener, LoggingApiUser {
 				case SERVER_LOGIN_REQUEST: {
 					CloudPlayer player = findPlayer(playerConnection);
 					cloud.getEventManager().callEvent(new PlayerServerLoginRequestEvent(player, serviceInfo));
+					cloud.getSocketComponent().sendPacket(new PlayerEventPacket(type, player.getUniqueId(), serviceInfo.getUniqueId()));
 					break;
 				}
 				case SERVER_LOGIN_SUCCESS: {
 					CloudPlayer player = findPlayer(playerConnection);
 					player.setServerConnectionData(playerConnection);
 					cloud.getEventManager().callEvent(new PlayerServerLoginSuccessEvent(player, serviceInfo));
+					cloud.getSocketComponent().sendPacket(new PlayerEventPacket(type, player.getUniqueId(), serviceInfo.getUniqueId(), playerConnection));
 					break;
 				}
 				case SERVER_DISCONNECT: {
 					CloudPlayer player = cloud.getPlayerManager().getOnlinePlayerByUniqueId(playerConnection.getUniqueId());
-					cloud.getEventManager().callEvent(new PlayerServerDisconnectEvent(player, serviceInfo));
+					cloud.getEventManager().callEvent(new PlayerServerDisconnectEvent(player, serviceInfo, playerConnection.getName(), playerConnection.getUniqueId()));
+					cloud.getSocketComponent().sendPacket(new PlayerEventPacket(type, playerConnection.getUniqueId(), playerConnection.getName(), serviceInfo.getUniqueId()));
 					break;
 				}
 			}
