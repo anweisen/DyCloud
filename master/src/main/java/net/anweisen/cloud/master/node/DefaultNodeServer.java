@@ -57,7 +57,7 @@ public class DefaultNodeServer implements NodeServer {
 
 	@Override
 	public boolean isAvailable() {
-		return cycleData != null;
+		return cycleData != null && !cycleData.hasTimeouted();
 	}
 
 	@Nonnull
@@ -74,6 +74,6 @@ public class DefaultNodeServer implements NodeServer {
 
 	@Override
 	public String toString() {
-		return "NodeServer[name=" + info.getName() + " address=" + info.getAddress() + (!isAvailable() ? " available=false" : "") + "]";
+		return "NodeServer[name=" + info.getName() + " address=" + info.getAddress() + (!isAvailable() ? " available=false" : "") + " data=" + cycleData + "]";
 	}
 }
