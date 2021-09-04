@@ -85,12 +85,9 @@ public class MasterServiceManager extends DefaultServiceManager implements Cloud
 
 	@Override
 	protected void updateServiceInfoInternally(@Nonnull ServiceInfo newServiceInfo) {
-		services.stream()
-			.filter(service -> service.getInfo().getUniqueId().equals(newServiceInfo.getUniqueId()))
-			.findFirst()
-			.ifPresent(service -> service.setInfo(newServiceInfo));
+		CloudService service = getServiceByUniqueId(newServiceInfo.getUniqueId());
+		if (service != null) service.setInfo(newServiceInfo);
 	}
-
 
 	@Override
 	protected void unregisterServiceInfoInternally(@Nonnull ServiceInfo serviceInfo) {

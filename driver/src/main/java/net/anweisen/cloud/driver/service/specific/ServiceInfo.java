@@ -21,6 +21,9 @@ import java.util.UUID;
  */
 public final class ServiceInfo implements SerializableObject {
 
+	public static final int PUBLISH_INTERVAL = 60_000; // publish every minute
+	public static final int CYCLE_TIMEOUT = 2; // service times out after 2 minutes
+
 	private UUID uniqueId;
 	private String dockerContainerId;
 
@@ -29,13 +32,16 @@ public final class ServiceInfo implements SerializableObject {
 
 	private ServiceEnvironment environment;
 	private ServiceState state;
+	private ServiceControlState controlState;
 	private boolean ready;
 
 	private String nodeName;
 	private String nodeAddress;
 
 	private int port;
-	private boolean staticService;
+	private boolean permanent;
+
+	private long timestamp;
 
 	private Document properties;
 
@@ -43,18 +49,21 @@ public final class ServiceInfo implements SerializableObject {
 	}
 
 	public ServiceInfo(@Nonnull UUID uniqueId, @Nullable String dockerContainerId, @Nonnull String taskName, @Nonnegative int serviceNumber, @Nonnull ServiceEnvironment environment,
-	                   @Nonnull ServiceState state, @Nonnull String nodeName, @Nonnull String nodeAddress, int port, boolean staticService, @Nonnull Document properties) {
+	                   @Nonnull ServiceState state, @Nonnull ServiceControlState controlState, @Nonnull String nodeName, @Nonnull String nodeAddress, int port, boolean permanent,
+	                   @Nonnull Document properties) {
 		this.uniqueId = uniqueId;
 		this.dockerContainerId = dockerContainerId;
 		this.taskName = taskName;
 		this.serviceNumber = serviceNumber;
 		this.environment = environment;
 		this.state = state;
+		this.controlState = controlState;
 		this.nodeName = nodeName;
 		this.nodeAddress = nodeAddress;
 		this.port = port;
-		this.staticService = staticService;
+		this.permanent = permanent;
 		this.properties = properties;
+		this.timestamp = System.currentTimeMillis();
 	}
 
 	@Override
@@ -65,11 +74,13 @@ public final class ServiceInfo implements SerializableObject {
 		buffer.writeString(nodeName);
 		buffer.writeString(nodeAddress);
 		buffer.writeEnumConstant(state);
+		buffer.writeEnumConstant(controlState);
 		buffer.writeBoolean(ready);
 		buffer.writeEnumConstant(environment);
 		buffer.writeInt(port);
-		buffer.writeBoolean(staticService);
+		buffer.writeBoolean(permanent);
 		buffer.writeDocument(properties);
+		buffer.writeLong(timestamp);
 	}
 
 	@Override
@@ -80,11 +91,13 @@ public final class ServiceInfo implements SerializableObject {
 		nodeName = buffer.readString();
 		nodeAddress = buffer.readString();
 		state = buffer.readEnumConstant(ServiceState.class);
+		controlState = buffer.readEnumConstant(ServiceControlState.class);
 		ready = buffer.readBoolean();
 		environment = buffer.readEnumConstant(ServiceEnvironment.class);
 		port = buffer.readInt();
-		staticService = buffer.readBoolean();
+		permanent = buffer.readBoolean();
 		properties = buffer.readDocument();
+		timestamp = buffer.readLong();
 	}
 
 	@Nonnull
@@ -132,6 +145,11 @@ public final class ServiceInfo implements SerializableObject {
 		return state;
 	}
 
+	@Nonnull
+	public ServiceControlState getControlState() {
+		return controlState;
+	}
+
 	public boolean isReady() {
 		return state == ServiceState.RUNNING && ready;
 	}
@@ -145,13 +163,17 @@ public final class ServiceInfo implements SerializableObject {
 		return port;
 	}
 
-	public boolean isStatic() {
-		return staticService;
+	public boolean isPermanent() {
+		return permanent;
 	}
 
 	@Nonnull
 	public Document getProperties() {
 		return properties;
+	}
+
+	public long getTimestamp() {
+		return timestamp;
 	}
 
 	public <T> T get(@Nonnull ServiceProperty<T> property) {
@@ -189,6 +211,11 @@ public final class ServiceInfo implements SerializableObject {
 		this.state = state;
 	}
 
+	public void setControlState(@Nonnull ServiceControlState controlState) {
+		Preconditions.checkNotNull(controlState, "The given control state cannot be null");
+		this.controlState = controlState;
+	}
+
 	public void setReady() {
 		Preconditions.checkArgument(state == ServiceState.RUNNING, "Cannot set service ready when not in State.RUNNING");
 		this.ready = true;
@@ -196,7 +223,8 @@ public final class ServiceInfo implements SerializableObject {
 
 	@Override
 	public String toString() {
-		return "Service[name=" + getName() + " node=" + nodeName + " port=" + port + " state=" + state + (state == ServiceState.RUNNING ? ":" + (ready ? "ready" : "unready") : "") + "]";
+		return "Service[name=" + getName() + " node=" + nodeName + " port=" + port
+					+ " state=" + state + (state == ServiceState.RUNNING ? ":" + (ready ? "ready" : "unready") : "") + (controlState != ServiceControlState.NONE ? "->" + controlState : "") + "]";
 	}
 
 	@Override
@@ -207,9 +235,10 @@ public final class ServiceInfo implements SerializableObject {
 		return serviceNumber == that.serviceNumber
 			&& ready == that.ready
 			&& port == that.port
-			&& staticService == that.staticService
+			&& permanent == that.permanent
 			&& environment == that.environment
 			&& state == that.state
+			&& controlState == that.controlState
 			&& Objects.equals(uniqueId, that.uniqueId)
 			&& Objects.equals(dockerContainerId, that.dockerContainerId)
 			&& Objects.equals(taskName, that.taskName)
@@ -227,6 +256,6 @@ public final class ServiceInfo implements SerializableObject {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(uniqueId, dockerContainerId, taskName, serviceNumber, environment, state, ready, nodeName, nodeAddress, port, staticService, properties);
+		return Objects.hash(uniqueId, dockerContainerId, taskName, serviceNumber, environment, state, controlState, ready, nodeName, nodeAddress, port, permanent, properties);
 	}
 }

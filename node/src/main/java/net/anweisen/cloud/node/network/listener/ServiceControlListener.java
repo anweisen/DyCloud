@@ -11,6 +11,7 @@ import net.anweisen.cloud.driver.network.packet.def.ServiceControlPacket.Service
 import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.ServicePublishType;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.service.config.ServiceTask;
+import net.anweisen.cloud.driver.service.specific.ServiceControlState;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.driver.service.specific.ServiceState;
 import net.anweisen.cloud.node.CloudNode;
@@ -48,15 +49,16 @@ public class ServiceControlListener implements PacketListener, LoggingApiUser {
 	    }
 
 		UUID uuid = buffer.readUUID();
-		ServiceInfo service = cloud.getServiceManager().getServiceInfoByUUID(uuid);
+		ServiceInfo service = cloud.getServiceManager().getServiceInfoByUniqueId(uuid);
 		debug("{} -> {}", type, service);
 		Preconditions.checkNotNull(service, "Service for action " + type + " is null (" + uuid + ")");
 		ServiceTask task = service.findTask();
-		Preconditions.checkNotNull(task, "ServiceTask of service for action " + type + " is null (" + service.getTaskName() + ")");
-		Preconditions.checkNotNull(service.getDockerContainerId(), "Docker container id of service for action is null");
+		Preconditions.checkNotNull(task, "ServiceTask of service " + service.getName() + " for action " + type + " is null (" + service.getTaskName() + ")");
+		Preconditions.checkNotNull(service.getDockerContainerId(), "Docker container id of service " + service.getName() + " for action " + type + " is null");
 
 		try {
 			doServiceAction(service, type, actor);
+			service.setControlState(ServiceControlState.NONE);
 			service.setState(getServiceState(type));
 			cloud.publishUpdate(getPublishType(type), service);
 		} catch (DockerException ex) {

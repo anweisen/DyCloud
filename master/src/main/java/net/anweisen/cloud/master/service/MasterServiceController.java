@@ -3,6 +3,8 @@ package net.anweisen.cloud.master.service;
 import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.network.packet.def.ServiceControlPacket;
 import net.anweisen.cloud.driver.network.packet.def.ServiceControlPacket.ServiceControlType;
+import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.ServicePublishType;
+import net.anweisen.cloud.driver.service.specific.ServiceControlState;
 import net.anweisen.cloud.driver.service.specific.ServiceController;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.master.CloudMaster;
@@ -33,36 +35,39 @@ public class MasterServiceController implements ServiceController {
 	@Nonnull
 	@Override
 	public Task<Void> startAsync() {
-		return sendPacket(ServiceControlType.START);
+		return executeAction(ServiceControlType.START, ServiceControlState.STARTING);
 	}
 
 	@Nonnull
 	@Override
 	public Task<Void> stopAsync() {
-		return sendPacket(ServiceControlType.STOP);
+		return executeAction(ServiceControlType.STOP, ServiceControlState.STOPPING);
 	}
 
 	@Nonnull
 	@Override
 	public Task<Void> restartAsync() {
-		return sendPacket(ServiceControlType.RESTART);
+		return executeAction(ServiceControlType.RESTART, ServiceControlState.RESTARTING);
 	}
 
 	@Nonnull
 	@Override
 	public Task<Void> killAsync() {
-		return sendPacket(ServiceControlType.KILL);
+		return executeAction(ServiceControlType.KILL, ServiceControlState.KILLING);
 	}
 
 	@Nonnull
 	@Override
 	public Task<Void> deleteAsync() {
-		return sendPacket(ServiceControlType.DELETE);
+		return executeAction(ServiceControlType.DELETE, ServiceControlState.DELETING);
 	}
 
 	@Nonnull
-	private Task<Void> sendPacket(@Nonnull ServiceControlType type) {
+	private Task<Void> executeAction(@Nonnull ServiceControlType type, @Nonnull ServiceControlState state) {
+		service.getInfo().setControlState(state);
+		CloudMaster.getInstance().publishUpdate(ServicePublishType.UPDATE, service.getInfo());
 		NodeServer nodeServer = CloudMaster.getInstance().getNodeManager().getNodeServer(service.getInfo().getNodeName());
+		CloudMaster.getInstance().getLogger().debug("=> {}:{} -> {} -> {}", type, state, service, nodeServer);
 		Preconditions.checkNotNull(nodeServer, "NodeServer of service is null");
 		Preconditions.checkNotNull(nodeServer.getChannel(), "SocketChannel of NodeServer of service is null");
 		return nodeServer.getChannel().sendQueryAsync(new ServiceControlPacket(type, service.getInfo().getUniqueId())).mapVoid();

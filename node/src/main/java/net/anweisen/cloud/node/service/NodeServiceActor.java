@@ -13,6 +13,7 @@ import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.Ser
 import net.anweisen.cloud.driver.service.config.ServiceTask;
 import net.anweisen.cloud.driver.service.config.ServiceTemplate;
 import net.anweisen.cloud.driver.service.config.TemplateStorage;
+import net.anweisen.cloud.driver.service.specific.ServiceControlState;
 import net.anweisen.cloud.driver.service.specific.ServiceEnvironment;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.driver.service.specific.ServiceState;
@@ -58,7 +59,7 @@ public class NodeServiceActor implements LoggingApiUser {
 	}
 
 	public void deleteService(@Nonnull ServiceInfo service) {
-		execAction(service, DockerClient::removeConfigCmd);
+		execAction(service, DockerClient::removeContainerCmd);
 	}
 
 	private void execAction(@Nonnull ServiceInfo service, @Nonnull BiFunction<DockerClient, String, SyncDockerCmd<?>> commandCreator) {
@@ -220,6 +221,7 @@ public class NodeServiceActor implements LoggingApiUser {
 		trace("Successfully transferred archives to docker container of {}", info);
 
 		info.setState(ServiceState.PREPARED);
+		info.setControlState(ServiceControlState.NONE);
 		cloud.publishUpdate(ServicePublishType.UPDATE, info);
 
 		FileUtils.delete(tempTemplateDirectory);

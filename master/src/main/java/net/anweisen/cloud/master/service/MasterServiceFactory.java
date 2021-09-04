@@ -5,6 +5,7 @@ import net.anweisen.cloud.driver.network.packet.def.ServiceControlPacket.Service
 import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.ServicePublishType;
 import net.anweisen.cloud.driver.service.ServiceFactory;
 import net.anweisen.cloud.driver.service.config.ServiceTask;
+import net.anweisen.cloud.driver.service.specific.ServiceControlState;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.driver.service.specific.ServiceState;
 import net.anweisen.cloud.master.CloudMaster;
@@ -74,7 +75,7 @@ public class MasterServiceFactory implements ServiceFactory {
 		int port = getNextFreePort(node, task);
 		ServiceInfo info = new ServiceInfo(
 				UUID.randomUUID(), null, task.getName(), servicesRunning + 1, task.getEnvironment(),
-				ServiceState.DEFINED, node.getInfo().getName(), node.getInfo().getAddress().getHost(), port, true, Document.create()
+				ServiceState.DEFINED, ServiceControlState.CREATING, node.getInfo().getName(), node.getInfo().getAddress().getHost(), port, true, Document.create()
 		);
 		cloud.publishUpdate(ServicePublishType.REGISTER, info, node.getChannel());
 		cloud.getServiceManager().handleServiceUpdate(ServicePublishType.REGISTER, info);
