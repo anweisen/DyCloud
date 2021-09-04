@@ -8,6 +8,7 @@ import net.anweisen.cloud.driver.event.service.ServiceStoppedEvent;
 import net.anweisen.cloud.driver.player.CloudPlayer;
 import net.anweisen.cloud.driver.player.chat.ChatText;
 import net.anweisen.cloud.driver.player.chat.ChatClickEvent;
+import net.anweisen.cloud.driver.player.permission.Permissions;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.modules.notify.CloudNotifyModule;
 
@@ -18,8 +19,6 @@ import javax.annotation.Nonnull;
  * @since 1.0
  */
 public class ServiceStatusListener {
-
-	private static final String permission = "cloud.notify";
 
 	@EventListener
 	public void onServiceRegistered(@Nonnull ServiceRegisteredEvent event) {
@@ -44,7 +43,7 @@ public class ServiceStatusListener {
 		.addHover(CloudNotifyModule.getInstance().getNotifyConfig().getHoverMessage());
 
 		for (CloudPlayer player : CloudDriver.getInstance().getPlayerManager().getOnlinePlayers()) {
-			player.getExecutor().sendMessage(permission, text);
+			player.getExecutor().sendMessage(Permissions.NOTIFY, text);
 		}
 
 	}

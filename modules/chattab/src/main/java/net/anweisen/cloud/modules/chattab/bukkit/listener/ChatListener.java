@@ -1,5 +1,6 @@
 package net.anweisen.cloud.modules.chattab.bukkit.listener;
 
+import net.anweisen.cloud.driver.player.permission.Permissions;
 import net.anweisen.cloud.modules.chattab.bukkit.BukkitCloudChatTabPlugin;
 import net.anweisen.cloud.modules.chattab.bukkit.handler.ChatHandler;
 import org.bukkit.ChatColor;
@@ -21,7 +22,7 @@ public class ChatListener implements Listener {
 		if (handler == null) return;
 
 		String message = event.getMessage().replace("%", "%%").trim();
-		if (event.getPlayer().hasPermission("cloud.chat.color")) {
+		if (event.getPlayer().hasPermission(Permissions.CHAT_COLORS)) {
 			message = ChatColor.translateAlternateColorCodes('&', message);
 		}
 
