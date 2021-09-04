@@ -44,15 +44,15 @@ public class JLine3Console implements Console {
 		} catch (Throwable ignored) {
 		}
 
-		this.terminal = TerminalBuilder.builder().system(true).encoding(StandardCharsets.UTF_8).build();
-		this.lineReader = new InternalLineReaderBuilder(this.terminal)
+		terminal = TerminalBuilder.builder().system(true).encoding(StandardCharsets.UTF_8).build();
+		lineReader = new InternalLineReaderBuilder(terminal)
 //			.completer(new JLine3Completer(this))
 			.option(LineReader.Option.DISABLE_EVENT_EXPANSION, true)
 			.variable(LineReader.BELL_STYLE, "off")
 			.build();
 
-		this.resetPrompt();
-		this.consoleReadThread.start();
+		resetPrompt();
+		consoleReadThread.start();
 	}
 
 	@Override
