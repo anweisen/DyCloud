@@ -35,7 +35,7 @@ public abstract class DefaultSocketComponent implements SocketComponent, Logging
 	public void closeChannels() {
 		for (SocketChannel channel : getChannels()) {
 			try {
-				info("Closing Channel[client={} server{}]..", channel.getClientAddress(), channel.getServerAddress());
+				info("Closing Channel[client={} server={}]..", channel.getClientAddress(), channel.getServerAddress());
 				channel.close();
 			} catch (Exception ex) {
 				ex.printStackTrace();
