@@ -21,11 +21,10 @@ public final class PacketConstants {
 	public static final int SERVICE_UPDATE_SELF_INFO_CHANNEL = 7;   // wrapper  -> master
 	public static final int SERVICE_CONTROL_CHANNEL = 8;            // node    <-  master                <- wrapper, node
 	public static final int PLAYER_EVENT_CHANNEL = 9;               // wrapper  -> master
-	public static final int PLAYER_UPDATE_REMOTE_CHANNEL = 10;      // master   -> node, wrapper
-	public static final int PLAYER_EXECUTOR_CHANNEL = 11;           // wrapper <-  master                <- wrapper, node
-	public static final int PLAYER_REMOTE_MANAGER_CHANNEL = 12;     // master  <-| wrapper, node
-	public static final int MODULE_SYSTEM_CHANNEL = 13;             // master  <-| node
-	public static final int GLOBAL_CONFIG_CHANNEL = 14;             // master   -> wrapper, node
+	public static final int PLAYER_EXECUTOR_CHANNEL = 10;           // wrapper <-  master                <- wrapper, node
+	public static final int PLAYER_REMOTE_MANAGER_CHANNEL = 11;     // master  <-| wrapper, node
+	public static final int MODULE_SYSTEM_CHANNEL = 12;             // master  <-| node
+	public static final int GLOBAL_CONFIG_CHANNEL = 13;             // master  <-> wrapper, node
 
 	private static final Map<Integer, String> channelNames = new LinkedHashMap<>();
 	static {
