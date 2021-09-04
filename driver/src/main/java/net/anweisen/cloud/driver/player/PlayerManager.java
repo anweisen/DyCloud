@@ -36,6 +36,8 @@ public interface PlayerManager {
 
 	void registerPlayer(@Nonnull CloudPlayer player);
 
+	void unregisterPlayer(@Nonnull UUID uniqueId);
+
 	long getRegisteredPlayerCount();
 
 	@Nonnull

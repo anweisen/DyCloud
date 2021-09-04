@@ -9,7 +9,6 @@ import net.anweisen.cloud.driver.player.permission.PermissionData;
 import net.anweisen.utilities.common.config.Document;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.UUID;
 
 /**
@@ -80,10 +79,14 @@ public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer, Serializab
 		this.name = name;
 	}
 
-	@Nullable
+	@Nonnull
 	@Override
 	public PlayerProxyConnectionData getLastProxyConnectionData() {
 		return lastNetworkConnection;
+	}
+
+	public void setLastProxyConnectionData(@Nonnull PlayerProxyConnectionData connectionData) {
+		this.lastNetworkConnection = connectionData;
 	}
 
 	@Nonnull

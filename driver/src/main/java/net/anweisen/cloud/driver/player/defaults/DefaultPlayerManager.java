@@ -81,6 +81,11 @@ public abstract class DefaultPlayerManager implements PlayerManager {
 	}
 
 	@Override
+	public void unregisterPlayer(@Nonnull UUID uniqueId) {
+		onlinePlayers.remove(uniqueId);
+	}
+
+	@Override
 	public long getRegisteredPlayerCount() {
 		return getRegisteredPlayerCountAsync().getBeforeTimeout(15, TimeUnit.SECONDS);
 	}

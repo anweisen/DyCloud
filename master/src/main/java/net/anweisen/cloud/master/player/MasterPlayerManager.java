@@ -38,7 +38,7 @@ public class MasterPlayerManager extends DefaultPlayerManager implements Logging
 	}
 
 	@Nonnull
-	public CloudPlayer registerOnlinePlayer(@Nonnull PlayerProxyConnectionData playerConnection, @Nonnull ServiceInfo proxy) {
+	public CloudOfflinePlayer getOrCreateOfflinePlayer(@Nonnull PlayerProxyConnectionData playerConnection) {
 		CloudOfflinePlayer offlinePlayer = getOfflinePlayerByUniqueId(playerConnection.getUniqueId());
 		if (offlinePlayer == null) {
 			offlinePlayer = new DefaultCloudOfflinePlayer(
@@ -51,19 +51,27 @@ public class MasterPlayerManager extends DefaultPlayerManager implements Logging
 				Document.create()
 			);
 			saveOfflinePlayer(offlinePlayer);
-		} else if (!offlinePlayer.getName().equals(playerConnection.getName())) {
-			offlinePlayer.setName(playerConnection.getName());
-			saveOfflinePlayer(offlinePlayer);
+			return offlinePlayer;
 		}
 
-		CloudPlayer player = new DefaultCloudPlayer(offlinePlayer, playerConnection, proxy);
-		onlinePlayers.put(playerConnection.getUniqueId(), player);
+		offlinePlayer.setLastOnlineTime(System.currentTimeMillis());
+		offlinePlayer.setName(playerConnection.getName());
+		offlinePlayer.setLastProxyConnectionData(playerConnection);
+		saveOfflinePlayer(offlinePlayer);
+		return offlinePlayer;
+	}
+
+	@Nonnull
+	public CloudPlayer registerOnlinePlayer(@Nonnull CloudOfflinePlayer offlinePlayer, @Nonnull ServiceInfo proxy) {
+		CloudPlayer player = new DefaultCloudPlayer(offlinePlayer, offlinePlayer.getLastProxyConnectionData(), proxy);
+		onlinePlayers.put(offlinePlayer.getUniqueId(), player);
 		return player;
 	}
 
-	public void unregisterOnlinePlayer(@Nonnull CloudPlayer player) {
-		onlinePlayers.remove(player.getUniqueId());
-	}
+//	@Nonnull
+//	public CloudPlayer registerOnlinePlayer(@Nonnull PlayerProxyConnectionData playerConnection, @Nonnull ServiceInfo proxy) {
+//		return registerOnlinePlayer(getOrCreateOfflinePlayer(playerConnection), proxy);
+//	}
 
 	@Nonnull
 	@Override

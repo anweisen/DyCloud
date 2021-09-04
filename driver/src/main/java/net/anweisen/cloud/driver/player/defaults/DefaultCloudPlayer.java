@@ -13,6 +13,7 @@ import net.anweisen.utilities.common.config.Document;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -74,10 +75,15 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 		offlinePlayer.setName(name);
 	}
 
-	@Nullable
+	@Nonnull
 	@Override
 	public PlayerProxyConnectionData getLastProxyConnectionData() {
 		return offlinePlayer.getLastProxyConnectionData();
+	}
+
+	@Override
+	public void setLastProxyConnectionData(@Nonnull PlayerProxyConnectionData connectionData) {
+		offlinePlayer.setLastProxyConnectionData(connectionData);
 	}
 
 	@Nonnull
@@ -165,5 +171,19 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 	@Override
 	public String toString() {
 		return "CloudPlayer[name=" + getName() + " uuid=" + getUniqueId() + " address=" + getAddress() + " proxy=" + proxyConnection.getName() + " server=" + (server == null ? null : server.getName()) + (online ? "" : " online=false") + "]";
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		DefaultCloudPlayer that = (DefaultCloudPlayer) o;
+		return Objects.equals(this.getName(), that.getName())
+			&& Objects.equals(this.getUniqueId(), that.getUniqueId());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getName(), getUniqueId());
 	}
 }
