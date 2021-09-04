@@ -6,6 +6,7 @@ import net.anweisen.cloud.driver.player.CloudPlayer;
 import net.anweisen.cloud.driver.player.PlayerManager;
 
 import javax.annotation.Nonnull;
+import java.util.UUID;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -22,6 +23,16 @@ public abstract class PlayerEvent implements Event {
 	@Nonnull
 	public CloudPlayer getPlayer() {
 		return player;
+	}
+
+	@Nonnull
+	public UUID getPlayerUniqueId() {
+		return player.getUniqueId();
+	}
+
+	@Nonnull
+	public String getPlayerName() {
+		return player.getName();
 	}
 
 	@Nonnull
