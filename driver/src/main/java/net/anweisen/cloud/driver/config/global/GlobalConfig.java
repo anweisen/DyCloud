@@ -22,8 +22,16 @@ public interface GlobalConfig {
 
 	@Nonnull
 	default GlobalConfig setMaxPlayers(int maxPlayers) {
-		getRawData().set("maxPlayers", maxPlayers);
-		return this;
+		return set("maxPlayers", maxPlayers);
+	}
+
+	default boolean getMaintenance() {
+		return getRawData().getBoolean("maintenance");
+	}
+
+	@Nonnull
+	default GlobalConfig setMaintenance(boolean on) {
+		return set("maintenance", on);
 	}
 
 	@Nonnull

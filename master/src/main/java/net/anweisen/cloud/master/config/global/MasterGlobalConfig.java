@@ -21,7 +21,7 @@ public class MasterGlobalConfig implements GlobalConfig {
 
 	private static final Path path = Paths.get("global.json");
 	private static final Map<String, Object> defaultValues = ImmutableMap.of(
-		"maxPlayers", 50);
+		"maxPlayers", 50, "maintenance", false);
 
 	private Document rawData;
 
@@ -41,6 +41,7 @@ public class MasterGlobalConfig implements GlobalConfig {
 
 	@Override
 	public void update() {
+		// We only save values which keys are contained in defaultValues, because we dont want temp values to be saved
 		FileDocument document = FileDocument.wrap(Document.create(), path.toFile());
 		rawData.forEach((key, value) -> {
 			if (defaultValues.containsKey(key))
@@ -48,8 +49,7 @@ public class MasterGlobalConfig implements GlobalConfig {
 		});
 		document.save();
 
-		CloudMaster.getInstance().getSocketComponent()
-			.sendPacket(new GlobalConfigPacket(GlobalConfigPacketType.UPDATE, rawData));
+		CloudMaster.getInstance().getSocketComponent().sendPacket(new GlobalConfigPacket(GlobalConfigPacketType.UPDATE, rawData));
 	}
 
 	@Override
