@@ -38,7 +38,7 @@ public abstract class CloudBase extends CloudDriver {
 	}
 
 	public void publishUpdate(@Nonnull ServicePublishType publishType, @Nonnull ServiceInfo serviceInfo, @Nonnull SocketChannel... skipChannels) {
-		getSocketComponent().sendPacket(new ServiceInfoPublishPacket(publishType, serviceInfo), skipChannels);
+		getSocketComponent().sendPacketSync(new ServiceInfoPublishPacket(publishType, serviceInfo), skipChannels);
 	}
 
 	@Nonnull
