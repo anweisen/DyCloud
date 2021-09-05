@@ -88,6 +88,7 @@ public class FileLogHandler implements LogHandler {
 	private OutputStream initStream(@Nonnull AtomicReference<Path> file, @Nonnull Supplier<Path> selectNewFile) throws IOException {
 		if (!Files.exists(directory)) FileUtils.createDirectory(directory);
 		if (file.get() == null || Files.size(file.get()) > maxBytes) file.set(selectNewFile.get());
+		if (!Files.exists(file.get())) FileUtils.createFile(file.get());
 		return Files.newOutputStream(file.get(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 	}
 
