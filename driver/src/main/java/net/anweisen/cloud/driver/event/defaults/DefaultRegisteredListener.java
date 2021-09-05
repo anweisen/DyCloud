@@ -1,6 +1,5 @@
 package net.anweisen.cloud.driver.event.defaults;
 
-import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.event.Event;
 import net.anweisen.cloud.driver.event.EventPriority;
 import net.anweisen.cloud.driver.event.RegisteredListener;
@@ -28,14 +27,8 @@ public final class DefaultRegisteredListener implements RegisteredListener {
 		this.ignoreCancelled = ignoreCancelled;
 	}
 
-	public void execute(@Nonnull Event event) {
-		try {
-			method.invoke(holder, event);
-		} catch (Throwable ex) {
-			CloudDriver.getInstance().getLogger().error("An error uncaught occurred while executing event listener", ex);
-			if (ex instanceof Error)
-				throw (Error) ex;
-		}
+	public void execute(@Nonnull Event event) throws Exception {
+		method.invoke(holder, event);
 	}
 
 	@Nonnull

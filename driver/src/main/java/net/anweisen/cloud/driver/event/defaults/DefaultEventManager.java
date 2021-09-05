@@ -106,14 +106,21 @@ public class DefaultEventManager implements EventManager {
 	@Nonnull
 	@Override
 	public <E extends Event> E callEvent(@Nonnull E event) {
-		CloudDriver.getInstance().getLogger().trace("Calling event {}", event.getClass().getSimpleName());
+		CloudDriver.getInstance().getLogger().trace("Calling event {} | {}", event.getClass().getSimpleName(), event);
 
 		for (Class<?> clazz : ClassWalker.walk(event.getClass())) {
 			List<RegisteredListener> listeners = this.listeners.get(clazz);
 			if (listeners == null) continue;
 			for (RegisteredListener listener : listeners) {
 				if (listener.getIgnoreCancelled() && event instanceof Cancelable && ((Cancelable)event).isCancelled()) continue;
-				listener.execute(event);
+
+				try {
+					listener.execute(event);
+				} catch (Throwable ex) {
+					CloudDriver.getInstance().getLogger().error("An error uncaught occurred while executing event listener", ex);
+					if (ex instanceof Error)
+						throw (Error) ex;
+				}
 			}
 		}
 
