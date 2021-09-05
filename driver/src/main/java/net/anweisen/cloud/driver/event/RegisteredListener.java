@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
  */
 public interface RegisteredListener {
 
-	void execute(@Nonnull Event event);
+	void execute(@Nonnull Event event) throws Exception;
 
 	@Nonnull
 	Class<? extends Event> getEventClass();
