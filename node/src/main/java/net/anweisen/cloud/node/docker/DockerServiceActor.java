@@ -1,4 +1,4 @@
-package net.anweisen.cloud.node.service;
+package net.anweisen.cloud.node.docker;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.SyncDockerCmd;
@@ -9,7 +9,6 @@ import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports.Binding;
 import net.anweisen.cloud.base.module.ModuleController;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
-import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.ServicePublishType;
 import net.anweisen.cloud.driver.service.config.ServiceTask;
 import net.anweisen.cloud.driver.service.config.ServiceTemplate;
 import net.anweisen.cloud.driver.service.config.TemplateStorage;
@@ -37,7 +36,7 @@ import java.util.function.BiFunction;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class NodeServiceActor implements LoggingApiUser {
+public class DockerServiceActor implements LoggingApiUser {
 
 	private static final String serverDirectory = "/server";
 	private static final int containerPort = 25565;
@@ -67,6 +66,7 @@ public class NodeServiceActor implements LoggingApiUser {
 	}
 
 	// TODO split method up
+	// This method does not publish the updated ServiceInfo
 	public void createServiceHere(@Nonnull ServiceInfo info, @Nonnull ServiceTask task) throws IOException {
 		CloudNode cloud = CloudNode.getInstance();
 
@@ -194,15 +194,14 @@ public class NodeServiceActor implements LoggingApiUser {
 				.withMemory(task.getMemoryLimit() < 1 ? null : 1024L * 1024L * task.getMemoryLimit()) // bytes -> kilobytes -> megabytes
 			).exec().getId();
 		info.setDockerContainerId(containerId);
-		cloud.publishUpdate(ServicePublishType.UPDATE, info);
 		trace("Created docker container {} for {}", containerId, info);
 		trace("=> Applied memory limit of {} bytes = {} kilobytes = {} megabytes", 1024L * 1024L * task.getMemoryLimit(), 1024L * task.getMemoryLimit(), task.getMemoryLimit());
 
 		Document.create()
 			.set("master", cloud.getConfig().getMasterAddress())
 			.set("identity", cloud.getConfig().getIdentity())
-			.set("task", task)
-			.set("service", info)
+			.set("serviceTaskName", task.getName())
+			.set("serviceUniqueId", info.getUniqueId())
 			.saveToFile(tempTemplateDirectory.resolve(".cloud/config.json"));
 
 		// Copy resources to container
@@ -218,11 +217,9 @@ public class NodeServiceActor implements LoggingApiUser {
 			.withDirChildrenOnly(true)
 			.withNoOverwriteDirNonDir(false)
 			.exec();
-		trace("Successfully transferred archives to docker container of {}", info);
-
 		info.setState(ServiceState.PREPARED);
 		info.setControlState(ServiceControlState.NONE);
-		cloud.publishUpdate(ServicePublishType.UPDATE, info);
+		trace("Successfully transferred archives to docker container of {}", info);
 
 		FileUtils.delete(tempTemplateDirectory);
 	}
