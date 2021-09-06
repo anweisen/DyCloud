@@ -35,4 +35,9 @@ public final class PacketReceiveEvent extends SocketChannelEvent implements Canc
 	public void setCancelled(boolean cancelled) {
 		this.cancelled = cancelled;
 	}
+
+	@Override
+	public String toString() {
+		return "PacketReceiveEvent[channel=" + channel + " packet=" + packet + "]";
+	}
 }

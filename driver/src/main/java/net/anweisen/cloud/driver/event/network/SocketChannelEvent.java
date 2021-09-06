@@ -11,9 +11,7 @@ import javax.annotation.Nonnull;
  */
 public abstract class SocketChannelEvent implements Event {
 
-	private final SocketChannel channel;
-
-	private boolean cancelled;
+	protected final SocketChannel channel;
 
 	public SocketChannelEvent(@Nonnull SocketChannel channel) {
 		this.channel = channel;
@@ -24,4 +22,8 @@ public abstract class SocketChannelEvent implements Event {
 		return channel;
 	}
 
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName() + "[channel=" + channel + "]";
+	}
 }

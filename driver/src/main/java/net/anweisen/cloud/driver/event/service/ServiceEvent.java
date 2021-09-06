@@ -21,4 +21,9 @@ public abstract class ServiceEvent implements Event {
 	public ServiceInfo getServiceInfo() {
 		return serviceInfo;
 	}
+
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName() + "[service=" + serviceInfo.getName() + "]";
+	}
 }

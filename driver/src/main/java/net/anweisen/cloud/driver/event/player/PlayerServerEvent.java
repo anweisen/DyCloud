@@ -22,4 +22,9 @@ public abstract class PlayerServerEvent extends PlayerEvent {
 	public ServiceInfo getService() {
 		return service;
 	}
+
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName() + "[player=" + player + " service=" + service.getName() + "]";
+	}
 }

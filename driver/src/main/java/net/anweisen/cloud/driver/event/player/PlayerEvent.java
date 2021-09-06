@@ -39,4 +39,9 @@ public abstract class PlayerEvent implements Event {
 	public PlayerManager getPlayerManager() {
 		return CloudDriver.getInstance().getPlayerManager();
 	}
+
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName() + "[player=" + player + "]";
+	}
 }

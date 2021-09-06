@@ -45,4 +45,9 @@ public class PlayerServerDisconnectEvent extends PlayerServerEvent {
 	public CloudPlayer getPlayer() {
 		return super.getPlayer();
 	}
+
+	@Override
+	public String toString() {
+		return "PlayerServerDisconnectEvent[player=CloudPlayer[name=" + name + " uuid=" + uuid + "] service=" + service.getName() + "]";
+	}
 }

@@ -27,4 +27,9 @@ public class PlayerProxyServerConnectRequestEvent extends PlayerProxyEvent {
 	public ServiceInfo getTarget() {
 		return target;
 	}
+
+	@Override
+	public String toString() {
+		return "PlayerProxyServerConnectRequestEvent[player=" + player + " target=" + target.getName() + "]";
+	}
 }

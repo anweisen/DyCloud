@@ -34,4 +34,9 @@ public class PlayerProxyServerSwitchEvent extends PlayerProxyEvent {
 	public ServiceInfo getTo() {
 		return to;
 	}
+
+	@Override
+	public String toString() {
+		return "PlayerProxyServerSwitchEvent[player=" + player + " from=" + from.getName() + " to=" + to.getName() + "]";
+	}
 }

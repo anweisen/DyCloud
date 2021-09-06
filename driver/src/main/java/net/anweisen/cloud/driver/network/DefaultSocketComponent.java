@@ -111,4 +111,9 @@ public abstract class DefaultSocketComponent implements SocketComponent, Logging
 			channel.sendPacketsSync(packets);
 		}
 	}
+
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName() + "[channels=" + channels + "]";
+	}
 }
