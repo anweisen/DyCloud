@@ -68,8 +68,8 @@ public class MasterServiceController implements ServiceController {
 		CloudMaster.getInstance().publishUpdate(ServicePublishType.UPDATE, service.getInfo());
 		NodeServer nodeServer = CloudMaster.getInstance().getNodeManager().getNodeServer(service.getInfo().getNodeName());
 		CloudMaster.getInstance().getLogger().debug("=> {}:{} -> {} -> {}", type, state, service, nodeServer);
-		Preconditions.checkNotNull(nodeServer, "NodeServer of service is null");
-		Preconditions.checkNotNull(nodeServer.getChannel(), "SocketChannel of NodeServer of service is null");
+		Preconditions.checkNotNull(nodeServer, "NodeServer of service " + service + " is null");
+		Preconditions.checkNotNull(nodeServer.getChannel(), "SocketChannel of NodeServer of service " + service + " is null");
 		return nodeServer.getChannel().sendQueryAsync(new ServiceControlPacket(type, service.getInfo().getUniqueId())).mapVoid();
 	}
 
