@@ -25,18 +25,18 @@ public abstract class ChunkedPacketListener implements PacketListener {
 
 	@Override
 	public void handlePacket(@Nonnull SocketChannel channel, @Nonnull Packet packet) throws Exception {
-		this.lock.lock();
+		lock.lock();
 		try {
 			ChunkedPacket chunk = ChunkedPacket
 				.createIncomingPacket(packet.getChannel(), packet.getUniqueId(), packet.getHeader(), packet.getBuffer())
 				.readBuffer();
-			if (!this.sessions.containsKey(packet.getUniqueId())) {
-				this.sessions.put(packet.getUniqueId(), this.createSession(channel, packet.getUniqueId(), new HashMap<>()));
+			if (!sessions.containsKey(packet.getUniqueId())) {
+				sessions.put(packet.getUniqueId(), createSession(channel, packet.getUniqueId(), new HashMap<>()));
 			}
 
-			this.sessions.get(packet.getUniqueId()).handleIncomingChunk(chunk);
+			sessions.get(packet.getUniqueId()).handleIncomingChunk(chunk);
 		} finally {
-			this.lock.unlock();
+			lock.unlock();
 		}
 	}
 
@@ -47,7 +47,7 @@ public abstract class ChunkedPacketListener implements PacketListener {
 
 	@Nonnull
 	protected ChunkedPacketSession createSession(@Nonnull SocketChannel channel, @Nonnull UUID sessionUniqueId, @Nonnull Map<String, Object> properties) throws IOException {
-		return new ChunkedPacketSession(channel, this, sessionUniqueId, this.createOutputStream(sessionUniqueId, properties), properties);
+		return new ChunkedPacketSession(channel, this, sessionUniqueId, createOutputStream(sessionUniqueId, properties), properties);
 	}
 
 	@Nonnull

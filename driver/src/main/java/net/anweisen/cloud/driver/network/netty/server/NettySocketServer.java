@@ -36,7 +36,7 @@ public class NettySocketServer extends DefaultSocketComponent implements SocketS
 
 		try {
 			new ServerBootstrap()
-				.group(this.bossEventLoopGroup, this.workerEventLoopGroup)
+				.group(bossEventLoopGroup, workerEventLoopGroup)
 				.childOption(ChannelOption.TCP_NODELAY, true)
 				.childOption(ChannelOption.IP_TOS, 24)
 				.childOption(ChannelOption.AUTO_READ, true)

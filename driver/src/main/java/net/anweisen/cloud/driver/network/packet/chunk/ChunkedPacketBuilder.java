@@ -58,7 +58,7 @@ public class ChunkedPacketBuilder {
 	}
 
 	public int channel() {
-		return this.chunkSize;
+		return channel;
 	}
 
 	public ChunkedPacketBuilder target(Consumer<ChunkedPacket> target) {
@@ -114,7 +114,10 @@ public class ChunkedPacketBuilder {
 	}
 
 	public ChunkedPacketBuilder complete() throws IOException {
-		validate();
+		Preconditions.checkNotNull(inputStream, "No input provided");
+		Preconditions.checkNotNull(target, "No handler provided");
+		Preconditions.checkNotNull(channel, "No channel provided");
+		Preconditions.checkArgument(!completed, "Builder cannot be completed twice");
 
 		try {
 			target.accept(createStartPacket(channel, uniqueId, header, chunkSize));
@@ -136,13 +139,6 @@ public class ChunkedPacketBuilder {
 
 		completed = true;
 		return this;
-	}
-
-	private void validate() {
-		Preconditions.checkNotNull(inputStream, "No input provided");
-		Preconditions.checkNotNull(target, "No handler provided");
-		Preconditions.checkNotNull(channel, "No channel provided");
-		Preconditions.checkState(!completed, "Builder cannot be completed twice");
 	}
 
 	public boolean isCompleted() {

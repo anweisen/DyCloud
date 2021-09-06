@@ -40,38 +40,36 @@ public class ChunkedPacketSession implements LoggingApiUser {
 	}
 
 	public void handleIncomingChunk(@Nonnull ChunkedPacket packet) throws IOException {
-		if (this.closed) {
+		if (closed) {
 			packet.clearData();
 			throw new IllegalStateException(String.format("Session is already closed but received packet %d, %b", packet.getChunkId(), packet.isEnd()));
 		}
 
-		if (packet.getChunkId() == 0 && this.header.isEmpty() && !packet.getHeader().isEmpty()) {
-			this.header = packet.getHeader();
-			this.firstPacket = packet;
+		if (packet.getChunkId() == 0 && header.isEmpty() && !packet.getHeader().isEmpty()) {
+			header = packet.getHeader();
+			firstPacket = packet;
 		}
 
 		if (packet.isEnd()) {
-			this.lastPacket = packet;
+			lastPacket = packet;
 		}
 
 		try {
-			if (this.chunkId != packet.getChunkId()) {
-				this.pendingPackets.add(packet);
+			if (chunkId != packet.getChunkId()) {
+				pendingPackets.add(packet);
 			} else {
-				this.storeChunk(packet);
+				storeChunk(packet);
 			}
 		} finally {
-			this.checkPendingPackets();
+			checkPendingPackets();
 		}
 	}
 
 	private void storeChunk(@Nonnull ChunkedPacket packet) throws IOException {
-		if (this.closed) {
-			return;
-		}
+		if (closed) return;
 
 		if (packet.getChunkId() == 0) { // Ignore first packet because it has no data we need
-			++chunkId;
+			chunkId++;
 			return;
 		}
 
@@ -80,44 +78,44 @@ public class ChunkedPacketSession implements LoggingApiUser {
 			return;
 		}
 
-		++chunkId;
+		chunkId++;
 
 		try {
-			packet.readData(this.outputStream);
+			packet.readData(outputStream);
 		} finally {
-			this.outputStream.flush();
+			outputStream.flush();
 			packet.clearData();
 		}
 	}
 
 	private void checkPendingPackets() throws IOException {
-		if (!this.pendingPackets.isEmpty()) {
-			Iterator<ChunkedPacket> iterator = this.pendingPackets.iterator();
+		if (!pendingPackets.isEmpty()) {
+			Iterator<ChunkedPacket> iterator = pendingPackets.iterator();
 			while (iterator.hasNext()) {
 				ChunkedPacket pending = iterator.next();
-				if (this.chunkId == pending.getChunkId() || (pending.isEnd() && this.chunkId - 1 == pending.getChunks())) {
+				if (chunkId == pending.getChunkId() || (pending.isEnd() && chunkId - 1 == pending.getChunks())) {
 					iterator.remove();
-					this.storeChunk(pending);
+					storeChunk(pending);
 				}
 			}
 		}
 	}
 
 	protected void close() throws IOException {
-		if (!this.pendingPackets.isEmpty()) {
-			String packets = this.pendingPackets.stream().map(ChunkedPacket::getChunkId).map(String::valueOf).collect(Collectors.joining(", "));
-			throw new IllegalStateException(String.format("Closing with %d pending packets: %s", this.pendingPackets.size(), packets));
+		if (!pendingPackets.isEmpty()) {
+			String packets = pendingPackets.stream().map(ChunkedPacket::getChunkId).map(String::valueOf).collect(Collectors.joining(", "));
+			throw new IllegalStateException(String.format("Closing with %d pending packets: %s", pendingPackets.size(), packets));
 		}
 
-		this.closed = true;
-		this.outputStream.close();
+		closed = true;
+		outputStream.close();
 
 		System.gc();
 
-		trace("Closing session of ChunkedPacket consisting of {} chunks", chunkId+1);
+		trace("Closing session of ChunkedPacket consisting of {} chunks: header:{}", chunkId + 1, header);
 
-		this.listener.getSessions().remove(this.sessionUniqueId);
-		this.listener.handleComplete(this);
+		listener.getSessions().remove(sessionUniqueId);
+		listener.handleComplete(this);
 	}
 
 	@Nonnull
