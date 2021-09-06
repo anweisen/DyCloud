@@ -33,54 +33,54 @@ public class ChunkedPacket extends Packet {
 		this.chunks = chunks;
 	}
 
-	protected ChunkedPacket(int channel, @Nonnull UUID uniqueId, @Nonnull Document header, Buffer body) {
-		super(channel, uniqueId, header, body);
+	protected ChunkedPacket(int channel, @Nonnull UUID uniqueId, @Nonnull Document header, Buffer buffer) {
+		super(channel, uniqueId, header, buffer);
 	}
 
-	public static ChunkedPacket createIncomingPacket(int channel, @Nonnull UUID uniqueId, @Nonnull Document header, Buffer body) {
-		return new ChunkedPacket(channel, uniqueId, header, body);
+	public static ChunkedPacket createIncomingPacket(int channel, @Nonnull UUID uniqueId, @Nonnull Document header, Buffer buffer) {
+		return new ChunkedPacket(channel, uniqueId, header, buffer);
 	}
 
 	public ChunkedPacket fillBuffer() {
-		if (body != null) { // The buffer is filled already
+		if (buffer != null) { // The buffer is filled already
 			return this;
 		}
 
-		body = Buffer.create().writeVarInt(chunkId);
+		buffer = Buffer.create().writeVarInt(chunkId);
 		if (this.chunkId == 0) {
-			body.writeInt(chunkSize);
+			buffer.writeInt(chunkSize);
 			return this;
 		}
 
-		body.writeBoolean(end);
+		buffer.writeBoolean(end);
 		if (this.end) {
-			body.writeVarInt(chunks);
+			buffer.writeVarInt(chunks);
 			return this;
 		}
 
-		body.writeInt(dataLength).writeBytes(data, 0, dataLength);
+		buffer.writeInt(dataLength).writeBytes(data, 0, dataLength);
 		return this;
 	}
 
 	@Nonnull
 	public ChunkedPacket readBuffer() {
-		chunkId = body.readVarInt();
+		chunkId = buffer.readVarInt();
 		if (chunkId == 0) {
-			chunkSize = body.readInt();
+			chunkSize = buffer.readInt();
 			return this;
 		}
 
-		end = body.readBoolean();
+		end = buffer.readBoolean();
 		if (end) {
-			chunks = body.readVarInt();
+			chunks = buffer.readVarInt();
 		}
 
 		return this;
 	}
 
 	public void readData(@Nonnull OutputStream outputStream) throws IOException {
-		dataLength = body.readInt();
-		body.readBytes(outputStream, dataLength);
+		dataLength = buffer.readInt();
+		buffer.readBytes(outputStream, dataLength);
 	}
 
 	public int getChunks() {
@@ -104,9 +104,9 @@ public class ChunkedPacket extends Packet {
 	}
 
 	public void clearData() {
-		if (body != null) {
-			while (body.refCnt() > 0) {
-				body.release();
+		if (buffer != null) {
+			while (buffer.refCnt() > 0) {
+				buffer.release();
 			}
 		}
 

@@ -19,7 +19,7 @@ public class GlobalConfigPacket extends Packet {
 
 	public GlobalConfigPacket(@Nonnull GlobalConfigPacketType packetType, @Nonnull Document data) {
 		this(packetType);
-		body.writeDocument(data);
+		buffer.writeDocument(data);
 	}
 
 	public enum GlobalConfigPacketType {

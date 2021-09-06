@@ -26,7 +26,7 @@ public class AuthenticationResponsePacket extends Packet {
 		super(PacketConstants.AUTH_CHANNEL, Document.create().set("access", access).set("message", message));
 
 		if (access) {
-			body = Buffer.create();
+			buffer = Buffer.create();
 			appendConfigProperties();
 		}
 	}
@@ -51,8 +51,8 @@ public class AuthenticationResponsePacket extends Packet {
 	}
 
 	private void append(@Nonnull PropertySection section, @Nonnull Consumer<? super Buffer> modifier) {
-		body.writeEnumConstant(section);
-		modifier.accept(body);
+		buffer.writeEnumConstant(section);
+		modifier.accept(buffer);
 	}
 
 	public enum PropertySection {

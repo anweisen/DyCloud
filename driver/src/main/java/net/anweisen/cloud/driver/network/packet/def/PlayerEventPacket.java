@@ -22,37 +22,37 @@ public class PlayerEventPacket extends Packet {
 
 	public PlayerEventPacket(@Nonnull PlayerEventType type, @Nonnull UUID player, @Nonnull SerializableObject... objects) {
 		this(type);
-		body.writeUUID(player);
+		buffer.writeUUID(player);
 		for (SerializableObject object : objects) {
-			body.writeObject(object);
+			buffer.writeObject(object);
 		}
 	}
 
 	public PlayerEventPacket(@Nonnull PlayerEventType type, @Nonnull UUID player, @Nonnull String name, @Nonnull UUID service) {
 		this(type, player);
-		body.writeString(name);
-		body.writeUUID(service);
+		buffer.writeString(name);
+		buffer.writeUUID(service);
 	}
 
 	public PlayerEventPacket(@Nonnull PlayerEventType type, @Nonnull UUID player, @Nonnull UUID service, @Nonnull SerializableObject... objects) {
 		this(type, player);
-		body.writeUUID(service);
+		buffer.writeUUID(service);
 		for (SerializableObject object : objects) {
-			body.writeObject(object);
+			buffer.writeObject(object);
 		}
 	}
 
 	public PlayerEventPacket(@Nonnull PlayerEventType type, @Nonnull UUID player, @Nonnull UUID serviceA, @Nonnull UUID serviceB) {
 		this(type, player);
-		body.writeUUID(serviceA);
-		body.writeUUID(serviceB);
+		buffer.writeUUID(serviceA);
+		buffer.writeUUID(serviceB);
 	}
 
 	public PlayerEventPacket(@Nonnull PlayerEventType object, @Nonnull SerializableObject player, @Nonnull SerializableObject... objects) {
 		this(object);
-		body.writeObject(player);
+		buffer.writeObject(player);
 		for (SerializableObject current : objects) {
-			body.writeObject(current);
+			buffer.writeObject(current);
 		}
 	}
 

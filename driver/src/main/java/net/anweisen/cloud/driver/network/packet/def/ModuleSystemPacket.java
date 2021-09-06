@@ -18,7 +18,7 @@ public class ModuleSystemPacket extends Packet {
 
 	public ModuleSystemPacket(@Nonnull ModuleSystemRequestType type, int count) {
 		this(type);
-		body.writeInt(count);
+		buffer.writeInt(count);
 	}
 
 	public enum ModuleSystemRequestType {

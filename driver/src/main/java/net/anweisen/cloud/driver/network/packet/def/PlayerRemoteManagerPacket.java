@@ -17,7 +17,7 @@ public class PlayerRemoteManagerPacket extends Packet {
 	public PlayerRemoteManagerPacket(@Nonnull PlayerRemoteManagerType type, @Nullable Consumer<? super Buffer> modifier) {
 		super(PacketConstants.PLAYER_REMOTE_MANAGER_CHANNEL, Buffer.create().writeEnumConstant(type));
 		if (modifier != null)
-			modifier.accept(body);
+			modifier.accept(buffer);
 	}
 
 	public enum PlayerRemoteManagerType {

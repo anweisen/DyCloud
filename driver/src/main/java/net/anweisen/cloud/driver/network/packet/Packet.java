@@ -21,46 +21,46 @@ public class Packet {
 	protected int channel;
 	protected UUID uniqueId;
 	protected Document header;
-	protected Buffer body;
+	protected Buffer buffer;
 
 	public Packet(int channel, @Nullable Document header) {
 		this(channel, header, (Buffer) null);
 	}
 
-	public Packet(int channel, @Nullable Document header, @Nullable byte[] body) {
-		this(channel, UUID.randomUUID(), header, body);
+	public Packet(int channel, @Nullable Document header, @Nullable byte[] buffer) {
+		this(channel, UUID.randomUUID(), header, buffer);
 	}
 
-	public Packet(int channel, @Nonnull UUID uniqueId, @Nullable Document header, @Nullable byte[] body) {
+	public Packet(int channel, @Nonnull UUID uniqueId, @Nullable Document header, @Nullable byte[] buffer) {
 		this.channel = channel;
 		this.uniqueId = uniqueId;
 		this.header = header;
-		this.body = body == null ? null : Buffer.wrap(body);
+		this.buffer = buffer == null ? null : Buffer.wrap(buffer);
 	}
 
-	public Packet(int channel, @Nullable Buffer body) {
-		this(channel, Document.empty(), body);
+	public Packet(int channel, @Nullable Buffer buffer) {
+		this(channel, Document.empty(), buffer);
 	}
 
-	public Packet(int channel, @Nullable Document header, @Nullable Buffer body) {
-		this(channel, UUID.randomUUID(), header, body);
+	public Packet(int channel, @Nullable Document header, @Nullable Buffer buffer) {
+		this(channel, UUID.randomUUID(), header, buffer);
 	}
 
 	public Packet(int channel, @Nonnull UUID uniqueId, @Nullable Document header) {
 		this(channel, uniqueId, header, (Buffer) null);
 	}
 
-	public Packet(int channel, @Nonnull UUID uniqueId, @Nullable Document header, @Nullable Buffer body) {
+	public Packet(int channel, @Nonnull UUID uniqueId, @Nullable Document header, @Nullable Buffer buffer) {
 		this.channel = channel;
 		this.uniqueId = uniqueId;
 		this.header = header;
-		this.body = body;
+		this.buffer = buffer;
 	}
 
 	@Nonnull
 	@CheckReturnValue
-	public static Packet createResponseFor(@Nonnull Packet packet, @Nullable Document header, @Nullable Buffer body) {
-		return new Packet(PacketConstants.RESPONSE_CHANNEL, packet.getUniqueId(), header, body);
+	public static Packet createResponseFor(@Nonnull Packet packet, @Nullable Document header, @Nullable Buffer buffer) {
+		return new Packet(PacketConstants.RESPONSE_CHANNEL, packet.getUniqueId(), header, buffer);
 	}
 
 	@Nonnull
@@ -71,8 +71,8 @@ public class Packet {
 
 	@Nonnull
 	@CheckReturnValue
-	public static Packet createResponseFor(@Nonnull Packet packet, @Nullable Buffer body) {
-		return new Packet(PacketConstants.RESPONSE_CHANNEL, packet.getUniqueId(), Document.empty(), body);
+	public static Packet createResponseFor(@Nonnull Packet packet, @Nullable Buffer buffer) {
+		return new Packet(PacketConstants.RESPONSE_CHANNEL, packet.getUniqueId(), Document.empty(), buffer);
 	}
 
 	@Nonnull
@@ -98,11 +98,11 @@ public class Packet {
 	}
 
 	public Buffer getBuffer() {
-		return body;
+		return buffer;
 	}
 
-	public byte[] getBodyAsArray() {
-		return body == null ? EMPTY_PACKET_BYTE_ARRAY : body.toArray();
+	public byte[] getBufferAsArray() {
+		return buffer == null ? EMPTY_PACKET_BYTE_ARRAY : buffer.toArray();
 	}
 
 	public long getCreationMillis() {
@@ -111,6 +111,6 @@ public class Packet {
 
 	@Override
 	public String toString() {
-		return "Packet[channel=" + PacketConstants.getChannelName(channel) + " uuid=" + uniqueId + " header=" + header.toJson() + " buffer=" + (body != null ? body.readableBytes() + body.readerIndex() : 0) + "]";
+		return "Packet[channel=" + PacketConstants.getChannelName(channel) + " uuid=" + uniqueId + " header=" + header.toJson() + " buffer=" + (buffer != null ? buffer.readableBytes() + buffer.readerIndex() : 0) + "]";
 	}
 }
