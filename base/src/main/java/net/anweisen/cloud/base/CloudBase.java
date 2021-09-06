@@ -33,6 +33,7 @@ public abstract class CloudBase extends CloudDriver {
 		moduleManager.disableModules();
 		moduleManager.unregisterModules();
 
+		logger.info("Thank you and good bye!");
 		console.close();
 
 	}
