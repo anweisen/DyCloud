@@ -13,20 +13,23 @@ import javax.annotation.Nonnull;
  */
 public enum ServiceEnvironment {
 
-	MINECRAFT   (ServiceType.SERVER,    "plugins",  "server.properties"),
-	BUKKIT      (ServiceType.SERVER,    "plugins",  "server.properties", "bukkit.yml"),
-	SPIGOT      (ServiceType.SERVER,    "plugins",  "server.properties", "bukkit.yml", "spigot.yml"),
-	PAPER       (ServiceType.SERVER,    "plugins",  "server.properties", "bukkit.yml", "spigot.yml", "paper.yml"),
-	GLOWSTONE   (ServiceType.SERVER,    "plugins",  "server.properties", "glowstone.yml"),
-	BUNGEECORD  (ServiceType.PROXY,     "plugins",  "config.yml"),
-	VELOCITY    (ServiceType.PROXY,     "plugins",  "velocity.toml");
+	MINECRAFT   (ServiceType.SERVER,    false,  "plugins",  "server.properties"),
+	BUKKIT      (ServiceType.SERVER,    true,   "plugins",  "server.properties", "bukkit.yml"),
+	SPIGOT      (ServiceType.SERVER,    true,   "plugins",  "server.properties", "bukkit.yml", "spigot.yml"),
+	PAPER       (ServiceType.SERVER,    true,   "plugins",  "server.properties", "bukkit.yml", "spigot.yml", "paper.yml"),
+	GLOWSTONE   (ServiceType.SERVER,    false,  "plugins",  "server.properties", "glowstone.yml"),
+	BUNGEECORD  (ServiceType.PROXY,     true,   "plugins",  "config.yml"),
+	VELOCITY    (ServiceType.PROXY,     false,  "plugins",  "velocity.toml"),
+	OTHER       (ServiceType.OTHER,     false,  "plugins");
 
 	private final ServiceType serviceType;
 	private final String pluginsFolder;
 	private final String[] defaultConfig;
+	private final boolean hasBridge;
 
-	ServiceEnvironment(@Nonnull ServiceType serviceType, @Nonnull String pluginsFolder, @Nonnull String... configs) {
+	ServiceEnvironment(@Nonnull ServiceType serviceType, boolean hasBridge, @Nonnull String pluginsFolder, @Nonnull String... configs) {
 		this.serviceType = serviceType;
+		this.hasBridge = hasBridge;
 		this.pluginsFolder = pluginsFolder;
 		this.defaultConfig = configs;
 	}
@@ -52,5 +55,9 @@ public enum ServiceEnvironment {
 
 	public boolean isServer() {
 		return serviceType == ServiceType.SERVER;
+	}
+
+	public boolean hasBridge() {
+		return hasBridge;
 	}
 }
