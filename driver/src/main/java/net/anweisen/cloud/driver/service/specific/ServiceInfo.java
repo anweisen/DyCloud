@@ -153,7 +153,7 @@ public final class ServiceInfo implements SerializableObject {
 	}
 
 	public boolean isReady() {
-		return state == ServiceState.RUNNING && ready;
+		return state == ServiceState.RUNNING && (ready || !environment.hasBridge());
 	}
 
 	@Nonnull
