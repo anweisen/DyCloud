@@ -3,6 +3,7 @@ package net.anweisen.cloud.driver.service.specific;
 import net.anweisen.cloud.driver.service.specific.data.MinecraftPlayerInfo;
 import net.anweisen.cloud.driver.service.specific.data.PluginInfo;
 import net.anweisen.cloud.driver.service.specific.data.ProxyPlayerInfo;
+import net.anweisen.cloud.driver.service.specific.data.ServicePlayerInfo;
 import net.anweisen.utilities.common.config.Document;
 
 import javax.annotation.Nonnull;
@@ -18,6 +19,7 @@ public interface ServiceProperty<T> {
 
 	ServiceProperty<Integer> ONLINE_PLAYER_COUNT = newServiceProperty("online", Document::getInt);
 	ServiceProperty<Integer> MAX_PLAYER_COUNT = newServiceProperty("max", Document::getInt);
+	ServiceProperty<List<ServicePlayerInfo>> PLAYER_LIST = newServiceListProperty("players", ServicePlayerInfo.class);
 	ServiceProperty<List<MinecraftPlayerInfo>> MINECRAFT_PLAYER_LIST = newServiceListProperty("players", MinecraftPlayerInfo.class);
 	ServiceProperty<List<ProxyPlayerInfo>> PROXY_PLAYER_LIST = newServiceListProperty("players", ProxyPlayerInfo.class);
 	ServiceProperty<List<PluginInfo>> PLUGINS = newServiceListProperty("plugins", PluginInfo.class);
