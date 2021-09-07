@@ -43,7 +43,7 @@ public class ServiceControlListener implements PacketListener, LoggingApiUser {
 		CloudService service = cloud.getServiceManager().getServiceByUniqueId(uuid);
 		debug("{} -> {}", type, service.getInfo().getName());
 		NodeServer node = cloud.getNodeManager().getNodeServer(service.getInfo().getNodeName());
-		node.getChannel().sendQueryAsync(new ServiceControlPacket(type, uuid))
+		node.getChannel().sendPacketQueryAsync(new ServiceControlPacket(type, uuid))
 			.onComplete(response -> channel.sendPacket(Packet.createResponseFor(packet)));
 	}
 

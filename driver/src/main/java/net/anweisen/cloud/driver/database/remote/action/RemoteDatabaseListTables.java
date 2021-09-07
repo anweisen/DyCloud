@@ -21,7 +21,7 @@ public class RemoteDatabaseListTables implements DatabaseListTables, RemoteDatab
 	@Override
 	public Task<List<String>> executeAsync() {
 		return CloudDriver.getInstance().getSocketComponent().getFirstChannel()
-			.sendQueryAsync(new RemoteDatabaseActionPacket(DatabaseActionType.LIST_TABLES))
+			.sendPacketQueryAsync(new RemoteDatabaseActionPacket(DatabaseActionType.LIST_TABLES))
 			.map(packet -> new ArrayList<>(packet.getBuffer().readStringCollection()));
 	}
 

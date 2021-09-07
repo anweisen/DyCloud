@@ -37,7 +37,7 @@ public class RemoteGlobalConfig implements GlobalConfig {
 	@Override
 	public void fetch() {
 		rawData = CloudDriver.getInstance().getSocketComponent().getFirstChannel()
-			.sendQuery(new GlobalConfigPacket(GlobalConfigPacketType.FETCH))
+			.sendPacketQuery(new GlobalConfigPacket(GlobalConfigPacketType.FETCH))
 			.getBuffer().readDocument();
 	}
 }

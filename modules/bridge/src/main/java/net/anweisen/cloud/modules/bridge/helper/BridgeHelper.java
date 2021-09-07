@@ -191,7 +191,7 @@ public final class BridgeHelper {
 	public static Tuple<CloudPlayer, String> sendProxyLoginRequestPacket(@Nonnull PlayerProxyConnectionData playerConnection) {
 		return Optional.ofNullable(
 				CloudWrapper.getInstance().getSocketComponent().getFirstChannel()
-					.sendQuery(new PlayerEventPacket(PlayerEventType.PROXY_LOGIN_REQUEST, playerConnection))
+					.sendPacketQuery(new PlayerEventPacket(PlayerEventType.PROXY_LOGIN_REQUEST, playerConnection))
 			)
 			.map(packet -> Tuple.<CloudPlayer, String>of(packet.getBuffer().readOptionalObject(DefaultCloudPlayer.class), packet.getBuffer().readOptionalString()))
 			.orElse(Tuple.empty());

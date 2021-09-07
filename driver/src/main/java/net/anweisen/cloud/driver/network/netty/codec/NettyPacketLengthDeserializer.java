@@ -22,14 +22,14 @@ public final class NettyPacketLengthDeserializer extends ByteToMessageDecoder {
 		int varIntByteEnding = buffer.forEachByte(processor);
 
 		if (processor.result != VarIntByteProcessor.ProcessingResult.OK) {
-			throw SilentDecoderException.INVALID_VAR_INT;
+			throw SilentDecoderException.forInvalidVarInt();
 		} else {
 			int varInt = processor.varInt;
 			int bytesRead = processor.bytesRead;
 
 			if (varInt < 0) {
 				buffer.clear();
-				throw SilentDecoderException.BAD_PACKET_LENGTH;
+				throw SilentDecoderException.forBadPacketLength();
 			} else if (varInt == 0) {
 				// empty packet, ignore it
 				buffer.readerIndex(varIntByteEnding + 1);
@@ -50,17 +50,17 @@ public final class NettyPacketLengthDeserializer extends ByteToMessageDecoder {
 		private ProcessingResult result;
 
 		public VarIntByteProcessor() {
-			this.result = ProcessingResult.TOO_SHORT;
+			result = ProcessingResult.TOO_SHORT;
 		}
 
 		@Override
 		public boolean process(byte value) throws Exception {
-			this.varInt |= (value & 0x7F) << this.bytesRead++ * 7;
-			if (this.bytesRead > 5) {
-				this.result = ProcessingResult.TOO_BIG;
+			varInt |= (value & 0x7F) << bytesRead++ * 7;
+			if (bytesRead > 5) {
+				result = ProcessingResult.TOO_BIG;
 				return false;
 			} else if ((value & 0x80) != 128) {
-				this.result = ProcessingResult.OK;
+				result = ProcessingResult.OK;
 				return false;
 			} else {
 				return true;

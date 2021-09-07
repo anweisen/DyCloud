@@ -25,7 +25,7 @@ public final class NettyPacketEncoder extends MessageToByteEncoder<Packet> {
 			.writeLong(packet.getUniqueId().getLeastSignificantBits());
 		// header
 		this.writeHeader(packet, buffer);
-		// body
+		// buffer
 		if (packet.getBuffer() != null) {
 			int amount = packet.getBuffer().readableBytes();
 			NettyUtils.writeVarInt(buffer, amount);

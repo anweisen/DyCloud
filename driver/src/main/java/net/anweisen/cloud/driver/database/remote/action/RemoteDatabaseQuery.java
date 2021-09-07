@@ -88,7 +88,7 @@ public class RemoteDatabaseQuery implements DatabaseQuery, RemoteDatabaseCallbac
 	@Override
 	public Task<ExecutedQuery> executeAsync() {
 		return CloudDriver.getInstance().getSocketComponent().getFirstChannel()
-			.sendQueryAsync(new RemoteDatabaseActionPacket(DatabaseActionType.QUERY, buffer -> buffer.writeString(table).writeDocument(document)))
+			.sendPacketQueryAsync(new RemoteDatabaseActionPacket(DatabaseActionType.QUERY, buffer -> buffer.writeString(table).writeDocument(document)))
 			.map(packet -> new DefaultExecutedQuery(new ArrayList<>(packet.getBuffer().readDocumentCollection())));
 	}
 

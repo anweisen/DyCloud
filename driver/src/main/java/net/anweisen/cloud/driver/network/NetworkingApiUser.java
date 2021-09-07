@@ -43,17 +43,17 @@ public interface NetworkingApiUser {
 
 	@Nullable
 	default Packet sendPacketQuery(@Nonnull Packet packet) {
-		return getTargetChannel().sendQuery(packet);
+		return getTargetChannel().sendPacketQuery(packet);
 	}
 
 	@Nonnull
 	default Task<Packet> sendPacketQueryAsync(@Nonnull Packet packet) {
-		return getTargetChannel().sendQueryAsync(packet);
+		return getTargetChannel().sendPacketQueryAsync(packet);
 	}
 
 	@Nonnull
 	default <R> Task<R> sendPacketQueryAsync(@Nonnull Packet packet, @Nonnull Function<? super Buffer, ? extends R> mapper) {
-		return getTargetChannel().sendQueryAsync(packet).map(response -> mapper.apply(response.getBuffer()));
+		return getTargetChannel().sendPacketQueryAsync(packet).map(response -> mapper.apply(response.getBuffer()));
 	}
 
 	@Nonnull

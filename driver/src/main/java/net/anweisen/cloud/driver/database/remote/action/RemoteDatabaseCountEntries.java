@@ -25,7 +25,7 @@ public class RemoteDatabaseCountEntries implements DatabaseCountEntries, RemoteD
 	@Override
 	public Task<Long> executeAsync() {
 		return CloudDriver.getInstance().getSocketComponent().getFirstChannel()
-			.sendQueryAsync(new RemoteDatabaseActionPacket(DatabaseActionType.COUNT_ENTRIES, buffer -> buffer.writeString(table)))
+			.sendPacketQueryAsync(new RemoteDatabaseActionPacket(DatabaseActionType.COUNT_ENTRIES, buffer -> buffer.writeString(table)))
 			.map(packet -> packet.getBuffer().readLong());
 	}
 

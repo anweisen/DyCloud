@@ -99,9 +99,9 @@ public final class NettyUtils {
 	}
 
 	@Nonnull
-	public static byte[] readByteArray(@Nonnull ByteBuf byteBuf, @Nonnegative int size) {
+	public static byte[] readByteArray(@Nonnull ByteBuf buffer, @Nonnegative int size) {
 		byte[] data = new byte[size];
-		byteBuf.readBytes(data);
+		buffer.readBytes(data);
 		return data;
 	}
 
@@ -138,18 +138,18 @@ public final class NettyUtils {
 		}
 	}
 
-	private static long readVarVariant(@Nonnull ByteBuf byteBuf, int maxReadUpperBound) {
+	private static long readVarVariant(@Nonnull ByteBuf buffer, int maxReadUpperBound) {
 		long i = 0;
-		int maxRead = Math.min(maxReadUpperBound, byteBuf.readableBytes());
+		int maxRead = Math.min(maxReadUpperBound, buffer.readableBytes());
 		for (int j = 0; j < maxRead; j++) {
-			int nextByte = byteBuf.readByte();
+			int nextByte = buffer.readByte();
 			i |= (long) (nextByte & 0x7F) << j * 7;
 			if ((nextByte & 0x80) != 128) {
 				return i;
 			}
 		}
 
-		throw SilentDecoderException.INVALID_VAR_INT;
+		throw SilentDecoderException.forInvalidVarInt();
 	}
 
 	@Nonnull

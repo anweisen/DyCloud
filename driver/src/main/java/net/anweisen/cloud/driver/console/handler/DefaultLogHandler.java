@@ -16,7 +16,7 @@ public class DefaultLogHandler implements LogHandler {
 
 	@Override
 	public void handle(@Nonnull LogEntry entry) {
-		PrintStream stream = entry.getLevel().isColorized() ? err : out;
+		PrintStream stream = entry.getLevel().isHighlighted() ? err : out;
 		stream.println(MessageFormatter.formatUncolored(entry));
 	}
 

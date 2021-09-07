@@ -24,11 +24,11 @@ public interface SocketChannel extends PacketSender {
 	Task<Packet> registerQueryResponseHandler(@Nonnull UUID uniqueId);
 
 	@Nonnull
-	Task<Packet> sendQueryAsync(@Nonnull Packet packet);
+	Task<Packet> sendPacketQueryAsync(@Nonnull Packet packet);
 
 	@Nullable
 	@CheckReturnValue
-	Packet sendQuery(@Nonnull Packet packet);
+	Packet sendPacketQuery(@Nonnull Packet packet);
 
 	@Nonnull
 	Task<ChunkedQueryResponse> sendChunkedPacketQuery(@Nonnull Packet packet);

@@ -27,22 +27,22 @@ public final class NettyPacketDecoder extends ByteToMessageDecoder {
 		try {
 			int channel = NettyUtils.readVarInt(buffer);
 			UUID uniqueId = new UUID(buffer.readLong(), buffer.readLong());
-			Document header = this.readHeader(buffer);
-			Buffer body = Buffer.wrap(NettyUtils.readByteArray(buffer, NettyUtils.readVarInt(buffer)));
+			Document header = readHeader(buffer);
+			Buffer packetBuffer = Buffer.wrap(NettyUtils.readByteArray(buffer, NettyUtils.readVarInt(buffer)));
 
-			Packet packet = new Packet(channel, uniqueId, header, body);
+			Packet packet = new Packet(channel, uniqueId, header, packetBuffer);
 			out.add(packet);
 
-			if (CloudDriver.getInstance() != null ) {
+			if (CloudDriver.getInstance() != null )
 				CloudDriver.getInstance().getLogger().trace("Successfully decoded {}", packet);
-			}
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 
 	@Nonnull
-	protected Document readHeader(@Nonnull ByteBuf buffer) {
+	private Document readHeader(@Nonnull ByteBuf buffer) {
 		int length = NettyUtils.readVarInt(buffer);
 		if (length == 0) {
 			return Document.empty();

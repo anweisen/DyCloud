@@ -31,7 +31,7 @@ public class NettyClientInitializer extends ChannelInitializer<Channel> {
 			.addLast("packet-decoder", new NettyPacketDecoder())
 			.addLast("packet-length-serializer", new NettyPacketLengthSerializer())
 			.addLast("packet-encoder", new NettyPacketEncoder())
-			.addLast("channel-handler", new NettyClientChannelHandler(this.client, this.address))
+			.addLast("channel-handler", new NettyClientChannelHandler(client, address))
 		;
 	}
 
