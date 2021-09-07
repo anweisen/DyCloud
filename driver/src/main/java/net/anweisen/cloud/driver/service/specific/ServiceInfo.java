@@ -75,6 +75,7 @@ public final class ServiceInfo implements SerializableObject {
 		buffer.writeString(nodeAddress);
 		buffer.writeEnumConstant(state);
 		buffer.writeEnumConstant(controlState);
+		buffer.writeOptionalString(dockerContainerId);
 		buffer.writeBoolean(ready);
 		buffer.writeEnumConstant(environment);
 		buffer.writeInt(port);
@@ -92,6 +93,7 @@ public final class ServiceInfo implements SerializableObject {
 		nodeAddress = buffer.readString();
 		state = buffer.readEnumConstant(ServiceState.class);
 		controlState = buffer.readEnumConstant(ServiceControlState.class);
+		dockerContainerId = buffer.readOptionalString();
 		ready = buffer.readBoolean();
 		environment = buffer.readEnumConstant(ServiceEnvironment.class);
 		port = buffer.readInt();
