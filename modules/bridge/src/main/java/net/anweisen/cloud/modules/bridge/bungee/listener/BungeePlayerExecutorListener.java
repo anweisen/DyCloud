@@ -7,14 +7,19 @@ import net.anweisen.cloud.driver.network.packet.PacketListener;
 import net.anweisen.cloud.driver.network.packet.def.PlayerExecutorPacket.PlayerExecutorType;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.player.chat.ChatText;
+import net.anweisen.cloud.driver.player.defaults.DefaultPlayerExecutor;
 import net.anweisen.cloud.modules.bridge.bungee.BungeeBridgeHelper;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.Title;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.UUID;
 
 /**
@@ -29,43 +34,65 @@ public class BungeePlayerExecutorListener implements PacketListener, LoggingApiU
 
 		PlayerExecutorType type = buffer.readEnumConstant(PlayerExecutorType.class);
 		UUID playerUniqueId = buffer.readUUID();
-		ProxiedPlayer player = ProxyServer.getInstance().getPlayer(playerUniqueId);
+		boolean global = playerUniqueId.equals(DefaultPlayerExecutor.GLOBAL_UUID);
+		ProxiedPlayer targetPlayer = ProxyServer.getInstance().getPlayer(playerUniqueId);
+		if (global && targetPlayer == null) return;
+		Collection<ProxiedPlayer> players = global ? ProxyServer.getInstance().getPlayers() : Collections.singletonList(targetPlayer);
 
-		debug("{} -> '{}'", type, player);
-
+		debug("{} -> {}", type, players);
 		switch (type) {
 			case SEND_MESSAGE: {
 				String permission = buffer.readOptionalString();
 				ChatText[] messages = buffer.readObjectArray(ChatText.class);
 
-				if (permission != null && !player.hasPermission(permission)) break;
-				player.sendMessage(BungeeBridgeHelper.buildChatTextComponents(messages));
+				BaseComponent[] components = BungeeBridgeHelper.buildChatTextComponents(messages);
+				for (ProxiedPlayer player : players) {
+					if (permission != null && !player.hasPermission(permission)) break;
+					player.sendMessage(components);
+				}
 				break;
 			}
 			case SEND_ACTIONBAR: {
 				String actionbar = buffer.readString();
-				player.sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(actionbar));
+				BaseComponent[] components = TextComponent.fromLegacyText(actionbar);
+				for (ProxiedPlayer player : players) {
+					player.sendMessage(ChatMessageType.ACTION_BAR, components);
+				}
 				break;
 			}
 			case SEND_TITLE: {
-				ProxyServer.getInstance().createTitle()
+				Title title = ProxyServer.getInstance().createTitle()
 					.title(TextComponent.fromLegacyText(buffer.readString()))
 					.subTitle(TextComponent.fromLegacyText(buffer.readString()))
 					.fadeIn(buffer.readVarInt())
 					.stay(buffer.readVarInt())
-					.fadeOut(buffer.readVarInt())
-					.send(player);
+					.fadeOut(buffer.readVarInt());
+				for (ProxiedPlayer player : players) {
+					title.send(player);
+				}
 				break;
 			}
 			case CONNECT_SERVER: {
 				String serverName = buffer.readString();
 				ServerInfo serverInfo = ProxyServer.getInstance().getServerInfo(serverName);
-				player.connect(serverInfo);
+				for (ProxiedPlayer player : players) {
+					player.connect(serverInfo);
+				}
+				break;
+			}
+			case CONNECT_FALLBACK: {
+				for (ProxiedPlayer player : players) {
+					ServerInfo fallback = BungeeBridgeHelper.getNextFallback(player);
+					player.connect(fallback);
+				}
 				break;
 			}
 			case DISCONNECT: {
 				String reason = buffer.readString();
-				player.disconnect(TextComponent.fromLegacyText(reason));
+				BaseComponent[] components = TextComponent.fromLegacyText(reason);
+				for (ProxiedPlayer player : players) {
+					player.disconnect(components);
+				}
 				break;
 			}
 		}
