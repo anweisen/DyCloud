@@ -9,7 +9,8 @@ package net.anweisen.cloud.driver.service.specific;
 public enum ServiceType {
 
 	SERVER(30000),
-	PROXY(25565);
+	PROXY(25565),
+	OTHER(0);
 
 	private int startPort;
 
