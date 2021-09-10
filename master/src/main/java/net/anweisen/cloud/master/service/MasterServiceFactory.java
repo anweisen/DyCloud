@@ -95,11 +95,15 @@ public class MasterServiceFactory implements ServiceFactory {
 	private int getNextFreePort(@Nonnull NodeServer node, @Nonnull ServiceTask task) {
 		Collection<ServiceInfo> nodeServices = node.findServiceInfos();
 		int port = task.getEnvironment().getServiceType().getStartPort();
-		for (ServiceInfo service : nodeServices) {
-			if (service.findTask().getEnvironment() == task.getEnvironment())
-				port++;
+		loop: while (true) {
+			for (ServiceInfo service : nodeServices) {
+				if (service.getPort() == port) {
+					port++;
+					continue loop;
+				}
+			}
+			return port;
 		}
-		return port;
 	}
 
 }
