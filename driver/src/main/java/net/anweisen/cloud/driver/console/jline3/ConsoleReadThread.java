@@ -20,10 +20,10 @@ public class ConsoleReadThread extends Thread {
 	@Override
 	public void run() {
 		String line;
-		while (!Thread.interrupted() && (line = this.readLine()) != null) {
-			if (this.currentTask != null) {
-				this.currentTask.complete(line);
-				this.currentTask = null;
+		while (!Thread.interrupted() && (line = readLine()) != null) {
+			if (currentTask != null) {
+				currentTask.complete(line);
+				currentTask = null;
 			}
 		}
 	}
@@ -31,10 +31,12 @@ public class ConsoleReadThread extends Thread {
 	@Nullable
 	private	String readLine() {
 		try {
-			return this.console.getLineReader().readLine(this.console.getPrompt());
-		} catch (EndOfFileException ignored) {
-		} catch (UserInterruptException exception) {
+			return console.getLineReader().readLine(console.getPrompt());
+		} catch (EndOfFileException ex) {
+		} catch (UserInterruptException ex) {
 			System.exit(-1);
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 
 		return null;
@@ -42,10 +44,10 @@ public class ConsoleReadThread extends Thread {
 
 	@Nonnull
 	protected Task<String> getCurrentTask() {
-		if (this.currentTask == null) {
-			this.currentTask = new CompletableTask<>();
+		if (currentTask == null) {
+			currentTask = new CompletableTask<>();
 		}
 
-		return this.currentTask;
+		return currentTask;
 	}
 }

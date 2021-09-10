@@ -23,8 +23,8 @@ public enum ModuleEnvironment {
 	}
 
 	ModuleEnvironment() {
-		DriverEnvironment driverEnvironment = DriverEnvironment.valueOf(this.name());
-		this.filter = (environment) -> environment == driverEnvironment;
+		DriverEnvironment driverEnvironment = DriverEnvironment.valueOf(name());
+		filter = environment -> environment == driverEnvironment;
 	}
 
 	public boolean applies(@Nonnull DriverEnvironment environment) {
