@@ -37,6 +37,8 @@ public abstract class CloudDriver {
 	protected final ScheduledExecutorService executor = Executors.newScheduledThreadPool(4, new NamedThreadFactory("CloudTask"));
 	protected final EventManager eventManager = new DefaultEventManager();
 
+	protected final long startupTime = System.currentTimeMillis();
+
 	protected final DriverEnvironment environment;
 	protected final HandledLogger logger;
 	protected final Path tempDirectory;
@@ -139,6 +141,14 @@ public abstract class CloudDriver {
 
 	@Nonnull
 	public abstract String getComponentName();
+
+	public long getStartupTime() {
+		return startupTime;
+	}
+
+	public long getUpTime() {
+		return System.currentTimeMillis() - startupTime;
+	}
 
 	private static CloudDriver instance;
 
