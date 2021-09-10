@@ -2,9 +2,7 @@ package net.anweisen.cloud.modules.notify.listener;
 
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.event.EventListener;
-import net.anweisen.cloud.driver.event.service.ServiceRegisteredEvent;
-import net.anweisen.cloud.driver.event.service.ServiceStartedEvent;
-import net.anweisen.cloud.driver.event.service.ServiceStoppedEvent;
+import net.anweisen.cloud.driver.event.service.*;
 import net.anweisen.cloud.driver.player.chat.ChatClickEvent;
 import net.anweisen.cloud.driver.player.chat.ChatText;
 import net.anweisen.cloud.driver.player.permission.Permissions;
@@ -12,6 +10,7 @@ import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.modules.notify.CloudNotifyModule;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -21,25 +20,42 @@ public class IngameServiceStatusListener {
 
 	@EventListener
 	public void onServiceRegistered(@Nonnull ServiceRegisteredEvent event) {
-		sendMessage(event.getServiceInfo(), CloudNotifyModule.getInstance().getNotifyConfig().getIngame().getStartingMessage());
+		sendMessage(event.getServiceInfo(), CloudNotifyModule.getInstance().getNotifyConfig().getIngame().getCreatingMessage(), false);
 	}
 
 	@EventListener
 	public void onServiceStarted(@Nonnull ServiceStartedEvent event) {
-		sendMessage(event.getServiceInfo(), CloudNotifyModule.getInstance().getNotifyConfig().getIngame().getStartedMessage());
+		sendMessage(event.getServiceInfo(), CloudNotifyModule.getInstance().getNotifyConfig().getIngame().getStartingMessage(), true);
+	}
+
+	@EventListener
+	public void onServiceReady(@Nonnull ServiceReadyEvent event) {
+		sendMessage(event.getServiceInfo(), CloudNotifyModule.getInstance().getNotifyConfig().getIngame().getStartedMessage(), true);
 	}
 
 	@EventListener
 	public void onServiceStopped(@Nonnull ServiceStoppedEvent event) {
-		sendMessage(event.getServiceInfo(), CloudNotifyModule.getInstance().getNotifyConfig().getIngame().getStoppedMessage());
+		sendMessage(event.getServiceInfo(), CloudNotifyModule.getInstance().getNotifyConfig().getIngame().getStoppedMessage(), false);
 	}
 
-	private void sendMessage(@Nonnull ServiceInfo service, @Nonnull String message) {
+	@EventListener
+	public void onServiceDeleted(@Nonnull ServiceUnregisteredEvent event) {
+		sendMessage(event.getServiceInfo(), CloudNotifyModule.getInstance().getNotifyConfig().getIngame().getDeletedMessage(), false);
+	}
+
+	private void sendMessage(@Nonnull ServiceInfo service, @Nullable String message, boolean connect) {
+		if (message == null) return;
+
 		ChatText text = new ChatText(message
 			.replace("{service}", service.getName())
 			.replace("{node}", service.getNodeName())
-		).addClick(ChatClickEvent.RUN_COMMAND, "/server " + service.getName())
-		.addHover(CloudNotifyModule.getInstance().getNotifyConfig().getIngame().getHoverMessage());
+		);
+
+		if (connect) {
+			text.addClick(ChatClickEvent.RUN_COMMAND, "/server " + service.getName());
+			if (CloudNotifyModule.getInstance().getNotifyConfig().getIngame().getHoverConnectMessage() != null)
+				text.addHover(CloudNotifyModule.getInstance().getNotifyConfig().getIngame().getHoverConnectMessage());
+		}
 
 		CloudDriver.getInstance().getPlayerManager().getGlobalExecutor().sendMessage(Permissions.NOTIFY, text);
 	}
