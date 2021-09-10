@@ -9,12 +9,14 @@ import javax.annotation.Nonnull;
 public class ProxyConfig {
 
 	private ProxyTabListConfig tablist;
+	private ProxyMotdConfig motd;
 
 	private ProxyConfig() {
 	}
 
-	public ProxyConfig(@Nonnull ProxyTabListConfig tablist) {
+	public ProxyConfig(@Nonnull ProxyTabListConfig tablist, @Nonnull ProxyMotdConfig motd) {
 		this.tablist = tablist;
+		this.motd = motd;
 	}
 
 	@Nonnull
@@ -22,4 +24,8 @@ public class ProxyConfig {
 		return tablist;
 	}
 
+	@Nonnull
+	public ProxyMotdConfig getMotd() {
+		return motd;
+	}
 }

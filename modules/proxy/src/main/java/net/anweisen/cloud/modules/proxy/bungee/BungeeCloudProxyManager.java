@@ -1,13 +1,19 @@
 package net.anweisen.cloud.modules.proxy.bungee;
 
+import net.anweisen.cloud.driver.CloudDriver;
+import net.anweisen.cloud.modules.proxy.config.ProxyMotdEntryConfig;
 import net.anweisen.cloud.modules.proxy.helper.AbstractCloudProxyManager;
-import net.anweisen.cloud.wrapper.CloudWrapper;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.ServerPing;
+import net.md_5.bungee.api.ServerPing.PlayerInfo;
+import net.md_5.bungee.api.ServerPing.Players;
+import net.md_5.bungee.api.ServerPing.Protocol;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import javax.annotation.Nonnull;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -26,21 +32,41 @@ public class BungeeCloudProxyManager extends AbstractCloudProxyManager {
 	public void updateTabList() {
 		for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
 			player.setTabHeader(
-				TextComponent.fromLegacyText(replace(header, player)),
-				TextComponent.fromLegacyText(replace(footer, player))
+				TextComponent.fromLegacyText(replaceBungeePlayer(header, player)),
+				TextComponent.fromLegacyText(replaceBungeePlayer(footer, player))
 			);
 		}
 	}
 
 	@Nonnull
-	public String replace(@Nonnull String content, @Nonnull ProxiedPlayer player) {
-		return replaceDefault(content, player.getUniqueId())
+	public String replaceBungeePlayer(@Nonnull String content, @Nonnull ProxiedPlayer player) {
+		return replacePlayer(content, player.getUniqueId())
 			.replace("{service}", player.getServer() == null ? "N/A" : player.getServer().getInfo().getName())
-			.replace("{proxy}", CloudWrapper.getInstance().getServiceInfo().getName())
-			.replace("{node}", CloudWrapper.getInstance().getServiceInfo().getNodeName())
 			.replace("{name}", player.getName())
 			.replace("{ping}", String.valueOf(player.getPing()))
 		;
+	}
+
+	@Nonnull
+	public ServerPing getMotd(@Nonnull ServerPing original) {
+		CloudDriver cloud = CloudDriver.getInstance();
+		ProxyMotdEntryConfig motd = getMotdEntry();
+		if (motd == null) return original;
+
+		String motdText = replaceDefault(motd.getFirstLine() + '\n' + motd.getSecondLine());
+		String protocolText = motd.getProtocolText() == null ? null : replaceDefault(motd.getProtocolText());
+
+		PlayerInfo[] playerInfo = new PlayerInfo[motd.getPlayerInfo() == null || motd.getPlayerInfo().isEmpty() ? 0 : motd.getPlayerInfo().size()];
+		for (int i = 0; i < playerInfo.length; i++) {
+			playerInfo[i] = new PlayerInfo(motd.getPlayerInfo().get(i), UUID.randomUUID());
+		}
+
+		return new ServerPing(
+			new Protocol(protocolText == null ? original.getVersion().getName() : protocolText, protocolText == null ? original.getVersion().getProtocol() : 1),
+			new Players(cloud.getGlobalConfig().getMaxPlayers(), cloud.getPlayerManager().getOnlinePlayerCount(), playerInfo),
+			new TextComponent(TextComponent.fromLegacyText(motdText)),
+			original.getFaviconObject()
+		);
 	}
 
 	@Override

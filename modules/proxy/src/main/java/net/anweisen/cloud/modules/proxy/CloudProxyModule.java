@@ -1,9 +1,7 @@
 package net.anweisen.cloud.modules.proxy;
 
 import net.anweisen.cloud.base.module.CloudModule;
-import net.anweisen.cloud.modules.proxy.config.ProxyConfig;
-import net.anweisen.cloud.modules.proxy.config.ProxyTabListConfig;
-import net.anweisen.cloud.modules.proxy.config.ProxyTabListEntryConfig;
+import net.anweisen.cloud.modules.proxy.config.*;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -37,7 +35,7 @@ public final class CloudProxyModule extends CloudModule {
 						Arrays.asList(
 							"§7                                                              ",
 							"§e§lMinecraftCloud §8⏹ §7Dockerize your network",
-							"§8§l► §a{players.online} §7/ §c{players.max} §8§l┃ §7Server §8» §e{service} §8§l◄",
+							"§8► §a{players.online} §7/ §c{players.max} §8§l┃ §7Server §8» §e{service} §8◄",
 							"§7"
 						),
 						Arrays.asList(
@@ -49,6 +47,24 @@ public final class CloudProxyModule extends CloudModule {
 						)
 					)),
 					1
+				),
+				new ProxyMotdConfig(
+					Collections.singletonList(
+						new ProxyMotdEntryConfig(
+							"§e§lMinecraftCloud §8⏹ §7Dockerize your network",
+							"",
+							Collections.emptyList(),
+							null
+						)
+					),
+					Collections.singletonList(
+						new ProxyMotdEntryConfig(
+							"§e§lMinecraftCloud §8⏹ §7Dockerize your network",
+							"",
+							Collections.emptyList(),
+							"§c✖ §8┃ §cWartungsmodus"
+						)
+					)
 				)
 			)).save();
 		getGlobalConfig().set("proxyConfig", config).update();

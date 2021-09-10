@@ -4,10 +4,15 @@ import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.player.permission.PermissionGroup;
 import net.anweisen.cloud.driver.player.permission.PermissionPlayer;
 import net.anweisen.cloud.modules.proxy.config.ProxyConfig;
+import net.anweisen.cloud.modules.proxy.config.ProxyMotdEntryConfig;
 import net.anweisen.cloud.modules.proxy.config.ProxyTabListEntryConfig;
+import net.anweisen.cloud.wrapper.CloudWrapper;
+import net.anweisen.utilities.common.collection.IRandom;
 import net.anweisen.utilities.common.misc.StringUtils;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -49,7 +54,7 @@ public abstract class AbstractCloudProxyManager {
 		updateTabList();
 	}
 
-	protected String replaceDefault(@Nonnull String content, @Nonnull UUID playerUniqueId) {
+	protected String replacePlayer(@Nonnull String content, @Nonnull UUID playerUniqueId) {
 		if (CloudDriver.getInstance().hasPermissionManager()) {
 			PermissionPlayer permissionPlayer = CloudDriver.getInstance().getPermissionManager().getPlayerByUniqueId(playerUniqueId);
 			PermissionGroup group = permissionPlayer.getHighestGroup();
@@ -62,9 +67,23 @@ public abstract class AbstractCloudProxyManager {
 			}
 		}
 
+		return replaceDefault(content);
+	}
+
+	protected String replaceDefault(@Nonnull String content) {
 		return content
+			.replace("{proxy}", CloudWrapper.getInstance().getServiceInfo().getName())
+			.replace("{node}", CloudWrapper.getInstance().getServiceInfo().getNodeName())
 			.replace("{players.online}", CloudDriver.getInstance().getPlayerManager().getOnlinePlayerCount() + "")
 			.replace("{players.max}", CloudDriver.getInstance().getGlobalConfig().getMaxPlayers() + "")
 		;
 	}
+
+	@Nullable
+	public ProxyMotdEntryConfig getMotdEntry() {
+		List<ProxyMotdEntryConfig> motds = CloudDriver.getInstance().getGlobalConfig().getMaintenance() ? config.getMotd().getMaintenanceMotds() : config.getMotd().getMotds();
+		if (motds.isEmpty()) return null;
+		return IRandom.singleton().choose(motds);
+	}
+
 }
