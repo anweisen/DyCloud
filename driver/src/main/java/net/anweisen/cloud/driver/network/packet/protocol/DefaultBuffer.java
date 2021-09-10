@@ -227,7 +227,7 @@ public class DefaultBuffer extends Buffer {
 	@Nonnull
 	@Override
 	public Buffer writeDocument(@Nonnull Document document) {
-		return writeObject(SerializableDocument.asSerializable(document));
+		return writeObject(new SerializableDocument(document));
 	}
 
 	@Override
@@ -254,8 +254,8 @@ public class DefaultBuffer extends Buffer {
 		return this;
 	}
 
-	@Override
 	@Nonnull
+	@Override
 	public Buffer writeOptionalDocument(@Nullable Document document) {
 		writeBoolean(document != null);
 		if (document != null)

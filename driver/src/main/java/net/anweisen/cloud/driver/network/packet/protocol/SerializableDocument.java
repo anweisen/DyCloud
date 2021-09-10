@@ -11,20 +11,15 @@ import javax.annotation.Nullable;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class SerializableDocument implements WrappedDocument, SerializableObject {
-
-	@Nonnull
-	public static SerializableObject asSerializable(@Nonnull Document document) {
-		return new SerializableDocument(document);
-	}
+public class SerializableDocument implements WrappedDocument<SerializableDocument>, SerializableObject {
 
 	private Document document;
 
-	public SerializableDocument(@Nullable Document document) {
-		this.document = document;
+	private SerializableDocument() {
 	}
 
-	public SerializableDocument() {
+	public SerializableDocument(@Nullable Document document) {
+		this.document = document;
 	}
 
 	@Override
