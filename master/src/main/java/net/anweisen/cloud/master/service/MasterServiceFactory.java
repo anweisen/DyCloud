@@ -72,9 +72,13 @@ public class MasterServiceFactory implements ServiceFactory {
 
 		NodeServer node = allowedNodes.get(0); // TODO choose based on running services and load
 
+		int serviceNumber = 1;
+		while (cloud.getServiceManager().getServiceByName(task.getName() + "-" +  serviceNumber) != null)
+			serviceNumber++;
+
 		int port = getNextFreePort(node, task);
 		ServiceInfo info = new ServiceInfo(
-				UUID.randomUUID(), null, task.getName(), servicesRunning + 1, task.getEnvironment(),
+				UUID.randomUUID(), null, task.getName(), serviceNumber, task.getEnvironment(),
 				ServiceState.DEFINED, ServiceControlState.CREATING, node.getInfo().getName(), node.getInfo().getAddress().getHost(), port, true, Document.create()
 		);
 		cloud.publishUpdate(ServicePublishType.REGISTER, info, node.getChannel());
