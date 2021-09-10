@@ -1,4 +1,4 @@
-package net.anweisen.cloud.master.service;
+package net.anweisen.cloud.master.service.specific;
 
 import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.network.packet.def.ServiceControlPacket;
@@ -9,7 +9,6 @@ import net.anweisen.cloud.driver.service.specific.ServiceController;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.master.CloudMaster;
 import net.anweisen.cloud.master.node.NodeServer;
-import net.anweisen.cloud.master.service.specific.CloudService;
 import net.anweisen.utilities.common.concurrent.task.Task;
 
 import javax.annotation.Nonnull;
