@@ -167,7 +167,10 @@ public class DockerServiceActor implements LoggingApiUser {
 
 		List<String> arguments = new ArrayList<>(Collections.singletonList("java"));
 		arguments.addAll(Arrays.asList(
+			"-DIReallyKnowWhatIAmDoingISwear=true", // skip deprecated build warning
+			"-Djline.terminal=jline.UnsupportedTerminal",
 			"-Dfile.encoding=UTF-8",
+			"-Dclient.encoding.override=UTF-8",
 			"-XX:+UseStringDeduplication",
 			"-XX:-UseAdaptiveSizePolicy",
 			"-XX:+UseCompressedOops"
