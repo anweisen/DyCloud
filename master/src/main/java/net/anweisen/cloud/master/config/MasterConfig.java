@@ -31,6 +31,7 @@ public final class MasterConfig implements DriverConfig, LoggingApiUser {
 	private Collection<String> ipWhitelist;
 	private Document databaseConfig;
 
+	@Override
 	public void load() {
 
 		FileDocument document = FileDocument.readJsonFile(path);

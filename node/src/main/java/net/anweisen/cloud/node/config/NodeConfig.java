@@ -27,6 +27,7 @@ public final class NodeConfig implements RemoteConfig {
 	private String dockerHost;
 	private String dockerNetworkMode;
 
+	@Override
 	public void load() {
 
 		FileDocument document = FileDocument.readJsonFile(path);

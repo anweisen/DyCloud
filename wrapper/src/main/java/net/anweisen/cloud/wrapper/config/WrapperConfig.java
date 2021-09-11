@@ -27,6 +27,7 @@ public final class WrapperConfig implements RemoteConfig {
 	private ServiceTask task;
 	private ServiceInfo serviceInfo;
 
+	@Override
 	public void load() {
 
 		Document document = Document.readJsonFile(path);
