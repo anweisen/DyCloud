@@ -1,3 +1,5 @@
+[![CI](https://github.com/anweisen/MinecraftCloud/actions/workflows/ci.yml/badge.svg)](https://github.com/anweisen/MinecraftCloud/actions/workflows/ci.yml)
+
 # MinecraftCloud
 A minecraft cloud system using docker & netty supporting multiroot & multiproxy for learning purpose
 
