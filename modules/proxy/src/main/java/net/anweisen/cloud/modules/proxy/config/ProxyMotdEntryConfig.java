@@ -12,17 +12,17 @@ public class ProxyMotdEntryConfig {
 
 	private String firstLine;
 	private String secondLine;
-	private List<String> playerInfo;
 	private String protocolText;
+	private List<String> playerInfo;
 
 	private ProxyMotdEntryConfig() {
 	}
 
-	public ProxyMotdEntryConfig(@Nonnull String firstLine, @Nonnull String secondLine, @Nonnull List<String> playerInfo, @Nullable String protocolText) {
+	public ProxyMotdEntryConfig(@Nonnull String firstLine, @Nonnull String secondLine, @Nullable String protocolText, @Nonnull List<String> playerInfo) {
 		this.firstLine = firstLine;
 		this.secondLine = secondLine;
-		this.playerInfo = playerInfo;
 		this.protocolText = protocolText;
+		this.playerInfo = playerInfo;
 	}
 
 	@Nonnull
@@ -35,12 +35,12 @@ public class ProxyMotdEntryConfig {
 		return secondLine;
 	}
 
-	public List<String> getPlayerInfo() {
-		return playerInfo;
-	}
-
 	@Nullable
 	public String getProtocolText() {
 		return protocolText;
+	}
+
+	public List<String> getPlayerInfo() {
+		return playerInfo;
 	}
 }

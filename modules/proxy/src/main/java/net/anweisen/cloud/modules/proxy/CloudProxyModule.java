@@ -51,18 +51,18 @@ public final class CloudProxyModule extends CloudModule {
 				new ProxyMotdConfig(
 					Collections.singletonList(
 						new ProxyMotdEntryConfig(
-							"§e§lMinecraftCloud §8⏹ §7Dockerize your network",
-							"",
-							Collections.emptyList(),
-							null
+							"§e§lMinecraftCloud §8● §7Dockerize your network",
+							"§7Status §8» §aOnline §8§l┃ §7Version §8» §e1§7.§68§7.§e§k? §7- §e1§7.§617§7.§e§k?",
+							null,
+							Collections.emptyList()
 						)
 					),
 					Collections.singletonList(
 						new ProxyMotdEntryConfig(
-							"§e§lMinecraftCloud §8⏹ §7Dockerize your network",
-							"",
-							Collections.emptyList(),
-							"§c✖ §8┃ §cWartungsmodus"
+							"§e§lMinecraftCloud §8● §7Dockerize your network",
+							"§7Status §8» §cMaintenance §8§l┃ §7Website §8» §eanweisen§7.§enet",
+							"§4✖ §8┃ §cMaintenance",
+							Collections.emptyList()
 						)
 					)
 				)
