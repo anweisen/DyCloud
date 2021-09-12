@@ -58,7 +58,7 @@ public class NettyChannel implements SocketChannel {
 
 	@Nonnull
 	@Override
-	public Task<Packet> sendQueryAsync(@Nonnull Packet packet) {
+	public Task<Packet> sendPacketQueryAsync(@Nonnull Packet packet) {
 		Preconditions.checkNotNull(packet, "Packet cannot be null");
 
 		Task<Packet> task = registerQueryResponseHandler(packet.getUniqueId());
@@ -68,8 +68,8 @@ public class NettyChannel implements SocketChannel {
 
 	@Nullable
 	@Override
-	public Packet sendQuery(@Nonnull Packet packet) {
-		return sendQueryAsync(packet).getOrDefault(5, TimeUnit.SECONDS, null);
+	public Packet sendPacketQuery(@Nonnull Packet packet) {
+		return sendPacketQueryAsync(packet).getOrDefault(5, TimeUnit.SECONDS, null);
 	}
 
 	@Nonnull
@@ -119,12 +119,22 @@ public class NettyChannel implements SocketChannel {
 		Preconditions.checkNotNull(packet, "Packet cannot be null");
 
 		ChannelFuture future = writePacket(packet);
-		if (future != null)
-			future.syncUninterruptibly();
+		if (future != null) {
+			try {
+				future.sync();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
 	}
 
 	private ChannelFuture writePacket(@Nonnull Packet packet) {
-		return channel.writeAndFlush(packet);
+		try {
+			return channel.writeAndFlush(packet);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
 	}
 
 	@Override

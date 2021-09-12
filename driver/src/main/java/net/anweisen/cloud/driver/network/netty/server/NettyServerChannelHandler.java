@@ -2,14 +2,11 @@ package net.anweisen.cloud.driver.network.netty.server;
 
 import io.netty.channel.ChannelHandlerContext;
 import net.anweisen.cloud.driver.network.HostAndPort;
-import net.anweisen.cloud.driver.network.SocketChannel;
+import net.anweisen.cloud.driver.network.SocketComponent;
 import net.anweisen.cloud.driver.network.netty.NettyChannel;
 import net.anweisen.cloud.driver.network.netty.NettyChannelHandler;
-import net.anweisen.cloud.driver.network.packet.PacketListenerRegistry;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
-import java.util.concurrent.Executor;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -35,28 +32,15 @@ public class NettyServerChannelHandler extends NettyChannelHandler {
 			false
 		);
 
-		getChannels().add(channel);
+		server.getChannels().add(channel);
 
 		if (channel.getHandler() != null)
 			channel.getHandler().handleChannelInitialize(channel);
 	}
 
-
 	@Nonnull
 	@Override
-	protected Executor getPacketDispatcher() {
-		return server.getPacketDispatcher();
-	}
-
-	@Nonnull
-	@Override
-	protected Collection<SocketChannel> getChannels() {
-		return server.getChannels();
-	}
-
-	@Nonnull
-	@Override
-	protected PacketListenerRegistry getListenerRegistry() {
-		return server.getListenerRegistry();
+	public SocketComponent getComponent() {
+		return server;
 	}
 }
