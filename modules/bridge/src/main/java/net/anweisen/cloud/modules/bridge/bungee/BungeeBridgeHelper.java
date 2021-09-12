@@ -1,7 +1,6 @@
 package net.anweisen.cloud.modules.bridge.bungee;
 
 import net.anweisen.cloud.driver.network.HostAndPort;
-import net.anweisen.cloud.driver.player.PlayerSample;
 import net.anweisen.cloud.driver.player.chat.ChatText;
 import net.anweisen.cloud.driver.player.connection.DefaultPlayerConnection;
 import net.anweisen.cloud.driver.player.connection.PlayerConnection;
@@ -44,14 +43,6 @@ public final class BungeeBridgeHelper {
 			connection.getVersion(),
 			connection.isOnlineMode(),
 			connection.isLegacy()
-		);
-	}
-
-	@Nonnull
-	public static PlayerSample createPlayerSample(@Nonnull PendingConnection connection) {
-		return new PlayerSample(
-			connection.getUniqueId(),
-			connection.getName()
 		);
 	}
 

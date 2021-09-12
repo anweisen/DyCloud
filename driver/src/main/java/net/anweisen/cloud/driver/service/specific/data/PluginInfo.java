@@ -49,4 +49,9 @@ public final class PluginInfo {
 	public String getDescription() {
 		return description;
 	}
+
+	@Override
+	public String toString() {
+		return name + " v" + version;
+	}
 }
