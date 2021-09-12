@@ -4,7 +4,8 @@ import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import net.anweisen.cloud.driver.player.CloudOfflinePlayer;
-import net.anweisen.cloud.driver.player.data.PlayerProxyConnectionData;
+import net.anweisen.cloud.driver.player.connection.DefaultPlayerConnection;
+import net.anweisen.cloud.driver.player.connection.PlayerConnection;
 import net.anweisen.cloud.driver.player.permission.PermissionData;
 import net.anweisen.utilities.common.config.Document;
 
@@ -19,7 +20,7 @@ public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer, Serializab
 
 	private UUID uuid;
 	private String name;
-	private PlayerProxyConnectionData lastNetworkConnection;
+	private DefaultPlayerConnection lastNetworkConnection;
 	private PermissionData permissionData;
 	private long firstLogin;
 	private long lastOnline;
@@ -28,7 +29,7 @@ public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer, Serializab
 	private DefaultCloudOfflinePlayer() {
 	}
 
-	public DefaultCloudOfflinePlayer(@Nonnull UUID uuid, @Nonnull String name, @Nonnull PlayerProxyConnectionData lastNetworkConnection,
+	public DefaultCloudOfflinePlayer(@Nonnull UUID uuid, @Nonnull String name, @Nonnull DefaultPlayerConnection lastNetworkConnection,
 	                                 @Nonnull PermissionData permissionData, long firstLogin, long lastOnline, @Nonnull Document properties) {
 		this.uuid = uuid;
 		this.name = name;
@@ -54,7 +55,7 @@ public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer, Serializab
 	public void read(@Nonnull Buffer buffer) {
 		uuid = buffer.readUUID();
 		name = buffer.readString();
-		lastNetworkConnection = buffer.readObject(PlayerProxyConnectionData.class);
+		lastNetworkConnection = buffer.readObject(DefaultPlayerConnection.class);
 		permissionData = buffer.readObject(PermissionData.class);
 		firstLogin = buffer.readLong();
 		lastOnline = buffer.readLong();
@@ -81,12 +82,12 @@ public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer, Serializab
 
 	@Nonnull
 	@Override
-	public PlayerProxyConnectionData getLastProxyConnectionData() {
+	public DefaultPlayerConnection getLastProxyConnectionData() {
 		return lastNetworkConnection;
 	}
 
-	public void setLastProxyConnectionData(@Nonnull PlayerProxyConnectionData connectionData) {
-		this.lastNetworkConnection = connectionData;
+	public void setLastProxyConnectionData(@Nonnull PlayerConnection connectionData) {
+		this.lastNetworkConnection = (DefaultPlayerConnection) connectionData;
 	}
 
 	@Nonnull

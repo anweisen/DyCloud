@@ -1,12 +1,15 @@
 package net.anweisen.cloud.driver.player.defaults;
 
-import net.anweisen.cloud.driver.network.HostAndPort;
+import com.google.common.base.Preconditions;
+import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import net.anweisen.cloud.driver.player.CloudOfflinePlayer;
 import net.anweisen.cloud.driver.player.CloudPlayer;
-import net.anweisen.cloud.driver.player.data.PlayerProxyConnectionData;
-import net.anweisen.cloud.driver.player.data.PlayerServerConnectionData;
+import net.anweisen.cloud.driver.player.connection.DefaultPlayerConnection;
+import net.anweisen.cloud.driver.player.connection.PlayerConnection;
+import net.anweisen.cloud.driver.player.settings.DefaultPlayerSettings;
+import net.anweisen.cloud.driver.player.settings.PlayerSettings;
 import net.anweisen.cloud.driver.player.permission.PermissionData;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.utilities.common.config.Document;
@@ -14,6 +17,7 @@ import net.anweisen.utilities.common.config.Document;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -23,44 +27,50 @@ import java.util.UUID;
 public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 
 	private DefaultCloudOfflinePlayer offlinePlayer;
-	private PlayerProxyConnectionData proxyConnection;
-	private ServiceInfo proxy;
-	private PlayerServerConnectionData serverConnection;
-	private ServiceInfo server;
+	private DefaultPlayerConnection connection;
+	private DefaultPlayerSettings settings;
+	private UUID proxy;
+	private UUID server;
 	private long joinTime;
 	private boolean online = true;
+	private Document onlineProperties;
 
 	private DefaultCloudPlayer() {
 	}
 
-	public DefaultCloudPlayer(@Nonnull CloudOfflinePlayer offlinePlayer, @Nonnull PlayerProxyConnectionData connection, @Nonnull ServiceInfo proxy) {
+	public DefaultCloudPlayer(@Nonnull CloudOfflinePlayer offlinePlayer, @Nonnull DefaultPlayerConnection connection, @Nonnull UUID proxy) {
 		this.offlinePlayer = (DefaultCloudOfflinePlayer) offlinePlayer;
-		this.proxyConnection = connection;
+		this.connection = connection;
 		this.proxy = proxy;
 		this.joinTime = System.currentTimeMillis();
+		this.onlineProperties = Document.create();
 	}
 
 	@Override
 	public void write(@Nonnull Buffer buffer) {
 		buffer.writeObject(offlinePlayer);
-		buffer.writeObject(proxyConnection);
-		buffer.writeObject(proxy);
-		buffer.writeOptionalObject(serverConnection);
-		buffer.writeOptionalObject(server);
+		buffer.writeObject(connection);
+		buffer.writeObject(settings);
+		buffer.writeUUID(proxy);
+		buffer.writeOptionalUUID(server);
 		buffer.writeLong(joinTime);
 		buffer.writeBoolean(online);
+		buffer.writeDocument(onlineProperties);
 	}
 
 	@Override
 	public void read(@Nonnull Buffer buffer) {
 		offlinePlayer = buffer.readObject(DefaultCloudOfflinePlayer.class);
-		proxyConnection = buffer.readObject(PlayerProxyConnectionData.class);
-		proxy = buffer.readObject(ServiceInfo.class);
-		serverConnection = buffer.readOptionalObject(PlayerServerConnectionData.class);
-		server = buffer.readOptionalObject(ServiceInfo.class);
+		connection = buffer.readObject(DefaultPlayerConnection.class);
+		settings = buffer.readObject(DefaultPlayerSettings.class);
+		proxy = buffer.readUUID();
+		server = buffer.readOptionalUUID();
 		online = buffer.readBoolean();
 		joinTime = buffer.readLong();
+		onlineProperties = buffer.readDocument();
 	}
+
+	// BEGIN OF OFFLINE
 
 	@Nonnull
 	@Override
@@ -81,19 +91,13 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 
 	@Nonnull
 	@Override
-	public PlayerProxyConnectionData getLastProxyConnectionData() {
+	public PlayerConnection getLastProxyConnectionData() {
 		return offlinePlayer.getLastProxyConnectionData();
 	}
 
 	@Override
-	public void setLastProxyConnectionData(@Nonnull PlayerProxyConnectionData connectionData) {
+	public void setLastProxyConnectionData(@Nonnull PlayerConnection connectionData) {
 		offlinePlayer.setLastProxyConnectionData(connectionData);
-	}
-
-	@Nonnull
-	@Override
-	public PermissionData getStoredPermissionData() {
-		return offlinePlayer.getStoredPermissionData();
 	}
 
 	@Override
@@ -113,47 +117,69 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 
 	@Nonnull
 	@Override
+	public PermissionData getStoredPermissionData() {
+		return offlinePlayer.getStoredPermissionData();
+	}
+
+	@Nonnull
+	@Override
 	public Document getProperties() {
 		return offlinePlayer.getProperties();
 	}
 
+	// END OF OFFLINE
+	// BEGIN OF ONLINE
+
 	@Nonnull
 	@Override
-	public HostAndPort getAddress() {
-		return proxyConnection.getAddress();
+	public PlayerConnection getConnection() {
+		return connection;
 	}
 
 	@Nonnull
 	@Override
-	public PlayerProxyConnectionData getProxyConnectionData() {
-		return proxyConnection;
+	public PlayerSettings getSettings() {
+		Preconditions.checkNotNull(settings, "No settings available (set in PlayerProxyLoginSuccessEvent)");
+		return settings;
+	}
+
+	@Override
+	public void setSettings(@Nonnull PlayerSettings settings) {
+		this.settings = (DefaultPlayerSettings) settings;
 	}
 
 	@Nonnull
 	@Override
-	public ServiceInfo getCurrentProxy() {
+	public UUID getProxyUniqueId() {
 		return proxy;
 	}
 
-	@Nullable
+	@Nonnull
 	@Override
-	public PlayerServerConnectionData getServerConnectionData() {
-		return serverConnection;
-	}
-
-	@Override
-	public void setServerConnectionData(@Nonnull PlayerServerConnectionData serverConnection) {
-		this.serverConnection = serverConnection;
+	public ServiceInfo getProxy() {
+		return CloudDriver.getInstance().getServiceManager().getServiceInfoByUniqueId(proxy);
 	}
 
 	@Nullable
 	@Override
-	public ServiceInfo getCurrentServer() {
+	public UUID getServerUniqueId() {
 		return server;
 	}
 
+	@Nullable
 	@Override
-	public void setCurrentServer(@Nonnull ServiceInfo server) {
+	public ServiceInfo getServer() {
+		return server == null ? null : CloudDriver.getInstance().getServiceManager().getServiceInfoByUniqueId(server);
+	}
+
+	@Nonnull
+	@Override
+	public Optional<ServiceInfo> getServerOptional() {
+		return Optional.ofNullable(getServer());
+	}
+
+	@Override
+	public void setCurrentServer(@Nullable UUID server) {
 		this.server = server;
 	}
 
@@ -173,13 +199,24 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 	}
 
 	@Nonnull
+	@Override
+	public Document getOnlineProperties() {
+		return onlineProperties;
+	}
+
+	@Override
+	public void setOnlineProperties(@Nonnull Document properties) {
+		this.onlineProperties = properties;
+	}
+
+	@Nonnull
 	public DefaultCloudOfflinePlayer getOfflinePlayer() {
 		return offlinePlayer;
 	}
 
 	@Override
 	public String toString() {
-		return "CloudPlayer[name=" + getName() + " uuid=" + getUniqueId() + " address=" + getAddress() + " proxy=" + proxyConnection.getName() + " server=" + (server == null ? null : server.getName()) + (online ? "" : " online=false") + "]";
+		return "CloudPlayer[name=" + getName() + " uuid=" + getUniqueId() + " address=" + connection.getAddress() + " version=" + connection.getVersion() + " proxy=" + getProxy().getName() + " server=" + (getServer() == null ? null : getServer().getName()) + (online ? "" : " online=false") + "]";
 	}
 
 	@Override

@@ -12,6 +12,8 @@ import java.util.UUID;
  */
 public class RemotePlayerExecutor extends DefaultPlayerExecutor {
 
+	public static final RemotePlayerExecutor GLOBAL = new RemotePlayerExecutor(GLOBAL_UUID);
+
 	public RemotePlayerExecutor(@Nonnull UUID playerUniqueId) {
 		super(playerUniqueId);
 	}

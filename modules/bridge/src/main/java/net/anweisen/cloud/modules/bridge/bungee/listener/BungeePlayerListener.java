@@ -21,6 +21,8 @@ import net.md_5.bungee.event.EventHandler;
 import javax.annotation.Nonnull;
 import java.util.concurrent.TimeUnit;
 
+import static net.anweisen.cloud.modules.bridge.bungee.BungeeBridgeHelper.*;
+
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
@@ -29,7 +31,7 @@ public class BungeePlayerListener implements Listener, LoggingApiUser {
 
 	@EventHandler
 	public void onLogin(@Nonnull LoginEvent event) {
-		Tuple<CloudPlayer, String> response = BridgeHelper.sendProxyLoginRequestPacket(BungeeBridgeHelper.createPlayerConnection(event.getConnection()));
+		Tuple<CloudPlayer, String> response = BridgeHelper.sendProxyLoginRequestPacket(event.getConnection().getUniqueId(), event.getConnection().getName(), createPlayerConnection(event.getConnection()));
 
 		String kickReason = response.getSecond();
 		if (kickReason != null) {
@@ -47,13 +49,13 @@ public class BungeePlayerListener implements Listener, LoggingApiUser {
 	public void onServerConnectRequest(@Nonnull ServerConnectEvent event) {
 
 		if (event.getReason() == Reason.JOIN_PROXY) {
-			BridgeHelper.sendProxyLoginSuccessPacket(BungeeBridgeHelper.createPlayerConnection(event.getPlayer().getPendingConnection()));
+			BridgeHelper.sendProxyLoginSuccessPacket(event.getPlayer().getUniqueId(), createPlayerSettings(event.getPlayer()));
 			BridgeHelper.updateServiceInfo();
 		}
 
 		ServiceInfo serviceInfo = BridgeHelper.getCachedService(event.getTarget().getName());
 		if (serviceInfo != null) {
-			BridgeHelper.sendProxyServerConnectRequestPacket(BungeeBridgeHelper.createPlayerConnection(event.getPlayer().getPendingConnection()), serviceInfo);
+			BridgeHelper.sendProxyServerConnectRequestPacket(event.getPlayer().getUniqueId(), serviceInfo.getUniqueId());
 		}
 
 	}
@@ -65,7 +67,7 @@ public class BungeePlayerListener implements Listener, LoggingApiUser {
 		ServiceInfo from = BridgeHelper.getCachedService(event.getFrom().getName());
 		ServiceInfo to = BridgeHelper.getCachedService(event.getPlayer().getServer().getInfo().getName());
 		if (from != null && to != null) {
-			BridgeHelper.sendProxyServerSwitchPacket(BungeeBridgeHelper.createPlayerConnection(event.getPlayer().getPendingConnection()), from, to);
+			BridgeHelper.sendProxyServerSwitchPacket(event.getPlayer().getUniqueId(), from.getUniqueId(), to.getUniqueId());
 		}
 
 	}
@@ -97,9 +99,14 @@ public class BungeePlayerListener implements Listener, LoggingApiUser {
 	public void onDisconnect(@Nonnull PlayerDisconnectEvent event) {
 		ProxyServer.getInstance().getScheduler().schedule(BungeeCloudBridgePlugin.getInstance(), () -> {
 			BridgeHelper.updateServiceInfo();
-			BridgeHelper.sendProxyDisconnectPacket(BungeeBridgeHelper.createPlayerConnection(event.getPlayer().getPendingConnection()));
+			BridgeHelper.sendProxyDisconnectPacket(event.getPlayer().getUniqueId());
 			BridgeHelper.removeFallbackHistory(event.getPlayer().getUniqueId());
 		}, 50, TimeUnit.MILLISECONDS);
+	}
+
+	@EventHandler
+	public void onSettingsChange(@Nonnull SettingsChangedEvent event) {
+		BridgeHelper.sendPlayerSettingsChangePacket(event.getPlayer().getUniqueId(), BungeeBridgeHelper.createPlayerSettings(event.getPlayer()));
 	}
 
 }

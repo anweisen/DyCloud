@@ -4,8 +4,8 @@ import net.anweisen.cloud.driver.event.EventListener;
 import net.anweisen.cloud.driver.event.service.ServiceRegisteredEvent;
 import net.anweisen.cloud.driver.event.service.ServiceUnregisteredEvent;
 import net.anweisen.cloud.driver.service.specific.ServiceProperty;
+import net.anweisen.cloud.driver.service.specific.data.PlayerInfo;
 import net.anweisen.cloud.driver.service.specific.data.PluginInfo;
-import net.anweisen.cloud.driver.service.specific.data.ProxyPlayerInfo;
 import net.anweisen.cloud.modules.bridge.bungee.BungeeBridgeHelper;
 import net.anweisen.cloud.modules.bridge.helper.BridgeHelper;
 import net.anweisen.cloud.wrapper.event.service.ServiceInfoConfigureEvent;
@@ -30,8 +30,8 @@ public class BungeeCloudListener {
 			.set(ServiceProperty.MAX_PLAYER_COUNT, BridgeHelper.getMaxPlayers())
 			.set(ServiceProperty.ONLINE_PLAYER_COUNT, ProxyServer.getInstance().getOnlineCount())
 			.set(ServiceProperty.MESSAGING_CHANNELS, ProxyServer.getInstance().getChannels())
-			.set(ServiceProperty.PROXY_PLAYER_LIST, ProxyServer.getInstance().getPlayers().stream().map(player -> {
-				return new ProxyPlayerInfo(player.getName(), player.getUniqueId(), player.getServer() != null ? player.getServer().getInfo().getName() : null);
+			.set(ServiceProperty.PLAYERS, ProxyServer.getInstance().getPlayers().stream().map(player -> {
+				return new PlayerInfo(player.getUniqueId(), player.getName());
 			}).collect(Collectors.toList()))
 			.set(ServiceProperty.PLUGINS, ProxyServer.getInstance().getPluginManager().getPlugins().stream().map(Plugin::getDescription).map(plugin -> {
 				return new PluginInfo(plugin.getName(), new String[] { plugin.getAuthor() }, plugin.getVersion(), plugin.getMain(), plugin.getDescription());

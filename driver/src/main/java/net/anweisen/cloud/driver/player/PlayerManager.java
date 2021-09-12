@@ -16,6 +16,9 @@ public interface PlayerManager {
 	@Nonnull
 	PlayerExecutor getPlayerExecutor(@Nonnull UUID playerUniqueId);
 
+	@Nonnull
+	PlayerExecutor getGlobalExecutor();
+
 	int getOnlinePlayerCount();
 
 	@Nonnull
@@ -62,5 +65,13 @@ public interface PlayerManager {
 	Task<CloudOfflinePlayer> getOfflinePlayerByUniqueIdAsync(@Nonnull UUID uniqueId);
 
 	void saveOfflinePlayer(@Nonnull CloudOfflinePlayer updatedPlayer);
+
+	default void deleteOfflinePlayer(@Nonnull CloudOfflinePlayer player) {
+		deleteOfflinePlayer(player.getUniqueId());
+	}
+
+	void deleteOfflinePlayer(@Nonnull UUID playerUniqueId);
+
+	void updateOnlinePlayer(@Nonnull CloudPlayer updatedPlayer);
 
 }

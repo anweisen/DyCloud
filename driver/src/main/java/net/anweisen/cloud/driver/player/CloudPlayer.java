@@ -1,13 +1,15 @@
 package net.anweisen.cloud.driver.player;
 
 import net.anweisen.cloud.driver.CloudDriver;
-import net.anweisen.cloud.driver.network.HostAndPort;
-import net.anweisen.cloud.driver.player.data.PlayerProxyConnectionData;
-import net.anweisen.cloud.driver.player.data.PlayerServerConnectionData;
+import net.anweisen.cloud.driver.player.connection.PlayerConnection;
+import net.anweisen.cloud.driver.player.settings.PlayerSettings;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
+import net.anweisen.utilities.common.config.Document;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -21,28 +23,43 @@ public interface CloudPlayer extends CloudOfflinePlayer {
 	}
 
 	@Nonnull
-	HostAndPort getAddress();
+	PlayerConnection getConnection();
 
 	@Nonnull
-	PlayerProxyConnectionData getProxyConnectionData();
+	PlayerSettings getSettings();
+
+	void setSettings(@Nonnull PlayerSettings settings);
 
 	@Nonnull
-	ServiceInfo getCurrentProxy();
+	UUID getProxyUniqueId();
+
+	@Nonnull
+	ServiceInfo getProxy();
 
 	@Nullable
-	PlayerServerConnectionData getServerConnectionData();
-
-	void setServerConnectionData(@Nonnull PlayerServerConnectionData serverConnection);
+	UUID getServerUniqueId();
 
 	@Nullable
-	ServiceInfo getCurrentServer();
+	ServiceInfo getServer();
 
-	void setCurrentServer(@Nonnull ServiceInfo server);
+	@Nonnull
+	Optional<ServiceInfo> getServerOptional();
+
+	void setCurrentServer(@Nullable UUID server);
 
 	long getJoinTime();
 
 	boolean isOnline();
 
 	void setOnline(boolean online);
+
+	@Nonnull
+	Document getOnlineProperties();
+
+	void setOnlineProperties(@Nonnull Document properties);
+
+	default void update() {
+		CloudDriver.getInstance().getPlayerManager().updateOnlinePlayer(this);
+	}
 
 }

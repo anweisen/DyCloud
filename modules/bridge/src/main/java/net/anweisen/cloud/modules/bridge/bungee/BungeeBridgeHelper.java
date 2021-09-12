@@ -1,8 +1,14 @@
 package net.anweisen.cloud.modules.bridge.bungee;
 
 import net.anweisen.cloud.driver.network.HostAndPort;
+import net.anweisen.cloud.driver.player.PlayerSample;
 import net.anweisen.cloud.driver.player.chat.ChatText;
-import net.anweisen.cloud.driver.player.data.PlayerProxyConnectionData;
+import net.anweisen.cloud.driver.player.connection.DefaultPlayerConnection;
+import net.anweisen.cloud.driver.player.connection.PlayerConnection;
+import net.anweisen.cloud.driver.player.settings.ChatMode;
+import net.anweisen.cloud.driver.player.settings.DefaultPlayerSettings;
+import net.anweisen.cloud.driver.player.settings.DefaultSkinPartsConfig;
+import net.anweisen.cloud.driver.player.settings.MainHand;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.modules.bridge.helper.BridgeHelper;
 import net.anweisen.cloud.wrapper.CloudWrapper;
@@ -31,14 +37,41 @@ public final class BungeeBridgeHelper {
 	private BungeeBridgeHelper() {}
 
 	@Nonnull
-	public static PlayerProxyConnectionData createPlayerConnection(@Nonnull PendingConnection connection) {
-		return new PlayerProxyConnectionData(
-			connection.getUniqueId(),
-			connection.getName(),
+	public static PlayerConnection createPlayerConnection(@Nonnull PendingConnection connection) {
+		return new DefaultPlayerConnection(
+			BridgeHelper.getServiceInfo().getName(),
 			HostAndPort.fromSocketAddress(connection.getSocketAddress()),
 			connection.getVersion(),
 			connection.isOnlineMode(),
 			connection.isLegacy()
+		);
+	}
+
+	@Nonnull
+	public static PlayerSample createPlayerSample(@Nonnull PendingConnection connection) {
+		return new PlayerSample(
+			connection.getUniqueId(),
+			connection.getName()
+		);
+	}
+
+	@Nonnull
+	public static DefaultPlayerSettings createPlayerSettings(@Nonnull ProxiedPlayer player) {
+		return new DefaultPlayerSettings(
+			player.getLocale(),
+			player.getViewDistance(),
+			player.hasChatColors(),
+			new DefaultSkinPartsConfig(
+				player.getSkinParts().hasCape(),
+				player.getSkinParts().hasJacket(),
+				player.getSkinParts().hasLeftSleeve(),
+				player.getSkinParts().hasRightSleeve(),
+				player.getSkinParts().hasLeftPants(),
+				player.getSkinParts().hasRightPants(),
+				player.getSkinParts().hasHat()
+			),
+			ChatMode.valueOf(player.getChatMode().name()),
+			MainHand.valueOf(player.getMainHand().name())
 		);
 	}
 

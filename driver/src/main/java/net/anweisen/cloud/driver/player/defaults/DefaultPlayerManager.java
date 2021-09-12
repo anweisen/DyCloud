@@ -34,7 +34,7 @@ public abstract class DefaultPlayerManager implements PlayerManager {
 	public int getOnlineTaskPlayerCount(@Nonnull String taskName) {
 		int count = 0;
 		for (CloudPlayer player : onlinePlayers.values()) {
-			if (player.getCurrentServer() != null && player.getCurrentServer().getTaskName().equals(taskName))
+			if (player.getServer() != null && player.getServer().getTaskName().equals(taskName))
 				count++;
 		}
 		return count;
@@ -45,7 +45,7 @@ public abstract class DefaultPlayerManager implements PlayerManager {
 	public Collection<CloudPlayer> getOnlineTaskPlayers(@Nonnull String taskName) {
 		Collection<CloudPlayer> players = new LinkedList<>();
 		for (CloudPlayer player : onlinePlayers.values()) {
-			if (player.getCurrentServer() != null && player.getCurrentServer().getTaskName().equals(taskName))
+			if (player.getServer() != null && player.getServer().getTaskName().equals(taskName))
 				players.add(player);
 		}
 		return Collections.unmodifiableCollection(players);
@@ -117,7 +117,7 @@ public abstract class DefaultPlayerManager implements PlayerManager {
 	@Nullable
 	@Override
 	public CloudOfflinePlayer getOfflinePlayerByUniqueId(@Nonnull UUID uniqueId) {
-		return getOfflinePlayerByUniqueIdAsync(uniqueId).getBeforeTimeout(15, TimeUnit.SECONDS);
+		return getOfflinePlayerByUniqueIdAsync(uniqueId).getBeforeTimeout(10, TimeUnit.SECONDS);
 	}
 
 	@Nonnull

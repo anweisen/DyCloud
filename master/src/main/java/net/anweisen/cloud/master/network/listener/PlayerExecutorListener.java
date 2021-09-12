@@ -28,7 +28,7 @@ public class PlayerExecutorListener implements PacketListener {
 
 		// TODO check and maybe respond
 		CloudPlayer player = CloudMaster.getInstance().getPlayerManager().getOnlinePlayerByUniqueId(playerUniqueId);
-		CloudService proxyService = CloudMaster.getInstance().getServiceManager().getServiceByName(player.getProxyConnectionData().getName());
+		CloudService proxyService = CloudMaster.getInstance().getServiceManager().getServiceByUniqueId(player.getProxy().getUniqueId());
 		proxyService.getChannel().sendPacket(new Packet(PacketConstants.PLAYER_EXECUTOR_CHANNEL, buffer.resetReaderIndex().retain()));
 
 	}

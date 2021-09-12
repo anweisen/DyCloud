@@ -7,7 +7,7 @@ package net.anweisen.cloud.driver.player;
 public final class PlayerConstants {
 
 	public static final String TABLE_NAME = "player";
-	public static final String UUID_FIELD = "uuid";                         // UUID
+	public static final String UUID_FIELD = "uniqueId";                     // UUID
 	public static final String NAME_FIELD = "name";                         // String
 	public static final String LAST_CONNECTION_FIELD = "lastConnection";    // PlayerProxyConnectionData
 	public static final String FIRST_LOGIN_TIME_FIELD = "firstLogin";       // long

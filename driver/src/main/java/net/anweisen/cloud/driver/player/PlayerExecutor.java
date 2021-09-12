@@ -19,6 +19,11 @@ public interface PlayerExecutor {
 	UUID getPlayerUniqueId();
 
 	/**
+	 * @return whether this executor covers all players
+	 */
+	boolean isGlobal();
+
+	/**
 	 * Sends the message to the player.
 	 *
 	 * @param message the message to send
@@ -78,6 +83,11 @@ public interface PlayerExecutor {
 	 * @param serverName the target server's name
 	 */
 	void connect(@Nonnull String serverName);
+
+	/**
+	 * Sends the player to a fallback server (Lobby) just like in the /hub command.
+	 */
+	void connectToFallback();
 
 	/**
 	 * Disconnects the player from the proxy.

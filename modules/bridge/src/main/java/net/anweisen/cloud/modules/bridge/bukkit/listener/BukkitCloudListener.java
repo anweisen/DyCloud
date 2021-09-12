@@ -2,7 +2,7 @@ package net.anweisen.cloud.modules.bridge.bukkit.listener;
 
 import net.anweisen.cloud.driver.event.EventListener;
 import net.anweisen.cloud.driver.service.specific.ServiceProperty;
-import net.anweisen.cloud.driver.service.specific.data.MinecraftPlayerInfo;
+import net.anweisen.cloud.driver.service.specific.data.PlayerInfo;
 import net.anweisen.cloud.driver.service.specific.data.PluginInfo;
 import net.anweisen.cloud.modules.bridge.helper.BridgeHelper;
 import net.anweisen.cloud.wrapper.event.service.ServiceInfoConfigureEvent;
@@ -29,8 +29,8 @@ public class BukkitCloudListener {
 			.set(ServiceProperty.MAX_PLAYER_COUNT, BridgeHelper.getMaxPlayers())
 			.set(ServiceProperty.ONLINE_PLAYER_COUNT, Bukkit.getOnlinePlayers().size())
 			.set(ServiceProperty.MESSAGING_CHANNELS, SimpleCollectionUtils.of(Bukkit.getMessenger().getIncomingChannels(), Bukkit.getMessenger().getOutgoingChannels()))
-			.set(ServiceProperty.MINECRAFT_PLAYER_LIST, Bukkit.getOnlinePlayers().stream().map(player -> {
-				return new MinecraftPlayerInfo(player.getName(), player.getUniqueId());
+			.set(ServiceProperty.PLAYERS, Bukkit.getOnlinePlayers().stream().map(player -> {
+				return new PlayerInfo(player.getUniqueId(), player.getName());
 			}).collect(Collectors.toList()))
 			.set(ServiceProperty.PLUGINS, Arrays.stream(Bukkit.getPluginManager().getPlugins()).map(Plugin::getDescription).map(plugin -> {
 				return new PluginInfo(plugin.getName(), plugin.getAuthors().toArray(new String[0]), plugin.getVersion(), plugin.getMain(), plugin.getDescription());

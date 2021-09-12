@@ -18,6 +18,8 @@ import java.util.function.Consumer;
  */
 public abstract class DefaultPlayerExecutor implements PlayerExecutor {
 
+	public static final UUID GLOBAL_UUID = new UUID(0, 0);
+
 	protected final UUID playerUniqueId;
 
 	public DefaultPlayerExecutor(@Nonnull UUID playerUniqueId) {
@@ -28,6 +30,11 @@ public abstract class DefaultPlayerExecutor implements PlayerExecutor {
 	@Override
 	public UUID getPlayerUniqueId() {
 		return playerUniqueId;
+	}
+
+	@Override
+	public boolean isGlobal() {
+		return playerUniqueId.equals(GLOBAL_UUID);
 	}
 
 	@Override
@@ -48,6 +55,11 @@ public abstract class DefaultPlayerExecutor implements PlayerExecutor {
 	@Override
 	public void connect(@Nonnull String serverName) {
 		sendPacket(PlayerExecutorType.CONNECT_SERVER, buffer -> buffer.writeString(serverName));
+	}
+
+	@Override
+	public void connectToFallback() {
+		sendPacket(PlayerExecutorType.CONNECT_FALLBACK, buffer -> {});
 	}
 
 	@Override

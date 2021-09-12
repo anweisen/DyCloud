@@ -9,8 +9,10 @@ import net.anweisen.cloud.driver.network.packet.def.PlayerRemoteManagerPacket.Pl
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import net.anweisen.cloud.driver.player.CloudOfflinePlayer;
+import net.anweisen.cloud.driver.player.CloudPlayer;
 import net.anweisen.cloud.driver.player.PlayerManager;
 import net.anweisen.cloud.driver.player.defaults.DefaultCloudOfflinePlayer;
+import net.anweisen.cloud.driver.player.defaults.DefaultCloudPlayer;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -61,6 +63,18 @@ public class PlayerRemoteManagerListener implements PacketListener, LoggingApiUs
 				CloudOfflinePlayer player = buffer.readObject(DefaultCloudOfflinePlayer.class);
 				debug("{} -> {}", type, player);
 				manager.saveOfflinePlayer(player);
+				break;
+			}
+			case DELETE_OFFLINE_PLAYER: {
+				UUID uuid = buffer.readUUID();
+				debug("{} -> {}", type, uuid);
+				manager.deleteOfflinePlayer(uuid);
+				break;
+			}
+			case UPDATE_ONLINE_PLAYER: {
+				CloudPlayer player = buffer.readObject(DefaultCloudPlayer.class);
+				debug("{} -> {}", type, player);
+				manager.updateOnlinePlayer(player);
 				break;
 			}
 		}
