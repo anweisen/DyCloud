@@ -16,19 +16,11 @@ import java.util.UUID;
  */
 public class PlayerServerDisconnectEvent extends PlayerServerEvent {
 
-	protected final String name;
 	protected final UUID uuid;
 
-	public PlayerServerDisconnectEvent(@Nullable CloudPlayer player, @Nonnull ServiceInfo service, @Nonnull String name, @Nonnull UUID uuid) {
+	public PlayerServerDisconnectEvent(@Nullable CloudPlayer player, @Nonnull ServiceInfo service, @Nonnull UUID uuid) {
 		super(player, service);
-		this.name = name;
 		this.uuid = uuid;
-	}
-
-	@Nonnull
-	@Override
-	public String getPlayerName() {
-		return name;
 	}
 
 	@Nonnull
@@ -48,6 +40,6 @@ public class PlayerServerDisconnectEvent extends PlayerServerEvent {
 
 	@Override
 	public String toString() {
-		return "PlayerServerDisconnectEvent[player=CloudPlayer[name=" + name + " uuid=" + uuid + "] service=" + service.getName() + "]";
+		return "PlayerServerDisconnectEvent[player=CloudPlayer[uuid=" + uuid + "] service=" + service.getName() + "]";
 	}
 }

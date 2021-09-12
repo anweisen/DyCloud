@@ -31,11 +31,6 @@ public abstract class PlayerEvent implements Event {
 	}
 
 	@Nonnull
-	public String getPlayerName() {
-		return player.getName();
-	}
-
-	@Nonnull
 	public PlayerManager getPlayerManager() {
 		return CloudDriver.getInstance().getPlayerManager();
 	}
