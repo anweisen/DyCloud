@@ -1,5 +1,8 @@
 package net.anweisen.cloud.driver.console;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
@@ -8,50 +11,47 @@ public final class SpacePadder {
 
 	private SpacePadder() {}
 
-	private final static String[] SPACES = {
-		" ", "  ", "    ", "        ",      // 1, 2, 4, 8 spaces
-		"                ",                 // 16 spaces
-		"                                "  // 32 spaces
-	};
+	/** @see #pad(StringBuilder, int) */
+	private final static String[] fastSpaces = { " ", "  ", "    ", "        ", "                ", "                                " };
 
-	public static void leftPad(StringBuilder buf, String s, int desiredLength) {
-		int actualLen = 0;
-		if (s != null) {
-			actualLen = s.length();
+	public static void padLeft(@Nonnull StringBuilder buffer, @Nullable String content, int desiredLength) {
+		int actualLength = 0;
+		if (content != null) {
+			actualLength = content.length();
 		}
-		if (actualLen < desiredLength) {
-			pad(buf, desiredLength - actualLen);
+		if (actualLength < desiredLength) {
+			pad(buffer, desiredLength - actualLength);
 		}
-		if (s != null) {
-			buf.append(s);
+		if (content != null) {
+			buffer.append(content);
 		}
 	}
 
-	public static void rightPad(StringBuilder buf, String s, int desiredLength) {
-		int actualLen = 0;
-		if (s != null) {
-			actualLen = s.length();
+	public static void padRight(@Nonnull StringBuilder buffer, @Nullable String content, int desiredLength) {
+		int actualLength = 0;
+		if (content != null) {
+			actualLength = content.length();
 		}
-		if (s != null) {
-			buf.append(s);
+		if (content != null) {
+			buffer.append(content);
 		}
-		if (actualLen < desiredLength) {
-			pad(buf, desiredLength - actualLen);
+		if (actualLength < desiredLength) {
+			pad(buffer, desiredLength - actualLength);
 		}
 	}
 
 	/**
 	 * Fast space padding method.
 	 */
-	public static void pad(StringBuilder sbuf, int length) {
+	public static void pad(@Nonnull StringBuilder buffer, int length) {
 		while (length >= 32) {
-			sbuf.append(SPACES[5]);
+			buffer.append(fastSpaces[5]);
 			length -= 32;
 		}
 
 		for (int i = 4; i >= 0; i--) {
 			if ((length & (1 << i)) != 0) {
-				sbuf.append(SPACES[i]);
+				buffer.append(fastSpaces[i]);
 			}
 		}
 	}
