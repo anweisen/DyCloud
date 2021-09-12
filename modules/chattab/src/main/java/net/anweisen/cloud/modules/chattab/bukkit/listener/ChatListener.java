@@ -32,6 +32,8 @@ public class ChatListener implements Listener {
 		}
 
 		String format = handler.format(event.getPlayer(), message);
+		if (format == null) return;
+
 		event.setFormat(format);
 
 	}

@@ -3,6 +3,7 @@ package net.anweisen.cloud.modules.chattab.bukkit.handler;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -10,7 +11,7 @@ import javax.annotation.Nonnull;
  */
 public interface ChatHandler {
 
-	@Nonnull
+	@Nullable
 	String format(@Nonnull Player player, @Nonnull String message);
 
 }
