@@ -50,7 +50,7 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 	public void write(@Nonnull Buffer buffer) {
 		buffer.writeObject(offlinePlayer);
 		buffer.writeObject(connection);
-		buffer.writeObject(settings);
+		buffer.writeOptionalObject(settings);
 		buffer.writeUUID(proxy);
 		buffer.writeOptionalUUID(server);
 		buffer.writeLong(joinTime);
@@ -62,7 +62,7 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 	public void read(@Nonnull Buffer buffer) {
 		offlinePlayer = buffer.readObject(DefaultCloudOfflinePlayer.class);
 		connection = buffer.readObject(DefaultPlayerConnection.class);
-		settings = buffer.readObject(DefaultPlayerSettings.class);
+		settings = buffer.readOptionalObject(DefaultPlayerSettings.class);
 		proxy = buffer.readUUID();
 		server = buffer.readOptionalUUID();
 		online = buffer.readBoolean();
