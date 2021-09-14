@@ -80,6 +80,16 @@ public final class ProtocolVersion {
 
 	@Nonnull
 	public String getName() {
+		String nameString = name;
+		for (String otherName : otherNames) {
+			nameString += ", " + otherName;
+		}
+		return nameString;
+	}
+
+
+	@Nonnull
+	public String getMainName() {
 		return name;
 	}
 
@@ -90,11 +100,6 @@ public final class ProtocolVersion {
 
 	@Override
 	public String toString() {
-		String nameString = name;
-		for (String otherName : otherNames) {
-			nameString += ", " + otherName;
-		}
-
-		return "ProtocolVersion[name=" + nameString + " id=" + versionId + "]";
+		return "ProtocolVersion[name=" + getName() + " id=" + versionId + "]";
 	}
 }
