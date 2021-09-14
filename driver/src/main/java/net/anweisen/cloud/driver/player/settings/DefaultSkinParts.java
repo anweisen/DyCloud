@@ -9,14 +9,14 @@ import javax.annotation.Nonnull;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class DefaultSkinPartsConfig implements SkinPartsConfig, SerializableObject {
+public class DefaultSkinParts implements SkinParts, SerializableObject {
 
 	private boolean cape, jacket, leftSleeve, rightSleeve, leftPants, rightPants, hat;
 
-	private DefaultSkinPartsConfig() {
+	private DefaultSkinParts() {
 	}
 
-	public DefaultSkinPartsConfig(boolean cape, boolean jacket, boolean leftSleeve, boolean rightSleeve, boolean leftPants, boolean rightPants, boolean hat) {
+	public DefaultSkinParts(boolean cape, boolean jacket, boolean leftSleeve, boolean rightSleeve, boolean leftPants, boolean rightPants, boolean hat) {
 		this.cape = cape;
 		this.jacket = jacket;
 		this.leftSleeve = leftSleeve;

@@ -9,7 +9,7 @@ package net.anweisen.cloud.driver.player.settings;
  *
  * @see PlayerSettings#getSkinParts()
  */
-public interface SkinPartsConfig {
+public interface SkinParts {
 
 	boolean hasCape();
 

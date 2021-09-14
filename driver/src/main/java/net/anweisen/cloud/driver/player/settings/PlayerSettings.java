@@ -17,7 +17,7 @@ public interface PlayerSettings {
 	boolean hasChatColors();
 
 	@Nonnull
-	SkinPartsConfig getSkinParts();
+	SkinParts getSkinParts();
 
 	@Nonnull
 	ChatMode getChatMode();
