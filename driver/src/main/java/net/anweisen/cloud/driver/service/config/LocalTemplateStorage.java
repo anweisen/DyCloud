@@ -63,18 +63,15 @@ public class LocalTemplateStorage implements TemplateStorage, LoggingApiUser {
 	@Nullable
 	@Override
 	public InputStream zipTemplate(@Nonnull ServiceTemplate template) throws IOException {
-		if (!this.hasTemplate(template)) {
-			return null;
-		}
+		if (!hasTemplate(template)) return null;
 
 		Path directory = this.storageDirectory.resolve(template.getName());
 		Path tempFile = FileUtils.createTempFile();
 
-		trace("Ziping template {}/{} to temp file..", template.getStorage(), template.getName());
+		trace("Ziping template {} to temp file..", template.toShortString());
 		Path file = FileUtils.zipToFile(directory, tempFile);
-		trace("Finished ziping template {}/{}", template.getStorage(), template.getName());
-		if (file == null)
-			return null;
+		trace("Finished ziping template {}", template.toShortString());
+		if (file == null) return null;
 
 		return Files.newInputStream(file, StandardOpenOption.DELETE_ON_CLOSE, LinkOption.NOFOLLOW_LINKS);
 	}

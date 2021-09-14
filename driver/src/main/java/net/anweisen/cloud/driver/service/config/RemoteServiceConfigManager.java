@@ -1,6 +1,6 @@
 package net.anweisen.cloud.driver.service.config;
 
-import net.anweisen.cloud.driver.network.request.NetworkingApiUser;
+import net.anweisen.cloud.driver.network.NetworkingApiUser;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

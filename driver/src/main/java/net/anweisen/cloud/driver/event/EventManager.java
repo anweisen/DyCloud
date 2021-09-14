@@ -100,7 +100,7 @@ public interface EventManager {
 	}
 
 	@Nullable
-	default <E extends Event> E awaitNextEvent(@Nonnull Class<E> eventClass, long timeout, TimeUnit unit) {
+	default <E extends Event> E awaitNextEvent(@Nonnull Class<E> eventClass, long timeout, @Nonnull TimeUnit unit) {
 		try {
 			return nextEvent(eventClass).get(timeout, unit);
 		} catch (InterruptedException | ExecutionException ex) {

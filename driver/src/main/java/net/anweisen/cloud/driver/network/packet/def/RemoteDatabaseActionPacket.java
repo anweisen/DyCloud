@@ -21,7 +21,7 @@ public class RemoteDatabaseActionPacket extends Packet {
 	public RemoteDatabaseActionPacket(@Nonnull DatabaseActionType type, @Nullable Consumer<? super Buffer> modifier) {
 		super(PacketConstants.DATABASE_CHANNEL, Buffer.create().writeEnumConstant(type));
 		if (modifier != null)
-			modifier.accept(body);
+			modifier.accept(buffer);
 	}
 
 	public enum DatabaseActionType {

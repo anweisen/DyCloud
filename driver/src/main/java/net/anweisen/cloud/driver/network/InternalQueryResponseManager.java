@@ -58,7 +58,7 @@ public final class InternalQueryResponseManager {
 		waitingPackets.put(uniqueId, new Callback(autoRemove, consumer));
 	}
 
-	public static void registerChunkedQueryHandler(@Nonnull UUID uniqueId, @Nonnull Consumer<ChunkedQueryResponse> consumer) {
+	public static void registerChunkedQueryHandler(@Nonnull UUID uniqueId, @Nonnull Consumer<? super ChunkedQueryResponse> consumer) {
 		ChunkedPacketListener listener = new ConsumingChunkedPacketListener(response -> {
 			removeEntry(uniqueId);
 			consumer.accept(response);

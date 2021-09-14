@@ -10,9 +10,7 @@ import java.util.UUID;
 
 public class Packet {
 
-	/**
-	 * An one length size byte[] for empty packet bodies
-	 */
+	/** A one length size byte[] for empty packet bodies */
 	public static final byte[] EMPTY_PACKET_BYTE_ARRAY = new byte[] { 0 };
 	public static final Packet EMPTY_RESPONSE = new Packet(PacketConstants.RESPONSE_CHANNEL, Document.empty(), EMPTY_PACKET_BYTE_ARRAY);
 

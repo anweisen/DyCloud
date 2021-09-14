@@ -62,13 +62,13 @@ public final class NettyUtils {
 
 	@Nonnull
 	@CheckReturnValue
-	public static Executor newPacketDispatcher() {
+	public static ExecutorService newPacketDispatcher() {
 		// a cached pool with a thread idle-lifetime of 30 seconds
 		// rejected tasks will be executed on the calling thread (See ThreadPoolExecutor.CallerRunsPolicy)
 		return new ThreadPoolExecutor(
 			0,
 			getThreadAmount(),
-			30L,
+			30,
 			TimeUnit.SECONDS,
 			new SynchronousQueue<>(true),
 			new NamedThreadFactory("PacketDispatcher"),

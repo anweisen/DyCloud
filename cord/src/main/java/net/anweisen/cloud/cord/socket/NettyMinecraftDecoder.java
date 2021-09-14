@@ -151,8 +151,8 @@ public class NettyMinecraftDecoder extends SimpleChannelInboundHandler<ByteBuf> 
 	// TODO move to helper class
 
 	private static final Comparator<ServiceInfo> comparator = (service1, service2) -> {
-		int online1 = service1.get(ServiceProperty.ONLINE_PLAYER_COUNT);
-		int online2 = service2.get(ServiceProperty.ONLINE_PLAYER_COUNT);
+		int online1 = service1.get(ServiceProperty.ONLINE_PLAYERS);
+		int online2 = service2.get(ServiceProperty.ONLINE_PLAYERS);
 		if (online1 != online2)
 			return online1 - online2; // we prefer fewer players
 		return 0;
@@ -173,7 +173,7 @@ public class NettyMinecraftDecoder extends SimpleChannelInboundHandler<ByteBuf> 
 	}
 
 	private static boolean matchesHostName(@Nonnull String hostname, @Nonnull ServiceTask task) {
-		for (String cordHostname : task.getCordHostnames()) {
+		for (String cordHostname : task.getProperties().getStringList("cordHostnames")) {
 			if (matchesHostName(hostname, cordHostname))
 				return true;
 		}

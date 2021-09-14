@@ -48,14 +48,14 @@ public final class MessageFormatter {
 
 		String name = entry.getThreadName();
 		if (name.length() > 18) name = name.substring(name.length() - 18);
-		SpacePadder.leftPad(builder, name, 18);
+		SpacePadder.padLeft(builder, name, 18);
 
 		builder.append(ConsoleColor.DARK_GRAY)
 			.append("] ")
-			.append(entry.getLevel().isColorized() ? ConsoleColor.RED : ConsoleColor.GRAY);
+			.append(entry.getLevel().isHighlighted() ? ConsoleColor.RED : ConsoleColor.GRAY);
 
-		SpacePadder.rightPad(builder, entry.getLevel().getUpperCaseName() + ConsoleColor.DARK_GRAY + ":", 10 + ConsoleColor.DARK_GRAY.toString().length());
-		builder.append(entry.getLevel().isColorized() ? ConsoleColor.YELLOW : ConsoleColor.DEFAULT)
+		SpacePadder.padRight(builder, entry.getLevel().getUpperCaseName() + ConsoleColor.DARK_GRAY + ":", 10 + ConsoleColor.DARK_GRAY.toString().length());
+		builder.append(entry.getLevel().isHighlighted() ? ConsoleColor.YELLOW : ConsoleColor.DEFAULT)
 			.append(entry.getMessage());
 
 		if (entry.getException() != null) {

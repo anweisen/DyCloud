@@ -7,6 +7,7 @@ import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 import org.jline.reader.Completer;
 import org.jline.reader.LineReader;
+import org.jline.reader.LineReader.Option;
 import org.jline.reader.impl.LineReaderImpl;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
@@ -16,6 +17,7 @@ import javax.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -41,7 +43,7 @@ public class JLine3Console implements Console {
 
 		try {
 			AnsiConsole.systemInstall();
-		} catch (Throwable ignored) {
+		} catch (Throwable ex) {
 		}
 
 		terminal = TerminalBuilder.builder().system(true).encoding(StandardCharsets.UTF_8).build();
@@ -73,7 +75,7 @@ public class JLine3Console implements Console {
 	@Nonnull
 	@Override
 	public Task<String> readLine() {
-		return this.consoleReadThread.getCurrentTask();
+		return consoleReadThread.getCurrentTask();
 	}
 
 	@Nonnull
@@ -181,7 +183,7 @@ public class JLine3Console implements Console {
 
 	private void updatePrompt() {
 		prompt = ConsoleColor.toColoredString('&', prompt).replace("%screen%", screenName);
-		lineReader.setPrompt(this.prompt);
+		lineReader.setPrompt(prompt);
 	}
 
 	private void print(@Nonnull String text) {
@@ -215,7 +217,7 @@ public class JLine3Console implements Console {
 		@Override
 		protected boolean historySearchBackward() {
 			if (history.previous()) {
-				setBuffer(this.history.current());
+				setBuffer(history.current());
 				return true;
 			} else {
 				return false;
@@ -225,7 +227,7 @@ public class JLine3Console implements Console {
 		@Override
 		protected boolean historySearchForward() {
 			if (history.next()) {
-				setBuffer(this.history.current());
+				setBuffer(history.current());
 				return true;
 			} else {
 				return false;
@@ -279,8 +281,8 @@ public class JLine3Console implements Console {
 				reader.setCompleter(completer);
 			}
 
-			for (Map.Entry<LineReader.Option, Boolean> e : options.entrySet()) {
-				reader.option(e.getKey(), e.getValue());
+			for (Entry<Option, Boolean> entry : options.entrySet()) {
+				reader.option(entry.getKey(), entry.getValue());
 			}
 
 			return reader;

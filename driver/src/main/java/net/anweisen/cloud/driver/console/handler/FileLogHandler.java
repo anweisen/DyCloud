@@ -78,9 +78,8 @@ public class FileLogHandler implements LogHandler {
 
 	@Override
 	public void handle(@Nonnull LogEntry entry) throws Exception {
-		if (entry.getLevel().isHighlighted()) {
+		if (entry.getLevel().isHighlighted())
 			write(initStream(errorFile, () -> selectFile("error.")), entry);
-		}
 		write(initStream(outFile, () -> selectFile("cloud.")), entry);
 	}
 
