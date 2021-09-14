@@ -61,8 +61,8 @@ public class DefaultPermissionGroup implements PermissionGroup, SerializableObje
 		buffer.writeString(name);
 		buffer.writeString(color);
 		buffer.writeString(chatColor);
-		buffer.writeString(namePrefix);
 		buffer.writeString(tabPrefix);
+		buffer.writeString(namePrefix);
 		buffer.writeVarInt(sortId);
 		buffer.writeBoolean(defaultGroup);
 		buffer.writeStringCollection(groups);
@@ -76,8 +76,8 @@ public class DefaultPermissionGroup implements PermissionGroup, SerializableObje
 		name = buffer.readString();
 		color = buffer.readString();
 		chatColor = buffer.readString();
-		namePrefix = buffer.readString();
 		tabPrefix = buffer.readString();
+		namePrefix = buffer.readString();
 		sortId = buffer.readVarInt();
 		defaultGroup = buffer.readBoolean();
 		groups = buffer.readStringCollection();

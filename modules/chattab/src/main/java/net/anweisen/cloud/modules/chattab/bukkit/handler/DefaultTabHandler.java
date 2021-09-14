@@ -52,13 +52,14 @@ public class DefaultTabHandler implements TabHandler {
 
 			team.addEntry(player.getName());
 			team.setDisplayName(permissionGroup.getDisplayName());
+			team.setPrefix(permissionGroup.getNamePrefix());
 			try {
 				team.setColor(ChatColor.getByChar(permissionGroup.getColor().replace("§", "")));
 			} catch (Throwable ex) {
 			}
 
-			player.setDisplayName(permissionGroup.getNamePrefix() + player.getName());
 			player.setPlayerListName(tablistConfig.getPrefix() + permissionGroup.getTabPrefix() + player.getName() + tablistConfig.getSuffix());
+			player.setDisplayName(permissionGroup.getNamePrefix() + player.getName());
 
 		}
 	}

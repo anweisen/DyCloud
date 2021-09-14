@@ -198,7 +198,7 @@ public final class BridgeHelper {
 	}
 
 	public static void sendServerLoginSuccessPacket(@Nonnull UUID playerUniqueId) {
-		CloudWrapper.getInstance().getSocketComponent().sendPacket(PlayerEventPacket.forServerDisconnect(playerUniqueId));
+		CloudWrapper.getInstance().getSocketComponent().sendPacket(PlayerEventPacket.forServerLoginSuccess(playerUniqueId));
 	}
 
 	public static void sendServerDisconnectPacket(@Nonnull UUID playerUniqueId) {

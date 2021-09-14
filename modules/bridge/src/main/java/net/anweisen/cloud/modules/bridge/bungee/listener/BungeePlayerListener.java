@@ -47,11 +47,16 @@ public class BungeePlayerListener implements Listener, LoggingApiUser {
 	}
 
 	@EventHandler
+	public void onPostLogin(@Nonnull PostLoginEvent event) {
+		BridgeHelper.sendProxyLoginSuccessPacket(event.getPlayer().getUniqueId(), createPlayerSettings(event.getPlayer()));
+		BridgeHelper.updateServiceInfo();
+	}
+
+	@EventHandler
 	public void onServerConnectRequest(@Nonnull ServerConnectEvent event) {
 
 		if (event.getReason() == Reason.JOIN_PROXY) {
-			BridgeHelper.sendProxyLoginSuccessPacket(event.getPlayer().getUniqueId(), createPlayerSettings(event.getPlayer()));
-			BridgeHelper.updateServiceInfo();
+			// TODO here post login?
 		}
 
 		ServiceInfo serviceInfo = CloudDriver.getInstance().getServiceManager().getServiceInfoByName(event.getTarget().getName());
@@ -107,7 +112,7 @@ public class BungeePlayerListener implements Listener, LoggingApiUser {
 
 	@EventHandler
 	public void onSettingsChange(@Nonnull SettingsChangedEvent event) {
-		BridgeHelper.sendPlayerSettingsChangePacket(event.getPlayer().getUniqueId(), BungeeBridgeHelper.createPlayerSettings(event.getPlayer()));
+		BridgeHelper.sendPlayerSettingsChangePacket(event.getPlayer().getUniqueId(), createPlayerSettings(event.getPlayer()));
 	}
 
 }

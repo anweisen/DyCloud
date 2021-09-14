@@ -1,6 +1,7 @@
 package net.anweisen.cloud.driver.player.settings;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Locale;
 
 /**
@@ -9,7 +10,7 @@ import java.util.Locale;
  */
 public interface PlayerSettings {
 
-	@Nonnull
+	@Nullable
 	Locale getLocale();
 
 	byte getRenderDistance();
