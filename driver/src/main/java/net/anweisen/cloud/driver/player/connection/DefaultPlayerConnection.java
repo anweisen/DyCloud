@@ -17,6 +17,9 @@ public class DefaultPlayerConnection implements PlayerConnection, SerializableOb
 	private int version;
 	private boolean onlineMode, legacy;
 
+	private DefaultPlayerConnection() {
+	}
+
 	public DefaultPlayerConnection(@Nonnull String proxy, @Nonnull HostAndPort address, int version, boolean onlineMode, boolean legacy) {
 		this.proxy = proxy;
 		this.address = address;
