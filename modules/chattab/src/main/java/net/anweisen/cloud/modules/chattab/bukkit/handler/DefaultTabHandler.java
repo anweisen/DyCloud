@@ -57,9 +57,8 @@ public class DefaultTabHandler implements TabHandler {
 			} catch (Throwable ex) {
 			}
 
-			String displayName = permissionGroup.getColor() + player.getName();
-			player.setDisplayName(displayName);
-			player.setPlayerListName(tablistConfig.getPrefix() + displayName + tablistConfig.getSuffix());
+			player.setDisplayName(permissionGroup.getNamePrefix() + player.getName());
+			player.setPlayerListName(tablistConfig.getPrefix() + permissionGroup.getTabPrefix() + player.getName() + tablistConfig.getSuffix());
 
 		}
 	}
