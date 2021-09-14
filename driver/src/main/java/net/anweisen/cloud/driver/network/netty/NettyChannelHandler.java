@@ -36,9 +36,8 @@ public abstract class NettyChannelHandler extends SimpleChannelInboundHandler<Pa
 
 	@Override
 	public void exceptionCaught(@Nonnull ChannelHandlerContext context, @Nonnull Throwable ex) throws Exception {
-		trace("Error on channel {}: {}", channel, ex.getClass().getName(), ex.getMessage());
 		if (!(ex instanceof IOException)) {
-			ex.printStackTrace();
+			error("Error on channel {}", channel, ex);
 		}
 	}
 
