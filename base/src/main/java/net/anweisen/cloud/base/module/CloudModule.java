@@ -89,7 +89,7 @@ public abstract class CloudModule implements Module {
 		}
 
 		boolean enabled = config.getBoolean("enabled");
-		getLogger().debug("'{}' Status: enabled={}", getModuleConfig().getFullName(), enabled);
+		getLogger().debug("{} Status Check: enabled={}", getModuleConfig().getFullName(), enabled);
 		return enabled;
 	}
 
