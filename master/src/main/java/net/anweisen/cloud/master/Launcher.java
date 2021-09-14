@@ -1,7 +1,7 @@
 package net.anweisen.cloud.master;
 
 import net.anweisen.cloud.driver.console.Console;
-import net.anweisen.cloud.driver.console.JLine3Console;
+import net.anweisen.cloud.driver.console.jline3.JLine3Console;
 import net.anweisen.cloud.driver.console.handler.ConsoleLogHandler;
 import net.anweisen.cloud.driver.console.handler.FileLogHandler;
 import net.anweisen.utilities.common.logging.ILogger;
@@ -27,7 +27,7 @@ public final class Launcher {
 	}
 
 	private static void init(@Nonnull Console console, @Nonnull HandledLogger logger) {
-		logger.addHandler(new ConsoleLogHandler(console), new FileLogHandler());
+		logger.addHandler(new ConsoleLogHandler(console), new FileLogHandler(FileLogHandler.SIZE_32MB));
 
 		ILogger.setConstantFactory(logger);
 

@@ -1,7 +1,7 @@
 package net.anweisen.cloud.cord;
 
 import net.anweisen.cloud.driver.console.Console;
-import net.anweisen.cloud.driver.console.JLine3Console;
+import net.anweisen.cloud.driver.console.jline3.JLine3Console;
 import net.anweisen.cloud.driver.console.handler.ConsoleLogHandler;
 import net.anweisen.utilities.common.logging.ILogger;
 import net.anweisen.utilities.common.logging.LogLevel;
