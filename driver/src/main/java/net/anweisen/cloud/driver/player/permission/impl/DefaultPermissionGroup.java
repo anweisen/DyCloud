@@ -17,7 +17,9 @@ public class DefaultPermissionGroup implements PermissionGroup, SerializableObje
 	private UUID uniqueId;
 	private String name;
 	private String color;
-	private String prefix;
+	private String chatColor;
+	private String tabPrefix;
+	private String namePrefix;
 	private int sortId;
 	private boolean defaultGroup;
 	private Collection<String> groups;
@@ -27,20 +29,25 @@ public class DefaultPermissionGroup implements PermissionGroup, SerializableObje
 	private DefaultPermissionGroup() {
 	}
 
-	public DefaultPermissionGroup(@Nonnull String name, @Nonnull String color, @Nonnull String prefix, int sortId, boolean defaultGroup,
+	public DefaultPermissionGroup(@Nonnull String name, @Nonnull String color, @Nonnull String chatColor, @Nonnull String tabPrefix, @Nonnull String namePrefix,
+	                              int sortId, boolean defaultGroup,
 	                              @Nonnull Collection<String> groups, @Nonnull Collection<String> permissions, @Nonnull Collection<String> deniedPermissions) {
-		Preconditions.checkNotNull(name, "Name cannot be null");
-		Preconditions.checkNotNull(color, "Color cannot be null");
-		Preconditions.checkNotNull(prefix, "Prefix cannot be null");
+		Preconditions.checkNotNull(name, "name cannot be null");
+		Preconditions.checkNotNull(color, "color cannot be null");
+		Preconditions.checkNotNull(color, "chatColor cannot be null");
+		Preconditions.checkNotNull(namePrefix, "namePrefix cannot be null");
+		Preconditions.checkNotNull(tabPrefix, "tabPrefix cannot be null");
 		Preconditions.checkArgument(sortId >= 0, "SortId cannot be negative");
-		Preconditions.checkNotNull(groups, "Groups cannot be null");
-		Preconditions.checkNotNull(permissions, "Permissions cannot be null");
-		Preconditions.checkNotNull(deniedPermissions, "DeniedPermissions cannot be null");
+		Preconditions.checkNotNull(groups, "groups cannot be null");
+		Preconditions.checkNotNull(permissions, "permissions cannot be null");
+		Preconditions.checkNotNull(deniedPermissions, "deniedPermissions cannot be null");
 
 		this.uniqueId = UUID.randomUUID();
 		this.name = name;
 		this.color = color;
-		this.prefix = prefix;
+		this.chatColor = chatColor;
+		this.tabPrefix = tabPrefix;
+		this.namePrefix = namePrefix;
 		this.sortId = sortId;
 		this.defaultGroup = defaultGroup;
 		this.groups = new ArrayList<>(groups);
@@ -53,7 +60,9 @@ public class DefaultPermissionGroup implements PermissionGroup, SerializableObje
 		buffer.writeUUID(uniqueId);
 		buffer.writeString(name);
 		buffer.writeString(color);
-		buffer.writeString(prefix);
+		buffer.writeString(chatColor);
+		buffer.writeString(namePrefix);
+		buffer.writeString(tabPrefix);
 		buffer.writeVarInt(sortId);
 		buffer.writeBoolean(defaultGroup);
 		buffer.writeStringCollection(groups);
@@ -66,7 +75,9 @@ public class DefaultPermissionGroup implements PermissionGroup, SerializableObje
 		uniqueId = buffer.readUUID();
 		name = buffer.readString();
 		color = buffer.readString();
-		prefix = buffer.readString();
+		chatColor = buffer.readString();
+		namePrefix = buffer.readString();
+		tabPrefix = buffer.readString();
 		sortId = buffer.readVarInt();
 		defaultGroup = buffer.readBoolean();
 		groups = buffer.readStringCollection();
@@ -104,13 +115,35 @@ public class DefaultPermissionGroup implements PermissionGroup, SerializableObje
 
 	@Nonnull
 	@Override
-	public String getPrefix() {
-		return prefix;
+	public String getChatColor() {
+		return chatColor;
 	}
 
 	@Override
-	public void setPrefix(@Nonnull String prefix) {
-		this.prefix = prefix;
+	public void setChatColor(@Nonnull String chatColor) {
+		this.chatColor = color;
+	}
+
+	@Nonnull
+	@Override
+	public String getNamePrefix() {
+		return namePrefix;
+	}
+
+	@Override
+	public void setNamePrefix(@Nonnull String prefix) {
+		this.namePrefix = prefix;
+	}
+
+	@Nonnull
+	@Override
+	public String getTabPrefix() {
+		return tabPrefix;
+	}
+
+	@Override
+	public void setTabPrefix(@Nonnull String prefix) {
+		this.tabPrefix = tabPrefix;
 	}
 
 	@Override
@@ -205,7 +238,9 @@ public class DefaultPermissionGroup implements PermissionGroup, SerializableObje
 			&& defaultGroup == that.defaultGroup
 			&& Objects.equals(name, that.name)
 			&& Objects.equals(color, that.color)
-			&& Objects.equals(prefix, that.prefix)
+			&& Objects.equals(chatColor, that.chatColor)
+			&& Objects.equals(namePrefix, that.namePrefix)
+			&& Objects.equals(tabPrefix, that.tabPrefix)
 			&& Objects.equals(groups, that.groups)
 			&& Objects.equals(permissions, that.permissions)
 			&& Objects.equals(deniedPermissions, that.deniedPermissions);
@@ -213,6 +248,6 @@ public class DefaultPermissionGroup implements PermissionGroup, SerializableObje
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(name, color, prefix, sortId, defaultGroup, groups, permissions, deniedPermissions);
+		return Objects.hash(name, color, chatColor, namePrefix, tabPrefix, sortId, defaultGroup, groups, permissions, deniedPermissions);
 	}
 }

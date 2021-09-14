@@ -20,7 +20,7 @@ public class RemotePermissionManager extends DefaultPermissionManager {
 
 	@Nonnull
 	@Override
-	public PermissionGroup createGroup(@Nonnull String name, @Nonnull String color, @Nonnull String prefix, int sortId, boolean defaultGroup,
+	public PermissionGroup createGroup(@Nonnull String name, @Nonnull String color, @Nonnull String chatColor, @Nonnull String tabPrefix, @Nonnull String namePrefix, int sortId, boolean defaultGroup,
 	                                   @Nonnull Collection<String> groups, @Nonnull Collection<String> permissions, @Nonnull Collection<String> deniedPermissions) {
 		// TODO
 		throw new UnsupportedOperationException();

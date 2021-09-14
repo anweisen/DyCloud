@@ -141,6 +141,7 @@ public class DockerServiceActor implements LoggingApiUser {
 		if (applicationFile == null) {
 			warn("Unable to locate application file for '{}': Used templates: {}", info.getName(), task.getTemplates());
 			FileUtils.list(tempTemplateDirectory).forEach(path -> extended("=> {}", path.toString()));
+			FileUtils.delete(tempTemplateDirectory);
 			return;
 		}
 

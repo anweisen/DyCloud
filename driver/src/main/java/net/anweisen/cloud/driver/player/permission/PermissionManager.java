@@ -36,18 +36,18 @@ public interface PermissionManager {
 	@Nonnull
 	@CheckReturnValue
 	default PermissionGroup createGroup(@Nonnull String name, int sortId) {
-		return createGroup(name, "", "", sortId, false);
+		return createGroup(name, "", "", "", "", sortId);
 	}
 
 	@Nonnull
 	@CheckReturnValue
-	default PermissionGroup createGroup(@Nonnull String name, @Nonnull String color, @Nonnull String prefix, int sortId, boolean defaultGroup) {
-		return createGroup(name, color, prefix, sortId, defaultGroup, Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
+	default PermissionGroup createGroup(@Nonnull String name, @Nonnull String color, @Nonnull String chatColor, @Nonnull String tabPrefix, @Nonnull String namePrefix, int sortId) {
+		return createGroup(name, color, chatColor, tabPrefix, namePrefix, sortId, false, Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
 	}
 
 	@Nonnull
 	@CheckReturnValue
-	PermissionGroup createGroup(@Nonnull String name, @Nonnull String color, @Nonnull String prefix, int sortId, boolean defaultGroup,
+	PermissionGroup createGroup(@Nonnull String name, @Nonnull String color, @Nonnull String chatColor, @Nonnull String tabPrefix, @Nonnull String namePrefix, int sortId, boolean defaultGroup,
 	                            @Nonnull Collection<String> groups, @Nonnull Collection<String> permissions, @Nonnull Collection<String> deniedPermissions);
 
 	void setGroupsCache(@Nonnull Collection<? extends PermissionGroup> groups);

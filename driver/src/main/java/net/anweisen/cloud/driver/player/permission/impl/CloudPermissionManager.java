@@ -18,23 +18,14 @@ import java.util.*;
  */
 public class CloudPermissionManager extends DefaultPermissionManager implements LoggingApiUser {
 
-//	private static final Path directory = Paths.get("permissionGroups");
 	private static final Path file = Paths.get("groups.json");
 
 	public CloudPermissionManager() {
-//		FileUtils.createDirectory(directory);
 		FileUtils.createFile(file);
 	}
 
 	@Override
 	public void reload() {
-//		for (Path file : FileUtils.list(directory).filter(path -> path.toString().endsWith(".json")).collect(Collectors.toList())) {
-//			extended("Loading permission group '{}'", file.getFileName());
-//			Document document = Document.readJsonFile(file);
-//			PermissionGroup group = document.toInstanceOf(DefaultPermissionGroup.class);
-//			extended("=> {}", group);
-//			if (group != null) groups.put(group.getUniqueId(), group);
-//		}
 		for (Document document : Document.readJsonArrayFile(file)) {
 			PermissionGroup group = document.toInstanceOf(DefaultPermissionGroup.class);
 			extended("=> {}", group);
@@ -45,9 +36,9 @@ public class CloudPermissionManager extends DefaultPermissionManager implements 
 
 	@Nonnull
 	@Override
-	public PermissionGroup createGroup(@Nonnull String name, @Nonnull String color, @Nonnull String prefix, int sortId, boolean defaultGroup,
+	public PermissionGroup createGroup(@Nonnull String name, @Nonnull String color, @Nonnull String chatColor, @Nonnull String tabPrefix, @Nonnull String namePrefix, int sortId, boolean defaultGroup,
 	                                   @Nonnull Collection<String> groups, @Nonnull Collection<String> permissions, @Nonnull Collection<String> deniedPermissions) {
-		return new DefaultPermissionGroup(name, color, prefix, sortId, defaultGroup, groups, permissions, deniedPermissions);
+		return new DefaultPermissionGroup(name, color, chatColor, tabPrefix, namePrefix, sortId, defaultGroup, groups, permissions, deniedPermissions);
 	}
 
 	@Override
@@ -58,11 +49,6 @@ public class CloudPermissionManager extends DefaultPermissionManager implements 
 
 	@Override
 	public void saveGroup(@Nonnull PermissionGroup group) {
-//		try {
-//			Document.of(group).saveToFile(directory.resolve(group.getUniqueId() + ".json"));
-//		} catch (IOException ex) {
-//			throw new WrappedException(ex);
-//		}
 		saveGroups();
 	}
 

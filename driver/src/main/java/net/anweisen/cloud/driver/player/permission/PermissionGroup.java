@@ -33,9 +33,19 @@ public interface PermissionGroup {
 	void setColor(@Nonnull String color);
 
 	@Nonnull
-	String getPrefix();
+	String getChatColor();
 
-	void setPrefix(@Nonnull String prefix);
+	void setChatColor(@Nonnull String color);
+
+	@Nonnull
+	String getNamePrefix();
+
+	void setNamePrefix(@Nonnull String prefix);
+
+	@Nonnull
+	String getTabPrefix();
+
+	void setTabPrefix(@Nonnull String prefix);
 
 	int getSortId();
 

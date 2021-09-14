@@ -1,5 +1,6 @@
 package net.anweisen.cloud.modules.bridge.helper;
 
+import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.network.packet.def.PlayerEventPacket;
 import net.anweisen.cloud.driver.player.CloudPlayer;
 import net.anweisen.cloud.driver.player.connection.PlayerConnection;
@@ -70,7 +71,6 @@ public final class BridgeHelper {
 		}
 	}
 
-	private static final Map<String, ServiceInfo> cachedServices = new ConcurrentHashMap<>();
 	private static final Map<UUID, PlayerFallbackHistory> playerFallbacks = new ConcurrentHashMap<>();
 	private static final Comparator<ServiceInfo> fallbackServiceComparator = (service1, service2) -> {
 		ServiceTask task1 = service1.findTask();
@@ -78,8 +78,8 @@ public final class BridgeHelper {
 		if (task1.getFallbackPriority() != task2.getFallbackPriority())
 			return task1.getFallbackPriority() - task2.getFallbackPriority();
 
-		int online1 = service1.get(ServiceProperty.ONLINE_PLAYER_COUNT);
-		int online2 = service2.get(ServiceProperty.ONLINE_PLAYER_COUNT);
+		int online1 = service1.get(ServiceProperty.ONLINE_PLAYERS);
+		int online2 = service2.get(ServiceProperty.ONLINE_PLAYERS);
 		if (online1 != online2)
 			return online1 - online2; // we prefer fewer players
 
@@ -92,24 +92,6 @@ public final class BridgeHelper {
 	 */
 	private static int maxPlayers, lastOnlineCount;
 	private static String motd, extra;
-
-	public static void removeCachedService(@Nonnull String name) {
-		cachedServices.remove(name);
-	}
-
-	public static void cacheService(@Nonnull ServiceInfo info) {
-		cachedServices.put(info.getName(), info);
-	}
-
-	@Nullable
-	public static ServiceInfo getCachedService(@Nonnull String name) {
-		return cachedServices.get(name);
-	}
-
-	@Nonnull
-	public static Collection<ServiceInfo> getCachedServices() {
-		return cachedServices.values();
-	}
 
 	public static void removeFallbackHistory(@Nonnull UUID playerUUID) {
 		playerFallbacks.remove(playerUUID);
@@ -135,7 +117,7 @@ public final class BridgeHelper {
 
 	@Nonnull
 	public static Stream<ServiceInfo> getAvailableFallbacks(@Nonnull Predicate<String> permissionTester) {
-		return getCachedServices().stream()
+		return CloudDriver.getInstance().getServiceManager().getServiceInfos().stream()
 			.filter(service -> {
 				ServiceTask task = service.findTask();
 				return service.isReady()

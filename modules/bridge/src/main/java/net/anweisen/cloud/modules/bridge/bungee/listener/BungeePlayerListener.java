@@ -21,7 +21,8 @@ import net.md_5.bungee.event.EventHandler;
 import javax.annotation.Nonnull;
 import java.util.concurrent.TimeUnit;
 
-import static net.anweisen.cloud.modules.bridge.bungee.BungeeBridgeHelper.*;
+import static net.anweisen.cloud.modules.bridge.bungee.BungeeBridgeHelper.createPlayerConnection;
+import static net.anweisen.cloud.modules.bridge.bungee.BungeeBridgeHelper.createPlayerSettings;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -53,7 +54,7 @@ public class BungeePlayerListener implements Listener, LoggingApiUser {
 			BridgeHelper.updateServiceInfo();
 		}
 
-		ServiceInfo serviceInfo = BridgeHelper.getCachedService(event.getTarget().getName());
+		ServiceInfo serviceInfo = CloudDriver.getInstance().getServiceManager().getServiceInfoByName(event.getTarget().getName());
 		if (serviceInfo != null) {
 			BridgeHelper.sendProxyServerConnectRequestPacket(event.getPlayer().getUniqueId(), serviceInfo.getUniqueId());
 		}
@@ -64,8 +65,8 @@ public class BungeePlayerListener implements Listener, LoggingApiUser {
 	public void onServerSwitch(@Nonnull ServerSwitchEvent event) {
 
 		if (event.getFrom() == null) return;
-		ServiceInfo from = BridgeHelper.getCachedService(event.getFrom().getName());
-		ServiceInfo to = BridgeHelper.getCachedService(event.getPlayer().getServer().getInfo().getName());
+		ServiceInfo from = CloudDriver.getInstance().getServiceManager().getServiceInfoByName(event.getFrom().getName());
+		ServiceInfo to = CloudDriver.getInstance().getServiceManager().getServiceInfoByName(event.getPlayer().getServer().getInfo().getName());
 		if (from != null && to != null) {
 			BridgeHelper.sendProxyServerSwitchPacket(event.getPlayer().getUniqueId(), from.getUniqueId(), to.getUniqueId());
 		}
