@@ -45,7 +45,7 @@ public final class CloudCloudflareModule extends CloudModule {
 	}
 
 	private void loadConfig() {
-		config = getConfig().get("config", CloudflareConfig.class);
+		config = getConfig().getInstance("config", CloudflareConfig.class);
 		getLogger().debug("Loaded config {}", config);
 		if (config == null)
 			getConfig().set("config", config = new CloudflareConfig(

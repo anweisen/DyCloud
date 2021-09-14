@@ -41,7 +41,7 @@ public interface GlobalConfig {
 	}
 
 	default <T> T get(@Nonnull String path, @Nonnull Class<T> classOfT) {
-		return getRawData().get(path, classOfT);
+		return getRawData().getInstance(path, classOfT);
 	}
 
 	void update();
