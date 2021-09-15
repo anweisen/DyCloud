@@ -150,20 +150,8 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 
 	@Nonnull
 	@Override
-	public UUID getProxyUniqueId() {
-		return proxy;
-	}
-
-	@Nonnull
-	@Override
 	public ServiceInfo getProxy() {
 		return CloudDriver.getInstance().getServiceManager().getServiceInfoByUniqueId(proxy);
-	}
-
-	@Nullable
-	@Override
-	public UUID getServerUniqueId() {
-		return server;
 	}
 
 	@Nullable

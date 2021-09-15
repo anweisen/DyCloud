@@ -31,13 +31,7 @@ public interface CloudPlayer extends CloudOfflinePlayer {
 	void setSettings(@Nonnull PlayerSettings settings);
 
 	@Nonnull
-	UUID getProxyUniqueId();
-
-	@Nonnull
 	ServiceInfo getProxy();
-
-	@Nullable
-	UUID getServerUniqueId();
 
 	@Nullable
 	ServiceInfo getServer();
