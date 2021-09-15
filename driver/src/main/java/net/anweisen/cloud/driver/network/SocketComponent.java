@@ -34,6 +34,8 @@ public interface SocketComponent extends PacketSender {
 
 	void closeChannels();
 
+	void shutdown();
+
 	@Nonnull
 	PacketListenerRegistry getListenerRegistry();
 
