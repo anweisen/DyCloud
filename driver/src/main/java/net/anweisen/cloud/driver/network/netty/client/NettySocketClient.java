@@ -17,6 +17,7 @@ import net.anweisen.utilities.common.collection.WrappedException;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.function.Supplier;
 
 /**
@@ -58,6 +59,8 @@ public class NettySocketClient extends DefaultSocketComponent implements SocketC
 			channel.closeFuture().addListener(future -> {
 				reconnect(address);
 			});
+		} catch (IllegalStateException | RejectedExecutionException ex) {
+			error("Unable to reconnect to master socket ({}: {})", ex.getClass().getName(), ex.getMessage());
 		} catch (Exception ex) {
 			error("Unable to reconnect to master socket", ex);
 
@@ -90,6 +93,7 @@ public class NettySocketClient extends DefaultSocketComponent implements SocketC
 	@Override
 	public void shutdown() {
 		try {
+			packetDispatcher.shutdownNow();
 			eventLoopGroup.shutdownGracefully().sync();
 		} catch (Exception ex) {
 			ex.printStackTrace();
