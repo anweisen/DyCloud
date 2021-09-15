@@ -4,6 +4,7 @@ import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Locale;
 
 /**
@@ -15,27 +16,30 @@ public class DefaultPlayerSettings implements PlayerSettings, SerializableObject
 	private Locale locale;
 	private byte renderDistance;
 	private boolean chatColors;
-	private DefaultSkinPartsConfig skinParts;
+	private DefaultSkinParts skinParts;
 	private ChatMode chatMode;
 	private MainHand mainHand;
 
 	private DefaultPlayerSettings() {
 	}
 
-	public DefaultPlayerSettings(@Nonnull Locale locale, byte renderDistance, boolean chatColors, @Nonnull DefaultSkinPartsConfig skinParts, @Nonnull ChatMode chatMode, @Nonnull MainHand mainHand) {
+	public DefaultPlayerSettings(@Nonnull Locale locale, byte renderDistance, boolean chatColors, @Nonnull DefaultSkinParts skinParts, @Nonnull ChatMode chatMode, @Nonnull MainHand mainHand) {
 		this.locale = locale;
 		this.renderDistance = renderDistance;
 		this.chatColors = chatColors;
 		this.skinParts = skinParts;
 		this.chatMode = chatMode;
 		this.mainHand = mainHand;
+
+		System.err.println(this.toString());
 	}
 
 	@Override
 	public void write(@Nonnull Buffer buffer) {
-		buffer.writeString(locale.getLanguage());
-		buffer.writeString(locale.getCountry());
-		buffer.writeString(locale.getVariant());
+		buffer.writeBoolean(locale == null);
+		buffer.writeOptionalString(locale.getLanguage());
+		buffer.writeOptionalString(locale.getCountry());
+		buffer.writeOptionalString(locale.getVariant());
 		buffer.writeByte(renderDistance);
 		buffer.writeObject(skinParts);
 		buffer.writeEnumConstant(chatMode);
@@ -44,16 +48,21 @@ public class DefaultPlayerSettings implements PlayerSettings, SerializableObject
 
 	@Override
 	public void read(@Nonnull Buffer buffer) {
-		locale = new Locale(
-			buffer.readString(), // language
-			buffer.readString(), // country
-			buffer.readString()  // variant
+		locale = buffer.readBoolean() ? null : new Locale(
+			stringOrEmpty(buffer.readOptionalString()), // language
+			stringOrEmpty(buffer.readOptionalString()), // country
+			stringOrEmpty(buffer.readOptionalString())  // variant
 		);
 		renderDistance = buffer.readByte();
 		chatColors = buffer.readBoolean();
-		skinParts = buffer.readObject(DefaultSkinPartsConfig.class);
+		skinParts = buffer.readObject(DefaultSkinParts.class);
 		chatMode = buffer.readEnumConstant(ChatMode.class);
 		mainHand = buffer.readEnumConstant(MainHand.class);
+	}
+
+	@Nonnull
+	private String stringOrEmpty(@Nullable String value) {
+		return value == null ? "" : value;
 	}
 
 	@Nonnull
@@ -74,7 +83,7 @@ public class DefaultPlayerSettings implements PlayerSettings, SerializableObject
 
 	@Nonnull
 	@Override
-	public SkinPartsConfig getSkinParts() {
+	public SkinParts getSkinParts() {
 		return skinParts;
 	}
 
@@ -92,6 +101,6 @@ public class DefaultPlayerSettings implements PlayerSettings, SerializableObject
 
 	@Override
 	public String toString() {
-		return "PlayerSetting[locale=" + locale.toString() + " renderDistance=" + renderDistance + " chatColors=" + chatColors + " chatMode=" + chatMode + " mainHand=" + mainHand + " skin=" + skinParts + "]";
+		return "PlayerSetting[locale=" + locale + " renderDistance=" + renderDistance + " chatColors=" + chatColors + " chatMode=" + chatMode + " mainHand=" + mainHand + " skin=" + skinParts + "]";
 	}
 }
