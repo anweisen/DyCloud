@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.function.Supplier;
 
 /**
@@ -20,7 +21,7 @@ import java.util.function.Supplier;
  */
 public abstract class DefaultSocketComponent implements SocketComponent, LoggingApiUser {
 
-	protected final Executor packetDispatcher = NettyUtils.newPacketDispatcher();
+	protected final ExecutorService packetDispatcher = NettyUtils.newPacketDispatcher();
 	protected final PacketListenerRegistry listenerRegistry = new PacketListenerRegistry();
 
 	protected final Collection<SocketChannel> channels = new ConcurrentLinkedQueue<>();
