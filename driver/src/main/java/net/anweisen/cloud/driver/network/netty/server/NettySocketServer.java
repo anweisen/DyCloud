@@ -57,8 +57,9 @@ public class NettySocketServer extends DefaultSocketComponent implements SocketS
 	@Override
 	public void shutdown() {
 		try {
-			bossEventLoopGroup.shutdownGracefully().sync();
-			workerEventLoopGroup.shutdownGracefully().sync();
+			packetDispatcher.shutdownNow();
+			bossEventLoopGroup.shutdownGracefully();
+			workerEventLoopGroup.shutdownGracefully();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
