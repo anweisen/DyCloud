@@ -121,7 +121,9 @@ public final class CloudNode extends CloudBase {
 		moduleManager.setModulesDirectory(getTempDirectory().resolve("modules"));
 		initModules();
 
-		executor.scheduleAtFixedRate(this::publishDataCycle, NodeCycleData.PERIOD, NodeCycleData.PERIOD, TimeUnit.MILLISECONDS);
+		pullJavaImages();
+
+		executor.scheduleAtFixedRate(this::publishDataCycle, 1_000, NodeCycleData.PUBLISH_INTERVAL, TimeUnit.MILLISECONDS);
 
 	}
 
@@ -210,6 +212,22 @@ public final class CloudNode extends CloudBase {
 
 		registry.addListener(PacketConstants.SERVICE_INFO_PUBLISH_CHANNEL, new ServiceInfoUpdateListener());
 		registry.addListener(PacketConstants.SERVICE_CONTROL_CHANNEL, new ServiceControlListener());
+	}
+
+	private void pullJavaImages() {
+		logger.info("Pulling docker java images..");
+		Set<Integer> javaVersions = new TreeSet<>();
+		serviceConfigManager.getTasks().forEach(task -> javaVersions.add(task.getJavaVersion()));
+		for (int javaVersion : javaVersions) {
+			String image = "openjdk:" + javaVersion;
+			try {
+				logger.info("Pulling image '{}' for java-{}..", image, javaVersion);
+				dockerClient.pullImageCmd(image).start().awaitCompletion();
+				logger.info("Successfully pulled image '{}'", image);
+			} catch (Exception ex) {
+				logger.error("Unable to pull image '{}'", image, ex);
+			}
+		}
 	}
 
 	private void initModules() throws Exception {
