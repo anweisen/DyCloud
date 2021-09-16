@@ -6,7 +6,7 @@ import net.anweisen.cloud.driver.player.connection.DefaultPlayerConnection;
 import net.anweisen.cloud.driver.player.connection.PlayerConnection;
 import net.anweisen.cloud.driver.player.settings.ChatMode;
 import net.anweisen.cloud.driver.player.settings.DefaultPlayerSettings;
-import net.anweisen.cloud.driver.player.settings.DefaultSkinPartsConfig;
+import net.anweisen.cloud.driver.player.settings.DefaultSkinParts;
 import net.anweisen.cloud.driver.player.settings.MainHand;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.modules.bridge.helper.BridgeHelper;
@@ -52,7 +52,7 @@ public final class BungeeBridgeHelper {
 			player.getLocale(),
 			player.getViewDistance(),
 			player.hasChatColors(),
-			new DefaultSkinPartsConfig(
+			new DefaultSkinParts(
 				player.getSkinParts().hasCape(),
 				player.getSkinParts().hasJacket(),
 				player.getSkinParts().hasLeftSleeve(),
@@ -78,7 +78,6 @@ public final class BungeeBridgeHelper {
 			serviceInfo.getName(),
 			serviceInfo.getAddress().toInetSocketAddress(), "A MinecraftCloud service", false
 		));
-		BridgeHelper.cacheService(serviceInfo);
 	}
 
 	public static void unregisterServer(@Nonnull String name) {
