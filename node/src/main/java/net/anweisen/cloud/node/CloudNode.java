@@ -210,8 +210,12 @@ public final class CloudNode extends CloudBase {
 	private void loadNetworkListeners(@Nonnull PacketListenerRegistry registry) {
 		logger.info("Registering network listeners..");
 
-		registry.addListener(PacketConstants.SERVICE_INFO_PUBLISH_CHANNEL, new ServiceInfoUpdateListener());
+		registry.addListener(PacketConstants.NODE_INFO_PUBLISH_CHANNEL, new NodeInfoPublishListener());
+		registry.addListener(PacketConstants.SERVICE_INFO_PUBLISH_CHANNEL, new ServiceInfoPublishListener());
 		registry.addListener(PacketConstants.SERVICE_CONTROL_CHANNEL, new ServiceControlListener());
+		registry.addListener(PacketConstants.PLAYER_EVENT_CHANNEL, new PlayerEventListener());
+		registry.addListener(PacketConstants.PLAYER_REMOTE_MANAGER_CHANNEL, new PlayerRemoteManagerListener());
+		registry.addListener(PacketConstants.GLOBAL_CONFIG_CHANNEL, new GlobalConfigUpdateListener());
 	}
 
 	private void pullJavaImages() {
