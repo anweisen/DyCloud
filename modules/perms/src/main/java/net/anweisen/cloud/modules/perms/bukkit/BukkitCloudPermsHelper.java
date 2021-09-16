@@ -11,7 +11,7 @@ import java.lang.reflect.Field;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class BukkitCloudPermsHelper {
+public final class BukkitCloudPermsHelper {
 
 	public static void injectPermissible(@Nonnull Player player) {
 		try {
@@ -27,4 +27,6 @@ public class BukkitCloudPermsHelper {
 			player.setOp(true);
 	}
 
+	private BukkitCloudPermsHelper() {
+	}
 }

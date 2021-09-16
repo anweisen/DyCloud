@@ -10,7 +10,6 @@ import net.md_5.bungee.api.ServerPing.Players;
 import net.md_5.bungee.api.ServerPing.Protocol;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.plugin.Plugin;
 
 import javax.annotation.Nonnull;
 import java.util.UUID;
@@ -22,9 +21,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class BungeeCloudProxyManager extends AbstractCloudProxyManager {
 
-	private final Plugin plugin;
+	private final BungeeCloudProxyPlugin plugin;
 
-	public BungeeCloudProxyManager(@Nonnull Plugin plugin) {
+	public BungeeCloudProxyManager(@Nonnull BungeeCloudProxyPlugin plugin) {
 		this.plugin = plugin;
 	}
 
