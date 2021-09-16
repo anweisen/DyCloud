@@ -111,7 +111,7 @@ public class AuthenticationResponseListener implements PacketListener, LoggingAp
 			}
 			case TEMPLATE_STORAGES: {
 				for (String name : buffer.readStringCollection()) {
-					cloud.getServiceConfigManager().registerTemplateStorage(new RemoteTemplateStorage(name, channel));
+					cloud.getServiceConfigManager().registerTemplateStorage(new RemoteTemplateStorage(name));
 				}
 				break;
 			}
