@@ -24,10 +24,11 @@ public class BukkitCloudListener {
 	public void onInfoConfigure(@Nonnull ServiceInfoConfigureEvent event) {
 		BridgeHelper.setOnlineCount(Bukkit.getOnlinePlayers().size());
 		event.getServiceInfo()
+			.set(ServiceProperty.WHITELIST, Bukkit.hasWhitelist())
 			.set(ServiceProperty.MOTD, BridgeHelper.getMotd())
 			.set(ServiceProperty.EXTRA, BridgeHelper.getExtra())
-			.set(ServiceProperty.MAX_PLAYER_COUNT, BridgeHelper.getMaxPlayers())
-			.set(ServiceProperty.ONLINE_PLAYER_COUNT, Bukkit.getOnlinePlayers().size())
+			.set(ServiceProperty.MAX_PLAYERS, BridgeHelper.getMaxPlayers())
+			.set(ServiceProperty.ONLINE_PLAYERS, Bukkit.getOnlinePlayers().size())
 			.set(ServiceProperty.MESSAGING_CHANNELS, SimpleCollectionUtils.of(Bukkit.getMessenger().getIncomingChannels(), Bukkit.getMessenger().getOutgoingChannels()))
 			.set(ServiceProperty.PLAYERS, Bukkit.getOnlinePlayers().stream().map(player -> {
 				return new PlayerInfo(player.getUniqueId(), player.getName());

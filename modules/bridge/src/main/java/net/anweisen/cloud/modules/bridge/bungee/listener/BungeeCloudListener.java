@@ -27,8 +27,8 @@ public class BungeeCloudListener {
 		event.getServiceInfo()
 			.set(ServiceProperty.MOTD, BridgeHelper.getMotd())
 			.set(ServiceProperty.EXTRA, BridgeHelper.getExtra())
-			.set(ServiceProperty.MAX_PLAYER_COUNT, BridgeHelper.getMaxPlayers())
-			.set(ServiceProperty.ONLINE_PLAYER_COUNT, ProxyServer.getInstance().getOnlineCount())
+			.set(ServiceProperty.MAX_PLAYERS, BridgeHelper.getMaxPlayers())
+			.set(ServiceProperty.ONLINE_PLAYERS, ProxyServer.getInstance().getOnlineCount())
 			.set(ServiceProperty.MESSAGING_CHANNELS, ProxyServer.getInstance().getChannels())
 			.set(ServiceProperty.PLAYERS, ProxyServer.getInstance().getPlayers().stream().map(player -> {
 				return new PlayerInfo(player.getUniqueId(), player.getName());
