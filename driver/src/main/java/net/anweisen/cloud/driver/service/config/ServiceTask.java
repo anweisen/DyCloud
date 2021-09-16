@@ -5,6 +5,7 @@ import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import net.anweisen.cloud.driver.service.specific.ServiceEnvironment;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
+import net.anweisen.utilities.common.config.Document;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -24,22 +25,24 @@ public final class ServiceTask implements SerializableObject {
 	private ServiceEnvironment environment;
 	private int javaVersion;
 
+	private int startOrder;
+
 	// Servers
 	private boolean fallback;
 	private int fallbackPriority;
 
-	// Proxies
-	private Collection<String> cordHostnames;
-
 	private String permission;
 
 	private int memoryLimit;
+	private int requiredMemory;
 
 	private int minCount;
 	private int maxCount;
 
 	private Collection<String> nodes;
 	private Collection<ServiceTemplate> templates;
+
+	private Document properties;
 
 	private ServiceTask() {
 	}
@@ -49,15 +52,17 @@ public final class ServiceTask implements SerializableObject {
 		buffer.writeString(name);
 		buffer.writeEnumConstant(environment);
 		buffer.writeInt(javaVersion);
+		buffer.writeInt(startOrder);
 		buffer.writeBoolean(fallback);
 		buffer.writeInt(fallbackPriority);
-		buffer.writeStringCollection(cordHostnames);
 		buffer.writeOptionalString(permission);
 		buffer.writeInt(memoryLimit);
+		buffer.writeInt(requiredMemory);
 		buffer.writeInt(minCount);
 		buffer.writeInt(maxCount);
 		buffer.writeStringCollection(nodes);
 		buffer.writeObjectCollection(templates);
+		buffer.writeDocument(properties);
 	}
 
 	@Override
@@ -65,15 +70,17 @@ public final class ServiceTask implements SerializableObject {
 		name = buffer.readString();
 		environment = buffer.readEnumConstant(ServiceEnvironment.class);
 		javaVersion = buffer.readInt();
+		startOrder = buffer.readInt();
 		fallback = buffer.readBoolean();
 		fallbackPriority = buffer.readInt();
-		cordHostnames = buffer.readStringCollection();
 		permission = buffer.readOptionalString();
+		memoryLimit = buffer.readInt();
 		memoryLimit = buffer.readInt();
 		minCount = buffer.readInt();
 		maxCount = buffer.readInt();
 		nodes = buffer.readStringCollection();
 		templates = buffer.readObjectCollection(ServiceTemplate.class);
+		properties = buffer.readDocument();
 	}
 
 	@Nonnull
@@ -104,11 +111,6 @@ public final class ServiceTask implements SerializableObject {
 		return fallbackPriority;
 	}
 
-	@Nonnull
-	public Collection<String> getCordHostnames() {
-		return cordHostnames;
-	}
-
 	@Nullable
 	public String getPermission() {
 		return permission;
@@ -124,12 +126,25 @@ public final class ServiceTask implements SerializableObject {
 		return minCount;
 	}
 
+	public int getStartOrder() {
+		return startOrder;
+	}
+
 	public int getJavaVersion() {
 		return javaVersion;
 	}
 
 	public int getMemoryLimit() {
 		return memoryLimit;
+	}
+
+	public int getRequiredMemory() {
+		return requiredMemory;
+	}
+
+	@Nonnull
+	public Document getProperties() {
+		return properties;
 	}
 
 	@Nonnull
@@ -157,14 +172,14 @@ public final class ServiceTask implements SerializableObject {
 			&& maxCount == task.maxCount
 			&& environment == task.environment
 			&& Objects.equals(name, task.name)
-			&& Objects.equals(cordHostnames, task.cordHostnames)
 			&& Objects.equals(permission, task.permission)
 			&& Objects.equals(nodes, task.nodes)
-			&& Objects.equals(templates, task.templates);
+			&& Objects.equals(templates, task.templates)
+			&& Objects.equals(properties, task.properties);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(name, environment, javaVersion, fallback, fallbackPriority, cordHostnames, permission, memoryLimit, minCount, maxCount, nodes, templates);
+		return Objects.hash(name, environment, javaVersion, fallback, fallbackPriority, permission, memoryLimit, minCount, maxCount, nodes, templates, properties);
 	}
 }
