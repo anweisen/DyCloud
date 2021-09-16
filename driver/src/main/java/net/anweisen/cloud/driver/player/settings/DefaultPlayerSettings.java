@@ -30,16 +30,16 @@ public class DefaultPlayerSettings implements PlayerSettings, SerializableObject
 		this.skinParts = skinParts;
 		this.chatMode = chatMode;
 		this.mainHand = mainHand;
-
-		System.err.println(this.toString());
 	}
 
 	@Override
 	public void write(@Nonnull Buffer buffer) {
 		buffer.writeBoolean(locale == null);
-		buffer.writeOptionalString(locale.getLanguage());
-		buffer.writeOptionalString(locale.getCountry());
-		buffer.writeOptionalString(locale.getVariant());
+		if (locale != null) {
+			buffer.writeOptionalString(locale.getLanguage());
+			buffer.writeOptionalString(locale.getCountry());
+			buffer.writeOptionalString(locale.getVariant());
+		}
 		buffer.writeByte(renderDistance);
 		buffer.writeObject(skinParts);
 		buffer.writeEnumConstant(chatMode);
