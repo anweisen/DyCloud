@@ -47,6 +47,12 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>com.velocitypowered</groupId>
+			<artifactId>velocity-api</artifactId>
+			<version>${velocity.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<repositories>
@@ -64,6 +70,11 @@
 		<repository>
 			<id>spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+		</repository>
+
+		<repository>
+			<id>velocity-repo</id>
+			<url>https://repo.velocitypowered.com/snapshots/</url>
 		</repository>
 
 	</repositories>
