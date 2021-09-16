@@ -17,13 +17,14 @@ import java.util.stream.Collectors;
  */
 public interface ServiceProperty<T> {
 
-	ServiceProperty<Integer> ONLINE_PLAYER_COUNT = newServiceProperty("online", Document::getInt);
-	ServiceProperty<Integer> MAX_PLAYER_COUNT = newServiceProperty("max", Document::getInt);
+	ServiceProperty<Integer> ONLINE_PLAYERS = newServiceProperty("online", Document::getInt);
+	ServiceProperty<Integer> MAX_PLAYERS = newServiceProperty("max", Document::getInt);
 	ServiceProperty<List<PlayerInfo>> PLAYERS = newServiceListProperty("players", PlayerInfo.class);
 	ServiceProperty<List<PluginInfo>> PLUGINS = newServiceListProperty("plugins", PluginInfo.class);
 	ServiceProperty<Collection<String>> MESSAGING_CHANNELS = newServiceProperty("channels", Document::getStringList);
 	ServiceProperty<String> EXTRA = newServiceProperty("extra", Document::getString);
 	ServiceProperty<String> MOTD = newServiceProperty("motd", Document::getString);
+	ServiceProperty<Boolean> WHITELIST = newServiceProperty("whitelist", Document::getBoolean);
 
 	@Nonnull
 	String getPropertyName();
