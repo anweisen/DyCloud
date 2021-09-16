@@ -2,7 +2,7 @@ package net.anweisen.cloud.cord.config;
 
 import net.anweisen.cloud.cord.CloudCord;
 import net.anweisen.cloud.driver.CloudDriver;
-import net.anweisen.cloud.driver.config.RemoteConfig;
+import net.anweisen.cloud.driver.config.DriverRemoteConfig;
 import net.anweisen.cloud.driver.network.HostAndPort;
 import net.anweisen.utilities.common.config.FileDocument;
 
@@ -17,7 +17,7 @@ import java.util.UUID;
  *
  * @see CloudCord#getConfig()
  */
-public final class CordConfig implements RemoteConfig {
+public final class CordConfig implements DriverRemoteConfig {
 
 	private static final Path path = Paths.get("config.json");
 

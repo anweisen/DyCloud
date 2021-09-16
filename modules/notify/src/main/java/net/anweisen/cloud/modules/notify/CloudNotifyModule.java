@@ -17,7 +17,7 @@ import java.awt.*;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class CloudNotifyModule extends CloudModule {
+public final class CloudNotifyModule extends CloudModule {
 
 	private static CloudNotifyModule instance;
 

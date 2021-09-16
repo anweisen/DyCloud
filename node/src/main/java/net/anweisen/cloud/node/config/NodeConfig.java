@@ -1,7 +1,7 @@
 package net.anweisen.cloud.node.config;
 
 import net.anweisen.cloud.driver.CloudDriver;
-import net.anweisen.cloud.driver.config.RemoteConfig;
+import net.anweisen.cloud.driver.config.DriverRemoteConfig;
 import net.anweisen.cloud.driver.network.HostAndPort;
 import net.anweisen.cloud.node.CloudNode;
 import net.anweisen.utilities.common.config.FileDocument;
@@ -17,7 +17,7 @@ import java.util.UUID;
  *
  * @see CloudNode#getConfig()
  */
-public final class NodeConfig implements RemoteConfig {
+public final class NodeConfig implements DriverRemoteConfig {
 
 	private static final Path path = Paths.get("config.json");
 
