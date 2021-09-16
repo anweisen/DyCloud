@@ -17,7 +17,7 @@ public final class ModuleClassLoader extends URLClassLoader {
 
 	private final ClassLoader parent;
 
-	Module module;
+	private Module module;
 
 	public ModuleClassLoader(@Nonnull URL jarFileUrl, @Nonnull ClassLoader parent) {
 		super(new URL[] { jarFileUrl });
@@ -58,4 +58,12 @@ public final class ModuleClassLoader extends URLClassLoader {
 		super.close();
 	}
 
+	void setModule(@Nonnull Module module) {
+		this.module = module;
+	}
+
+	@Nonnull
+	public Module getModule() {
+		return module;
+	}
 }

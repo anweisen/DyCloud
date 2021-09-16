@@ -96,7 +96,7 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 		module = (CloudModule) instance;
 		module.controller = this;
 
-		classLoader.module = module;
+		classLoader.setModule(module);
 
 	}
 
