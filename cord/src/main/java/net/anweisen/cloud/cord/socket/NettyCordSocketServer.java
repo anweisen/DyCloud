@@ -24,7 +24,7 @@ public class NettyCordSocketServer {
 	public void init(@Nonnull HostAndPort address) throws Exception {
 
 		channel = new ServerBootstrap()
-				.group(this.bossEventLoopGroup, this.workerEventLoopGroup)
+				.group(bossEventLoopGroup, workerEventLoopGroup)
 				.childOption(ChannelOption.TCP_NODELAY, true)
 				.childOption(ChannelOption.IP_TOS, 24)
 				.childOption(ChannelOption.AUTO_READ, true)

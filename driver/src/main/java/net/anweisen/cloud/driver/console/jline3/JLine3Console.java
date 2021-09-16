@@ -69,7 +69,7 @@ public class JLine3Console implements Console {
 
 	@Override
 	public void setCommandInputValue(@Nonnull String commandInputValue) {
-		this.lineReader.getBuffer().write(commandInputValue);
+		lineReader.getBuffer().write(commandInputValue);
 	}
 
 	@Nonnull
