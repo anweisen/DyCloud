@@ -145,6 +145,11 @@ public final class CloudNode extends CloudBase {
 		// Test connection with a ping
 		dockerClient.pingCmd().exec();
 		logger.info("Successfully pinged docker daemon");
+
+		dockerClient.eventsCmd()
+			.withEventTypeFilter("container")
+			.exec(new DockerEventListener());
+		logger.debug("Registered docker container event listener");
 	}
 
 	private void connectAndAwaitAuthentication() throws InterruptedException {
