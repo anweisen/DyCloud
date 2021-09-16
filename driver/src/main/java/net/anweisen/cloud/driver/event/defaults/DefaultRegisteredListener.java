@@ -1,7 +1,7 @@
 package net.anweisen.cloud.driver.event.defaults;
 
 import net.anweisen.cloud.driver.event.Event;
-import net.anweisen.cloud.driver.event.EventPriority;
+import net.anweisen.cloud.driver.event.EventOrder;
 import net.anweisen.cloud.driver.event.RegisteredListener;
 
 import javax.annotation.Nonnull;
@@ -16,14 +16,14 @@ public final class DefaultRegisteredListener implements RegisteredListener {
 	private final Object holder;
 	private final Method method;
 	private final Class<? extends Event> eventClass;
-	private final EventPriority priority;
+	private final EventOrder order;
 	private final boolean ignoreCancelled;
 
-	public DefaultRegisteredListener(@Nonnull Object holder, @Nonnull Method method, @Nonnull Class<? extends Event> eventClass, @Nonnull EventPriority priority, boolean ignoreCancelled) {
+	public DefaultRegisteredListener(@Nonnull Object holder, @Nonnull Method method, @Nonnull Class<? extends Event> eventClass, @Nonnull EventOrder order, boolean ignoreCancelled) {
 		this.holder = holder;
 		this.method = method;
 		this.eventClass = eventClass;
-		this.priority = priority;
+		this.order = order;
 		this.ignoreCancelled = ignoreCancelled;
 	}
 
@@ -39,8 +39,8 @@ public final class DefaultRegisteredListener implements RegisteredListener {
 
 	@Nonnull
 	@Override
-	public EventPriority getPriority() {
-		return priority;
+	public EventOrder getOrder() {
+		return order;
 	}
 
 	@Override

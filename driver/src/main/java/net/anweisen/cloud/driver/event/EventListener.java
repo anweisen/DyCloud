@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 public @interface EventListener {
 
 	@Nonnull
-	EventPriority priority() default EventPriority.NORMAL;
+	EventOrder order() default EventOrder.NORMAL;
 
 	boolean ignoreCancelled() default false;
 

@@ -14,7 +14,7 @@ public interface RegisteredListener {
 	Class<? extends Event> getEventClass();
 
 	@Nonnull
-	EventPriority getPriority();
+	EventOrder getOrder();
 
 	boolean getIgnoreCancelled();
 

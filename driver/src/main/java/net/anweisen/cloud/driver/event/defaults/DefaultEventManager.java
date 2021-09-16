@@ -40,7 +40,7 @@ public class DefaultEventManager implements EventManager {
 		for (RegisteredListener listener : listeners) {
 			List<RegisteredListener> registeredListeners = this.listeners.computeIfAbsent(listener.getEventClass(), key -> new LinkedList<>());
 			registeredListeners.add(listener);
-			registeredListeners.sort(Comparator.comparingInt(value -> value.getPriority().ordinal()));
+			registeredListeners.sort(Comparator.comparingInt(value -> value.getOrder().ordinal()));
 		}
 		return this;
 	}
@@ -69,7 +69,7 @@ public class DefaultEventManager implements EventManager {
 			}
 
 			EventListener annotation = method.getAnnotation(EventListener.class);
-			addListener(new DefaultRegisteredListener(listener, method, parameterType.asSubclass(Event.class), annotation.priority(), annotation.ignoreCancelled()));
+			addListener(new DefaultRegisteredListener(listener, method, parameterType.asSubclass(Event.class), annotation.order(), annotation.ignoreCancelled()));
 		}
 
 		return this;

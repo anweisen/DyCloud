@@ -1,7 +1,7 @@
 package net.anweisen.cloud.driver.event.defaults;
 
 import net.anweisen.cloud.driver.event.Event;
-import net.anweisen.cloud.driver.event.EventPriority;
+import net.anweisen.cloud.driver.event.EventOrder;
 import net.anweisen.cloud.driver.event.RegisteredListener;
 
 import javax.annotation.Nonnull;
@@ -34,8 +34,8 @@ public final class ActionRegisteredListener<E extends Event> implements Register
 
 	@Nonnull
 	@Override
-	public EventPriority getPriority() {
-		return EventPriority.NORMAL;
+	public EventOrder getOrder() {
+		return EventOrder.NORMAL;
 	}
 
 	@Override
