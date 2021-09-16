@@ -27,6 +27,8 @@ public class DefaultChatHandler implements ChatHandler {
 				.replace("{group.color}", group.getColor())
 				.replace("{group.display}", group.getDisplayName())
 			;
+
+			message = group.getChatColor() + message;
 		}
 
 		return format
