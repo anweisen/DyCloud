@@ -14,6 +14,9 @@ import java.util.UUID;
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
+ *
+ * @see PlayerManager#getOnlinePlayerByUniqueId(UUID)
+ * @see PlayerManager#getOnlinePlayerByName(String)
  */
 public interface CloudPlayer extends CloudOfflinePlayer {
 

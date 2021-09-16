@@ -9,6 +9,11 @@ import java.util.UUID;
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
+ *
+ * @see CloudPlayer#getExecutor()
+ *
+ * @see PlayerManager#getPlayerExecutor(UUID)
+ * @see PlayerManager#getGlobalExecutor()
  */
 public interface PlayerExecutor {
 

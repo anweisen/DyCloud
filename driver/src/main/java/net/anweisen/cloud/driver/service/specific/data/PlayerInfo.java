@@ -7,6 +7,8 @@ import java.util.UUID;
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
+ *
+ * @see net.anweisen.cloud.driver.service.specific.ServiceProperty#PLAYERS
  */
 public final class PlayerInfo {
 

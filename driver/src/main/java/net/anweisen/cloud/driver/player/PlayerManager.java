@@ -1,5 +1,6 @@
 package net.anweisen.cloud.driver.player;
 
+import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.utilities.common.concurrent.task.Task;
 
 import javax.annotation.Nonnull;
@@ -10,6 +11,8 @@ import java.util.UUID;
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
+ *
+ * @see CloudDriver#getPlayerManager()
  */
 public interface PlayerManager {
 

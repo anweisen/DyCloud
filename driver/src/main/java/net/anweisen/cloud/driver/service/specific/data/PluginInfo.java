@@ -5,6 +5,8 @@ import javax.annotation.Nonnull;
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
+ *
+ * @see net.anweisen.cloud.driver.service.specific.ServiceProperty#PLUGINS
  */
 public final class PluginInfo {
 

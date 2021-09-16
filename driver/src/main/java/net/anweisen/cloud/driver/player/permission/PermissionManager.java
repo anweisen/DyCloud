@@ -1,5 +1,6 @@
 package net.anweisen.cloud.driver.player.permission;
 
+import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.player.CloudOfflinePlayer;
 
 import javax.annotation.CheckReturnValue;
@@ -12,6 +13,8 @@ import java.util.UUID;
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
+ *
+ * @see CloudDriver#getPermissionManager()
  */
 public interface PermissionManager {
 

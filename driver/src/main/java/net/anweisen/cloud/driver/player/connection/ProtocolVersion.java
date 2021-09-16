@@ -9,6 +9,8 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
+ *
+ * @see PlayerConnection#getVersion()
  */
 public final class ProtocolVersion {
 
