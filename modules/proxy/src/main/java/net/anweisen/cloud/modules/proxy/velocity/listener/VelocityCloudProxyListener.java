@@ -1,6 +1,7 @@
 package net.anweisen.cloud.modules.proxy.velocity.listener;
 
 import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.LoginEvent;
 import com.velocitypowered.api.event.proxy.ProxyPingEvent;
 import net.anweisen.cloud.modules.proxy.velocity.VelocityCloudProxyPlugin;
@@ -15,6 +16,11 @@ public class VelocityCloudProxyListener {
 
 	@Subscribe
 	public void onLogin(@Nonnull LoginEvent event) {
+		VelocityCloudProxyPlugin.getInstance().getManager().updateTabList();
+	}
+
+	@Subscribe
+	public void onDisconnect(@Nonnull DisconnectEvent event) {
 		VelocityCloudProxyPlugin.getInstance().getManager().updateTabList();
 	}
 
