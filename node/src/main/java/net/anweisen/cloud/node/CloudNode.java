@@ -14,17 +14,18 @@ import net.anweisen.cloud.base.module.ModuleController;
 import net.anweisen.cloud.base.node.NodeCycleData;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.DriverEnvironment;
+import net.anweisen.cloud.driver.config.global.GlobalConfig;
+import net.anweisen.cloud.driver.config.global.RemoteGlobalConfig;
 import net.anweisen.cloud.driver.console.Console;
 import net.anweisen.cloud.driver.console.HeaderPrinter;
 import net.anweisen.cloud.driver.cord.CordManager;
 import net.anweisen.cloud.driver.database.DatabaseManager;
 import net.anweisen.cloud.driver.database.remote.RemoteDatabaseManager;
-import net.anweisen.cloud.driver.network.HostAndPort;
+import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.SocketClient;
 import net.anweisen.cloud.driver.network.handler.SocketChannelClientHandler;
-import net.anweisen.cloud.driver.network.listener.AuthenticationResponseListener;
-import net.anweisen.cloud.driver.network.listener.ServiceInfoUpdateListener;
+import net.anweisen.cloud.driver.network.listener.*;
 import net.anweisen.cloud.driver.network.netty.client.NettySocketClient;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketConstants;
@@ -35,6 +36,7 @@ import net.anweisen.cloud.driver.network.packet.def.ModuleSystemPacket;
 import net.anweisen.cloud.driver.network.packet.def.ModuleSystemPacket.ModuleSystemRequestType;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.node.NodeManager;
+import net.anweisen.cloud.driver.node.RemoteNodeManager;
 import net.anweisen.cloud.driver.player.PlayerManager;
 import net.anweisen.cloud.driver.player.defaults.RemotePlayerManager;
 import net.anweisen.cloud.driver.player.permission.impl.RemotePermissionManager;
@@ -45,23 +47,19 @@ import net.anweisen.cloud.driver.service.ServiceManager;
 import net.anweisen.cloud.driver.service.config.RemoteServiceConfigManager;
 import net.anweisen.cloud.driver.service.config.ServiceConfigManager;
 import net.anweisen.cloud.node.config.NodeConfig;
+import net.anweisen.cloud.node.docker.DockerEventListener;
+import net.anweisen.cloud.node.docker.DockerServiceActor;
 import net.anweisen.cloud.node.network.listener.ServiceControlListener;
-import net.anweisen.cloud.node.node.NodeNodeManager;
-import net.anweisen.cloud.node.service.NodeServiceActor;
-import net.anweisen.utilities.common.logging.ILogger;
+import net.anweisen.utilities.common.logging.handler.HandledLogger;
 import net.anweisen.utilities.common.misc.FileUtils;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -80,24 +78,31 @@ public final class CloudNode extends CloudBase {
 	private final DatabaseManager databaseManager;
 	private final ServiceConfigManager serviceConfigManager;
 	private final ServiceManager serviceManager;
-	private final NodeServiceFactory serviceFactory;
+	private final ServiceFactory serviceFactory;
 	private final NodeManager nodeManager;
+	private final PlayerManager playerManager;
+	private final GlobalConfig globalConfig;
+	private final DockerServiceActor serviceActor;
 
 	private SocketClient socketClient;
 	private DockerClient dockerClient;
 
-	CloudNode(@Nonnull ILogger logger, @Nonnull Console console) {
+	CloudNode(@Nonnull HandledLogger logger, @Nonnull Console console) {
 		super(logger, console, DriverEnvironment.NODE);
 		setInstance(this);
 
 		Path wrapperOrigin = Paths.get("wrapper.jar");
 		if (!Files.exists(wrapperOrigin)) throw new IllegalStateException("Missing wrapper.jar");
 
-		nodeManager = new NodeNodeManager();
+		nodeManager = new RemoteNodeManager();
 		databaseManager = new RemoteDatabaseManager();
-		serviceConfigManager = new NodeServiceConfigManager();
-		serviceManager = new NodeServiceManager();
-		serviceFactory = new NodeServiceFactory();
+		serviceConfigManager = new RemoteServiceConfigManager();
+		serviceManager = new RemoteServiceManager();
+		serviceFactory = new RemoteServiceFactory();
+		permissionManager = new RemotePermissionManager();
+		playerManager = new RemotePlayerManager();
+		serviceActor = new DockerServiceActor();
+		globalConfig = new RemoteGlobalConfig();
 
 		HeaderPrinter.printHeader(console, this);
 	}
@@ -179,6 +184,7 @@ public final class CloudNode extends CloudBase {
 		if (!listener.getResult())
 			throw new IllegalStateException("Network authentication failed: " + listener.getMessage());
 
+		listener.readConfigProperties();
 		logger.info("Network authentication was successful");
 
 	}
@@ -296,7 +302,7 @@ public final class CloudNode extends CloudBase {
 
 	@Nonnull
 	@Override
-	public NodeServiceFactory getServiceFactory() {
+	public ServiceFactory getServiceFactory() {
 		return serviceFactory;
 	}
 
@@ -314,8 +320,31 @@ public final class CloudNode extends CloudBase {
 
 	@Nonnull
 	@Override
+	public CordManager getCordManager() {
+		return null;
+	}
+
+	@Nonnull
+	@Override
+	public PlayerManager getPlayerManager() {
+		return playerManager;
+	}
+
+	@Nonnull
+	public DockerServiceActor getServiceActor() {
+		return serviceActor;
+	}
+
+	@Nonnull
+	@Override
 	public String getComponentName() {
 		return config.getNodeName();
+	}
+
+	@Nonnull
+	@Override
+	public GlobalConfig getGlobalConfig() {
+		return globalConfig;
 	}
 
 	@Nonnull
