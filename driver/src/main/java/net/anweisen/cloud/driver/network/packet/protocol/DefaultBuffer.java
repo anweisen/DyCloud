@@ -15,6 +15,8 @@ import java.io.*;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
@@ -260,6 +262,24 @@ public class DefaultBuffer extends Buffer {
 		writeBoolean(document != null);
 		if (document != null)
 			writeDocument(document);
+		return this;
+	}
+
+	@Nonnull
+	@Override
+	public InetAddress readInetAddress() {
+		try {
+			return InetAddress.getByAddress(readOptionalString(), readArray());
+		} catch (UnknownHostException ex) {
+			throw new WrappedException(ex);
+		}
+	}
+
+	@Nonnull
+	@Override
+	public Buffer writeInetAddress(@Nonnull InetAddress address) {
+		writeOptionalString(address.getHostName());
+		writeArray(address.getAddress());
 		return this;
 	}
 

@@ -3,7 +3,7 @@ package net.anweisen.cloud.master.config;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.config.DriverConfig;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
-import net.anweisen.cloud.driver.network.HostAndPort;
+import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.service.specific.ServiceType;
 import net.anweisen.cloud.master.CloudMaster;
 import net.anweisen.utilities.common.config.Document;

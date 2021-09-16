@@ -1,5 +1,7 @@
 package net.anweisen.cloud.driver.network;
 
+import net.anweisen.cloud.driver.network.object.HostAndPort;
+
 import javax.annotation.Nonnull;
 
 /**

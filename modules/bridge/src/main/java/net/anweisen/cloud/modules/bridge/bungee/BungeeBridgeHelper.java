@@ -1,6 +1,6 @@
 package net.anweisen.cloud.modules.bridge.bungee;
 
-import net.anweisen.cloud.driver.network.HostAndPort;
+import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.player.chat.ChatText;
 import net.anweisen.cloud.driver.player.connection.DefaultPlayerConnection;
 import net.anweisen.cloud.driver.player.connection.PlayerConnection;
@@ -76,7 +76,7 @@ public final class BungeeBridgeHelper {
 		CloudWrapper.getInstance().getLogger().debug("Registering server '{}' -> {}", serviceInfo.getName(), serviceInfo.getAddress());
 		ProxyServer.getInstance().getServers().put(serviceInfo.getName(), ProxyServer.getInstance().constructServerInfo(
 			serviceInfo.getName(),
-			serviceInfo.getAddress().toInetSocketAddress(), "A MinecraftCloud service", false
+			serviceInfo.getAddress().toSocketAddress(), "A MinecraftCloud service", false
 		));
 	}
 

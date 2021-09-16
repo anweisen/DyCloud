@@ -116,7 +116,7 @@ public class NettyMinecraftDecoder extends SimpleChannelInboundHandler<ByteBuf> 
 				}
 			});
 
-		ChannelFuture connectFuture = bootstrap.connect(proxyService.getAddress().toInetSocketAddress());
+		ChannelFuture connectFuture = bootstrap.connect(proxyService.getAddress().toSocketAddress());
 		debug("Connecting for client {} for hostname {} to '{}': {}..", clientChannel.remoteAddress(), hostname, proxyService.getName(), proxyService.getAddress());
 		connectFuture.addListener((ChannelFutureListener) future -> {
 			Channel serverChannel = future.channel();

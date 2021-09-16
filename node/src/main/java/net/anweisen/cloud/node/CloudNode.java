@@ -186,29 +186,16 @@ public final class CloudNode extends CloudBase {
 	private void sendAuthentication() {
 		logger.info("Sending authentication to master..");
 
-		List<String> subnetIps = dockerClient.listNetworksCmd()
-			.withNameFilter(this.config.getDockerNetworkMode())
+		Config ipamConfig = dockerClient.listNetworksCmd()
+			.withNameFilter(config.getDockerNetworkMode())
 			.exec().stream().findFirst()
 			.map(Network::getIpam)
 			.map(Ipam::getConfig)
 			.map(configs -> configs.isEmpty() ? null : configs.get(0))
-			.map(Config::getSubnet)
-			.map(subnet -> {
-				String[] split = subnet.split("/");
-				String originIp = split[0];
-				int range = Integer.parseInt(split[1]);
-
-				List<String> ips = new ArrayList<>(range + 1);
-				for (int i = 0; i <= range; i++) {
-					int index = originIp.lastIndexOf('.');
-					String ip = originIp.substring(0, index + 1) + i;
-					ips.add(ip);
-				}
-				return ips;
-			}).orElse(Collections.emptyList());
+			.orElseThrow(() -> new IllegalStateException("Unable to retrieve ipam config of '" + config.getDockerNetworkMode() + "'"));
 
 		socketClient.sendPacket(new AuthenticationPacket(AuthenticationType.NODE, config.getIdentity(), config.getNodeName(), buffer -> {
-			buffer.writeStringCollection(subnetIps);
+			buffer.writeString(ipamConfig.getGateway()).writeString(ipamConfig.getSubnet());
 		}));
 	}
 

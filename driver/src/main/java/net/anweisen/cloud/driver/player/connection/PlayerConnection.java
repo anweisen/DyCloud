@@ -1,6 +1,6 @@
 package net.anweisen.cloud.driver.player.connection;
 
-import net.anweisen.cloud.driver.network.HostAndPort;
+import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.player.CloudPlayer;
 
 import javax.annotation.Nonnull;

@@ -2,7 +2,7 @@ package net.anweisen.cloud.node.config;
 
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.config.DriverRemoteConfig;
-import net.anweisen.cloud.driver.network.HostAndPort;
+import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.node.CloudNode;
 import net.anweisen.utilities.common.config.FileDocument;
 

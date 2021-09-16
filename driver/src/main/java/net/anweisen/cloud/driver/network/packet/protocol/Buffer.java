@@ -9,6 +9,7 @@ import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -129,6 +130,12 @@ public abstract class Buffer extends ByteBuf {
 
 	@Nonnull
 	public abstract Collection<Document> readDocumentCollection();
+
+	@Nonnull
+	public abstract InetAddress readInetAddress();
+
+	@Nonnull
+	public abstract Buffer writeInetAddress(@Nonnull InetAddress address);
 
 	@Nonnull
 	public abstract Buffer writeDocumentCollection(@Nonnull Collection<? extends Document> documents);

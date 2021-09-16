@@ -1,7 +1,7 @@
 package net.anweisen.cloud.driver.network.netty.server;
 
 import io.netty.channel.ChannelHandlerContext;
-import net.anweisen.cloud.driver.network.HostAndPort;
+import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.network.SocketComponent;
 import net.anweisen.cloud.driver.network.netty.NettyChannel;
 import net.anweisen.cloud.driver.network.netty.NettyChannelHandler;

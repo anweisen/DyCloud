@@ -3,7 +3,7 @@ package net.anweisen.cloud.cord.config;
 import net.anweisen.cloud.cord.CloudCord;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.config.DriverRemoteConfig;
-import net.anweisen.cloud.driver.network.HostAndPort;
+import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.utilities.common.config.FileDocument;
 
 import javax.annotation.Nonnull;

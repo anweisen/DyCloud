@@ -1,4 +1,4 @@
-package net.anweisen.cloud.driver.network;
+package net.anweisen.cloud.driver.network.object;
 
 import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
@@ -7,10 +7,9 @@ import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.net.UnknownHostException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.*;
 import java.util.Objects;
 
 /**
@@ -42,7 +41,7 @@ public final class HostAndPort implements SerializableObject {
 	public static HostAndPort parse(@Nonnull String input) {
 		String[] args = input.split(":");
 		if (args.length == 2)
-			return create(args[0], Integer.parseInt(args[1]));
+			return new HostAndPort(args[0], Integer.parseInt(args[1]));
 
 		throw new IllegalStateException("Unable to parse '" + input + "'");
 	}
@@ -63,38 +62,33 @@ public final class HostAndPort implements SerializableObject {
 		return new HostAndPort((InetSocketAddress) address);
 	}
 
-	@Nullable
-	@CheckReturnValue
-	public static HostAndPort fromSocketAddressOrNull(@Nullable SocketAddress address) {
-		return address instanceof InetSocketAddress ? fromSocketAddress(address) : null;
-	}
-
 	@Nonnull
 	@CheckReturnValue
 	public static HostAndPort localhost(int port) {
-		return create(localhost(), port);
+		return new HostAndPort(localhost(), port);
 	}
 
 	@Nonnull
 	@CheckReturnValue
 	public static String localhost() {
 		try {
+			return new BufferedReader(new InputStreamReader(new URL("http://checkip.amazonaws.com").openStream())).readLine();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		try {
 			return InetAddress.getLocalHost().getHostAddress();
 		} catch (UnknownHostException ex) {
 			ex.printStackTrace();
-			return "127.0.0.1";
 		}
+
+		return "127.0.0.1";
 	}
 
 	@Nonnull
 	@CheckReturnValue
-	public static HostAndPort create(@Nonnull String host, int port) {
-		return new HostAndPort(host, port);
-	}
-
-	@Nonnull
-	@CheckReturnValue
-	public InetSocketAddress toInetSocketAddress() {
+	public InetSocketAddress toSocketAddress() {
 		return new InetSocketAddress(host, port);
 	}
 
