@@ -94,7 +94,7 @@ public class NettySocketClient extends DefaultSocketComponent implements SocketC
 	public void shutdown() {
 		try {
 			packetDispatcher.shutdownNow();
-			eventLoopGroup.shutdownGracefully().sync();
+			eventLoopGroup.shutdownGracefully();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
