@@ -34,30 +34,31 @@ public class DefaultPlayerSettings implements PlayerSettings, SerializableObject
 
 	@Override
 	public void write(@Nonnull Buffer buffer) {
+		buffer.writeByte(renderDistance);
+		buffer.writeBoolean(chatColors);
+		buffer.writeObject(skinParts);
+		buffer.writeEnumConstant(chatMode);
+		buffer.writeEnumConstant(mainHand);
 		buffer.writeBoolean(locale == null);
 		if (locale != null) {
 			buffer.writeOptionalString(locale.getLanguage());
 			buffer.writeOptionalString(locale.getCountry());
 			buffer.writeOptionalString(locale.getVariant());
 		}
-		buffer.writeByte(renderDistance);
-		buffer.writeObject(skinParts);
-		buffer.writeEnumConstant(chatMode);
-		buffer.writeEnumConstant(mainHand);
 	}
 
 	@Override
 	public void read(@Nonnull Buffer buffer) {
-		locale = buffer.readBoolean() ? null : new Locale(
-			stringOrEmpty(buffer.readOptionalString()), // language
-			stringOrEmpty(buffer.readOptionalString()), // country
-			stringOrEmpty(buffer.readOptionalString())  // variant
-		);
 		renderDistance = buffer.readByte();
 		chatColors = buffer.readBoolean();
 		skinParts = buffer.readObject(DefaultSkinParts.class);
 		chatMode = buffer.readEnumConstant(ChatMode.class);
 		mainHand = buffer.readEnumConstant(MainHand.class);
+		locale = buffer.readBoolean() ? null : new Locale(
+			stringOrEmpty(buffer.readOptionalString()), // language
+			stringOrEmpty(buffer.readOptionalString()), // country
+			stringOrEmpty(buffer.readOptionalString())  // variant
+		);
 	}
 
 	@Nonnull
@@ -101,6 +102,6 @@ public class DefaultPlayerSettings implements PlayerSettings, SerializableObject
 
 	@Override
 	public String toString() {
-		return "PlayerSetting[locale=" + locale + " renderDistance=" + renderDistance + " chatColors=" + chatColors + " chatMode=" + chatMode + " mainHand=" + mainHand + " skin=" + skinParts + "]";
+		return "PlayerSettings[locale=" + locale + " renderDistance=" + renderDistance + " chatColors=" + chatColors + " chatMode=" + chatMode + " mainHand=" + mainHand + " skin=" + skinParts + "]";
 	}
 }
