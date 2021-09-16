@@ -212,15 +212,17 @@ public final class CloudNode extends CloudBase {
 		registry.addListener(PacketConstants.SERVICE_CONTROL_CHANNEL, new ServiceControlListener());
 	}
 
-	private void initModules() throws IOException {
+	private void initModules() throws Exception {
 		logger.info("Requesting & downloading modules..");
 		SocketChannel channel = socketClient.getFirstChannel();
 
-		String[] names = channel.sendQuery(new ModuleSystemPacket(ModuleSystemRequestType.GET_MODULES)).getBuffer().readStringArray();
+		String[] names = channel.sendPacketQuery(new ModuleSystemPacket(ModuleSystemRequestType.GET_MODULES)).getBuffer().readStringArray();
 		for (int i = 0; i < names.length; i++) {
+			logger.info("Downloading module {}..", names[i]);
 			InputStream input = channel.sendChunkedPacketQuery(new ModuleSystemPacket(ModuleSystemRequestType.GET_MODULE_JAR, i)).getBeforeTimeout(10, TimeUnit.SECONDS).getInputStream();
 			Path file = moduleManager.getModulesDirectory().resolve(names[i]);
 			FileUtils.copy(input, Files.newOutputStream(file, StandardOpenOption.CREATE));
+			input.close();
 		}
 
 		moduleManager.resolveModules();
@@ -229,6 +231,7 @@ public final class CloudNode extends CloudBase {
 			InputStream input = channel.sendChunkedPacketQuery(new ModuleSystemPacket(ModuleSystemRequestType.GET_MODULE_DATA_FOLDER, i)).getBeforeTimeout(10, TimeUnit.SECONDS).getInputStream();
 			ModuleController module = moduleManager.getModules().get(i);
 			FileUtils.extract(input, module.getDataFolder());
+			input.close();
 		}
 
 		moduleManager.loadModules();
@@ -246,6 +249,8 @@ public final class CloudNode extends CloudBase {
 
 		logger.info("Closing socket connection..");
 		socketClient.closeChannels();
+		logger.info("Shutting down socket client..");
+		socketClient.shutdown();
 
 		shutdownBase();
 		shutdownDriver();
