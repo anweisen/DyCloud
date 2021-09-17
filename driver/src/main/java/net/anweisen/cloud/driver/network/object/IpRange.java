@@ -9,7 +9,7 @@ import java.net.UnknownHostException;
 /**
  * Takes a specific IP address or a range specified using the IP/Netmask (e.g. 192.168.1.0/24 or 202.24.0.0/14).
  */
-public class IpRange {
+public final class IpRange {
 
 	private final int maskBits;
 	private final InetAddress requiredAddress;
@@ -65,7 +65,7 @@ public class IpRange {
 	}
 
 	@Nonnull
-	protected InetAddress parseAddress(@Nonnull String address) {
+	private InetAddress parseAddress(@Nonnull String address) {
 		try {
 			return InetAddress.getByName(address);
 		} catch (UnknownHostException ex) {
