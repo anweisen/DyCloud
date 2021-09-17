@@ -152,6 +152,10 @@ public final class ServiceInfo implements SerializableObject {
 		return controlState;
 	}
 
+	/**
+	 * The service is marked as ready by the bridge plugin when it was enabled.
+	 * If the server software does not have a bridge plugin it will always be {@code true} if the service is running.
+	 */
 	public boolean isReady() {
 		return state == ServiceState.RUNNING && (ready || !environment.hasBridge());
 	}
