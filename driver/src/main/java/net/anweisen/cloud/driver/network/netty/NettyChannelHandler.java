@@ -6,8 +6,6 @@ import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.network.SocketComponent;
 import net.anweisen.cloud.driver.network.packet.Packet;
-import net.anweisen.cloud.driver.network.packet.PacketConstants;
-import net.anweisen.cloud.driver.network.packet.def.InternalNetworkingPacket;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -51,10 +49,6 @@ public abstract class NettyChannelHandler extends SimpleChannelInboundHandler<Pa
 		getComponent().getPacketDispatcher().execute(() -> {
 			try {
 
-				if (packet.getChannel() == PacketConstants.INTERNAL_NETWORKING_CHANNEL) {
-					InternalNetworkingPacket.handle(getComponent(), packet.getBuffer());
-					return;
-				}
 				if (channel.getHandler() == null || channel.getHandler().handlePacketReceive(channel, packet))
 					getComponent().getListenerRegistry().handlePacket(channel, packet);
 
