@@ -109,7 +109,7 @@ public class MasterPlayerManager extends DefaultPlayerManager implements Logging
 
 	@Nonnull
 	public CloudPlayer registerOnlinePlayer(@Nonnull CloudOfflinePlayer offlinePlayer, @Nonnull DefaultPlayerConnection connection, @Nonnull ServiceInfo proxy) {
-		CloudPlayer player = new DefaultCloudPlayer(offlinePlayer, connection, proxy);
+		CloudPlayer player = new DefaultCloudPlayer(offlinePlayer, connection, proxy.getUniqueId());
 		onlinePlayers.put(offlinePlayer.getUniqueId(), player);
 		return player;
 	}
