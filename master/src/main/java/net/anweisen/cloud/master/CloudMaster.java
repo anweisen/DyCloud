@@ -171,7 +171,7 @@ public final class CloudMaster extends CloudBase {
 
 	@Nonnull
 	@Override
-	public MasterServiceManager getServiceManager() {
+	public CloudServiceManager getServiceManager() {
 		return serviceManager;
 	}
 
@@ -179,6 +179,18 @@ public final class CloudMaster extends CloudBase {
 	@Override
 	public NodeServerManager getNodeManager() {
 		return nodeManager;
+	}
+
+	@Nonnull
+	@Override
+	public CordServerManager getCordManager() {
+		return cordManager;
+	}
+
+	@Nonnull
+	@Override
+	public MasterPlayerManager getPlayerManager() {
+		return playerManager;
 	}
 
 	@Nonnull
@@ -191,6 +203,12 @@ public final class CloudMaster extends CloudBase {
 	@Override
 	public MasterConfig getConfig() {
 		return config;
+	}
+
+	@Nonnull
+	@Override
+	public GlobalConfig getGlobalConfig() {
+		return globalConfig;
 	}
 
 	private static CloudMaster instance;
