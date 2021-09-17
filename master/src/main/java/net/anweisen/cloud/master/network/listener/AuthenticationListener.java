@@ -1,7 +1,7 @@
 package net.anweisen.cloud.master.network.listener;
 
 import net.anweisen.cloud.driver.cord.CordInfo;
-import net.anweisen.cloud.driver.network.HostAndPort;
+import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
@@ -35,12 +35,11 @@ public class AuthenticationListener implements PacketListener {
 
 		AuthenticationType type = buffer.readEnumConstant(AuthenticationType.class);
 		UUID identity = buffer.readUUID();
-		String name = buffer.readString();
 
-		cloud.getLogger().debug("Received authentication from {}: type={}, name={}", channel, type, name);
+		cloud.getLogger().debug("Received authentication from {}: type={}", channel, type);
 
 		if (!cloud.getConfig().getIdentity().equals(identity)) {
-			cloud.getLogger().info("Authentication for '{}' with identity {} was rejected: {}", name, identity, channel);
+			cloud.getLogger().info("Authentication for some {} with identity {} was rejected: {}", type, identity, channel);
 			channel.sendPacket(new AuthenticationResponsePacket(false, "authentication failed"));
 			channel.close();
 			return;
@@ -49,6 +48,7 @@ public class AuthenticationListener implements PacketListener {
 		switch (type) {
 
 			case NODE: {
+				String name = buffer.readString();
 				if (cloud.getNodeManager().getNodeInfos().stream().anyMatch(info -> info.getAddress().equals(channel.getClientAddress()))) {
 					cloud.getLogger().warn("{} tried to authenticate again with node name '{}'", channel, name);
 					channel.sendPacket(new AuthenticationResponsePacket(false, "node address already registered"));
@@ -61,14 +61,13 @@ public class AuthenticationListener implements PacketListener {
 					return;
 				}
 
-				NodeInfo info = new NodeInfo(name, channel.getClientAddress(), buffer.readStringCollection(), buffer.readString());
+				NodeInfo info = new NodeInfo(name, channel.getClientAddress(), buffer.readString(), buffer.readString());
 				NodeServer server = new DefaultNodeServer(info, channel);
 				cloud.getNodeManager().registerNode(server);
 
-				cloud.getLogger().extended("Subnet ips for {}: {}", name, info.getSubnetIps());
-				cloud.getLogger().extended("Gateway ip for {}: {}", name, info.getGatewayIp());
-
 				cloud.getLogger().info("Node '{}' has connected successfully", name);
+				cloud.getLogger().extended("=> Subnet range for {}: {}", name, info.getSubnet());
+				cloud.getLogger().extended("=> Gateway ip for {}: {}", name, info.getGateway());
 				cloud.getNodeManager().handleNodeUpdate(NodePublishType.CONNECTED, info);
 				cloud.publishUpdate(NodePublishType.CONNECTED, info);
 				channel.sendPacket(new AuthenticationResponsePacket(true, "successful"));
@@ -76,6 +75,7 @@ public class AuthenticationListener implements PacketListener {
 			}
 
 			case CORD: {
+				String name = buffer.readString();
 				if (cloud.getCordManager().getCordInfos().stream().anyMatch(info -> info.getClientAddress().equals(channel.getClientAddress()))) {
 					cloud.getLogger().warn("{} tried to authenticate again with cord name '{}'", channel, name);
 					channel.sendPacket(new AuthenticationResponsePacket(false, "cord address already registered"));
@@ -100,9 +100,10 @@ public class AuthenticationListener implements PacketListener {
 			}
 
 			case SERVICE: {
-				CloudService service = cloud.getServiceManager().getServiceByName(name);
+				UUID uniqueId = buffer.readUUID();
+				CloudService service = cloud.getServiceManager().getServiceByUniqueId(uniqueId);
 				if (service == null) {
-					cloud.getLogger().warn("{} tried to register with unknown service name '{}'", channel, name);
+					cloud.getLogger().warn("{} tried to register with unknown service '{}'", channel, uniqueId);
 					channel.sendPacket(new AuthenticationResponsePacket(false, "unknown service"));
 					channel.close();
 					return;
@@ -112,13 +113,13 @@ public class AuthenticationListener implements PacketListener {
 				cloud.publishUpdate(ServicePublishType.CONNECTED, service.getInfo());
 				cloud.getServiceManager().handleServiceUpdate(ServicePublishType.CONNECTED, service.getInfo());
 
-				cloud.getLogger().info("Service '{}' has connected successfully", name);
+				cloud.getLogger().info("Service '{}' has connected successfully", service.getInfo().getName());
 				channel.sendPacket(new AuthenticationResponsePacket(true, "successful"));
 				break;
 			}
 
 			default: {
-				cloud.getLogger().info("Authentication for '{}' with identity {} was a invalid type: {}", name, identity, channel);
+				cloud.getLogger().info("Authentication for '{}' with identity {} was a invalid type", channel, identity);
 				channel.sendPacket(new AuthenticationResponsePacket(false, "invalid type"));
 				channel.close();
 				return;

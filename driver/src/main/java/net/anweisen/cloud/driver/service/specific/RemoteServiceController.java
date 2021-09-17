@@ -2,7 +2,7 @@ package net.anweisen.cloud.driver.service.specific;
 
 import net.anweisen.cloud.driver.network.packet.def.ServiceControlPacket;
 import net.anweisen.cloud.driver.network.packet.def.ServiceControlPacket.ServiceControlType;
-import net.anweisen.cloud.driver.network.request.NetworkingApiUser;
+import net.anweisen.cloud.driver.network.NetworkingApiUser;
 import net.anweisen.utilities.common.concurrent.task.Task;
 
 import javax.annotation.Nonnull;
@@ -28,30 +28,30 @@ public class RemoteServiceController implements ServiceController, NetworkingApi
 	@Nonnull
 	@Override
 	public Task<Void> startAsync() {
-		return sendQueryAsync(new ServiceControlPacket(ServiceControlType.START, service.getUniqueId()), buffer -> null);
+		return sendPacketQueryAsync(new ServiceControlPacket(ServiceControlType.START, service.getUniqueId()), buffer -> null);
 	}
 
 	@Nonnull
 	@Override
 	public Task<Void> stopAsync() {
-		return sendQueryAsync(new ServiceControlPacket(ServiceControlType.STOP, service.getUniqueId()), buffer -> null);
+		return sendPacketQueryAsync(new ServiceControlPacket(ServiceControlType.STOP, service.getUniqueId()), buffer -> null);
 	}
 
 	@Nonnull
 	@Override
 	public Task<Void> restartAsync() {
-		return sendQueryAsync(new ServiceControlPacket(ServiceControlType.RESTART, service.getUniqueId()), buffer -> null);
+		return sendPacketQueryAsync(new ServiceControlPacket(ServiceControlType.RESTART, service.getUniqueId()), buffer -> null);
 	}
 
 	@Nonnull
 	@Override
 	public Task<Void> killAsync() {
-		return sendQueryAsync(new ServiceControlPacket(ServiceControlType.KILL, service.getUniqueId()), buffer -> null);
+		return sendPacketQueryAsync(new ServiceControlPacket(ServiceControlType.KILL, service.getUniqueId()), buffer -> null);
 	}
 
 	@Nonnull
 	@Override
 	public Task<Void> deleteAsync() {
-		return sendQueryAsync(new ServiceControlPacket(ServiceControlType.DELETE, service.getUniqueId()), buffer -> null);
+		return sendPacketQueryAsync(new ServiceControlPacket(ServiceControlType.DELETE, service.getUniqueId()), buffer -> null);
 	}
 }

@@ -2,7 +2,7 @@ package net.anweisen.cloud.driver.service;
 
 import net.anweisen.cloud.driver.network.packet.def.ServiceControlPacket;
 import net.anweisen.cloud.driver.network.packet.def.ServiceControlPacket.ServiceControlType;
-import net.anweisen.cloud.driver.network.request.NetworkingApiUser;
+import net.anweisen.cloud.driver.network.NetworkingApiUser;
 import net.anweisen.cloud.driver.service.config.ServiceTask;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.utilities.common.concurrent.task.Task;
@@ -26,6 +26,6 @@ public class RemoteServiceFactory implements ServiceFactory, NetworkingApiUser {
 	@Nonnull
 	@Override
 	public Task<ServiceInfo> createServiceAsync(@Nonnull ServiceTask task) {
-		return sendQueryAsync(new ServiceControlPacket(ServiceControlType.CREATE, task), buffer -> buffer.readOptionalObject(ServiceInfo.class));
+		return sendPacketQueryAsync(new ServiceControlPacket(ServiceControlType.CREATE, task), buffer -> buffer.readOptionalObject(ServiceInfo.class));
 	}
 }
