@@ -297,6 +297,12 @@ public final class CloudWrapper extends CloudDriver {
 	}
 
 	@Nonnull
+	@Override
+	public GlobalConfig getGlobalConfig() {
+		return globalConfig;
+	}
+
+	@Nonnull
 	public Instrumentation getInstrumentation() {
 		return instrumentation;
 	}
@@ -347,7 +353,7 @@ public final class CloudWrapper extends CloudDriver {
 	@Nonnull
 	@Override
 	public ServiceFactory getServiceFactory() {
-		return null;
+		return serviceFactory;
 	}
 
 	@Nonnull
@@ -359,7 +365,7 @@ public final class CloudWrapper extends CloudDriver {
 	@Nonnull
 	@Override
 	public NodeManager getNodeManager() {
-		return null;
+		return nodeManager;
 	}
 
 	@Nonnull
