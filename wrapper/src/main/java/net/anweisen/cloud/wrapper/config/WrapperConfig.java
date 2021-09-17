@@ -1,9 +1,7 @@
 package net.anweisen.cloud.wrapper.config;
 
-import net.anweisen.cloud.driver.config.RemoteConfig;
-import net.anweisen.cloud.driver.network.HostAndPort;
-import net.anweisen.cloud.driver.service.config.ServiceTask;
-import net.anweisen.cloud.driver.service.specific.ServiceInfo;
+import net.anweisen.cloud.driver.config.DriverRemoteConfig;
+import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.wrapper.CloudWrapper;
 import net.anweisen.utilities.common.config.Document;
 
@@ -18,24 +16,24 @@ import java.util.UUID;
  *
  * @see CloudWrapper#getConfig()
  */
-public final class WrapperConfig implements RemoteConfig {
+public final class WrapperConfig implements DriverRemoteConfig {
 
 	private static final Path path = Paths.get(".cloud", "config.json");
 
 	private HostAndPort masterAddress;
 	private UUID identity;
-	private ServiceTask task;
-	private ServiceInfo serviceInfo;
+	private UUID serviceUniqueId;
+	private String serviceTaskName;
 
 	@Override
 	public void load() {
 
 		Document document = Document.readJsonFile(path);
 
-		masterAddress = document.get("master", HostAndPort.class);
+		masterAddress = document.getInstance("master", HostAndPort.class);
 		identity = document.getUUID("identity");
-		task = document.get("task", ServiceTask.class);
-		serviceInfo = document.get("service", ServiceInfo.class);
+		serviceUniqueId = document.getUUID("serviceUniqueId");
+		serviceTaskName = document.getString("serviceTaskName");
 
 	}
 
@@ -52,12 +50,12 @@ public final class WrapperConfig implements RemoteConfig {
 	}
 
 	@Nonnull
-	public ServiceTask getTask() {
-		return task;
+	public UUID getServiceUniqueId() {
+		return serviceUniqueId;
 	}
 
 	@Nonnull
-	public ServiceInfo getServiceInfo() {
-		return serviceInfo;
+	public String getServiceTaskName() {
+		return serviceTaskName;
 	}
 }

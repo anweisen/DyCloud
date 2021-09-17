@@ -2,14 +2,15 @@ package net.anweisen.cloud.wrapper;
 
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.DriverEnvironment;
+import net.anweisen.cloud.driver.config.global.GlobalConfig;
+import net.anweisen.cloud.driver.config.global.RemoteGlobalConfig;
 import net.anweisen.cloud.driver.cord.CordManager;
 import net.anweisen.cloud.driver.database.DatabaseManager;
 import net.anweisen.cloud.driver.database.remote.RemoteDatabaseManager;
-import net.anweisen.cloud.driver.network.HostAndPort;
+import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.network.SocketClient;
 import net.anweisen.cloud.driver.network.handler.SocketChannelClientHandler;
-import net.anweisen.cloud.driver.network.listener.AuthenticationResponseListener;
-import net.anweisen.cloud.driver.network.listener.ServiceInfoUpdateListener;
+import net.anweisen.cloud.driver.network.listener.*;
 import net.anweisen.cloud.driver.network.netty.client.NettySocketClient;
 import net.anweisen.cloud.driver.network.packet.PacketConstants;
 import net.anweisen.cloud.driver.network.packet.PacketListenerRegistry;
@@ -17,20 +18,23 @@ import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket;
 import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket.AuthenticationType;
 import net.anweisen.cloud.driver.network.packet.def.ServiceUpdateSelfInfoPacket;
 import net.anweisen.cloud.driver.node.NodeManager;
+import net.anweisen.cloud.driver.node.RemoteNodeManager;
 import net.anweisen.cloud.driver.player.PlayerManager;
 import net.anweisen.cloud.driver.player.defaults.RemotePlayerManager;
 import net.anweisen.cloud.driver.player.permission.impl.RemotePermissionManager;
+import net.anweisen.cloud.driver.service.RemoteServiceFactory;
 import net.anweisen.cloud.driver.service.RemoteServiceManager;
 import net.anweisen.cloud.driver.service.ServiceFactory;
 import net.anweisen.cloud.driver.service.ServiceManager;
 import net.anweisen.cloud.driver.service.config.RemoteServiceConfigManager;
 import net.anweisen.cloud.driver.service.config.ServiceConfigManager;
+import net.anweisen.cloud.driver.service.specific.ServiceControlState;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.driver.service.specific.ServiceState;
 import net.anweisen.cloud.wrapper.config.WrapperConfig;
 import net.anweisen.cloud.wrapper.event.service.ServiceInfoConfigureEvent;
 import net.anweisen.utilities.common.collection.WrappedException;
-import net.anweisen.utilities.common.logging.ILogger;
+import net.anweisen.utilities.common.logging.handler.HandledLogger;
 import net.anweisen.utilities.common.misc.ReflectionUtils;
 
 import javax.annotation.Nonnull;
@@ -66,29 +70,35 @@ public final class CloudWrapper extends CloudDriver {
 	private final List<String> commandlineArguments;
 	private final Instrumentation instrumentation;
 
+	private final NodeManager nodeManager;
 	private final DatabaseManager databaseManager;
 	private final ServiceManager serviceManager;
 	private final ServiceConfigManager serviceConfigManager;
+	private final ServiceFactory serviceFactory;
 	private final PlayerManager playerManager;
+	private final GlobalConfig globalConfig;
 
 	private final Thread mainThread = Thread.currentThread();
 	private Thread applicationThread;
-	private Path applicationFile;
 	private ClassLoader applicationClassLoader;
+	private Path applicationFile;
 
 	private SocketClient socketClient;
 	private ServiceInfo serviceInfo;
 
-	CloudWrapper(@Nonnull ILogger logger, @Nonnull List<String> commandlineArguments, @Nonnull Instrumentation instrumentation) {
+	CloudWrapper(@Nonnull HandledLogger logger, @Nonnull List<String> commandlineArguments, @Nonnull Instrumentation instrumentation) {
 		super(logger, DriverEnvironment.WRAPPER);
 		setInstance(this);
 
 		this.commandlineArguments = commandlineArguments;
 		this.instrumentation = instrumentation;
 
+		globalConfig = new RemoteGlobalConfig();
+		nodeManager = new RemoteNodeManager();
 		databaseManager = new RemoteDatabaseManager();
 		serviceManager = new RemoteServiceManager();
 		serviceConfigManager = new RemoteServiceConfigManager();
+		serviceFactory = new RemoteServiceFactory();
 		playerManager = new RemotePlayerManager();
 		permissionManager = new RemotePermissionManager();
 	}
@@ -99,12 +109,14 @@ public final class CloudWrapper extends CloudDriver {
 
 		logger.debug("Loading wrapper configuration..");
 		config.load();
-		serviceInfo = config.getServiceInfo();
 
 		socketClient = new NettySocketClient(SocketChannelClientHandler::new);
 
 		loadNetworkListeners(socketClient.getListenerRegistry());
 		connectAndAwaitAuthentication();
+
+		// Retrieve current service info
+		serviceInfo = serviceManager.getServiceInfoByUniqueId(config.getServiceUniqueId());
 
 		try {
 			startApplication();
@@ -148,14 +160,18 @@ public final class CloudWrapper extends CloudDriver {
 	}
 
 	private void sendAuthentication() {
-		logger.debug("Sending authentication to master.. Service: '{}'", serviceInfo.getName());
-		socketClient.sendPacket(new AuthenticationPacket(AuthenticationType.SERVICE, config.getIdentity(), serviceInfo.getName(), buffer -> {}));
+		logger.debug("Sending authentication to master.. Service: '{}'", config.getServiceUniqueId());
+		socketClient.sendPacket(new AuthenticationPacket(AuthenticationType.SERVICE, config.getIdentity(), config.getServiceUniqueId(), buffer -> {}));
 	}
 
 	private void loadNetworkListeners(@Nonnull PacketListenerRegistry registry) {
 		logger.info("Registering network listeners..");
 
-		registry.addListener(PacketConstants.SERVICE_INFO_PUBLISH_CHANNEL, new ServiceInfoUpdateListener());
+		registry.addListener(PacketConstants.NODE_INFO_PUBLISH_CHANNEL, new NodeInfoPublishListener());
+		registry.addListener(PacketConstants.SERVICE_INFO_PUBLISH_CHANNEL, new ServiceInfoPublishListener());
+		registry.addListener(PacketConstants.PLAYER_EVENT_CHANNEL, new PlayerEventListener());
+		registry.addListener(PacketConstants.PLAYER_REMOTE_MANAGER_CHANNEL, new PlayerRemoteManagerListener());
+		registry.addListener(PacketConstants.GLOBAL_CONFIG_CHANNEL, new GlobalConfigUpdateListener());
 	}
 
 	public synchronized void startApplication() throws Exception {
