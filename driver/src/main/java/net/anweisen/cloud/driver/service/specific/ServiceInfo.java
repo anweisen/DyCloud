@@ -229,6 +229,20 @@ public final class ServiceInfo implements SerializableObject {
 					+ " state=" + state + (state == ServiceState.RUNNING ? ":" + (ready ? "ready" : "unready") : "") + (controlState != ServiceControlState.NONE ? "->" + controlState : "") + "]";
 	}
 
+	public String toFullString() {
+		return "Service[" +
+			"\n  uniqueId=" + uniqueId +
+			"\n  name=" + getName() +
+			"\n  dockerContainerId=" + dockerContainerId +
+			"\n  environment=" + environment +
+			"\n  node=" + nodeName +
+			"\n  port=" + port +
+			"\n  address=" + nodeAddress +
+			"\n  state=" + state + ":" + (ready ? "ready" : "unready") + "->" + controlState +
+			"\n  properties=" + properties.toPrettyJson() +
+			"\n]";
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
