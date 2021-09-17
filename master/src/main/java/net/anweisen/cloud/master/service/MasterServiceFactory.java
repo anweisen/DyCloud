@@ -43,11 +43,11 @@ public class MasterServiceFactory implements ServiceFactory {
 	@Nonnull
 	@Override
 	public synchronized Task<ServiceInfo> createServiceAsync(@Nonnull ServiceTask task) {
-		cloud.getLogger().debug("Creating new service of '{}'", task.getName());
+		cloud.getLogger().debug("Creating new service of '{}'..", task.getName());
 
-		int servicesRunning = task.findServices().size();
+		int taskServicesRunning = task.findServices().size();
 
-		if (task.getMaxCount() > 0 && servicesRunning >= task.getMaxCount()) {
+		if (task.getMaxCount() > 0 && taskServicesRunning >= task.getMaxCount()) {
 			cloud.getLogger().warn("The max service count for '{}' of {} is already reached", task.getName(), task.getMaxCount());
 			return Task.empty();
 		}
@@ -71,29 +71,36 @@ public class MasterServiceFactory implements ServiceFactory {
 		}
 
 		NodeServer node = allowedNodes.get(0); // TODO choose based on running services and load
+		cloud.getLogger().debug("Chosen '{}' to start new service of '{}'", node.getInfo().getName(), task.getName());
 
 		int serviceNumber = 1;
 		while (cloud.getServiceManager().getServiceByName(task.getName() + "-" +  serviceNumber) != null)
 			serviceNumber++;
 
 		int port = getNextFreePort(node, task);
+		cloud.getLogger().debug("Chosen port {} to start new service of '{}' on '{}'", port, task.getName(), node.getInfo().getName());
 		ServiceInfo info = new ServiceInfo(
 				UUID.randomUUID(), null, task.getName(), serviceNumber, task.getEnvironment(),
-				ServiceState.DEFINED, ServiceControlState.CREATING, node.getInfo().getName(), node.getInfo().getAddress().getHost(), port, true, Document.create()
+				ServiceState.DEFINED, ServiceControlState.CREATING, node.getInfo().getName(), node.getInfo().getAddress().getHost(),
+				port, true, Document.create()
 		);
-		cloud.publishUpdate(ServicePublishType.REGISTER, info, node.getChannel());
-		cloud.getServiceManager().handleServiceUpdate(ServicePublishType.REGISTER, info);
 
 		CloudService service = new DefaultCloudService(info);
 		cloud.getServiceManager().registerService(service);
+		cloud.publishUpdate(ServicePublishType.REGISTER, info, node.getChannel());
+		cloud.getServiceManager().handleServiceUpdate(ServicePublishType.REGISTER, info);
 
 		cloud.getLogger().info("Told '{}' to create '{}'", node.getInfo().getName(), info.getName());
 		cloud.getLogger().extended("- {}", node);
 		cloud.getLogger().extended("- {}", info);
 		cloud.getLogger().extended("- {}", task);
 
-		// TODO handle response?
-		return node.getChannel().sendQueryAsync(new ServiceControlPacket(ServiceControlType.CREATE, info)).map(packet -> info);
+		return node.getChannel().sendPacketQueryAsync(new ServiceControlPacket(ServiceControlType.CREATE, info)).map(packet -> {
+			ServiceInfo response = packet.getBuffer().readObject(ServiceInfo.class);
+			cloud.getServiceManager().handleServiceUpdate(ServicePublishType.UPDATE, response);
+			cloud.publishUpdate(ServicePublishType.UPDATE, response, node.getChannel());
+			return response;
+		});
 	}
 
 	private int getNextFreePort(@Nonnull NodeServer node, @Nonnull ServiceTask task) {
