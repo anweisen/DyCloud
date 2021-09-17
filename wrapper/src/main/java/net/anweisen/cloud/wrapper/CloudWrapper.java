@@ -239,7 +239,7 @@ public final class CloudWrapper extends CloudDriver {
 		applicationThread.setContextClassLoader(applicationClassLoader);
 		applicationThread.start();
 
-		executor.scheduleAtFixedRate(this::updateServiceInfo, 0, 3, TimeUnit.MINUTES);
+		executor.scheduleAtFixedRate(this::updateServiceInfo, 0, ServiceInfo.PUBLISH_INTERVAL, TimeUnit.MILLISECONDS);
 
 	}
 
