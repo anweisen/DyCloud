@@ -246,6 +246,11 @@ public final class CloudWrapper extends CloudDriver {
 	@Override
 	public synchronized void shutdown() throws Exception {
 
+		logger.info("Closing socket connection..");
+		socketClient.closeChannels();
+		logger.info("Shutting down socket client..");
+		socketClient.shutdown();
+
 		shutdownDriver();
 
 	}
