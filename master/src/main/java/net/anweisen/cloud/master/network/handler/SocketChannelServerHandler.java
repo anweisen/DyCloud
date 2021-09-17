@@ -114,7 +114,7 @@ public class SocketChannelServerHandler implements SocketChannelHandler {
 		for (NodeInfo node : CloudMaster.getInstance().getNodeManager().getNodeInfos()) {
 			if (node.getSubnet().matches(ipAddress))
 				return true;
-			if (node.getGatewayIp().equals(ipAddress))
+			if (node.getGateway().equals(ipAddress))
 				return true;
 		}
 

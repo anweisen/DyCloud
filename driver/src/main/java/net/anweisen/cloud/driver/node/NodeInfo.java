@@ -1,6 +1,7 @@
 package net.anweisen.cloud.driver.node;
 
-import net.anweisen.cloud.driver.network.HostAndPort;
+import net.anweisen.cloud.driver.network.object.HostAndPort;
+import net.anweisen.cloud.driver.network.object.IpRange;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 
@@ -15,24 +16,50 @@ public final class NodeInfo implements SerializableObject {
 	private String name;
 	private HostAndPort address;
 
+	private String gateway;
+	private IpRange subnet;
+
 	private NodeInfo() {
 	}
 
-	public NodeInfo(@Nonnull String name, @Nonnull HostAndPort address) {
+	public NodeInfo(@Nonnull String name, @Nonnull HostAndPort address, @Nonnull String gateway, @Nonnull String subnet) {
 		this.name = name;
 		this.address = address;
+		this.gateway = gateway;
+		this.subnet = new IpRange(subnet);
 	}
 
 	@Override
 	public void write(@Nonnull Buffer buffer) {
 		buffer.writeString(name);
 		buffer.writeObject(address);
+		buffer.writeString(gateway);
+		buffer.writeInetAddress(subnet.getRequiredAddress());
+		buffer.writeInt(subnet.getMaskBits());
 	}
 
 	@Override
 	public void read(@Nonnull Buffer buffer) {
 		name = buffer.readString();
 		address = buffer.readObject(HostAndPort.class);
+		gateway = buffer.readString();
+		subnet = new IpRange(buffer.readInetAddress(), buffer.readInt());
+	}
+
+	/**
+	 * @return the subnet of the docker network used
+	 */
+	@Nonnull
+	public IpRange getSubnet() {
+		return subnet;
+	}
+
+	/**
+	 * @return the gateway of the docker network used
+	 */
+	@Nonnull
+	public String getGateway() {
+		return gateway;
 	}
 
 	@Nonnull
