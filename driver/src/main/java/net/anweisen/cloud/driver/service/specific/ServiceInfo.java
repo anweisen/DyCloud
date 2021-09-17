@@ -2,7 +2,7 @@ package net.anweisen.cloud.driver.service.specific;
 
 import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.CloudDriver;
-import net.anweisen.cloud.driver.network.HostAndPort;
+import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import net.anweisen.cloud.driver.node.NodeInfo;
