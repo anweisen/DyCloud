@@ -9,7 +9,7 @@ import net.anweisen.cloud.driver.player.settings.DefaultPlayerSettings;
 import net.anweisen.cloud.driver.player.settings.DefaultSkinParts;
 import net.anweisen.cloud.driver.player.settings.MainHand;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
-import net.anweisen.cloud.modules.bridge.helper.BridgeHelper;
+import net.anweisen.cloud.modules.bridge.helper.ProxyBridgeHelper;
 import net.anweisen.cloud.wrapper.CloudWrapper;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
@@ -38,7 +38,7 @@ public final class BungeeBridgeHelper {
 	@Nonnull
 	public static PlayerConnection createPlayerConnection(@Nonnull PendingConnection connection) {
 		return new DefaultPlayerConnection(
-			BridgeHelper.getServiceInfo().getName(),
+			CloudWrapper.getInstance().getServiceInfo().getName(),
 			HostAndPort.fromSocketAddress(connection.getSocketAddress()),
 			connection.getVersion(),
 			connection.isOnlineMode(),
@@ -68,7 +68,7 @@ public final class BungeeBridgeHelper {
 
 	@Nullable
 	public static ServerInfo getNextFallback(@Nonnull ProxiedPlayer player) {
-		ServiceInfo service = BridgeHelper.getNextFallback(player.getUniqueId(), player::hasPermission);
+		ServiceInfo service = ProxyBridgeHelper.getNextFallback(player.getUniqueId(), player::hasPermission);
 		return service == null ? null : ProxyServer.getInstance().getServerInfo(service.getName()); // TODO warn if ServerInfo is null (should never happen, but if it does we want to know)
 	}
 

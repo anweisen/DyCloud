@@ -3,7 +3,6 @@ package net.anweisen.cloud.modules.bridge.bukkit;
 import net.anweisen.cloud.modules.bridge.bukkit.listener.BukkitCloudListener;
 import net.anweisen.cloud.modules.bridge.bukkit.listener.BukkitPlayerListener;
 import net.anweisen.cloud.modules.bridge.helper.BridgeHelper;
-import net.anweisen.cloud.modules.bridge.helper.general.BridgeCloudListener;
 import net.anweisen.cloud.wrapper.CloudWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -32,11 +31,12 @@ public final class BukkitCloudBridgePlugin extends JavaPlugin {
 	private void initHelpers() {
 		BridgeHelper.setMaxPlayers(Bukkit.getMaxPlayers());
 		BridgeHelper.setMotd(Bukkit.getMotd());
+		BridgeHelper.setStatus("LOBBY");
 		BridgeHelper.updateServiceInfo();
 	}
 
 	private void initListeners() {
-		CloudWrapper.getInstance().getEventManager().registerListeners(new BridgeCloudListener(), new BukkitCloudListener());
+		CloudWrapper.getInstance().getEventManager().registerListeners(new BukkitCloudListener());
 		Bukkit.getServer().getPluginManager().registerEvents(new BukkitPlayerListener(), this);
 	}
 

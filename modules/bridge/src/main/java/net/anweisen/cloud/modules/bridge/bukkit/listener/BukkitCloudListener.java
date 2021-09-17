@@ -23,9 +23,11 @@ public class BukkitCloudListener {
 	@EventListener
 	public void onInfoConfigure(@Nonnull ServiceInfoConfigureEvent event) {
 		BridgeHelper.setOnlineCount(Bukkit.getOnlinePlayers().size());
+		event.getServiceInfo().setReady();
 		event.getServiceInfo()
 			.set(ServiceProperty.WHITELIST, Bukkit.hasWhitelist())
 			.set(ServiceProperty.MOTD, BridgeHelper.getMotd())
+			.set(ServiceProperty.STATUS, BridgeHelper.getStatus())
 			.set(ServiceProperty.EXTRA, BridgeHelper.getExtra())
 			.set(ServiceProperty.MAX_PLAYERS, BridgeHelper.getMaxPlayers())
 			.set(ServiceProperty.ONLINE_PLAYERS, Bukkit.getOnlinePlayers().size())

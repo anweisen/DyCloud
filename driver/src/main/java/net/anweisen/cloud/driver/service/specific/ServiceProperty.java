@@ -22,6 +22,7 @@ public interface ServiceProperty<T> {
 	ServiceProperty<List<PlayerInfo>> PLAYERS = newServiceListProperty("players", PlayerInfo.class);
 	ServiceProperty<List<PluginInfo>> PLUGINS = newServiceListProperty("plugins", PluginInfo.class);
 	ServiceProperty<Collection<String>> MESSAGING_CHANNELS = newServiceProperty("channels", Document::getStringList);
+	ServiceProperty<String> STATUS = newServiceProperty("status", Document::getString);
 	ServiceProperty<String> EXTRA = newServiceProperty("extra", Document::getString);
 	ServiceProperty<String> MOTD = newServiceProperty("motd", Document::getString);
 	ServiceProperty<Boolean> WHITELIST = newServiceProperty("whitelist", Document::getBoolean);

@@ -7,7 +7,6 @@ import net.anweisen.cloud.modules.bridge.bungee.listener.BungeeCloudListener;
 import net.anweisen.cloud.modules.bridge.bungee.listener.BungeePlayerExecutorListener;
 import net.anweisen.cloud.modules.bridge.bungee.listener.BungeePlayerListener;
 import net.anweisen.cloud.modules.bridge.helper.BridgeHelper;
-import net.anweisen.cloud.modules.bridge.helper.general.BridgeCloudListener;
 import net.anweisen.cloud.wrapper.CloudWrapper;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -41,11 +40,12 @@ public final class BungeeCloudBridgePlugin extends Plugin implements LoggingApiU
 	private void initHelpers() {
 		BridgeHelper.setMaxPlayers(this.getProxy().getConfig().getPlayerLimit());
 		BridgeHelper.setMotd(new ArrayList<>(this.getProxy().getConfig().getListeners()).get(0).getMotd());
+		BridgeHelper.setStatus("LOBBY");
 		BridgeHelper.updateServiceInfo();
 	}
 
 	private void initListeners() {
-		CloudWrapper.getInstance().getEventManager().registerListeners(new BridgeCloudListener(), new BungeeCloudListener());
+		CloudWrapper.getInstance().getEventManager().registerListeners(new BungeeCloudListener());
 		CloudWrapper.getInstance().getSocketComponent().getListenerRegistry().addListener(PacketConstants.PLAYER_EXECUTOR_CHANNEL, new BungeePlayerExecutorListener());
 		ProxyServer.getInstance().getPluginManager().registerListener(this, new BungeePlayerListener());
 	}
