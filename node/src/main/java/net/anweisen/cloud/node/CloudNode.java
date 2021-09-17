@@ -147,7 +147,6 @@ public final class CloudNode extends CloudBase {
 			.withDockerHttpClient(httpClient)
 			.build();
 
-		// Test connection with a ping
 		dockerClient.pingCmd().exec();
 		logger.info("Successfully pinged docker daemon");
 

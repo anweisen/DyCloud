@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class TabListener implements Listener {
+public class BukkitTabListener implements Listener {
 
 	@EventHandler
 	public void onJoin(@Nonnull PlayerJoinEvent event) {

@@ -5,9 +5,9 @@ import net.anweisen.cloud.driver.network.packet.def.NodeInfoPublishPacket.NodePu
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -22,12 +22,21 @@ public interface NodeManager {
 
 	@Nullable
 	default NodeInfo getNodeInfo(@Nonnull String name) {
-		return getNodeInfos().stream().filter(info -> info.getName().equals(name)).findFirst().orElse(null);
+		for (NodeInfo node : getNodeInfos()) {
+			if (node.getName().equalsIgnoreCase(name))
+				return node;
+		}
+		return null;
 	}
 
 	@Nonnull
 	default Collection<String> getNodeNames() {
-		return getNodeInfos().stream().map(NodeInfo::getName).collect(Collectors.toList());
+		Collection<NodeInfo> infos = getNodeInfos();
+		Collection<String> names = new ArrayList<>(infos.size());
+		for (NodeInfo info : infos) {
+			names.add(info.getName());
+		}
+		return names;
 	}
 
 	void handleNodeUpdate(@Nonnull NodePublishType publishType, @Nonnull NodeInfo info);

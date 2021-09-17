@@ -105,12 +105,12 @@ public class DockerServiceActor implements LoggingApiUser {
 		for (ModuleController module : cloud.getModuleManager().getModules()) {
 			if (module.getModuleConfig().getCopyType().applies(task.getEnvironment().getServiceType())) {
 				if (!module.isEnabled()) {
-					debug("Skipping Module {} for {}, disabled", module.getModuleConfig().getJarFile().getFileName(), info);
+					debug("Skipping Module {} for {}, disabled", module.getJarFile().getFileName(), info);
 					continue;
 				}
 
-				debug("Copying Module {} to {}", module.getModuleConfig().getJarFile().getFileName(), info);
-				FileUtils.copy(module.getModuleConfig().getJarFile(), tempTemplateDirectory.resolve(task.getEnvironment().getPluginsFolder() + "/" + module.getModuleConfig().getJarFile().getFileName()));
+				debug("Copying Module {} to {}", module.getJarFile().getFileName(), info);
+				FileUtils.copy(module.getJarFile(), tempTemplateDirectory.resolve(task.getEnvironment().getPluginsFolder() + "/" + module.getJarFile().getFileName()));
 			}
 		}
 		// Copy config files

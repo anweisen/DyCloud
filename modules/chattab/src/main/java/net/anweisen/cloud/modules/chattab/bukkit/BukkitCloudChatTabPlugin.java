@@ -3,8 +3,8 @@ package net.anweisen.cloud.modules.chattab.bukkit;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.modules.chattab.bukkit.handler.DefaultChatHandler;
 import net.anweisen.cloud.modules.chattab.bukkit.handler.DefaultTabHandler;
-import net.anweisen.cloud.modules.chattab.bukkit.listener.ChatListener;
-import net.anweisen.cloud.modules.chattab.bukkit.listener.TabListener;
+import net.anweisen.cloud.modules.chattab.bukkit.listener.BukkitChatListener;
+import net.anweisen.cloud.modules.chattab.bukkit.listener.BukkitTabListener;
 import net.anweisen.cloud.modules.chattab.config.ChatTabConfig;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -27,18 +27,25 @@ public final class BukkitCloudChatTabPlugin extends JavaPlugin {
 
 		manager = new BukkitCloudChatTabManager();
 
-		config = CloudDriver.getInstance().getGlobalConfig().get("chattabConfig", ChatTabConfig.class);
-		if (config.getTablist().isEnabled())
+		updateConfig();
+	}
+
+	public void updateConfig() {
+		this.config = CloudDriver.getInstance().getGlobalConfig().get("chattabConfig", ChatTabConfig.class);
+
+		if (config.getTablist().isEnabled() && manager.getTabHandler() == null)
 			manager.setTabHandler(new DefaultTabHandler());
-		if (config.getChat().isEnabled())
+		if (config.getChat().isEnabled() && manager.getChatHandler() == null)
 			manager.setChatHandler(new DefaultChatHandler());
 
+		if (manager.getTabHandler() != null)
+			manager.getTabHandler().update();
 	}
 
 	@Override
 	public void onEnable() {
-		getServer().getPluginManager().registerEvents(new ChatListener(), this);
-		getServer().getPluginManager().registerEvents(new TabListener(), this);
+		getServer().getPluginManager().registerEvents(new BukkitChatListener(), this);
+		getServer().getPluginManager().registerEvents(new BukkitTabListener(), this);
 	}
 
 	@Nonnull

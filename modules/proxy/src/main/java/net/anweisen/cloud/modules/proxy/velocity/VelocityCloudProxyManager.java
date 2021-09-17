@@ -51,6 +51,7 @@ public class VelocityCloudProxyManager extends AbstractCloudProxyManager {
 		plugin.getServer().getScheduler().buildTask(plugin, command).repeat(millis, TimeUnit.MILLISECONDS);
 	}
 
+	@Nonnull
 	public ServerPing getMotd(@Nonnull ServerPing original) {
 		CloudDriver cloud = CloudDriver.getInstance();
 		ProxyMotdEntryConfig motd = getMotdEntry();

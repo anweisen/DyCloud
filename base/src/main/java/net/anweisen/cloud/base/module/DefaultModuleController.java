@@ -78,8 +78,7 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 			document.getString("website", ""),
 			document.getStringArray("depends"),
 			document.getEnum("copy", ModuleCopyType.NONE),
-			document.getEnum("environment", ModuleEnvironment.ALL),
-			jarFile
+			document.getEnum("environment", ModuleEnvironment.ALL)
 		);
 
 		dataFolder = manager.getModulesDirectory().resolve(moduleConfig.getName());
@@ -87,11 +86,11 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 
 	public void initModule() throws Exception {
 
-
 		Class<?> mainClass = classLoader.loadClass(moduleConfig.getMainClass());
 		Constructor<?> constructor = mainClass.getDeclaredConstructor();
 		Object instance = constructor.newInstance();
-		if (!(instance instanceof CloudModule)) throw new IllegalArgumentException("Main class (" + moduleConfig.getMainClass() + ") does not extend " + CloudModule.class.getName());
+		if (!(instance instanceof CloudModule))
+			throw new IllegalArgumentException("Main class (" + moduleConfig.getMainClass() + ") does not extend " + CloudModule.class.getName());
 
 		module = (CloudModule) instance;
 		module.controller = this;
@@ -194,6 +193,12 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 	@Override
 	public ModuleState getState() {
 		return state;
+	}
+
+	@Nonnull
+	@Override
+	public Path getJarFile() {
+		return jarFile;
 	}
 
 	@Nonnull

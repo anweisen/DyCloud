@@ -99,7 +99,7 @@ public abstract class CloudModule implements Module {
 
 	@Override
 	public String toString() {
-		return getModuleConfig().getFullName() + " (" + getModuleConfig().getJarFile().getFileName() + ")";
+		return getModuleConfig().getFullName() + " (" + getController().getJarFile().getFileName() + ")";
 	}
 
 }

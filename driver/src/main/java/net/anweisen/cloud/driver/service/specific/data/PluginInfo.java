@@ -1,6 +1,7 @@
 package net.anweisen.cloud.driver.service.specific.data;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -19,7 +20,7 @@ public final class PluginInfo {
 	private PluginInfo() {
 	}
 
-	public PluginInfo(String name, String[] author, String version, String mainClass, String description) {
+	public PluginInfo(@Nonnull String name, @Nonnull String[] author, @Nonnull String version, @Nonnull String mainClass, @Nullable String description) {
 		this.name = name;
 		this.author = author;
 		this.version = version;
@@ -47,7 +48,7 @@ public final class PluginInfo {
 		return mainClass;
 	}
 
-	@Nonnull
+	@Nullable
 	public String getDescription() {
 		return description;
 	}

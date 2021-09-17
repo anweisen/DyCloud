@@ -30,6 +30,9 @@ public interface ModuleController {
 	ModuleManager getManager();
 
 	@Nonnull
+	Path getJarFile();
+
+	@Nonnull
 	Path getDataFolder();
 
 	@Nonnull

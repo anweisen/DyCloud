@@ -31,14 +31,14 @@ public class ModuleSystemListener implements PacketListener {
 		switch (type) {
 			case GET_MODULES: {
 				channel.sendPacket(Packet.createResponseFor(packet, Buffer.create().writeStringArray(
-					getModules().stream().map(module -> module.getModuleConfig().getJarFile().getFileName().toString()).toArray(String[]::new)
+					getModules().stream().map(module -> module.getJarFile().getFileName().toString()).toArray(String[]::new)
 				)));
 				break;
 			}
 			case GET_MODULE_JAR: {
 				int index = buffer.readInt();
 				ModuleController module = getModules().get(index);
-				channel.sendChunkedPacketsResponse(packet.getUniqueId(), Document.empty(), Files.newInputStream(module.getModuleConfig().getJarFile()));
+				channel.sendChunkedPacketsResponse(packet.getUniqueId(), Document.empty(), Files.newInputStream(module.getJarFile()));
 				break;
 			}
 			case GET_MODULE_DATA_FOLDER: {

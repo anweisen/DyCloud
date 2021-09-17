@@ -37,6 +37,6 @@ public class TabConfig {
 
 	@Override
 	public String toString() {
-		return "Tab[enabled=" + enabled + "]";
+		return "Tab[enabled=" + enabled + " prefix='" + prefix + "' suffix='" + suffix + "']";
 	}
 }
