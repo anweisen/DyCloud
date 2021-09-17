@@ -1,18 +1,18 @@
 package net.anweisen.cloud.master.service;
 
 import com.google.common.base.Preconditions;
-import net.anweisen.cloud.driver.network.SocketChannel;
+import net.anweisen.cloud.driver.CloudDriver;
+import net.anweisen.cloud.driver.event.service.ServiceReadyEvent;
 import net.anweisen.cloud.driver.service.DefaultServiceManager;
 import net.anweisen.cloud.driver.service.specific.ServiceController;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.master.service.specific.CloudService;
+import net.anweisen.cloud.master.service.specific.MasterServiceController;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.UUID;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  */
 public class MasterServiceManager extends DefaultServiceManager implements CloudServiceManager {
 
-	private final Collection<CloudService> services = new CopyOnWriteArrayList<>();
+	private final Map<UUID, CloudService> services = new ConcurrentHashMap<>();
 
 	@Nonnull
 	@Override
@@ -39,59 +39,45 @@ public class MasterServiceManager extends DefaultServiceManager implements Cloud
 	@Nonnull
 	@Override
 	public Collection<ServiceInfo> getServiceInfos() {
-		return services.stream().map(CloudService::getInfo).collect(Collectors.toList());
+		Collection<ServiceInfo> infos = new ArrayList<>(services.size());
+		for (CloudService service : services.values()) {
+			infos.add(service.getInfo());
+		}
+		return infos;
 	}
 
 	@Nonnull
 	@Override
 	public Collection<CloudService> getServices() {
-		return services;
-	}
-
-	@Nonnull
-	@Override
-	public Collection<CloudService> getServicesByTask(@Nonnull String taskName) {
-		return services.stream().filter(service -> service.getInfo().getTaskName().equals(taskName)).collect(Collectors.toList());
-	}
-
-	@Nonnull
-	@Override
-	public Collection<CloudService> getServicesByNode(@Nonnull String nodeName) {
-		return services.stream().filter(service -> service.getInfo().getNodeName().equals(nodeName)).collect(Collectors.toList());
+		return Collections.unmodifiableCollection(services.values());
 	}
 
 	@Nullable
 	@Override
 	public CloudService getServiceByUniqueId(@Nonnull UUID uniqueId) {
-		return services.stream().filter(service -> service.getInfo().getUniqueId().equals(uniqueId)).findFirst().orElse(null);
-	}
-
-	@Nullable
-	@Override
-	public CloudService getServiceByName(@Nonnull String serviceName) {
-		return services.stream().filter(service -> service.getInfo().getName().equals(serviceName)).findFirst().orElse(null);
-	}
-
-	@Nullable
-	@Override
-	public CloudService getServiceByChannel(@Nonnull SocketChannel channel) {
-		return services.stream().filter(service -> service.getChannel() == channel).findFirst().orElse(null);
+		return services.get(uniqueId);
 	}
 
 	@Override
 	public void registerService(@Nonnull CloudService service) {
-		services.add(service);
+		services.put(service.getInfo().getUniqueId(), service);
 	}
 
 	@Override
 	protected void updateServiceInfoInternally(@Nonnull ServiceInfo newServiceInfo) {
 		CloudService service = getServiceByUniqueId(newServiceInfo.getUniqueId());
-		if (service != null) service.setInfo(newServiceInfo);
+		if (service == null) {
+			CloudDriver.getInstance().getLogger().warn("Tried to update ServiceInfo " + newServiceInfo + ", but the service is no longer registered");
+			return;
+		}
+		boolean readyEvent = !service.getInfo().isReady() && newServiceInfo.isReady();
+		service.setInfo(newServiceInfo);
+		if (readyEvent) CloudDriver.getInstance().getEventManager().callEvent(new ServiceReadyEvent(newServiceInfo));
 	}
 
 	@Override
 	protected void unregisterServiceInfoInternally(@Nonnull ServiceInfo serviceInfo) {
-		services.removeIf(service -> service.getInfo().getUniqueId().equals(serviceInfo.getUniqueId()));
+		services.remove(serviceInfo.getUniqueId());
 	}
 
 	@Override
