@@ -4,6 +4,7 @@ import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.event.player.PlayerProxyLoginRequestEvent;
 import net.anweisen.cloud.driver.player.CloudPlayer;
+import net.anweisen.cloud.driver.player.settings.PlayerSettings;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.modules.bridge.bungee.BungeeBridgeHelper;
 import net.anweisen.cloud.modules.bridge.bungee.BungeeCloudBridgePlugin;
@@ -111,7 +112,11 @@ public class BungeePlayerListener implements Listener, LoggingApiUser {
 
 	@EventHandler
 	public void onSettingsChange(@Nonnull SettingsChangedEvent event) {
-		BridgeNetworkingHelper.sendPlayerSettingsChangePacket(event.getPlayer().getUniqueId(), createPlayerSettings(event.getPlayer()));
+		PlayerSettings settings = createPlayerSettings(event.getPlayer());
+		CloudPlayer player = CloudDriver.getInstance().getPlayerManager().getOnlinePlayerByUniqueId(event.getPlayer().getUniqueId());
+		if (!player.getSettings().equals(settings)) {
+			BridgeNetworkingHelper.sendPlayerSettingsChangePacket(event.getPlayer().getUniqueId(), settings);
+		}
 	}
 
 }

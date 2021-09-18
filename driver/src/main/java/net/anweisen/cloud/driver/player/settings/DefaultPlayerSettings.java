@@ -6,6 +6,7 @@ import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -103,5 +104,23 @@ public class DefaultPlayerSettings implements PlayerSettings, SerializableObject
 	@Override
 	public String toString() {
 		return "PlayerSettings[locale=" + locale + " renderDistance=" + renderDistance + " chatColors=" + chatColors + " chatMode=" + chatMode + " mainHand=" + mainHand + " skin=" + skinParts + "]";
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		DefaultPlayerSettings that = (DefaultPlayerSettings) o;
+		return renderDistance == that.renderDistance
+			&& chatColors == that.chatColors
+			&& chatMode == that.chatMode
+			&& mainHand == that.mainHand
+			&& Objects.equals(locale, that.locale)
+			&& Objects.equals(skinParts, that.skinParts);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(locale, renderDistance, chatColors, skinParts, chatMode, mainHand);
 	}
 }

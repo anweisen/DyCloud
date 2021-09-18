@@ -5,10 +5,7 @@ import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.player.chat.ChatText;
 import net.anweisen.cloud.driver.player.connection.DefaultPlayerConnection;
 import net.anweisen.cloud.driver.player.connection.PlayerConnection;
-import net.anweisen.cloud.driver.player.settings.ChatMode;
-import net.anweisen.cloud.driver.player.settings.DefaultPlayerSettings;
-import net.anweisen.cloud.driver.player.settings.DefaultSkinParts;
-import net.anweisen.cloud.driver.player.settings.MainHand;
+import net.anweisen.cloud.driver.player.settings.*;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.modules.bridge.helper.ProxyBridgeHelper;
 import net.anweisen.cloud.wrapper.CloudWrapper;
@@ -48,7 +45,7 @@ public final class BungeeBridgeHelper {
 	}
 
 	@Nonnull
-	public static DefaultPlayerSettings createPlayerSettings(@Nonnull ProxiedPlayer player) {
+	public static PlayerSettings createPlayerSettings(@Nonnull ProxiedPlayer player) {
 		return new DefaultPlayerSettings(
 			player.getLocale(),
 			player.getViewDistance(),
