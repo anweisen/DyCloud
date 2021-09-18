@@ -95,9 +95,9 @@ public final class NodeCycleData implements SerializableObject {
 	}
 
 	public boolean hasTimeouted() {
-		long lastCycleDelay = System.currentTimeMillis() - timestamp;
+		long lastCycleDelay = System.currentTimeMillis() - timestamp - 30; // we allow 30ms delay
 		int lostCycles = (int) lastCycleDelay / PUBLISH_INTERVAL;
-		CloudDriver.getInstance().getLogger().trace("Node timeout: lost {} cycles ({}ms)", lostCycles, lastCycleDelay);
+		if (lostCycles > 0) CloudDriver.getInstance().getLogger().trace("Node timeout: lost {} cycles ({}ms)", lostCycles, lastCycleDelay);
 		return lostCycles >= CYCLE_TIMEOUT;
 	}
 

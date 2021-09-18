@@ -1,6 +1,7 @@
-package net.anweisen.cloud.driver.network;
+package net.anweisen.cloud.driver.network.internal;
 
 import com.google.common.base.Preconditions;
+import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.chunk.ChunkedQueryResponse;
 import net.anweisen.cloud.driver.network.packet.chunk.listener.ChunkedPacketListener;

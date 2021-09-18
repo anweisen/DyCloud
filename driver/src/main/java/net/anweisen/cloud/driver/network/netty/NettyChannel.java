@@ -4,7 +4,7 @@ import com.google.common.base.Preconditions;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import net.anweisen.cloud.driver.network.object.HostAndPort;
-import net.anweisen.cloud.driver.network.InternalQueryResponseManager;
+import net.anweisen.cloud.driver.network.internal.InternalQueryResponseManager;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.handler.SocketChannelHandler;
 import net.anweisen.cloud.driver.network.packet.Packet;

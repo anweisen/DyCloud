@@ -16,7 +16,7 @@ public abstract class DefaultServiceManager implements ServiceManager, LoggingAp
 
 	@Override
 	public void handleServiceUpdate(@Nonnull ServicePublishType type, @Nonnull ServiceInfo info) {
-		debug("{} -> {}:{}", type, info, info.getUniqueId());
+		debug("{} -> {} uuid={}", type, info, info.getUniqueId());
 
 		if (type == ServicePublishType.UNREGISTER) {
 			unregisterServiceInfoInternally(info);

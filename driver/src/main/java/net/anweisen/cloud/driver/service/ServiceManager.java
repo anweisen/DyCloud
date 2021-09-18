@@ -7,9 +7,9 @@ import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -27,22 +27,49 @@ public interface ServiceManager {
 
 	@Nonnull
 	default Collection<ServiceInfo> getServiceInfosByTask(@Nonnull String taskName) {
-		return getServiceInfos().stream().filter(info -> info.getTaskName().equals(taskName)).collect(Collectors.toList());
+		Collection<ServiceInfo> services = new ArrayList<>(1);
+		for (ServiceInfo service : getServiceInfos()) {
+			if (service.getTaskName().equals(taskName))
+				services.add(service);
+		}
+		return services;
 	}
 
 	@Nonnull
 	default Collection<ServiceInfo> getServiceInfosByNode(@Nonnull String nodeName) {
-		return getServiceInfos().stream().filter(info -> info.getNodeName().equals(nodeName)).collect(Collectors.toList());
+		Collection<ServiceInfo> services = new ArrayList<>(1);
+		for (ServiceInfo service : getServiceInfos()) {
+			if (service.getNodeName().equals(nodeName))
+				services.add(service);
+		}
+		return services;
 	}
 
 	@Nullable
 	default ServiceInfo getServiceInfoByName(@Nonnull String serviceName) {
-		return getServiceInfos().stream().filter(info -> info.getName().equals(serviceName)).findFirst().orElse(null);
+		for (ServiceInfo service : getServiceInfos()) {
+			if (service.getName().equals(serviceName))
+				return service;
+		}
+		return null;
 	}
 
 	@Nullable
-	default ServiceInfo getServiceInfoByUUID(@Nonnull UUID uniqueId) {
-		return getServiceInfos().stream().filter(info -> info.getUniqueId().equals(uniqueId)).findFirst().orElse(null);
+	default ServiceInfo getServiceInfoByUniqueId(@Nonnull UUID uniqueId) {
+		for (ServiceInfo service : getServiceInfos()) {
+			if (service.getUniqueId().equals(uniqueId))
+				return service;
+		}
+		return null;
+	}
+
+	@Nullable
+	default ServiceInfo getServiceInfoByDockerId(@Nonnull String dockerContainerId) {
+		for (ServiceInfo service : getServiceInfos()) {
+			if (dockerContainerId.equals(service.getDockerContainerId()))
+				return service;
+		}
+		return null;
 	}
 
 	void handleServiceUpdate(@Nonnull ServicePublishType type, @Nonnull ServiceInfo info);

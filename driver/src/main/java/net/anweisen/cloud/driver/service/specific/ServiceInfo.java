@@ -21,8 +21,8 @@ import java.util.UUID;
  */
 public final class ServiceInfo implements SerializableObject {
 
-	public static final int PUBLISH_INTERVAL = 60_000; // publish every minute
-	public static final int CYCLE_TIMEOUT = 2; // service times out after 2 minutes
+	public static final int PUBLISH_INTERVAL = 90_000; // publish all 1.5 minute
+	public static final int CYCLE_TIMEOUT = 2; // service times out after 3 minutes
 
 	private UUID uniqueId;
 	private String dockerContainerId;
@@ -223,7 +223,7 @@ public final class ServiceInfo implements SerializableObject {
 	}
 
 	public void setReady() {
-		Preconditions.checkArgument(state == ServiceState.RUNNING, "Cannot set service ready when not in State.RUNNING");
+		Preconditions.checkArgument(state == ServiceState.RUNNING, "Cannot mark service as ready when not in State.RUNNING");
 		this.ready = true;
 	}
 

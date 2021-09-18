@@ -89,7 +89,6 @@ public final class ProtocolVersion {
 		return nameString;
 	}
 
-
 	@Nonnull
 	public String getMainName() {
 		return name;

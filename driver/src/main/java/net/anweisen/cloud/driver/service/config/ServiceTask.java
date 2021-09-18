@@ -75,7 +75,7 @@ public final class ServiceTask implements SerializableObject {
 		fallbackPriority = buffer.readInt();
 		permission = buffer.readOptionalString();
 		memoryLimit = buffer.readInt();
-		memoryLimit = buffer.readInt();
+		requiredMemory = buffer.readInt();
 		minCount = buffer.readInt();
 		maxCount = buffer.readInt();
 		nodes = buffer.readStringCollection();

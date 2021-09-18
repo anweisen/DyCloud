@@ -8,9 +8,9 @@ import net.anweisen.cloud.driver.player.CloudOfflinePlayer;
 import net.anweisen.cloud.driver.player.CloudPlayer;
 import net.anweisen.cloud.driver.player.connection.DefaultPlayerConnection;
 import net.anweisen.cloud.driver.player.connection.PlayerConnection;
+import net.anweisen.cloud.driver.player.permission.PermissionData;
 import net.anweisen.cloud.driver.player.settings.DefaultPlayerSettings;
 import net.anweisen.cloud.driver.player.settings.PlayerSettings;
-import net.anweisen.cloud.driver.player.permission.PermissionData;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.utilities.common.config.Document;
 
@@ -151,7 +151,7 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 	@Nonnull
 	@Override
 	public ServiceInfo getProxy() {
-		return CloudDriver.getInstance().getServiceManager().getServiceInfoByUniqueId(proxy);
+		return Preconditions.checkNotNull(CloudDriver.getInstance().getServiceManager().getServiceInfoByUniqueId(proxy), "The proxy of the player no longer exists");
 	}
 
 	@Nullable
@@ -204,7 +204,7 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 
 	@Override
 	public String toString() {
-		return "CloudPlayer[name=" + getName() + " uuid=" + getUniqueId() + " address=" + connection.getAddress() + " version=" + connection.getVersion() + " proxy=" + getProxy().getName() + " server=" + (getServer() == null ? null : getServer().getName()) + (online ? "" : " online=false") + "]";
+		return "CloudPlayer[name=" + getName() + " uuid=" + getUniqueId() + " address=" + connection.getAddress() + " version=" + connection.getVersion().getName() + " proxy=" + getProxy().getName() + " server=" + (getServer() == null ? null : getServer().getName()) + (online ? "" : " online=false") + "]";
 	}
 
 	@Override

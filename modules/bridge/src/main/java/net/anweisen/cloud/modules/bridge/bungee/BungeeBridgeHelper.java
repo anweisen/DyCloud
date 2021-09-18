@@ -1,5 +1,6 @@
 package net.anweisen.cloud.modules.bridge.bungee;
 
+import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.player.chat.ChatText;
 import net.anweisen.cloud.driver.player.connection.DefaultPlayerConnection;
@@ -69,7 +70,14 @@ public final class BungeeBridgeHelper {
 	@Nullable
 	public static ServerInfo getNextFallback(@Nonnull ProxiedPlayer player) {
 		ServiceInfo service = ProxyBridgeHelper.getNextFallback(player.getUniqueId(), player::hasPermission);
-		return service == null ? null : ProxyServer.getInstance().getServerInfo(service.getName()); // TODO warn if ServerInfo is null (should never happen, but if it does we want to know)
+		ServerInfo server = service == null ? null : ProxyServer.getInstance().getServerInfo(service.getName());
+
+		if (server == null) {
+			CloudDriver.getInstance().getLogger().warn("Server {} is not registered in the proxy", service);
+			if (service != null) registerServer(service);
+		}
+
+		return server;
 	}
 
 	public static void registerServer(@Nonnull ServiceInfo serviceInfo) {
@@ -85,6 +93,7 @@ public final class BungeeBridgeHelper {
 		ProxyServer.getInstance().getServers().remove(name);
 	}
 
+	@SuppressWarnings("deprecation")
 	public static BaseComponent[] buildChatTextComponents(@Nonnull ChatText[] messages) {
 		List<BaseComponent> components = new ArrayList<>(messages.length);
 		ChatColor lastColor = ChatColor.WHITE;

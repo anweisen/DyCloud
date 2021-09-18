@@ -32,6 +32,7 @@ public final class IpRange {
 	public IpRange(@Nonnull InetAddress requiredAddress, int maskBits) {
 		this.requiredAddress = requiredAddress;
 		this.maskBits = maskBits;
+		Preconditions.checkArgument(requiredAddress.getAddress().length * 8 >= maskBits, String.format("IP address %s is too short for bitmask of length %d", requiredAddress.getHostAddress(), maskBits));
 	}
 
 	public boolean matches(@Nonnull String address) {

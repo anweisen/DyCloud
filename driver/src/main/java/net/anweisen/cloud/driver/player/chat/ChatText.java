@@ -91,7 +91,7 @@ public class ChatText implements SerializableObject {
 
 	@Override
 	public String toString() {
-		return "ChatText[text='" + text + "' hover='" + hover + "' click=" + clickEvent + ":'" + click + "']";
+		return "ChatText[text='" + text + "' hover='" + hover + "' click=" + clickEvent + "='" + click + "']";
 	}
 
 	@Override
@@ -99,8 +99,8 @@ public class ChatText implements SerializableObject {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		ChatText chatText = (ChatText) o;
-		return Objects.equals(text, chatText.text)
-			&& clickEvent == chatText.clickEvent
+		return clickEvent == chatText.clickEvent
+			&& Objects.equals(text, chatText.text)
 			&& Objects.equals(click, chatText.click)
 			&& Objects.equals(hover, chatText.hover);
 	}

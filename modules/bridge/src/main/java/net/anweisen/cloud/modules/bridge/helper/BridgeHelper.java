@@ -23,7 +23,7 @@ import java.util.UUID;
  */
 public final class BridgeHelper {
 
-		/**
+	/**
 	 *  @see BungeeCloudListener#onInfoConfigure(ServiceInfoConfigureEvent)
 	 *  @see BukkitCloudListener#onInfoConfigure(ServiceInfoConfigureEvent)
 	 */

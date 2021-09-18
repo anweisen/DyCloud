@@ -118,8 +118,6 @@ public class DefaultEventManager implements EventManager {
 					listener.execute(event);
 				} catch (Throwable ex) {
 					CloudDriver.getInstance().getLogger().error("An error uncaught occurred while executing event listener", ex);
-					if (ex instanceof Error)
-						throw (Error) ex;
 				}
 			}
 		}

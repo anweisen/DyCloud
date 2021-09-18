@@ -17,14 +17,49 @@ import java.util.stream.Collectors;
  */
 public interface ServiceProperty<T> {
 
+	/**
+	 * The current amount of players on the service
+	 */
 	ServiceProperty<Integer> ONLINE_PLAYERS = newServiceProperty("online", Document::getInt);
+
+	/**
+	 * The max allowed amount of players on the service
+	 */
 	ServiceProperty<Integer> MAX_PLAYERS = newServiceProperty("max", Document::getInt);
+
+	/**
+	 * The players currently on the service, represented by a {@link PlayerInfo} object, holding uuid and name
+	 */
 	ServiceProperty<List<PlayerInfo>> PLAYERS = newServiceListProperty("players", PlayerInfo.class);
+
+	/**
+	 * The plugins on the service, represented by a {@link PluginInfo} object, holding name, description, versions, mainClass, authors and website
+	 */
 	ServiceProperty<List<PluginInfo>> PLUGINS = newServiceListProperty("plugins", PluginInfo.class);
+
+	/**
+	 * The registered plugin messaging channels of the proxy messenger
+	 */
 	ServiceProperty<Collection<String>> MESSAGING_CHANNELS = newServiceProperty("channels", Document::getStringList);
+
+	/**
+	 * A string representing the current status of the service like LOBBY, FULL, INGAME, defaults to LOBBY when started
+	 */
 	ServiceProperty<String> STATUS = newServiceProperty("status", Document::getString);
+
+	/**
+	 * A string with no internal use, can be used for the map name example
+	 */
 	ServiceProperty<String> EXTRA = newServiceProperty("extra", Document::getString);
+
+	/**
+	 * The motd of the service
+	 */
 	ServiceProperty<String> MOTD = newServiceProperty("motd", Document::getString);
+
+	/**
+	 * The status of the whitelist on the service
+	 */
 	ServiceProperty<Boolean> WHITELIST = newServiceProperty("whitelist", Document::getBoolean);
 
 	@Nonnull

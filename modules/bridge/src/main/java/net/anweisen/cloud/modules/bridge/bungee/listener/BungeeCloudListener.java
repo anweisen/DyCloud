@@ -1,7 +1,9 @@
 package net.anweisen.cloud.modules.bridge.bungee.listener;
 
 import net.anweisen.cloud.driver.event.EventListener;
+import net.anweisen.cloud.driver.event.service.ServiceReadyEvent;
 import net.anweisen.cloud.driver.event.service.ServiceRegisteredEvent;
+import net.anweisen.cloud.driver.event.service.ServiceStartedEvent;
 import net.anweisen.cloud.driver.event.service.ServiceUnregisteredEvent;
 import net.anweisen.cloud.driver.service.specific.ServiceProperty;
 import net.anweisen.cloud.driver.service.specific.data.PlayerInfo;
@@ -43,6 +45,22 @@ public class BungeeCloudListener {
 
 	@EventListener
 	public void onServiceRegister(@Nonnull ServiceRegisteredEvent event) {
+		if (event.getServiceInfo().getEnvironment().isServer()) {
+			BungeeBridgeHelper.registerServer(event.getServiceInfo());
+		}
+	}
+
+	@EventListener
+	public void onServiceStarted(@Nonnull ServiceStartedEvent event) {
+		// Sometimes the servers are not registered in the proxy, so register the server again to be safe
+		if (event.getServiceInfo().getEnvironment().isServer()) {
+			BungeeBridgeHelper.registerServer(event.getServiceInfo());
+		}
+	}
+
+	@EventListener
+	public void onServiceReady(@Nonnull ServiceReadyEvent event) {
+		// Sometimes the servers are not registered in the proxy, so register the server again to be safe
 		if (event.getServiceInfo().getEnvironment().isServer()) {
 			BungeeBridgeHelper.registerServer(event.getServiceInfo());
 		}
