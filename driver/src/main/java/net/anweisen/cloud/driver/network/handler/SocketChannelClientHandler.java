@@ -4,8 +4,8 @@ import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.event.network.PacketReceiveEvent;
 import net.anweisen.cloud.driver.event.network.SocketChannelCloseEvent;
 import net.anweisen.cloud.driver.event.network.SocketChannelConnectEvent;
-import net.anweisen.cloud.driver.network.internal.InternalQueryResponseManager;
 import net.anweisen.cloud.driver.network.SocketChannel;
+import net.anweisen.cloud.driver.network.internal.InternalQueryResponseManager;
 import net.anweisen.cloud.driver.network.packet.Packet;
 
 import javax.annotation.Nonnull;

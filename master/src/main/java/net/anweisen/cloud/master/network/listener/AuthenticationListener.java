@@ -1,8 +1,8 @@
 package net.anweisen.cloud.master.network.listener;
 
 import net.anweisen.cloud.driver.cord.CordInfo;
-import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.network.SocketChannel;
+import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
 import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket.AuthenticationType;

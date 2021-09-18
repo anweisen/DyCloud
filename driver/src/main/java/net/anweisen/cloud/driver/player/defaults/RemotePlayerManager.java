@@ -1,9 +1,9 @@
 package net.anweisen.cloud.driver.player.defaults;
 
+import net.anweisen.cloud.driver.network.NetworkingApiUser;
 import net.anweisen.cloud.driver.network.packet.def.PlayerRemoteManagerPacket;
 import net.anweisen.cloud.driver.network.packet.def.PlayerRemoteManagerPacket.PlayerRemoteManagerType;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
-import net.anweisen.cloud.driver.network.NetworkingApiUser;
 import net.anweisen.cloud.driver.player.CloudOfflinePlayer;
 import net.anweisen.cloud.driver.player.CloudPlayer;
 import net.anweisen.cloud.driver.player.PlayerExecutor;
