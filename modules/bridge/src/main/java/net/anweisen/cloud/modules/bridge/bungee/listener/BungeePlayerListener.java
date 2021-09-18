@@ -8,6 +8,7 @@ import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.modules.bridge.bungee.BungeeBridgeHelper;
 import net.anweisen.cloud.modules.bridge.bungee.BungeeCloudBridgePlugin;
 import net.anweisen.cloud.modules.bridge.helper.BridgeHelper;
+import net.anweisen.cloud.modules.bridge.helper.BridgeNetworkingHelper;
 import net.anweisen.cloud.modules.bridge.helper.ProxyBridgeHelper;
 import net.anweisen.utilities.common.collection.pair.Tuple;
 import net.md_5.bungee.api.ProxyServer;
@@ -32,7 +33,7 @@ public class BungeePlayerListener implements Listener, LoggingApiUser {
 
 	@EventHandler
 	public void onLogin(@Nonnull LoginEvent event) {
-		Tuple<CloudPlayer, String> response = BridgeHelper.sendProxyLoginRequestPacket(event.getConnection().getUniqueId(), event.getConnection().getName(), createPlayerConnection(event.getConnection()));
+		Tuple<CloudPlayer, String> response = BridgeNetworkingHelper.sendProxyLoginRequestPacket(event.getConnection().getUniqueId(), event.getConnection().getName(), createPlayerConnection(event.getConnection()));
 
 		String kickReason = response.getSecond();
 		if (kickReason != null) {
@@ -48,7 +49,7 @@ public class BungeePlayerListener implements Listener, LoggingApiUser {
 
 	@EventHandler
 	public void onPostLogin(@Nonnull PostLoginEvent event) {
-		BridgeHelper.sendProxyLoginSuccessPacket(event.getPlayer().getUniqueId(), createPlayerSettings(event.getPlayer()));
+		BridgeNetworkingHelper.sendProxyLoginSuccessPacket(event.getPlayer().getUniqueId(), createPlayerSettings(event.getPlayer()));
 		BridgeHelper.updateServiceInfo();
 	}
 
@@ -57,7 +58,7 @@ public class BungeePlayerListener implements Listener, LoggingApiUser {
 
 		ServiceInfo serviceInfo = CloudDriver.getInstance().getServiceManager().getServiceInfoByName(event.getTarget().getName());
 		if (serviceInfo != null) {
-			BridgeHelper.sendProxyServerConnectRequestPacket(event.getPlayer().getUniqueId(), serviceInfo.getUniqueId());
+			BridgeNetworkingHelper.sendProxyServerConnectRequestPacket(event.getPlayer().getUniqueId(), serviceInfo.getUniqueId());
 		}
 
 	}
@@ -71,7 +72,7 @@ public class BungeePlayerListener implements Listener, LoggingApiUser {
 		ServiceInfo from = CloudDriver.getInstance().getServiceManager().getServiceInfoByName(event.getFrom().getName());
 		ServiceInfo to = CloudDriver.getInstance().getServiceManager().getServiceInfoByName(event.getPlayer().getServer().getInfo().getName());
 		if (from != null && to != null) {
-			BridgeHelper.sendProxyServerSwitchPacket(event.getPlayer().getUniqueId(), from.getUniqueId(), to.getUniqueId());
+			BridgeNetworkingHelper.sendProxyServerSwitchPacket(event.getPlayer().getUniqueId(), from.getUniqueId(), to.getUniqueId());
 		}
 
 	}
@@ -103,14 +104,14 @@ public class BungeePlayerListener implements Listener, LoggingApiUser {
 	public void onDisconnect(@Nonnull PlayerDisconnectEvent event) {
 		ProxyServer.getInstance().getScheduler().schedule(BungeeCloudBridgePlugin.getInstance(), () -> {
 			BridgeHelper.updateServiceInfo();
-			BridgeHelper.sendProxyDisconnectPacket(event.getPlayer().getUniqueId());
+			BridgeNetworkingHelper.sendProxyDisconnectPacket(event.getPlayer().getUniqueId());
 			ProxyBridgeHelper.clearFallbackHistory(event.getPlayer().getUniqueId());
 		}, 50, TimeUnit.MILLISECONDS);
 	}
 
 	@EventHandler
 	public void onSettingsChange(@Nonnull SettingsChangedEvent event) {
-		BridgeHelper.sendPlayerSettingsChangePacket(event.getPlayer().getUniqueId(), createPlayerSettings(event.getPlayer()));
+		BridgeNetworkingHelper.sendPlayerSettingsChangePacket(event.getPlayer().getUniqueId(), createPlayerSettings(event.getPlayer()));
 	}
 
 }

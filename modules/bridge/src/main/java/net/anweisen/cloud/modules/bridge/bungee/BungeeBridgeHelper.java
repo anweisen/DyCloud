@@ -70,11 +70,15 @@ public final class BungeeBridgeHelper {
 	@Nullable
 	public static ServerInfo getNextFallback(@Nonnull ProxiedPlayer player) {
 		ServiceInfo service = ProxyBridgeHelper.getNextFallback(player.getUniqueId(), player::hasPermission);
-		ServerInfo server = service == null ? null : ProxyServer.getInstance().getServerInfo(service.getName());
+		if (service == null) return null;
 
+		ServerInfo server = ProxyServer.getInstance().getServerInfo(service.getName());
 		if (server == null) {
 			CloudDriver.getInstance().getLogger().warn("Server {} is not registered in the proxy", service);
-			if (service != null) registerServer(service);
+			for (ServerInfo current : ProxyServer.getInstance().getServers().values()) {
+				CloudDriver.getInstance().getLogger().extended("=> {}: {}", current.getName(),current.getSocketAddress());
+			}
+			registerServer(service);
 		}
 
 		return server;
