@@ -91,13 +91,13 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 
 	@Nonnull
 	@Override
-	public PlayerConnection getLastProxyConnectionData() {
-		return offlinePlayer.getLastProxyConnectionData();
+	public PlayerConnection getLastConnection() {
+		return offlinePlayer.getLastConnection();
 	}
 
 	@Override
-	public void setLastProxyConnectionData(@Nonnull PlayerConnection connectionData) {
-		offlinePlayer.setLastProxyConnectionData(connectionData);
+	public void setLastConnection(@Nonnull PlayerConnection connectionData) {
+		offlinePlayer.setLastConnection(connectionData);
 	}
 
 	@Override

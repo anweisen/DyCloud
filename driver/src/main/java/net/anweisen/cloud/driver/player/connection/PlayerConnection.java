@@ -1,6 +1,7 @@
 package net.anweisen.cloud.driver.player.connection;
 
 import net.anweisen.cloud.driver.network.object.HostAndPort;
+import net.anweisen.cloud.driver.player.CloudOfflinePlayer;
 import net.anweisen.cloud.driver.player.CloudPlayer;
 
 import javax.annotation.Nonnull;
@@ -10,6 +11,7 @@ import javax.annotation.Nonnull;
  * @since 1.0
  *
  * @see CloudPlayer#getConnection()
+ * @see CloudOfflinePlayer#getLastConnection()
  */
 public interface PlayerConnection {
 

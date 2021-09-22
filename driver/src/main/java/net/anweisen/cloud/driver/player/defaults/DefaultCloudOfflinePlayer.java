@@ -82,11 +82,11 @@ public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer, Serializab
 
 	@Nonnull
 	@Override
-	public DefaultPlayerConnection getLastProxyConnectionData() {
+	public DefaultPlayerConnection getLastConnection() {
 		return lastNetworkConnection;
 	}
 
-	public void setLastProxyConnectionData(@Nonnull PlayerConnection connectionData) {
+	public void setLastConnection(@Nonnull PlayerConnection connectionData) {
 		this.lastNetworkConnection = (DefaultPlayerConnection) connectionData;
 	}
 

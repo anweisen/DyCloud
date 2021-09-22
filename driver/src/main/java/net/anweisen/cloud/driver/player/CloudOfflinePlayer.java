@@ -28,9 +28,9 @@ public interface CloudOfflinePlayer {
 	void setName(@Nonnull String name);
 
 	@Nonnull
-	PlayerConnection getLastProxyConnectionData();
+	PlayerConnection getLastConnection();
 
-	void setLastProxyConnectionData(@Nonnull PlayerConnection connectionData);
+	void setLastConnection(@Nonnull PlayerConnection connectionData);
 
 	long getFirstLoginTime();
 
