@@ -1,34 +1,40 @@
 package net.anweisen.cloud.master;
 
 import net.anweisen.cloud.base.CloudBase;
-import net.anweisen.cloud.base.network.request.RequestPacketListener;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.DriverEnvironment;
+import net.anweisen.cloud.driver.config.global.GlobalConfig;
 import net.anweisen.cloud.driver.console.Console;
 import net.anweisen.cloud.driver.console.HeaderPrinter;
 import net.anweisen.cloud.driver.database.DatabaseManager;
-import net.anweisen.cloud.driver.network.SocketComponent;
-import net.anweisen.cloud.driver.network.HostAndPort;
 import net.anweisen.cloud.driver.network.SocketServer;
 import net.anweisen.cloud.driver.network.netty.server.NettySocketServer;
+import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.network.packet.PacketConstants;
 import net.anweisen.cloud.driver.network.packet.PacketListenerRegistry;
+import net.anweisen.cloud.driver.network.packet.def.NodeInfoPublishPacket;
+import net.anweisen.cloud.driver.network.packet.def.NodeInfoPublishPacket.NodePublishType;
+import net.anweisen.cloud.driver.node.NodeInfo;
 import net.anweisen.cloud.driver.service.ServiceFactory;
-import net.anweisen.cloud.driver.service.ServiceManager;
 import net.anweisen.cloud.driver.service.config.LocalTemplateStorage;
 import net.anweisen.cloud.driver.service.config.ServiceConfigManager;
 import net.anweisen.cloud.master.config.MasterConfig;
+import net.anweisen.cloud.master.config.global.MasterGlobalConfig;
+import net.anweisen.cloud.master.cord.CordServerManager;
+import net.anweisen.cloud.master.cord.DefaultCordServerManager;
 import net.anweisen.cloud.master.database.MasterDatabaseManager;
+import net.anweisen.cloud.master.loop.CloudMainLoop;
 import net.anweisen.cloud.master.network.handler.SocketChannelServerHandler;
 import net.anweisen.cloud.master.network.listener.*;
-import net.anweisen.cloud.master.network.requests.TemplateRequestHandlers;
 import net.anweisen.cloud.master.node.DefaultNodeServerManager;
 import net.anweisen.cloud.master.node.NodeServerManager;
+import net.anweisen.cloud.master.player.MasterPlayerManager;
+import net.anweisen.cloud.master.service.CloudServiceManager;
 import net.anweisen.cloud.master.service.MasterServiceFactory;
 import net.anweisen.cloud.master.service.MasterServiceManager;
 import net.anweisen.cloud.master.service.config.MasterServiceConfigManager;
 import net.anweisen.utilities.common.collection.NamedThreadFactory;
-import net.anweisen.utilities.common.logging.ILogger;
+import net.anweisen.utilities.common.logging.handler.HandledLogger;
 
 import javax.annotation.Nonnull;
 import java.nio.file.Paths;
@@ -52,21 +58,27 @@ public final class CloudMaster extends CloudBase {
 	private final MasterDatabaseManager databaseManager;
 	private final MasterServiceConfigManager serviceConfigManager;
 	private final NodeServerManager nodeManager;
-	private final MasterServiceManager serviceManager;
+	private final CordServerManager cordManager;
+	private final CloudServiceManager serviceManager;
 	private final ServiceFactory serviceFactory;
+	private final MasterPlayerManager playerManager;
+	private final GlobalConfig globalConfig;
 
 	private SocketServer socketServer;
 
-	CloudMaster(@Nonnull ILogger logger, @Nonnull Console console) {
+	CloudMaster(@Nonnull HandledLogger logger, @Nonnull Console console) {
 		super(logger, console, DriverEnvironment.MASTER);
 		console.setScreenName(getComponentName());
 		setInstance(this);
 
 		nodeManager = new DefaultNodeServerManager();
+		cordManager = new DefaultCordServerManager();
 		databaseManager = new MasterDatabaseManager();
 		serviceConfigManager = new MasterServiceConfigManager();
 		serviceManager = new MasterServiceManager();
 		serviceFactory = new MasterServiceFactory(this);
+		playerManager = new MasterPlayerManager();
+		globalConfig = new MasterGlobalConfig();
 
 		HeaderPrinter.printHeader(console, this);
 	}
@@ -85,6 +97,7 @@ public final class CloudMaster extends CloudBase {
 		logger.info("Opening socket server on {}..", config.getHostAddress());
 		socketServer = new NettySocketServer(SocketChannelServerHandler::new);
 		socketServer.addListener(config.getHostAddress());
+		globalConfig.fetch();
 
 		loadNetworkListeners(socketServer.getListenerRegistry());
 
@@ -111,16 +124,18 @@ public final class CloudMaster extends CloudBase {
 	private void loadNetworkListeners(@Nonnull PacketListenerRegistry registry) {
 		logger.info("Registering network listeners..");
 
-		registry.addListener(PacketConstants.AUTH_CHANNEL, new AuthenticationListener(this));
-		registry.addListener(PacketConstants.DATABASE_CHANNEL, new DatabaseActionListener(databaseManager));
+		registry.addListener(PacketConstants.AUTH_CHANNEL, new AuthenticationListener());
+		registry.addListener(PacketConstants.DATABASE_CHANNEL, new RemoteDatabaseActionListener(databaseManager));
 		registry.addListener(PacketConstants.NODE_DATA_CYCLE, new NodeDataCycleListener());
+		registry.addListener(PacketConstants.SERVICE_INFO_PUBLISH_CHANNEL, new ServiceInfoUpdateListener());
+		registry.addListener(PacketConstants.SERVICE_UPDATE_SELF_INFO_CHANNEL, new ServiceUpdateSelfInfoListener());
+		registry.addListener(PacketConstants.SERVICE_CONTROL_CHANNEL, new ServiceControlListener());
 		registry.addListener(PacketConstants.PLAYER_EVENT_CHANNEL, new PlayerEventListener());
 		registry.addListener(PacketConstants.PLAYER_EXECUTOR_CHANNEL, new PlayerExecutorListener());
 		registry.addListener(PacketConstants.PLAYER_REMOTE_MANAGER_CHANNEL, new PlayerRemoteManagerListener());
 		registry.addListener(PacketConstants.MODULE_SYSTEM_CHANNEL, new ModuleSystemListener());
-		registry.addListener(PacketConstants.REQUEST_API_CHANNEL, new RequestPacketListener(
-			new TemplateRequestHandlers()
-		));
+		registry.addListener(PacketConstants.GLOBAL_CONFIG_CHANNEL, new GlobalConfigListener());
+		registry.addListener(PacketConstants.TEMPLATE_STORAGE_CHANNEL, new TemplateStorageListener());
 	}
 
 	private void initModules() {
@@ -136,13 +151,20 @@ public final class CloudMaster extends CloudBase {
 	public synchronized void shutdown() throws Exception {
 
 		logger.info("Shutting down..");
+		mainLoopExecutor.shutdownNow();
 
 		logger.info("Closing all socket channels..");
 		socketServer.closeChannels();
+		logger.info("Shutting down socket server..");
+		socketServer.shutdown();
 
 		shutdownBase();
 		shutdownDriver();
 
+	}
+
+	public void publishUpdate(@Nonnull NodePublishType publishType, @Nonnull NodeInfo nodeInfo) {
+		getSocketComponent().sendPacketSync(new NodeInfoPublishPacket(publishType, nodeInfo));
 	}
 
 	@Nonnull

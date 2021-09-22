@@ -1,4 +1,4 @@
-package net.anweisen.cloud.master;
+package net.anweisen.cloud.master.loop;
 
 import net.anweisen.cloud.base.node.NodeCycleData;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
@@ -6,6 +6,7 @@ import net.anweisen.cloud.driver.service.config.ServiceTask;
 import net.anweisen.cloud.driver.service.specific.ServiceControlState;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.driver.service.specific.ServiceState;
+import net.anweisen.cloud.master.CloudMaster;
 import net.anweisen.cloud.master.node.NodeServer;
 import net.anweisen.cloud.master.service.specific.CloudService;
 
@@ -79,7 +80,6 @@ public final class CloudMainLoop implements Runnable, LoggingApiUser {
 	}
 
 	private void checkNodeStatus() {
-		trace("Checking node status & timeout..");
 		for (NodeServer node : cloud.getNodeManager().getNodeServers()) {
 			NodeCycleData cycleData = node.getLastCycleData();
 			if (cycleData == null) continue;
@@ -87,7 +87,7 @@ public final class CloudMainLoop implements Runnable, LoggingApiUser {
 			if (cycleData.hasTimeouted()) {
 				warn("{} has timeouted!", node);
 			}
-			if (cycleData.getLatency() > 99) {
+			if (cycleData.getLatency() > 50) {
 				warn("{} has a high ping: {}ms", node, cycleData.getLatency());
 			}
 		}
@@ -96,7 +96,7 @@ public final class CloudMainLoop implements Runnable, LoggingApiUser {
 	private boolean hasTimeouted(@Nonnull ServiceInfo serviceInfo) {
 		long lastCycleDelay = System.currentTimeMillis() - serviceInfo.getTimestamp() - 30;
 		int lostCycles = (int) lastCycleDelay / ServiceInfo.PUBLISH_INTERVAL;
-		if (lostCycles > 0) trace("Service timeout: lost {} cycles ({}ms)", lostCycles, lastCycleDelay);
+		if (lostCycles > 0) trace("Service timeout " + serviceInfo.getName() + ": lost {} cycles ({}ms)", lostCycles, lastCycleDelay);
 		return lostCycles >= ServiceInfo.CYCLE_TIMEOUT;
 	}
 
