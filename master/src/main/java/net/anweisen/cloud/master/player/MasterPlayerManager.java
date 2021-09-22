@@ -102,7 +102,7 @@ public class MasterPlayerManager extends DefaultPlayerManager implements Logging
 
 		offlinePlayer.setLastOnlineTime(System.currentTimeMillis());
 		offlinePlayer.setName(name);
-		offlinePlayer.setLastProxyConnectionData(playerConnection);
+		offlinePlayer.setLastConnection(playerConnection);
 		saveOfflinePlayer(offlinePlayer);
 		return offlinePlayer;
 	}
@@ -164,7 +164,7 @@ public class MasterPlayerManager extends DefaultPlayerManager implements Logging
 			.set(PlayerConstants.NAME_FIELD, updatedPlayer.getName())
 			.set(PlayerConstants.FIRST_LOGIN_TIME_FIELD, updatedPlayer.getFirstLoginTime())
 			.set(PlayerConstants.LAST_ONLINE_TIME_FIELD, updatedPlayer.getLastOnlineTime())
-			.set(PlayerConstants.LAST_CONNECTION_FIELD, Document.ofNullable(updatedPlayer.getLastProxyConnectionData()))
+			.set(PlayerConstants.LAST_CONNECTION_FIELD, Document.ofNullable(updatedPlayer.getLastConnection()))
 			.set(PlayerConstants.PERMISSION_DATA_FIELD, Document.of(updatedPlayer.getStoredPermissionData()))
 			.set(PlayerConstants.PROPERTIES_FIELD, updatedPlayer.getProperties())
 			.executeAsync();
