@@ -6,18 +6,18 @@ import net.anweisen.cloud.cord.reporter.DefaultTrafficReporter;
 import net.anweisen.cloud.cord.socket.NettyCordSocketServer;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.DriverEnvironment;
+import net.anweisen.cloud.driver.config.global.GlobalConfig;
+import net.anweisen.cloud.driver.config.global.RemoteGlobalConfig;
 import net.anweisen.cloud.driver.console.Console;
 import net.anweisen.cloud.driver.console.HeaderPrinter;
 import net.anweisen.cloud.driver.cord.CordManager;
 import net.anweisen.cloud.driver.database.DatabaseManager;
 import net.anweisen.cloud.driver.database.remote.RemoteDatabaseManager;
-import net.anweisen.cloud.driver.network.HostAndPort;
 import net.anweisen.cloud.driver.network.SocketClient;
 import net.anweisen.cloud.driver.network.handler.SocketChannelClientHandler;
-import net.anweisen.cloud.driver.network.listener.AuthenticationResponseListener;
-import net.anweisen.cloud.driver.network.listener.NodeInfoPublishListener;
-import net.anweisen.cloud.driver.network.listener.ServiceInfoPublishListener;
+import net.anweisen.cloud.driver.network.listener.*;
 import net.anweisen.cloud.driver.network.netty.client.NettySocketClient;
+import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.network.packet.PacketConstants;
 import net.anweisen.cloud.driver.network.packet.PacketListenerRegistry;
 import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket;
@@ -54,6 +54,7 @@ public final class CloudCord extends CloudDriver {
 	private final ServiceManager serviceManager;
 	private final ServiceConfigManager serviceConfigManager;
 	private final PlayerManager playerManager;
+	private final GlobalConfig globalConfig;
 
 	private SocketClient socketClient;
 	private NettyCordSocketServer cordServer;
@@ -70,6 +71,7 @@ public final class CloudCord extends CloudDriver {
 		serviceConfigManager = new RemoteServiceConfigManager();
 		playerManager = new RemotePlayerManager();
 		permissionManager = new RemotePermissionManager();
+		globalConfig = new RemoteGlobalConfig();
 
 		HeaderPrinter.printHeader(console, this);
 	}
@@ -138,6 +140,8 @@ public final class CloudCord extends CloudDriver {
 
 		registry.addListener(PacketConstants.SERVICE_INFO_PUBLISH_CHANNEL, new ServiceInfoPublishListener());
 		registry.addListener(PacketConstants.NODE_INFO_PUBLISH_CHANNEL, new NodeInfoPublishListener());
+		registry.addListener(PacketConstants.PLAYER_EVENT_CHANNEL, new PlayerEventListener());
+		registry.addListener(PacketConstants.PLAYER_REMOTE_MANAGER_CHANNEL, new PlayerRemoteManagerListener());
 	}
 
 	public synchronized void startCord() throws Exception {
@@ -168,6 +172,12 @@ public final class CloudCord extends CloudDriver {
 	@Override
 	public CordConfig getConfig() {
 		return config;
+	}
+
+	@Nonnull
+	@Override
+	public GlobalConfig getGlobalConfig() {
+		return globalConfig;
 	}
 
 	@Nonnull
