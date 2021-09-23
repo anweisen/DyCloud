@@ -8,11 +8,11 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.network.DefaultSocketComponent;
-import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.SocketClient;
 import net.anweisen.cloud.driver.network.handler.SocketChannelHandler;
 import net.anweisen.cloud.driver.network.netty.NettyUtils;
+import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.utilities.common.collection.WrappedException;
 
 import javax.annotation.Nonnull;
@@ -53,13 +53,14 @@ public class NettySocketClient extends DefaultSocketComponent implements SocketC
 
 	private void reconnect(@Nonnull HostAndPort address) {
 		warn("Got disconnected from the master socket! Reconnecting..");
+		if (eventLoopGroup.isShutdown()) return;
 
 		try {
 			Channel channel = doConnect(address);
 			channel.closeFuture().addListener(future -> {
 				reconnect(address);
 			});
-		} catch (IllegalStateException | RejectedExecutionException ex) {
+		} catch (RejectedExecutionException ex) {
 			error("Unable to reconnect to master socket ({}: {})", ex.getClass().getName(), ex.getMessage());
 		} catch (Exception ex) {
 			error("Unable to reconnect to master socket", ex);
