@@ -13,12 +13,12 @@ import java.util.function.Consumer;
  */
 public class TemplateStoragePacket extends Packet {
 
-	public TemplateStoragePacket(@Nonnull TemplateStorageRequestType type, @Nonnull Consumer<? super Buffer> modifier) {
+	public TemplateStoragePacket(@Nonnull TemplateStoragePacketType type, @Nonnull Consumer<? super Buffer> modifier) {
 		super(PacketConstants.TEMPLATE_STORAGE_CHANNEL, Buffer.create().writeEnumConstant(type));
 		modifier.accept(buffer);
 	}
 
-	public enum TemplateStorageRequestType {
+	public enum TemplateStoragePacketType {
 		GET_TEMPLATES,
 		HAS_TEMPLATE,
 		LOAD_TEMPLATE_STREAM

@@ -3,7 +3,7 @@ package net.anweisen.cloud.driver.service;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.event.service.*;
-import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.ServicePublishType;
+import net.anweisen.cloud.driver.network.packet.def.ServicePublishPacket.ServicePublishType;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 
 import javax.annotation.Nonnull;

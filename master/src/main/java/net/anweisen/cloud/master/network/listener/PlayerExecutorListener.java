@@ -4,7 +4,7 @@ import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketConstants;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
-import net.anweisen.cloud.driver.network.packet.def.PlayerExecutorPacket.PlayerExecutorType;
+import net.anweisen.cloud.driver.network.packet.def.PlayerExecutorPacket.PlayerExecutorPacketType;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.player.CloudPlayer;
 import net.anweisen.cloud.master.CloudMaster;
@@ -23,7 +23,7 @@ public class PlayerExecutorListener implements PacketListener {
 	public void handlePacket(@Nonnull SocketChannel channel, @Nonnull Packet packet) throws Exception {
 		Buffer buffer = packet.getBuffer();
 
-		PlayerExecutorType type = buffer.readEnumConstant(PlayerExecutorType.class);
+		PlayerExecutorPacketType type = buffer.readEnumConstant(PlayerExecutorPacketType.class);
 		UUID playerUniqueId = buffer.readUUID();
 
 		// TODO check and maybe respond

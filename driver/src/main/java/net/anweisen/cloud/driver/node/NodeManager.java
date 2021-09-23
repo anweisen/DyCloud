@@ -1,7 +1,7 @@
 package net.anweisen.cloud.driver.node;
 
 import net.anweisen.cloud.driver.CloudDriver;
-import net.anweisen.cloud.driver.network.packet.def.NodeInfoPublishPacket.NodePublishType;
+import net.anweisen.cloud.driver.network.packet.def.NodePublishPacket.NodePublishType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

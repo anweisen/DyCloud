@@ -14,17 +14,17 @@ import java.util.function.Consumer;
  */
 public class AuthenticationPacket extends Packet {
 
-	public AuthenticationPacket(@Nonnull AuthenticationType authenticationType, @Nonnull UUID identity, @Nonnull UUID id, @Nonnull Consumer<? super Buffer> modifier) {
+	public AuthenticationPacket(@Nonnull AuthenticationPacketType authenticationType, @Nonnull UUID identity, @Nonnull UUID id, @Nonnull Consumer<? super Buffer> modifier) {
 		super(PacketConstants.AUTH_CHANNEL, Buffer.create().writeEnumConstant(authenticationType).writeUUID(identity).writeUUID(id));
 		modifier.accept(buffer);
 	}
 
-	public AuthenticationPacket(@Nonnull AuthenticationType authenticationType, @Nonnull UUID identity, @Nonnull String name, @Nonnull Consumer<? super Buffer> modifier) {
+	public AuthenticationPacket(@Nonnull AuthenticationPacketType authenticationType, @Nonnull UUID identity, @Nonnull String name, @Nonnull Consumer<? super Buffer> modifier) {
 		super(PacketConstants.AUTH_CHANNEL, Buffer.create().writeEnumConstant(authenticationType).writeUUID(identity).writeString(name));
 		modifier.accept(buffer);
 	}
 
-	public enum AuthenticationType {
+	public enum AuthenticationPacketType {
 		NODE,
 		CORD,
 		SERVICE

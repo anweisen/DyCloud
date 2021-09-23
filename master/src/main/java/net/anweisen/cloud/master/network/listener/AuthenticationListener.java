@@ -5,10 +5,10 @@ import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
-import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket.AuthenticationType;
+import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket.AuthenticationPacketType;
 import net.anweisen.cloud.driver.network.packet.def.AuthenticationResponsePacket;
-import net.anweisen.cloud.driver.network.packet.def.NodeInfoPublishPacket.NodePublishType;
-import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.ServicePublishType;
+import net.anweisen.cloud.driver.network.packet.def.NodePublishPacket.NodePublishType;
+import net.anweisen.cloud.driver.network.packet.def.ServicePublishPacket.ServicePublishType;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.node.NodeInfo;
 import net.anweisen.cloud.master.CloudMaster;
@@ -33,7 +33,7 @@ public class AuthenticationListener implements PacketListener {
 
 		Buffer buffer = packet.getBuffer();
 
-		AuthenticationType type = buffer.readEnumConstant(AuthenticationType.class);
+		AuthenticationPacketType type = buffer.readEnumConstant(AuthenticationPacketType.class);
 		UUID identity = buffer.readUUID();
 
 		cloud.getLogger().debug("Received authentication from {}: type={}", channel, type);

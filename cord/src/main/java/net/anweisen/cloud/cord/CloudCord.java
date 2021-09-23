@@ -21,7 +21,7 @@ import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.network.packet.PacketConstants;
 import net.anweisen.cloud.driver.network.packet.PacketListenerRegistry;
 import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket;
-import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket.AuthenticationType;
+import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket.AuthenticationPacketType;
 import net.anweisen.cloud.driver.node.NodeManager;
 import net.anweisen.cloud.driver.player.PlayerManager;
 import net.anweisen.cloud.driver.player.defaults.RemotePlayerManager;
@@ -132,14 +132,14 @@ public final class CloudCord extends CloudDriver {
 
 	private void sendAuthentication() {
 		logger.debug("Sending authentication to master.. Cord: '{}'", config.getCordName());
-		socketClient.sendPacket(new AuthenticationPacket(AuthenticationType.CORD, config.getIdentity(), config.getCordName(), buffer -> buffer.writeObject(config.getBindAddress())));
+		socketClient.sendPacket(new AuthenticationPacket(AuthenticationPacketType.CORD, config.getIdentity(), config.getCordName(), buffer -> buffer.writeObject(config.getBindAddress())));
 	}
 
 	private void loadNetworkListeners(@Nonnull PacketListenerRegistry registry) {
 		logger.info("Registering network listeners..");
 
-		registry.addListener(PacketConstants.SERVICE_INFO_PUBLISH_CHANNEL, new ServiceInfoPublishListener());
-		registry.addListener(PacketConstants.NODE_INFO_PUBLISH_CHANNEL, new NodeInfoPublishListener());
+		registry.addListener(PacketConstants.SERVICE_INFO_PUBLISH_CHANNEL, new ServicePublishListener());
+		registry.addListener(PacketConstants.NODE_INFO_PUBLISH_CHANNEL, new NodePublishListener());
 		registry.addListener(PacketConstants.PLAYER_EVENT_CHANNEL, new PlayerEventListener());
 		registry.addListener(PacketConstants.PLAYER_REMOTE_MANAGER_CHANNEL, new PlayerRemoteManagerListener());
 	}

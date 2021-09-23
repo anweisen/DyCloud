@@ -3,7 +3,7 @@ package net.anweisen.cloud.master.network.listener;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
-import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.ServicePublishType;
+import net.anweisen.cloud.driver.network.packet.def.ServicePublishPacket.ServicePublishType;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.master.CloudMaster;
 

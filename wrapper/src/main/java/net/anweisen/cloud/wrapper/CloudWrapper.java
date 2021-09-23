@@ -7,15 +7,15 @@ import net.anweisen.cloud.driver.config.global.RemoteGlobalConfig;
 import net.anweisen.cloud.driver.cord.CordManager;
 import net.anweisen.cloud.driver.database.DatabaseManager;
 import net.anweisen.cloud.driver.database.remote.RemoteDatabaseManager;
-import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.network.SocketClient;
 import net.anweisen.cloud.driver.network.handler.SocketChannelClientHandler;
 import net.anweisen.cloud.driver.network.listener.*;
 import net.anweisen.cloud.driver.network.netty.client.NettySocketClient;
+import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.network.packet.PacketConstants;
 import net.anweisen.cloud.driver.network.packet.PacketListenerRegistry;
 import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket;
-import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket.AuthenticationType;
+import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket.AuthenticationPacketType;
 import net.anweisen.cloud.driver.network.packet.def.ServiceUpdateSelfInfoPacket;
 import net.anweisen.cloud.driver.node.NodeManager;
 import net.anweisen.cloud.driver.node.RemoteNodeManager;
@@ -161,14 +161,14 @@ public final class CloudWrapper extends CloudDriver {
 
 	private void sendAuthentication() {
 		logger.debug("Sending authentication to master.. Service: '{}'", config.getServiceUniqueId());
-		socketClient.sendPacket(new AuthenticationPacket(AuthenticationType.SERVICE, config.getIdentity(), config.getServiceUniqueId(), buffer -> {}));
+		socketClient.sendPacket(new AuthenticationPacket(AuthenticationPacketType.SERVICE, config.getIdentity(), config.getServiceUniqueId(), buffer -> {}));
 	}
 
 	private void loadNetworkListeners(@Nonnull PacketListenerRegistry registry) {
 		logger.info("Registering network listeners..");
 
-		registry.addListener(PacketConstants.NODE_INFO_PUBLISH_CHANNEL, new NodeInfoPublishListener());
-		registry.addListener(PacketConstants.SERVICE_INFO_PUBLISH_CHANNEL, new ServiceInfoPublishListener());
+		registry.addListener(PacketConstants.NODE_INFO_PUBLISH_CHANNEL, new NodePublishListener());
+		registry.addListener(PacketConstants.SERVICE_INFO_PUBLISH_CHANNEL, new ServicePublishListener());
 		registry.addListener(PacketConstants.PLAYER_EVENT_CHANNEL, new PlayerEventListener());
 		registry.addListener(PacketConstants.PLAYER_REMOTE_MANAGER_CHANNEL, new PlayerRemoteManagerListener());
 		registry.addListener(PacketConstants.GLOBAL_CONFIG_CHANNEL, new GlobalConfigUpdateListener());

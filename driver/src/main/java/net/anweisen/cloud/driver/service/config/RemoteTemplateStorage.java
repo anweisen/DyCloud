@@ -3,7 +3,7 @@ package net.anweisen.cloud.driver.service.config;
 import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.network.NetworkingApiUser;
 import net.anweisen.cloud.driver.network.packet.def.TemplateStoragePacket;
-import net.anweisen.cloud.driver.network.packet.def.TemplateStoragePacket.TemplateStorageRequestType;
+import net.anweisen.cloud.driver.network.packet.def.TemplateStoragePacket.TemplateStoragePacketType;
 import net.anweisen.utilities.common.concurrent.task.Task;
 
 import javax.annotation.Nonnull;
@@ -45,7 +45,7 @@ public class RemoteTemplateStorage implements TemplateStorage, NetworkingApiUser
 	@Nonnull
 	@Override
 	public Task<Collection<ServiceTemplate>> getTemplatesAsync() {
-		return sendPacketQueryAsync(new TemplateStoragePacket(TemplateStorageRequestType.GET_TEMPLATES, buffer -> buffer.writeString(name)))
+		return sendPacketQueryAsync(new TemplateStoragePacket(TemplateStoragePacketType.GET_TEMPLATES, buffer -> buffer.writeString(name)))
 			.map(packet -> packet.getBuffer().readObjectCollection(ServiceTemplate.class));
 	}
 
@@ -56,7 +56,7 @@ public class RemoteTemplateStorage implements TemplateStorage, NetworkingApiUser
 		Preconditions.checkArgument(template.getStorage().equals(name), "The given ServiceTemplate must be from this TemplateStorage");
 
 		return sendChunkedPacketQuery(
-			new TemplateStoragePacket(TemplateStorageRequestType.LOAD_TEMPLATE_STREAM, buffer -> buffer.writeObject(template))
+			new TemplateStoragePacket(TemplateStoragePacketType.LOAD_TEMPLATE_STREAM, buffer -> buffer.writeObject(template))
 		).map(response -> {
 			if (!response.getSession().getHeader().getBoolean("exists")) return null;
 			return response.getInputStream();
@@ -71,7 +71,7 @@ public class RemoteTemplateStorage implements TemplateStorage, NetworkingApiUser
 	@Nonnull
 	@Override
 	public Task<Boolean> hasTemplateAsync(@Nonnull ServiceTemplate template) {
-		return sendPacketQueryAsync(new TemplateStoragePacket(TemplateStorageRequestType.HAS_TEMPLATE, buffer -> buffer.writeObject(template)))
+		return sendPacketQueryAsync(new TemplateStoragePacket(TemplateStoragePacketType.HAS_TEMPLATE, buffer -> buffer.writeObject(template)))
 			.map(packet -> packet.getBuffer().readBoolean());
 	}
 

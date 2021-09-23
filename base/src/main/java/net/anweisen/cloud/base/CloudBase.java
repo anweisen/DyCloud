@@ -6,8 +6,8 @@ import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.DriverEnvironment;
 import net.anweisen.cloud.driver.console.Console;
 import net.anweisen.cloud.driver.network.SocketChannel;
-import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket;
-import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.ServicePublishType;
+import net.anweisen.cloud.driver.network.packet.def.ServicePublishPacket;
+import net.anweisen.cloud.driver.network.packet.def.ServicePublishPacket.ServicePublishType;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.utilities.common.logging.handler.HandledLogger;
 
@@ -39,7 +39,7 @@ public abstract class CloudBase extends CloudDriver {
 	}
 
 	public void publishUpdate(@Nonnull ServicePublishType publishType, @Nonnull ServiceInfo serviceInfo, @Nonnull SocketChannel... skipChannels) {
-		getSocketComponent().sendPacketSync(new ServiceInfoPublishPacket(publishType, serviceInfo), skipChannels);
+		getSocketComponent().sendPacketSync(new ServicePublishPacket(publishType, serviceInfo), skipChannels);
 	}
 
 	@Nonnull

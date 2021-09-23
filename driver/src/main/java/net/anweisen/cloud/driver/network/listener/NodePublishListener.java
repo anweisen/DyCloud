@@ -4,8 +4,8 @@ import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
-import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.ServicePublishType;
-import net.anweisen.cloud.driver.service.specific.ServiceInfo;
+import net.anweisen.cloud.driver.network.packet.def.NodePublishPacket.NodePublishType;
+import net.anweisen.cloud.driver.node.NodeInfo;
 
 import javax.annotation.Nonnull;
 
@@ -13,16 +13,15 @@ import javax.annotation.Nonnull;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class ServiceInfoPublishListener implements PacketListener {
+public class NodePublishListener implements PacketListener {
 
 	@Override
 	public void handlePacket(@Nonnull SocketChannel channel, @Nonnull Packet packet) throws Exception {
 
-		ServicePublishType publishType = packet.getBuffer().readEnumConstant(ServicePublishType.class);
-		ServiceInfo serviceInfo = packet.getBuffer().readObject(ServiceInfo.class);
+		NodePublishType publishType = packet.getBuffer().readEnumConstant(NodePublishType.class);
+		NodeInfo nodeInfo = packet.getBuffer().readObject(NodeInfo.class);
 
-		CloudDriver.getInstance().getServiceManager().handleServiceUpdate(publishType, serviceInfo);
+		CloudDriver.getInstance().getNodeManager().handleNodeUpdate(publishType, nodeInfo);
 
 	}
-
 }

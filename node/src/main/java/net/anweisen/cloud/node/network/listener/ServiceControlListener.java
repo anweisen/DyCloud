@@ -8,7 +8,7 @@ import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
 import net.anweisen.cloud.driver.network.packet.def.ServiceControlPacket.ServiceControlType;
-import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.ServicePublishType;
+import net.anweisen.cloud.driver.network.packet.def.ServicePublishPacket.ServicePublishType;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.service.config.ServiceTask;
 import net.anweisen.cloud.driver.service.specific.ServiceControlState;

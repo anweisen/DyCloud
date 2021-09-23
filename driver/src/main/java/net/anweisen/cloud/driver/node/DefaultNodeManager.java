@@ -4,7 +4,7 @@ import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.event.node.NodeConnectedEvent;
 import net.anweisen.cloud.driver.event.node.NodeDisconnectedEvent;
-import net.anweisen.cloud.driver.network.packet.def.NodeInfoPublishPacket.NodePublishType;
+import net.anweisen.cloud.driver.network.packet.def.NodePublishPacket.NodePublishType;
 
 import javax.annotation.Nonnull;
 

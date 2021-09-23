@@ -21,19 +21,19 @@ import net.anweisen.cloud.driver.console.HeaderPrinter;
 import net.anweisen.cloud.driver.cord.CordManager;
 import net.anweisen.cloud.driver.database.DatabaseManager;
 import net.anweisen.cloud.driver.database.remote.RemoteDatabaseManager;
-import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.SocketClient;
 import net.anweisen.cloud.driver.network.handler.SocketChannelClientHandler;
 import net.anweisen.cloud.driver.network.listener.*;
 import net.anweisen.cloud.driver.network.netty.client.NettySocketClient;
+import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketConstants;
 import net.anweisen.cloud.driver.network.packet.PacketListenerRegistry;
 import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket;
-import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket.AuthenticationType;
+import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket.AuthenticationPacketType;
 import net.anweisen.cloud.driver.network.packet.def.ModuleSystemPacket;
-import net.anweisen.cloud.driver.network.packet.def.ModuleSystemPacket.ModuleSystemRequestType;
+import net.anweisen.cloud.driver.network.packet.def.ModuleSystemPacket.ModuleSystemPacketType;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.node.NodeManager;
 import net.anweisen.cloud.driver.node.RemoteNodeManager;
@@ -59,7 +59,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.*;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -199,7 +200,7 @@ public final class CloudNode extends CloudBase {
 			.map(configs -> configs.isEmpty() ? null : configs.get(0))
 			.orElseThrow(() -> new IllegalStateException("Unable to retrieve ipam config of '" + config.getDockerNetworkMode() + "'"));
 
-		socketClient.sendPacket(new AuthenticationPacket(AuthenticationType.NODE, config.getIdentity(), config.getNodeName(), buffer -> {
+		socketClient.sendPacket(new AuthenticationPacket(AuthenticationPacketType.NODE, config.getIdentity(), config.getNodeName(), buffer -> {
 			buffer.writeString(ipamConfig.getGateway()).writeString(ipamConfig.getSubnet());
 		}));
 	}
@@ -207,8 +208,8 @@ public final class CloudNode extends CloudBase {
 	private void loadNetworkListeners(@Nonnull PacketListenerRegistry registry) {
 		logger.info("Registering network listeners..");
 
-		registry.addListener(PacketConstants.NODE_INFO_PUBLISH_CHANNEL, new NodeInfoPublishListener());
-		registry.addListener(PacketConstants.SERVICE_INFO_PUBLISH_CHANNEL, new ServiceInfoPublishListener());
+		registry.addListener(PacketConstants.NODE_INFO_PUBLISH_CHANNEL, new NodePublishListener());
+		registry.addListener(PacketConstants.SERVICE_INFO_PUBLISH_CHANNEL, new ServicePublishListener());
 		registry.addListener(PacketConstants.SERVICE_CONTROL_CHANNEL, new ServiceControlListener());
 		registry.addListener(PacketConstants.PLAYER_EVENT_CHANNEL, new PlayerEventListener());
 		registry.addListener(PacketConstants.PLAYER_REMOTE_MANAGER_CHANNEL, new PlayerRemoteManagerListener());
@@ -235,10 +236,10 @@ public final class CloudNode extends CloudBase {
 		logger.info("Requesting & downloading modules..");
 		SocketChannel channel = socketClient.getFirstChannel();
 
-		String[] names = channel.sendPacketQuery(new ModuleSystemPacket(ModuleSystemRequestType.GET_MODULES)).getBuffer().readStringArray();
+		String[] names = channel.sendPacketQuery(new ModuleSystemPacket(ModuleSystemPacketType.GET_MODULES)).getBuffer().readStringArray();
 		for (int i = 0; i < names.length; i++) {
 			logger.info("Downloading module {}..", names[i]);
-			InputStream input = channel.sendChunkedPacketQuery(new ModuleSystemPacket(ModuleSystemRequestType.GET_MODULE_JAR, i)).getBeforeTimeout(10, TimeUnit.SECONDS).getInputStream();
+			InputStream input = channel.sendChunkedPacketQuery(new ModuleSystemPacket(ModuleSystemPacketType.GET_MODULE_JAR, i)).getBeforeTimeout(10, TimeUnit.SECONDS).getInputStream();
 			Path file = moduleManager.getModulesDirectory().resolve(names[i]);
 			FileUtils.copy(input, Files.newOutputStream(file, StandardOpenOption.CREATE));
 			input.close();
@@ -247,7 +248,7 @@ public final class CloudNode extends CloudBase {
 		moduleManager.resolveModules();
 
 		for (int i = 0; i < names.length; i++) {
-			InputStream input = channel.sendChunkedPacketQuery(new ModuleSystemPacket(ModuleSystemRequestType.GET_MODULE_DATA_FOLDER, i)).getBeforeTimeout(10, TimeUnit.SECONDS).getInputStream();
+			InputStream input = channel.sendChunkedPacketQuery(new ModuleSystemPacket(ModuleSystemPacketType.GET_MODULE_DATA_FOLDER, i)).getBeforeTimeout(10, TimeUnit.SECONDS).getInputStream();
 			ModuleController module = moduleManager.getModules().get(i);
 			FileUtils.extract(input, module.getDataFolder());
 			input.close();

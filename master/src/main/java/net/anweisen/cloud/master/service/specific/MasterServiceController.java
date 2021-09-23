@@ -3,7 +3,7 @@ package net.anweisen.cloud.master.service.specific;
 import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.network.packet.def.ServiceControlPacket;
 import net.anweisen.cloud.driver.network.packet.def.ServiceControlPacket.ServiceControlType;
-import net.anweisen.cloud.driver.network.packet.def.ServiceInfoPublishPacket.ServicePublishType;
+import net.anweisen.cloud.driver.network.packet.def.ServicePublishPacket.ServicePublishType;
 import net.anweisen.cloud.driver.service.specific.ServiceControlState;
 import net.anweisen.cloud.driver.service.specific.ServiceController;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;

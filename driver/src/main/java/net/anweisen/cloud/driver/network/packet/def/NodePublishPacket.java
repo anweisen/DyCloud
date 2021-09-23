@@ -11,9 +11,9 @@ import javax.annotation.Nonnull;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class NodeInfoPublishPacket extends Packet {
+public class NodePublishPacket extends Packet {
 
-	public NodeInfoPublishPacket(@Nonnull NodePublishType publishType, @Nonnull NodeInfo info) {
+	public NodePublishPacket(@Nonnull NodePublishType publishType, @Nonnull NodeInfo info) {
 		super(PacketConstants.NODE_INFO_PUBLISH_CHANNEL, Buffer.create().writeEnumConstant(publishType).writeObject(info));
 	}
 

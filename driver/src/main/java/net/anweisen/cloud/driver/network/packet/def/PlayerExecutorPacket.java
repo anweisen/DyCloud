@@ -14,12 +14,12 @@ import java.util.function.Consumer;
  */
 public class PlayerExecutorPacket extends Packet {
 
-	public PlayerExecutorPacket(@Nonnull PlayerExecutorType type, @Nonnull UUID playerUniqueId, @Nonnull Consumer<? super Buffer> modifier) {
+	public PlayerExecutorPacket(@Nonnull PlayerExecutorPacketType type, @Nonnull UUID playerUniqueId, @Nonnull Consumer<? super Buffer> modifier) {
 		super(PacketConstants.PLAYER_EXECUTOR_CHANNEL, Buffer.create().writeEnumConstant(type).writeUUID(playerUniqueId));
 		modifier.accept(buffer);
 	}
 
-	public enum PlayerExecutorType {
+	public enum PlayerExecutorPacketType {
 		SEND_MESSAGE,
 		SEND_ACTIONBAR,
 		SEND_TITLE,
