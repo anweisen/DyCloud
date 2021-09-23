@@ -30,8 +30,8 @@ public interface GlobalConfig {
 	}
 
 	@Nonnull
-	default GlobalConfig setMaintenance(boolean on) {
-		return set("maintenance", on);
+	default GlobalConfig setMaintenance(boolean maintenance) {
+		return set("maintenance", maintenance);
 	}
 
 	@Nonnull
