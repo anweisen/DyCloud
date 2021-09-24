@@ -58,7 +58,7 @@ public abstract class DefaultPlayerExecutor implements PlayerExecutor {
 	}
 
 	@Override
-	public void connectToFallback() {
+	public void connectFallback() {
 		sendPacket(PlayerExecutorPacketType.CONNECT_FALLBACK, buffer -> {});
 	}
 

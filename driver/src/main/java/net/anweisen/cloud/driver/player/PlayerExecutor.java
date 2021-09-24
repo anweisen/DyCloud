@@ -92,7 +92,7 @@ public interface PlayerExecutor {
 	/**
 	 * Sends the player to a fallback server (Lobby) just like in the /hub command.
 	 */
-	void connectToFallback();
+	void connectFallback();
 
 	/**
 	 * Disconnects the player from the proxy.
