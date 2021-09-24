@@ -88,28 +88,29 @@ I would recommend you to use one of the **following cloud systems**:
 ❌ | Node Load Balancing
 ❌ | Auto Client Reconnect
 ✔️ | ServiceInfo publish
-🚧 | Basic Service Events
-🚧 | Service auto start (minCount & maxCount)
+✔️ | Basic Service Events
+🧪 | Service auto start (minCount & maxCount)
 🧪 | Shutdown mechanism
 ❌ | Template Cache
-🚧 | Proxy Bridge
-🧪 | Dynamic Proxy Server Registry
-🚧 | MultiProxy Cord
-🧪 | Lobby Balancing
+✔️ | Proxy Bridge
+🚧 | Proxy modules for Velocity
+✔️ | Dynamic Proxy Server Registry
+🧪 | MultiProxy Cord
+✔️ | Lobby Balancing
 ✔️ | Remote Database API
-❌ | Service Timeout (Crash detection) -> Delete -> Start new
+🧪 | Service Timeout (Crash detection) -> Delete -> Start new
 ❌ | Messenger System for Modules
-🚧 | Bukkit Bridge
+✔️ | Bukkit Bridge
 🚧 | Implement all driver functions for wrapper & node (remote)
 ❌ | Wrapper & Node to Master Logging
 ✔️ | Player Executor
-🧪 | Global Player Management
-🧪 | Permission System
-🚧 | Permission Chat & Tab Extension
+✔️ | Global Player Management
+✔️ | Permission System
+🧪 | Permission Chat & Tab Extension
 ✔️ | Module System (Master, Node?, Wrapper?)
 ✔️ | Module Copy
-🚧 | Notify Module
-🚧 | Synced Proxy Module
+✔️ | Notify Module
+✔️ | Synced Proxy Module
 ❌ | Cloud Commands
 ❌ | Service Screens
 ❌ | Message Translations
