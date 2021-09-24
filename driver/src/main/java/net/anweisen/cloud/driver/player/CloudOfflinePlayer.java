@@ -34,12 +34,17 @@ public interface CloudOfflinePlayer {
 
 	long getFirstLoginTime();
 
+	void setFirstLoginTime(long time);
+
 	long getLastOnlineTime();
 
-	void setLastOnlineTime(long lastOnlineTime);
+	void setLastOnlineTime(long time);
 
 	@Nonnull
 	PermissionData getStoredPermissionData();
+
+	@Nonnull
+	Document getProperties();
 
 	@Nonnull
 	default PermissionPlayer getPermissionPlayer() {
@@ -51,8 +56,9 @@ public interface CloudOfflinePlayer {
 		return CloudDriver.getInstance().getPlayerManager().getOnlinePlayerByUniqueId(getUniqueId());
 	}
 
-	@Nonnull
-	Document getProperties();
+	default boolean isOnline() {
+		return getOnlinePlayer() != null;
+	}
 
 	default void save() {
 		CloudDriver.getInstance().getPlayerManager().saveOfflinePlayer(this);

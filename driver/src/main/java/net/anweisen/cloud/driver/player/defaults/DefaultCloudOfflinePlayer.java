@@ -102,13 +102,18 @@ public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer, Serializab
 	}
 
 	@Override
+	public void setFirstLoginTime(long time) {
+		this.firstLogin = time;
+	}
+
+	@Override
 	public long getLastOnlineTime() {
 		return lastOnline;
 	}
 
 	@Override
-	public void setLastOnlineTime(long lastOnlineTime) {
-		this.lastOnline = lastOnlineTime;
+	public void setLastOnlineTime(long time) {
+		this.lastOnline = time;
 	}
 
 	@Nonnull

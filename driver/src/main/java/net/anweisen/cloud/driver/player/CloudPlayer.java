@@ -21,11 +21,6 @@ import java.util.UUID;
 public interface CloudPlayer extends CloudOfflinePlayer {
 
 	@Nonnull
-	default PlayerExecutor getExecutor() {
-		return CloudDriver.getInstance().getPlayerManager().getPlayerExecutor(getUniqueId());
-	}
-
-	@Nonnull
 	PlayerConnection getConnection();
 
 	@Nonnull
@@ -54,6 +49,18 @@ public interface CloudPlayer extends CloudOfflinePlayer {
 	Document getOnlineProperties();
 
 	void setOnlineProperties(@Nonnull Document properties);
+
+	@Nonnull
+	default PlayerExecutor getExecutor() {
+		return CloudDriver.getInstance().getPlayerManager().getPlayerExecutor(getUniqueId());
+	}
+
+	@Nonnull
+	@Override
+	@Deprecated
+	default CloudPlayer getOnlinePlayer() {
+		return this;
+	}
 
 	default void update() {
 		CloudDriver.getInstance().getPlayerManager().updateOnlinePlayer(this);

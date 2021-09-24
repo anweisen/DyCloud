@@ -106,13 +106,18 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 	}
 
 	@Override
+	public void setFirstLoginTime(long time) {
+		offlinePlayer.setFirstLoginTime(time);
+	}
+
+	@Override
 	public long getLastOnlineTime() {
 		return offlinePlayer.getLastOnlineTime();
 	}
 
 	@Override
-	public void setLastOnlineTime(long lastOnlineTime) {
-		offlinePlayer.setLastOnlineTime(lastOnlineTime);
+	public void setLastOnlineTime(long time) {
+		offlinePlayer.setLastOnlineTime(time);
 	}
 
 	@Nonnull
