@@ -44,30 +44,30 @@ I would recommend you to use one of the **following cloud systems**:
 - **Notify**: Allows the sending of service update messages to players <br>
 - **Proxy**: Allows the use of proxy systems & configs <br>
   - Tablist Replacements:
-    - ``{ping}``: The ping of the player provided by the proxy
-    - ``{name}``: The name of the player
-    - ``{server}``: The name of the server the player is currently on
-    - ``{proxy}``: The name of the proxy the player is connected to
-    - ``{node}``: The name of the proxy's node the player is connected to
-    - ``{group.name}``: The name of the player's highest group
-    - ``{group.color}``: The color of the player's highest group
-    - ``{group.display}``: The display name of the player's highest group
-    - ``{players.online}``: The count of online players on the network
-    - ``{players.max}``: The max count of player on the network defined in *global.json* as *maxPlayers*
+    - ``{ping}`` The ping of the player provided by the proxy
+    - ``{name}`` The name of the player
+    - ``{server}`` The name of the server the player is currently on
+    - ``{proxy}`` The name of the proxy the player is connected to
+    - ``{node}`` The name of the proxy's node the player is connected to
+    - ``{group.name}`` The name of the player's highest group
+    - ``{group.color}`` The color of the player's highest group
+    - ``{group.display}`` The display name of the player's highest group
+    - ``{players.online}`` The count of online players on the network
+    - ``{players.max}`` The max count of player on the network defined in *global.json* as *maxPlayers*
   - Motd Replacements:
-    - ``{proxy}``: The name of the proxy the player is pinging
-    - ``{node}``: The name of the proxy's node the player is pinging
-    - ``{players.online}``: The count of online players on the network
-    - ``{players.max}``: The max count of player on the network defined in *global.json* as *maxPlayers*
+    - ``{proxy}`` The name of the proxy the player is pinging
+    - ``{node}`` The name of the proxy's node the player is pinging
+    - ``{players.online}`` The count of online players on the network
+    - ``{players.max}`` The max count of player on the network defined in *global.json* as *maxPlayers*
 - **ChatTab**: Runtime module to enable the use of chat formatting & name tags
   - Message Replacements:
-    - ``{message}``: The message sent by the player
-    - ``{player.uuid}``: The uuid of the player
-    - ``{player.name}``: The name of the player
-    - ``{player.display}``: The display name of the player
-    - ``{group.name}``: The name of the player's highest group
-    - ``{group.color}``: The color of the player's highest group
-    - ``{group.display}``: The display name of the player's highest group
+    - ``{message}`` The message sent by the player
+    - ``{player.uuid}`` The uuid of the player
+    - ``{player.name}`` The name of the player
+    - ``{player.display}`` The display name of the player
+    - ``{group.name}`` The name of the player's highest group
+    - ``{group.color}`` The color of the player's highest group
+    - ``{group.display}`` The display name of the player's highest group
 
 ## Progress
 
