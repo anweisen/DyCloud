@@ -1,5 +1,6 @@
 package net.anweisen.cloud.driver.service.specific;
 
+import net.anweisen.cloud.driver.service.ServiceManager;
 import net.anweisen.utilities.common.concurrent.task.Task;
 
 import javax.annotation.Nonnull;
@@ -8,6 +9,10 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
+ *
+ * @see ServiceInfo#getController()
+ *
+ * @see ServiceManager#getController(ServiceInfo)
  */
 public interface ServiceController {
 

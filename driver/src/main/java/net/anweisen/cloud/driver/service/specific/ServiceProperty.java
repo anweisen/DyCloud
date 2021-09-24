@@ -14,6 +14,9 @@ import java.util.stream.Collectors;
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
+ *
+ * @see ServiceInfo#get(ServiceProperty)
+ * @see ServiceInfo#set(ServiceProperty, Object)
  */
 public interface ServiceProperty<T> {
 

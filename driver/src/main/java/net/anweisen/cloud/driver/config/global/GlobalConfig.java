@@ -44,8 +44,14 @@ public interface GlobalConfig {
 		return getRawData().getInstance(path, classOfT);
 	}
 
+	/**
+	 * Synchronizes all global config instances with the properties of this instance
+	 */
 	void update();
 
+	/**
+	 * Reloads this global config instance
+	 */
 	void fetch();
 
 }
