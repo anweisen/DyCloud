@@ -87,6 +87,7 @@ I would recommend you to use one of the **following cloud systems**:
 🚧 | Node Information Cycle & Timeout
 ❌ | Node Load Balancing
 ❌ | Auto Client Reconnect
+❌ | Encryption
 ✔️ | ServiceInfo publish
 ✔️ | Basic Service Events
 🧪 | Service auto start (minCount & maxCount)
