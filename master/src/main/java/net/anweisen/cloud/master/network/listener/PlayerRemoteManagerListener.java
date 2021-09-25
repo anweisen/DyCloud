@@ -6,7 +6,7 @@ import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
 import net.anweisen.cloud.driver.network.packet.def.PlayerRemoteManagerPacket.PlayerRemoteManagerPayload;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import net.anweisen.cloud.driver.player.CloudOfflinePlayer;
 import net.anweisen.cloud.driver.player.CloudPlayer;
@@ -26,37 +26,37 @@ public class PlayerRemoteManagerListener implements PacketListener, LoggingApiUs
 
 	@Override
 	public void handlePacket(@Nonnull SocketChannel channel, @Nonnull Packet packet) throws Exception {
-		Buffer buffer = packet.getBuffer();
+		PacketBuffer buffer = packet.getBuffer();
 		PlayerManager manager = CloudDriver.getInstance().getPlayerManager();
 
-		PlayerRemoteManagerPayload payload = buffer.readEnumConstant(PlayerRemoteManagerPayload.class);
+		PlayerRemoteManagerPayload payload = buffer.readEnum(PlayerRemoteManagerPayload.class);
 
 		switch (payload) {
 			case GET_REGISTERED_COUNT: {
 				debug("{}", payload);
 				long count = manager.getRegisteredPlayerCount();
-				channel.sendPacket(Packet.createResponseFor(packet, Buffer.create().writeLong(count)));
+				channel.sendPacket(Packet.createResponseFor(packet, Packet.newBuffer().writeLong(count)));
 				break;
 			}
 			case GET_REGISTERED_PLAYERS: {
 				debug("{}", payload);
 				@SuppressWarnings("unchecked")
 				Collection<? extends SerializableObject> players = (Collection<? extends SerializableObject>) (Collection<?>) manager.getRegisteredPlayers(); // Cannot cast directly to <? extends SerializableObject>
-				channel.sendPacket(Packet.createResponseFor(packet, Buffer.create().writeObjectCollection(players)));
+				channel.sendPacket(Packet.createResponseFor(packet, Packet.newBuffer().writeObjectCollection(players)));
 				break;
 			}
 			case GET_OFFLINE_PLAYER_BY_UUID: {
-				UUID uuid = buffer.readUUID();
+				UUID uuid = buffer.readUniqueId();
 				debug("{} -> {}", payload, uuid);
 				SerializableObject player = (SerializableObject) manager.getOfflinePlayerByUniqueId(uuid);
-				channel.sendPacket(Packet.createResponseFor(packet, Buffer.create().writeOptionalObject(player)));
+				channel.sendPacket(Packet.createResponseFor(packet, Packet.newBuffer().writeOptionalObject(player)));
 				break;
 			}
 			case GET_OFFLINE_PLAYER_BY_NAME: {
 				String name = buffer.readString();
 				debug("{} -> {}", payload, name);
 				SerializableObject player = (SerializableObject) manager.getOfflinePlayerByName(name);
-				channel.sendPacket(Packet.createResponseFor(packet, Buffer.create().writeOptionalObject(player)));
+				channel.sendPacket(Packet.createResponseFor(packet, Packet.newBuffer().writeOptionalObject(player)));
 				break;
 			}
 			case SAVE_OFFLINE_PLAYER: {
@@ -66,7 +66,7 @@ public class PlayerRemoteManagerListener implements PacketListener, LoggingApiUs
 				break;
 			}
 			case DELETE_OFFLINE_PLAYER: {
-				UUID uuid = buffer.readUUID();
+				UUID uuid = buffer.readUniqueId();
 				debug("{} -> {}", payload, uuid);
 				manager.deleteOfflinePlayer(uuid);
 				break;

@@ -8,7 +8,7 @@ import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
 import net.anweisen.cloud.driver.network.packet.def.PlayerEventPacket;
 import net.anweisen.cloud.driver.network.packet.def.PlayerEventPacket.PlayerEventPayload;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import net.anweisen.cloud.driver.player.CloudPlayer;
 import net.anweisen.cloud.driver.player.connection.DefaultPlayerConnection;
@@ -32,27 +32,27 @@ public class PlayerEventListener implements PacketListener, LoggingApiUser {
 	@Override
 	public synchronized void handlePacket(@Nonnull SocketChannel channel, @Nonnull Packet packet) throws Exception {
 		CloudMaster cloud = CloudMaster.getInstance();
-		Buffer buffer = packet.getBuffer();
+		PacketBuffer buffer = packet.getBuffer();
 
-		PlayerEventPayload payload = buffer.readEnumConstant(PlayerEventPayload.class);
+		PlayerEventPayload payload = buffer.readEnum(PlayerEventPayload.class);
 
 		CloudService service = cloud.getServiceManager().getServiceByChannel(channel);
 		Preconditions.checkNotNull(service, "Service from which a " + payload + " packet was received is not registered");
 		ServiceInfo serviceInfo = service.getInfo();
 
 		if (payload.getType() == ServiceType.PROXY) {
-			UUID playerUniqueId = buffer.readUUID();
+			UUID playerUniqueId = buffer.readUniqueId();
 			debug("{} '{}' -> {}", payload, serviceInfo.getName(), playerUniqueId);
 
 			switch (payload) {
 				case PROXY_LOGIN_REQUEST: {
 					CloudPlayer player = cloud.getPlayerManager().loginPlayer(
 						playerUniqueId, buffer.readString(), buffer.readObject(DefaultPlayerConnection.class), serviceInfo,
-						cancelReason -> channel.sendPacket(Packet.createResponseFor(packet, Buffer.create().writeOptionalObject(null).writeOptionalString(cancelReason)))
+						cancelReason -> channel.sendPacket(Packet.createResponseFor(packet, Packet.newBuffer().writeOptionalObject(null).writeOptionalString(cancelReason)))
 					);
 					if (player == null) return;
 
-					channel.sendPacket(Packet.createResponseFor(packet, Buffer.create().writeOptionalObject((SerializableObject) player).writeOptionalString(null)));
+					channel.sendPacket(Packet.createResponseFor(packet, Packet.newBuffer().writeOptionalObject((SerializableObject) player).writeOptionalString(null)));
 					cloud.getSocketComponent().sendPacket(PlayerEventPacket.forProxyLoginRequest(player), channel);
 					break;
 				}
@@ -69,7 +69,7 @@ public class PlayerEventListener implements PacketListener, LoggingApiUser {
 					break;
 				}
 				case PROXY_SERVER_CONNECT_REQUEST: {
-					UUID targetUniqueId = buffer.readUUID();
+					UUID targetUniqueId = buffer.readUniqueId();
 
 					CloudPlayer player = findPlayer(playerUniqueId);
 					ServiceInfo target = findService(targetUniqueId);
@@ -80,8 +80,8 @@ public class PlayerEventListener implements PacketListener, LoggingApiUser {
 					break;
 				}
 				case PROXY_SERVER_SWITCH: {
-					UUID fromUniqueId = buffer.readUUID();
-					UUID toUniqueId = buffer.readUUID();
+					UUID fromUniqueId = buffer.readUniqueId();
+					UUID toUniqueId = buffer.readUniqueId();
 
 					CloudPlayer player = findPlayer(playerUniqueId);
 					ServiceInfo from = findService(fromUniqueId);
@@ -110,7 +110,7 @@ public class PlayerEventListener implements PacketListener, LoggingApiUser {
 				}
 			}
 		} else if (payload.getType() == ServiceType.SERVER) {
-			UUID playerUniqueId = buffer.readUUID();
+			UUID playerUniqueId = buffer.readUniqueId();
 			debug("{} '{}' -> {}", payload, serviceInfo.getName(), playerUniqueId);
 
 			switch (payload) {
@@ -137,7 +137,7 @@ public class PlayerEventListener implements PacketListener, LoggingApiUser {
 				}
 			}
 		} else if (payload.getType() == null) {
-			UUID playerUniqueId = buffer.readUUID();
+			UUID playerUniqueId = buffer.readUniqueId();
 			debug("{} '{}' -> {}", payload, serviceInfo.getName(), playerUniqueId);
 			CloudPlayer player = findPlayer(playerUniqueId);
 

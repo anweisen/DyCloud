@@ -6,7 +6,6 @@ import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
 import net.anweisen.cloud.driver.network.packet.def.GlobalConfigPacket.GlobalConfigPayload;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 
 import javax.annotation.Nonnull;
 
@@ -18,11 +17,11 @@ public class GlobalConfigListener implements PacketListener {
 
 	@Override
 	public void handlePacket(@Nonnull SocketChannel channel, @Nonnull Packet packet) throws Exception {
-		GlobalConfigPayload payload = packet.getBuffer().readEnumConstant(GlobalConfigPayload.class);
+		GlobalConfigPayload payload = packet.getBuffer().readEnum(GlobalConfigPayload.class);
 		switch (payload) {
 			case FETCH: {
 				CloudDriver.getInstance().getLogger().debug("{} -> {}", CloudDriver.getInstance().getGlobalConfig().getRawData());
-				channel.sendPacket(Packet.createResponseFor(packet, Buffer.create().writeDocument(CloudDriver.getInstance().getGlobalConfig().getRawData())));
+				channel.sendPacket(Packet.createResponseFor(packet,Packet.newBuffer().writeDocument(CloudDriver.getInstance().getGlobalConfig().getRawData())));
 				break;
 			}
 			case UPDATE: {

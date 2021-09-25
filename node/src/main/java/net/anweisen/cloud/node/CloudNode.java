@@ -34,7 +34,6 @@ import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket;
 import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket.AuthenticationPayload;
 import net.anweisen.cloud.driver.network.packet.def.ModuleSystemPacket;
 import net.anweisen.cloud.driver.network.packet.def.ModuleSystemPacket.ModuleSystemPayload;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.node.NodeManager;
 import net.anweisen.cloud.driver.node.RemoteNodeManager;
 import net.anweisen.cloud.driver.player.PlayerManager;
@@ -259,7 +258,7 @@ public final class CloudNode extends CloudBase {
 	}
 
 	private void publishDataCycle() {
-		socketClient.sendPacket(new Packet(PacketConstants.NODE_DATA_CYCLE, Buffer.create().writeObject(NodeCycleData.current())));
+		socketClient.sendPacket(new Packet(PacketConstants.NODE_DATA_CYCLE, Packet.newBuffer().writeObject(NodeCycleData.current())));
 	}
 
 	@Override

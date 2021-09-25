@@ -9,7 +9,7 @@ import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
 import net.anweisen.cloud.driver.network.packet.def.ServiceControlPacket.ServiceControlPayload;
 import net.anweisen.cloud.driver.network.packet.def.ServicePublishPacket.ServicePublishPayload;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.service.config.ServiceTask;
 import net.anweisen.cloud.driver.service.specific.ServiceControlState;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
@@ -30,9 +30,9 @@ public class ServiceControlListener implements PacketListener, LoggingApiUser {
 	public void handlePacket(@Nonnull SocketChannel channel, @Nonnull Packet packet) throws Exception {
 		CloudNode cloud = CloudNode.getInstance();
 		DockerServiceActor actor = cloud.getServiceActor();
-		Buffer buffer = packet.getBuffer();
+		PacketBuffer buffer = packet.getBuffer();
 
-		ServiceControlPayload payload = buffer.readEnumConstant(ServiceControlPayload.class);
+		ServiceControlPayload payload = buffer.readEnum(ServiceControlPayload.class);
 
  		if (payload == ServiceControlPayload.CREATE) {
 		    ServiceInfo service = buffer.readObject(ServiceInfo.class);
@@ -44,11 +44,11 @@ public class ServiceControlListener implements PacketListener, LoggingApiUser {
 		    Preconditions.checkNotNull(task, "ServiceTask of service for action " + payload + " is null (" + service.getTaskName() + ")");
 
 		    actor.createServiceHere(service, task);
-			channel.sendPacket(Packet.createResponseFor(packet, Buffer.create().writeObject(service)));
+			channel.sendPacket(Packet.createResponseFor(packet, Packet.newBuffer().writeObject(service)));
 			return;
 	    }
 
-		UUID uuid = buffer.readUUID();
+		UUID uuid = buffer.readUniqueId();
 		ServiceInfo service = cloud.getServiceManager().getServiceInfoByUniqueId(uuid);
 		debug("{} -> {}", payload, service);
 		Preconditions.checkNotNull(service, "Service for action " + payload + " is null (" + uuid + ")");

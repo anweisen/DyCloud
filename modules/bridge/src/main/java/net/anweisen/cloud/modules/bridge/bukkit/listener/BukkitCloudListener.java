@@ -31,7 +31,7 @@ public class BukkitCloudListener {
 			.set(ServiceProperty.EXTRA, BridgeHelper.getExtra())
 			.set(ServiceProperty.MAX_PLAYERS, BridgeHelper.getMaxPlayers())
 			.set(ServiceProperty.ONLINE_PLAYERS, Bukkit.getOnlinePlayers().size())
-			.set(ServiceProperty.MESSAGING_CHANNELS, SimpleCollectionUtils.of(Bukkit.getMessenger().getIncomingChannels(), Bukkit.getMessenger().getOutgoingChannels()))
+			.set(ServiceProperty.MESSAGING_CHANNELS, SimpleCollectionUtils.setOf(Bukkit.getMessenger().getIncomingChannels(), Bukkit.getMessenger().getOutgoingChannels()))
 			.set(ServiceProperty.PLAYERS, Bukkit.getOnlinePlayers().stream().map(player -> {
 				return new PlayerInfo(player.getUniqueId(), player.getName());
 			}).collect(Collectors.toList()))

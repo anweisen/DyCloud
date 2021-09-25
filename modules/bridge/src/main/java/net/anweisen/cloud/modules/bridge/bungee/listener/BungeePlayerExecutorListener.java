@@ -5,7 +5,7 @@ import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
 import net.anweisen.cloud.driver.network.packet.def.PlayerExecutorPacket.PlayerExecutorPayload;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.player.chat.ChatText;
 import net.anweisen.cloud.driver.player.defaults.DefaultPlayerExecutor;
 import net.anweisen.cloud.modules.bridge.bungee.BungeeBridgeHelper;
@@ -30,10 +30,10 @@ public class BungeePlayerExecutorListener implements PacketListener, LoggingApiU
 
 	@Override
 	public void handlePacket(@Nonnull SocketChannel channel, @Nonnull Packet packet) throws Exception {
-		Buffer buffer = packet.getBuffer();
+		PacketBuffer buffer = packet.getBuffer();
 
-		PlayerExecutorPayload payload = buffer.readEnumConstant(PlayerExecutorPayload.class);
-		UUID playerUniqueId = buffer.readUUID();
+		PlayerExecutorPayload payload = buffer.readEnum(PlayerExecutorPayload.class);
+		UUID playerUniqueId = buffer.readUniqueId();
 		boolean global = playerUniqueId.equals(DefaultPlayerExecutor.GLOBAL_UUID);
 		ProxiedPlayer targetPlayer = ProxyServer.getInstance().getPlayer(playerUniqueId);
 		if (global && targetPlayer == null) return;

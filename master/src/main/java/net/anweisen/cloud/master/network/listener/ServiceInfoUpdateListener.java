@@ -18,7 +18,7 @@ public class ServiceInfoUpdateListener implements PacketListener {
 	@Override
 	public void handlePacket(@Nonnull SocketChannel channel, @Nonnull Packet packet) throws Exception {
 
-		ServicePublishPayload payload = packet.getBuffer().readEnumConstant(ServicePublishPayload.class);
+		ServicePublishPayload payload = packet.getBuffer().readEnum(ServicePublishPayload.class);
 		ServiceInfo info = packet.getBuffer().readObject(ServiceInfo.class);
 
 		CloudMaster cloud = CloudMaster.getInstance();

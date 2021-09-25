@@ -72,12 +72,12 @@ public class Packet {
 	}
 
 	@Nonnull
-	protected static PacketBuffer newBuffer() {
+	public static PacketBuffer newBuffer() {
 		return CloudDriver.getInstance().getSocketComponent().newPacketBuffer();
 	}
 
 	@Nonnull
-	protected static Document newDocument() {
+	public static Document newDocument() {
 		return Document.create();
 	}
 

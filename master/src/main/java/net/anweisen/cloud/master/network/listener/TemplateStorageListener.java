@@ -5,7 +5,7 @@ import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
 import net.anweisen.cloud.driver.network.packet.def.TemplateStoragePacket.TemplateStoragePayload;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.service.config.ServiceTemplate;
 import net.anweisen.cloud.driver.service.config.TemplateStorage;
 import net.anweisen.cloud.master.CloudMaster;
@@ -25,9 +25,9 @@ public class TemplateStorageListener implements PacketListener, LoggingApiUser {
 	@Override
 	public void handlePacket(@Nonnull SocketChannel channel, @Nonnull Packet packet) throws Exception {
 		CloudMaster cloud = CloudMaster.getInstance();
-		Buffer buffer = packet.getBuffer();
+		PacketBuffer buffer = packet.getBuffer();
 
-		TemplateStoragePayload payload = buffer.readEnumConstant(TemplateStoragePayload.class);
+		TemplateStoragePayload payload = buffer.readEnum(TemplateStoragePayload.class);
 		switch (payload) {
 			case LOAD_TEMPLATE_STREAM: {
 				ServiceTemplate template = buffer.readObject(ServiceTemplate.class);
@@ -45,14 +45,14 @@ public class TemplateStorageListener implements PacketListener, LoggingApiUser {
 			case GET_TEMPLATES: {
 				String name = buffer.readString();
 				TemplateStorage storage = cloud.getServiceConfigManager().getTemplateStorage(name);
-				channel.sendPacket(Packet.createResponseFor(packet, Buffer.create().writeObjectCollection(storage == null ? Collections.emptyList() : storage.getTemplates())));
+				channel.sendPacket(Packet.createResponseFor(packet, Packet.newBuffer().writeObjectCollection(storage == null ? Collections.emptyList() : storage.getTemplates())));
 				break;
 			}
 			case HAS_TEMPLATE: {
 				ServiceTemplate template = buffer.readObject(ServiceTemplate.class);
 				TemplateStorage storage = template.findStorage();
 				boolean has = storage != null && storage.hasTemplate(template);
-				channel.sendPacket(Packet.createResponseFor(packet, Buffer.create().writeBoolean(has)));
+				channel.sendPacket(Packet.createResponseFor(packet, Packet.newBuffer().writeBoolean(has)));
 				break;
 			}
 		}

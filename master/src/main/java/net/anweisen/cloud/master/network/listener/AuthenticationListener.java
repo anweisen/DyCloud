@@ -9,7 +9,7 @@ import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket.Authent
 import net.anweisen.cloud.driver.network.packet.def.AuthenticationResponsePacket;
 import net.anweisen.cloud.driver.network.packet.def.NodePublishPacket.NodePublishPayload;
 import net.anweisen.cloud.driver.network.packet.def.ServicePublishPacket.ServicePublishPayload;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.node.NodeInfo;
 import net.anweisen.cloud.master.CloudMaster;
 import net.anweisen.cloud.master.cord.CordServer;
@@ -31,10 +31,10 @@ public class AuthenticationListener implements PacketListener {
 	public void handlePacket(@Nonnull SocketChannel channel, @Nonnull Packet packet) throws Exception {
 		CloudMaster cloud = CloudMaster.getInstance();
 
-		Buffer buffer = packet.getBuffer();
+		PacketBuffer buffer = packet.getBuffer();
 
-		AuthenticationPayload payload = buffer.readEnumConstant(AuthenticationPayload.class);
-		UUID identity = buffer.readUUID();
+		AuthenticationPayload payload = buffer.readEnum(AuthenticationPayload.class);
+		UUID identity = buffer.readUniqueId();
 
 		cloud.getLogger().debug("Received authentication from {}: type={}", channel, payload);
 
@@ -100,7 +100,7 @@ public class AuthenticationListener implements PacketListener {
 			}
 
 			case SERVICE: {
-				UUID uniqueId = buffer.readUUID();
+				UUID uniqueId = buffer.readUniqueId();
 				CloudService service = cloud.getServiceManager().getServiceByUniqueId(uniqueId);
 				if (service == null) {
 					cloud.getLogger().warn("{} tried to register with unknown service '{}'", channel, uniqueId);

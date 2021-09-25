@@ -6,7 +6,7 @@ import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
 import net.anweisen.cloud.driver.network.packet.def.RemoteDatabaseActionPacket.DatabaseActionPayload;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.database.Order;
 import net.anweisen.utilities.database.SQLColumn;
@@ -33,13 +33,13 @@ public class RemoteDatabaseActionListener implements PacketListener {
 
 	@Override
 	public void handlePacket(@Nonnull SocketChannel channel, @Nonnull Packet packet) throws Exception {
-		Buffer buffer = packet.getBuffer();
+		PacketBuffer buffer = packet.getBuffer();
 
-		DatabaseActionPayload payload = buffer.readEnumConstant(DatabaseActionPayload.class);
+		DatabaseActionPayload payload = buffer.readEnum(DatabaseActionPayload.class);
 
 		if (payload.isSpecific()) {
 			String table = buffer.readString();
-			Document document = buffer.isReadable(1) ? buffer.readDocument() : null;
+			Document document = buffer.remaining() > 0 ? buffer.readDocument() : null;
 
 			switch (payload) {
 				case QUERY: {
@@ -48,7 +48,7 @@ public class RemoteDatabaseActionListener implements PacketListener {
 					applyOrder(document, action);
 					if (document.contains("select"))
 						action.select(document.getStringArray("select"));
-					channel.sendPacket(Packet.createResponseFor(packet, Buffer.create().writeDocumentCollection(action.execute().toList())));
+					channel.sendPacket(Packet.createResponseFor(packet, Packet.newBuffer().writeDocumentCollection(action.execute().toList())));
 					break;
 				}
 				case INSERT: {
@@ -79,7 +79,7 @@ public class RemoteDatabaseActionListener implements PacketListener {
 				}
 				case COUNT_ENTRIES:{
 					DatabaseCountEntries action = manager.getDatabase().countEntries(table);
-					channel.sendPacket(Packet.createResponseFor(packet, Buffer.create().writeLong(action.execute())));
+					channel.sendPacket(Packet.createResponseFor(packet, Packet.newBuffer().writeLong(action.execute())));
 				}
 				case CREATE_TABLE: {
 					SQLColumn[] columns = buffer.readObjectCollection(SerializableSQLColumn.class).stream().map(SerializableSQLColumn::getColumn).toArray(SQLColumn[]::new);
@@ -91,7 +91,7 @@ public class RemoteDatabaseActionListener implements PacketListener {
 			switch (payload) {
 				case LIST_TABLES: {
 					Collection<String> tables = manager.getDatabase().listTables().execute();
-					channel.sendPacket(Packet.createResponseFor(packet, Buffer.create().writeStringCollection(tables)));
+					channel.sendPacket(Packet.createResponseFor(packet, Packet.newBuffer().writeStringCollection(tables)));
 					break;
 				}
 			}
