@@ -3,7 +3,9 @@ package net.anweisen.cloud.driver.network;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListenerRegistry;
 import net.anweisen.cloud.driver.network.packet.PacketSender;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.concurrent.Executor;
@@ -38,5 +40,9 @@ public interface SocketComponent extends PacketSender {
 
 	@Nonnull
 	PacketListenerRegistry getListenerRegistry();
+
+	@Nonnull
+	@CheckReturnValue
+	PacketBuffer newPacketBuffer();
 
 }

@@ -1,12 +1,14 @@
 package net.anweisen.cloud.driver.network.netty.codec;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.network.netty.NettyUtils;
 import net.anweisen.cloud.driver.network.packet.Packet;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.netty.NettyPacketBuffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.utilities.common.config.Document;
 
 import javax.annotation.Nonnull;
@@ -28,7 +30,7 @@ public final class NettyPacketDecoder extends ByteToMessageDecoder {
 			int channel = NettyUtils.readVarInt(buffer);
 			UUID uniqueId = new UUID(buffer.readLong(), buffer.readLong());
 			Document header = readHeader(buffer);
-			Buffer packetBuffer = Buffer.wrap(NettyUtils.readByteArray(buffer, NettyUtils.readVarInt(buffer)));
+			PacketBuffer packetBuffer = new NettyPacketBuffer(Unpooled.wrappedBuffer(NettyUtils.readByteArray(buffer, NettyUtils.readVarInt(buffer))));
 
 			Packet packet = new Packet(channel, uniqueId, header, packetBuffer);
 			out.add(packet);

@@ -4,7 +4,7 @@ import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.network.listener.AuthenticationResponseListener;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketConstants;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import net.anweisen.cloud.driver.service.specific.ServiceType;
 import net.anweisen.utilities.common.collection.ArrayWalker;
@@ -26,7 +26,7 @@ public class AuthenticationResponsePacket extends Packet {
 		super(PacketConstants.AUTH_CHANNEL, Document.create().set("access", access).set("message", message));
 
 		if (access) {
-			buffer = Buffer.create();
+			buffer = newBuffer();
 			appendConfigProperties();
 		}
 	}
@@ -35,7 +35,7 @@ public class AuthenticationResponsePacket extends Packet {
 	public void appendConfigProperties() {
 		CloudDriver driver = CloudDriver.getInstance();
 
-		append(PropertySection.LOG_LEVEL, buffer -> buffer.writeEnumConstant(driver.getLogger().getMinLevel()));
+		append(PropertySection.LOG_LEVEL, buffer -> buffer.writeEnum(driver.getLogger().getMinLevel()));
 		append(PropertySection.TASKS, buffer -> buffer.writeObjectCollection(driver.getServiceConfigManager().getTasks()));
 		append(PropertySection.TEMPLATE_STORAGES, buffer -> buffer.writeStringCollection(driver.getServiceConfigManager().getTemplateStorageNames()));
 		append(PropertySection.SERVICES, buffer -> buffer.writeObjectCollection(driver.getServiceManager().getServiceInfos()));
@@ -45,13 +45,13 @@ public class AuthenticationResponsePacket extends Packet {
 		append(PropertySection.GLOBAL_CONFIG, buffer -> buffer.writeDocument(driver.getGlobalConfig().getRawData()));
 	}
 
-	private void append(@Nonnull PropertySection section, boolean condition, @Nonnull Consumer<? super Buffer> modifier) {
+	private void append(@Nonnull PropertySection section, boolean condition, @Nonnull Consumer<? super PacketBuffer> modifier) {
 		if (condition)
 			append(section, modifier);
 	}
 
-	private void append(@Nonnull PropertySection section, @Nonnull Consumer<? super Buffer> modifier) {
-		buffer.writeEnumConstant(section);
+	private void append(@Nonnull PropertySection section, @Nonnull Consumer<? super PacketBuffer> modifier) {
+		buffer.writeEnum(section);
 		modifier.accept(buffer);
 	}
 

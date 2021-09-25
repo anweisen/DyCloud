@@ -54,7 +54,7 @@ public class RemotePlayerManager extends DefaultPlayerManager implements Network
 	@Nonnull
 	@Override
 	protected Task<CloudOfflinePlayer> getOfflinePlayerByUniqueIdAsync0(@Nonnull UUID uniqueId) {
-		return sendPacketQueryAsync(new PlayerRemoteManagerPacket(PlayerRemoteManagerPayload.GET_OFFLINE_PLAYER_BY_UUID, buffer -> buffer.writeUUID(uniqueId)), buffer -> buffer.readOptionalObject(DefaultCloudOfflinePlayer.class));
+		return sendPacketQueryAsync(new PlayerRemoteManagerPacket(PlayerRemoteManagerPayload.GET_OFFLINE_PLAYER_BY_UUID, buffer -> buffer.writeUniqueId(uniqueId)), buffer -> buffer.readOptionalObject(DefaultCloudOfflinePlayer.class));
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class RemotePlayerManager extends DefaultPlayerManager implements Network
 
 	@Override
 	public void deleteOfflinePlayer(@Nonnull UUID playerUniqueId) {
-		sendPacket(new PlayerRemoteManagerPacket(PlayerRemoteManagerPayload.SAVE_OFFLINE_PLAYER, buffer -> buffer.writeUUID(playerUniqueId)));
+		sendPacket(new PlayerRemoteManagerPacket(PlayerRemoteManagerPayload.SAVE_OFFLINE_PLAYER, buffer -> buffer.writeUniqueId(playerUniqueId)));
 	}
 
 	@Override

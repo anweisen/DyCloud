@@ -2,7 +2,7 @@ package net.anweisen.cloud.driver.player.defaults;
 
 import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.CloudDriver;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import net.anweisen.cloud.driver.player.CloudOfflinePlayer;
 import net.anweisen.cloud.driver.player.CloudPlayer;
@@ -47,24 +47,24 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 	}
 
 	@Override
-	public void write(@Nonnull Buffer buffer) {
+	public void write(@Nonnull PacketBuffer buffer) {
 		buffer.writeObject(offlinePlayer);
 		buffer.writeObject(connection);
 		buffer.writeOptionalObject(settings);
-		buffer.writeUUID(proxy);
-		buffer.writeOptionalUUID(server);
+		buffer.writeUniqueId(proxy);
+		buffer.writeOptionalUniqueId(server);
 		buffer.writeLong(joinTime);
 		buffer.writeBoolean(online);
 		buffer.writeDocument(onlineProperties);
 	}
 
 	@Override
-	public void read(@Nonnull Buffer buffer) {
+	public void read(@Nonnull PacketBuffer buffer) {
 		offlinePlayer = buffer.readObject(DefaultCloudOfflinePlayer.class);
 		connection = buffer.readObject(DefaultPlayerConnection.class);
 		settings = buffer.readOptionalObject(DefaultPlayerSettings.class);
-		proxy = buffer.readUUID();
-		server = buffer.readOptionalUUID();
+		proxy = buffer.readUniqueId();
+		server = buffer.readOptionalUniqueId();
 		online = buffer.readBoolean();
 		joinTime = buffer.readLong();
 		onlineProperties = buffer.readDocument();

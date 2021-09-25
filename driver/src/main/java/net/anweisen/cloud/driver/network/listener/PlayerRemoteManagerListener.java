@@ -6,7 +6,7 @@ import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
 import net.anweisen.cloud.driver.network.packet.def.PlayerRemoteManagerPacket.PlayerRemoteManagerPayload;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.player.CloudPlayer;
 import net.anweisen.cloud.driver.player.defaults.DefaultCloudPlayer;
 import net.anweisen.cloud.driver.player.defaults.RemotePlayerManager;
@@ -22,9 +22,9 @@ public class PlayerRemoteManagerListener implements PacketListener {
 	@Override
 	public void handlePacket(@Nonnull SocketChannel channel, @Nonnull Packet packet) throws Exception {
 		CloudDriver cloud = CloudDriver.getInstance();
-		Buffer buffer = packet.getBuffer();
+		PacketBuffer buffer = packet.getBuffer();
 
-		PlayerRemoteManagerPayload payload = buffer.readEnumConstant(PlayerRemoteManagerPayload.class);
+		PlayerRemoteManagerPayload payload = buffer.readEnum(PlayerRemoteManagerPayload.class);
 		switch (payload) {
 			case UPDATE_ONLINE_PLAYER: {
 				RemotePlayerManager manager = (RemotePlayerManager) cloud.getPlayerManager();

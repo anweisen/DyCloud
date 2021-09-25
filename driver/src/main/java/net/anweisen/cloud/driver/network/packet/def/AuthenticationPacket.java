@@ -2,7 +2,7 @@ package net.anweisen.cloud.driver.network.packet.def;
 
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketConstants;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 
 import javax.annotation.Nonnull;
 import java.util.UUID;
@@ -14,13 +14,13 @@ import java.util.function.Consumer;
  */
 public class AuthenticationPacket extends Packet {
 
-	public AuthenticationPacket(@Nonnull AuthenticationPayload authenticationType, @Nonnull UUID identity, @Nonnull UUID id, @Nonnull Consumer<? super Buffer> modifier) {
-		super(PacketConstants.AUTH_CHANNEL, Buffer.create().writeEnumConstant(authenticationType).writeUUID(identity).writeUUID(id));
+	public AuthenticationPacket(@Nonnull AuthenticationPayload payload, @Nonnull UUID identity, @Nonnull UUID id, @Nonnull Consumer<? super PacketBuffer> modifier) {
+		super(PacketConstants.AUTH_CHANNEL, newBuffer().writeEnum(payload).writeUniqueId(identity).writeUniqueId(id));
 		modifier.accept(buffer);
 	}
 
-	public AuthenticationPacket(@Nonnull AuthenticationPayload authenticationType, @Nonnull UUID identity, @Nonnull String name, @Nonnull Consumer<? super Buffer> modifier) {
-		super(PacketConstants.AUTH_CHANNEL, Buffer.create().writeEnumConstant(authenticationType).writeUUID(identity).writeString(name));
+	public AuthenticationPacket(@Nonnull AuthenticationPayload payload, @Nonnull UUID identity, @Nonnull String name, @Nonnull Consumer<? super PacketBuffer> modifier) {
+		super(PacketConstants.AUTH_CHANNEL, newBuffer().writeEnum(payload).writeUniqueId(identity).writeString(name));
 		modifier.accept(buffer);
 	}
 

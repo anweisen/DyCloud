@@ -1,7 +1,7 @@
 package net.anweisen.cloud.driver.player.permission.impl;
 
 import com.google.common.base.Preconditions;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import net.anweisen.cloud.driver.player.permission.PermissionGroup;
 
@@ -56,8 +56,8 @@ public class DefaultPermissionGroup implements PermissionGroup, SerializableObje
 	}
 
 	@Override
-	public void write(@Nonnull Buffer buffer) {
-		buffer.writeUUID(uniqueId);
+	public void write(@Nonnull PacketBuffer buffer) {
+		buffer.writeUniqueId(uniqueId);
 		buffer.writeString(name);
 		buffer.writeString(color);
 		buffer.writeString(chatColor);
@@ -71,8 +71,8 @@ public class DefaultPermissionGroup implements PermissionGroup, SerializableObje
 	}
 
 	@Override
-	public void read(@Nonnull Buffer buffer) {
-		uniqueId = buffer.readUUID();
+	public void read(@Nonnull PacketBuffer buffer) {
+		uniqueId = buffer.readUniqueId();
 		name = buffer.readString();
 		color = buffer.readString();
 		chatColor = buffer.readString();

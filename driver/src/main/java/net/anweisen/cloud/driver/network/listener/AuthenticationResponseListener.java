@@ -7,7 +7,7 @@ import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
 import net.anweisen.cloud.driver.network.packet.def.AuthenticationResponsePacket;
 import net.anweisen.cloud.driver.network.packet.def.AuthenticationResponsePacket.PropertySection;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.player.defaults.DefaultCloudPlayer;
 import net.anweisen.cloud.driver.player.permission.impl.DefaultPermissionGroup;
 import net.anweisen.cloud.driver.service.config.RemoteTemplateStorage;
@@ -37,7 +37,7 @@ public class AuthenticationResponseListener implements PacketListener, LoggingAp
 	private SocketChannel channel;
 	private boolean result;
 	private String message;
-	private Buffer configs;
+	private PacketBuffer buffer;
 
 	public AuthenticationResponseListener(@Nonnull Lock lock, @Nonnull Condition condition) {
 		this.lock = lock;
@@ -55,7 +55,7 @@ public class AuthenticationResponseListener implements PacketListener, LoggingAp
 
 		result = header.getBoolean("access");
 		message = header.getString("message", "");
-		configs = packet.getBuffer();
+		buffer = packet.getBuffer();
 
 		try {
 			lock.lock();
@@ -78,23 +78,23 @@ public class AuthenticationResponseListener implements PacketListener, LoggingAp
 	 * @see AuthenticationResponsePacket#appendConfigProperties()
 	 */
 	public void readConfigProperties() {
-		readConfigProperties0(channel, configs);
+		readConfigProperties0(channel, buffer);
 	}
 
-	private void readConfigProperties0(@Nonnull SocketChannel channel, @Nonnull Buffer buffer) {
-		if (buffer.readableBytes() < 1) return;
+	private void readConfigProperties0(@Nonnull SocketChannel channel, @Nonnull PacketBuffer buffer) {
+		if (buffer.remaining() < 1) return;
 
-		PropertySection section = buffer.readEnumConstant(PropertySection.class);
+		PropertySection section = buffer.readEnum(PropertySection.class);
 		readConfigProperty(section, channel, buffer);
 		readConfigProperties0(channel, buffer);
 	}
 
-	private void readConfigProperty(@Nonnull PropertySection section, @Nonnull SocketChannel channel, @Nonnull Buffer buffer) {
+	private void readConfigProperty(@Nonnull PropertySection section, @Nonnull SocketChannel channel, @Nonnull PacketBuffer buffer) {
 		CloudDriver cloud = CloudDriver.getInstance();
 		cloud.getLogger().debug("=> PropertySection.{}", section);
 		switch (section) {
 			case LOG_LEVEL: {
-				cloud.getLogger().setMinLevel(buffer.readEnumConstant(LogLevel.class));
+				cloud.getLogger().setMinLevel(buffer.readEnum(LogLevel.class));
 				break;
 			}
 			case TASKS: {

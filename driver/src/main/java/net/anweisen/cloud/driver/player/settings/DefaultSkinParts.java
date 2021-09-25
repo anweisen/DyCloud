@@ -1,6 +1,6 @@
 package net.anweisen.cloud.driver.player.settings;
 
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 
 import javax.annotation.Nonnull;
@@ -27,7 +27,7 @@ public class DefaultSkinParts implements SkinParts, SerializableObject {
 	}
 
 	@Override
-	public void write(@Nonnull Buffer buffer) {
+	public void write(@Nonnull PacketBuffer buffer) {
 		buffer.writeBoolean(cape);
 		buffer.writeBoolean(jacket);
 		buffer.writeBoolean(leftSleeve);
@@ -38,7 +38,7 @@ public class DefaultSkinParts implements SkinParts, SerializableObject {
 	}
 
 	@Override
-	public void read(@Nonnull Buffer buffer) {
+	public void read(@Nonnull PacketBuffer buffer) {
 		cape = buffer.readBoolean();
 		jacket = buffer.readBoolean();
 		leftSleeve = buffer.readBoolean();

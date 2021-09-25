@@ -1,7 +1,7 @@
 package net.anweisen.cloud.driver.network.object;
 
 import com.google.common.base.Preconditions;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 
 import javax.annotation.CheckReturnValue;
@@ -102,13 +102,13 @@ public final class HostAndPort implements SerializableObject {
 	}
 
 	@Override
-	public void write(@Nonnull Buffer buffer) {
+	public void write(@Nonnull PacketBuffer buffer) {
 		buffer.writeString(host);
 		buffer.writeInt(port);
 	}
 
 	@Override
-	public void read(@Nonnull Buffer buffer) {
+	public void read(@Nonnull PacketBuffer buffer) {
 		host = buffer.readString();
 		port = buffer.readInt();
 	}

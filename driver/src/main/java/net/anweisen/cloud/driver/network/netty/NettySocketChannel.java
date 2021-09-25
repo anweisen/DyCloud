@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class NettyChannel implements SocketChannel {
+public class NettySocketChannel implements SocketChannel {
 
 	protected final HostAndPort serverAddress, clientAddress;
 	protected final boolean client;
@@ -34,7 +34,7 @@ public class NettyChannel implements SocketChannel {
 
 	protected SocketChannelHandler handler;
 
-	public NettyChannel(@Nonnull Channel channel, @Nullable SocketChannelHandler handler, @Nonnull HostAndPort serverAddress, @Nonnull HostAndPort clientAddress, boolean client) {
+	public NettySocketChannel(@Nonnull Channel channel, @Nullable SocketChannelHandler handler, @Nonnull HostAndPort serverAddress, @Nonnull HostAndPort clientAddress, boolean client) {
 		Preconditions.checkNotNull(channel, "Channel cannot be null");
 		Preconditions.checkNotNull(serverAddress, "ServerAddress cannot be null");
 		Preconditions.checkNotNull(clientAddress, "ClientAddress cannot be null");

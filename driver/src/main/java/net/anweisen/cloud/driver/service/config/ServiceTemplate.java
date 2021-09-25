@@ -1,7 +1,7 @@
 package net.anweisen.cloud.driver.service.config;
 
 import net.anweisen.cloud.driver.CloudDriver;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 
 import javax.annotation.Nonnull;
@@ -31,13 +31,13 @@ public final class ServiceTemplate implements SerializableObject {
 	}
 
 	@Override
-	public void write(@Nonnull Buffer buffer) {
+	public void write(@Nonnull PacketBuffer buffer) {
 		buffer.writeString(storage);
 		buffer.writeString(name);
 	}
 
 	@Override
-	public void read(@Nonnull Buffer buffer) {
+	public void read(@Nonnull PacketBuffer buffer) {
 		storage = buffer.readString();
 		name = buffer.readString();
 	}

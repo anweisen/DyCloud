@@ -2,7 +2,7 @@ package net.anweisen.cloud.base.node;
 
 import com.sun.management.OperatingSystemMXBean;
 import net.anweisen.cloud.driver.CloudDriver;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 
 import javax.annotation.Nonnull;
@@ -52,7 +52,7 @@ public final class NodeCycleData implements SerializableObject {
 	}
 
 	@Override
-	public void write(@Nonnull Buffer buffer) {
+	public void write(@Nonnull PacketBuffer buffer) {
 		buffer.writeFloat(cpuUsage);
 		buffer.writeVarInt(cores);
 		buffer.writeVarLong(maxRam);
@@ -61,7 +61,7 @@ public final class NodeCycleData implements SerializableObject {
 	}
 
 	@Override
-	public void read(@Nonnull Buffer buffer) {
+	public void read(@Nonnull PacketBuffer buffer) {
 		cpuUsage = buffer.readFloat();
 		cores = buffer.readVarInt();
 		maxRam = buffer.readVarInt();

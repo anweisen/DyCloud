@@ -2,13 +2,13 @@ package net.anweisen.cloud.master.network.listener;
 
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
-import net.anweisen.cloud.driver.network.packet.PacketConstants;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
 import net.anweisen.cloud.driver.network.packet.def.PlayerExecutorPacket.PlayerExecutorPayload;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.player.CloudPlayer;
+import net.anweisen.cloud.driver.player.PlayerExecutor;
+import net.anweisen.cloud.driver.player.chat.ChatText;
 import net.anweisen.cloud.master.CloudMaster;
-import net.anweisen.cloud.master.service.specific.CloudService;
 
 import javax.annotation.Nonnull;
 import java.util.UUID;
@@ -21,15 +21,36 @@ public class PlayerExecutorListener implements PacketListener {
 
 	@Override
 	public void handlePacket(@Nonnull SocketChannel channel, @Nonnull Packet packet) throws Exception {
-		Buffer buffer = packet.getBuffer();
+		PacketBuffer buffer = packet.getBuffer();
 
-		PlayerExecutorPayload payload = buffer.readEnumConstant(PlayerExecutorPayload.class);
-		UUID playerUniqueId = buffer.readUUID();
+		PlayerExecutorPayload payload = buffer.readEnum(PlayerExecutorPayload.class);
+		UUID playerUniqueId = buffer.readUniqueId();
 
-		// TODO check and maybe respond
 		CloudPlayer player = CloudMaster.getInstance().getPlayerManager().getOnlinePlayerByUniqueId(playerUniqueId);
-		CloudService proxyService = CloudMaster.getInstance().getServiceManager().getServiceByUniqueId(player.getProxy().getUniqueId());
-		proxyService.getChannel().sendPacket(new Packet(PacketConstants.PLAYER_EXECUTOR_CHANNEL, buffer.resetReaderIndex().retain()));
+		PlayerExecutor executor = player.getExecutor();
+
+		switch (payload) {
+			case SEND_MESSAGE:
+				executor.sendMessage(buffer.readOptionalString(), buffer.readObjectArray(ChatText.class));
+				return;
+			case SEND_ACTIONBAR:
+				executor.sendActionbar(buffer.readString());
+				return;
+			case SEND_TITLE:
+				executor.sendTitle(buffer.readString(), buffer.readString(), buffer.readVarInt(), buffer.readVarInt(), buffer.readVarInt());
+				return;
+			case CONNECT_SERVER:
+				executor.connect(buffer.readString());
+				return;
+			case CONNECT_FALLBACK:
+				executor.connectFallback();
+				return;
+			case DISCONNECT:
+				executor.disconnect(buffer.readString());
+				return;
+			default:
+				throw new IllegalStateException("Unrecognized PlayerExecutorPayload." + payload);
+		}
 
 	}
 

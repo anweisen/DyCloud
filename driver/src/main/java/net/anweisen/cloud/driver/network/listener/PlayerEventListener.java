@@ -7,7 +7,7 @@ import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
 import net.anweisen.cloud.driver.network.packet.def.PlayerEventPacket.PlayerEventPayload;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.player.CloudPlayer;
 import net.anweisen.cloud.driver.player.defaults.DefaultCloudPlayer;
 import net.anweisen.cloud.driver.player.settings.DefaultPlayerSettings;
@@ -26,9 +26,9 @@ public class PlayerEventListener implements PacketListener {
 	@Override
 	public void handlePacket(@Nonnull SocketChannel channel, @Nonnull Packet packet) throws Exception {
 		CloudDriver cloud = CloudDriver.getInstance();
-		Buffer buffer = packet.getBuffer();
+		PacketBuffer buffer = packet.getBuffer();
 
-		PlayerEventPayload payload = buffer.readEnumConstant(PlayerEventPayload.class);
+		PlayerEventPayload payload = buffer.readEnum(PlayerEventPayload.class);
 
 		if (payload == PlayerEventPayload.PROXY_LOGIN_REQUEST) {
 			CloudPlayer player = buffer.readObject(DefaultCloudPlayer.class);
@@ -37,11 +37,11 @@ public class PlayerEventListener implements PacketListener {
 			return;
 		}
 
-		UUID uuid = buffer.readUUID();
+		UUID uuid = buffer.readUniqueId();
 		CloudPlayer player = cloud.getPlayerManager().getOnlinePlayerByUniqueId(uuid);
 
 		if (payload == PlayerEventPayload.SERVER_DISCONNECT) {
-			ServiceInfo service = findService(buffer.readUUID());
+			ServiceInfo service = findService(buffer.readUniqueId());
 			cloud.getEventManager().callEvent(new PlayerServerDisconnectEvent(player, service, uuid));
 			return;
 		}
@@ -55,13 +55,13 @@ public class PlayerEventListener implements PacketListener {
 				break;
 			}
 			case PROXY_SERVER_CONNECT_REQUEST: {
-				ServiceInfo service = findService(buffer.readUUID());
+				ServiceInfo service = findService(buffer.readUniqueId());
 				cloud.getEventManager().callEvent(new PlayerProxyServerConnectRequestEvent(player, service));
 				break;
 			}
 			case PROXY_SERVER_SWITCH: {
-				ServiceInfo from = findService(buffer.readUUID());
-				ServiceInfo to = findService(buffer.readUUID());
+				ServiceInfo from = findService(buffer.readUniqueId());
+				ServiceInfo to = findService(buffer.readUniqueId());
 				player.setCurrentServer(to.getUniqueId());
 				cloud.getEventManager().callEvent(new PlayerProxyServerSwitchEvent(player, from, to));
 				break;
@@ -73,12 +73,12 @@ public class PlayerEventListener implements PacketListener {
 				break;
 			}
 			case SERVER_LOGIN_SUCCESS: {
-				ServiceInfo service = findService(buffer.readUUID());
+				ServiceInfo service = findService(buffer.readUniqueId());
 				cloud.getEventManager().callEvent(new PlayerServerLoginSuccessEvent(player, service));
 				break;
 			}
 			case SERVER_LOGIN_REQUEST: {
-				ServiceInfo service = findService(buffer.readUUID());
+				ServiceInfo service = findService(buffer.readUniqueId());
 				cloud.getEventManager().callEvent(new PlayerServerLoginRequestEvent(player, service));
 				break;
 			}

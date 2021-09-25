@@ -3,7 +3,7 @@ package net.anweisen.cloud.driver.network;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.chunk.ChunkedQueryResponse;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.utilities.common.concurrent.task.Task;
 import net.anweisen.utilities.common.config.Document;
 
@@ -52,7 +52,7 @@ public interface NetworkingApiUser {
 	}
 
 	@Nonnull
-	default <R> Task<R> sendPacketQueryAsync(@Nonnull Packet packet, @Nonnull Function<? super Buffer, ? extends R> mapper) {
+	default <R> Task<R> sendPacketQueryAsync(@Nonnull Packet packet, @Nonnull Function<? super PacketBuffer, ? extends R> mapper) {
 		return getTargetChannel().sendPacketQueryAsync(packet).map(response -> mapper.apply(response.getBuffer()));
 	}
 

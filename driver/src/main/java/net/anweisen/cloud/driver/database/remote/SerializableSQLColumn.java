@@ -1,6 +1,6 @@
 package net.anweisen.cloud.driver.database.remote;
 
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import net.anweisen.utilities.database.SQLColumn;
 
@@ -22,14 +22,14 @@ public class SerializableSQLColumn implements SerializableObject {
 	}
 
 	@Override
-	public void write(@Nonnull Buffer buffer) {
+	public void write(@Nonnull PacketBuffer buffer) {
 		buffer.writeString(column.getName());
 		buffer.writeString(column.getType());
 		buffer.writeOptionalString(column.getParam());
 	}
 
 	@Override
-	public void read(@Nonnull Buffer buffer) {
+	public void read(@Nonnull PacketBuffer buffer) {
 		column = new SQLColumn(
 			buffer.readString(),
 			buffer.readString(),

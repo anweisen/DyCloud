@@ -7,10 +7,10 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
-import net.anweisen.cloud.driver.network.DefaultSocketComponent;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.SocketClient;
 import net.anweisen.cloud.driver.network.handler.SocketChannelHandler;
+import net.anweisen.cloud.driver.network.netty.NettyDefaultSocketComponent;
 import net.anweisen.cloud.driver.network.netty.NettyUtils;
 import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.utilities.common.collection.WrappedException;
@@ -24,7 +24,7 @@ import java.util.function.Supplier;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class NettySocketClient extends DefaultSocketComponent implements SocketClient, LoggingApiUser {
+public class NettySocketClient extends NettyDefaultSocketComponent implements SocketClient, LoggingApiUser {
 
 	private static final int CONNECTION_TIMEOUT_MILLIS = 5_000;
 

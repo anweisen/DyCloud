@@ -1,7 +1,7 @@
 package net.anweisen.cloud.driver.service.config;
 
 import net.anweisen.cloud.driver.CloudDriver;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import net.anweisen.cloud.driver.service.specific.ServiceEnvironment;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
@@ -48,9 +48,9 @@ public final class ServiceTask implements SerializableObject {
 	}
 
 	@Override
-	public void write(@Nonnull Buffer buffer) {
+	public void write(@Nonnull PacketBuffer buffer) {
 		buffer.writeString(name);
-		buffer.writeEnumConstant(environment);
+		buffer.writeEnum(environment);
 		buffer.writeInt(javaVersion);
 		buffer.writeInt(startOrder);
 		buffer.writeBoolean(fallback);
@@ -66,9 +66,9 @@ public final class ServiceTask implements SerializableObject {
 	}
 
 	@Override
-	public void read(@Nonnull Buffer buffer) {
+	public void read(@Nonnull PacketBuffer buffer) {
 		name = buffer.readString();
-		environment = buffer.readEnumConstant(ServiceEnvironment.class);
+		environment = buffer.readEnum(ServiceEnvironment.class);
 		javaVersion = buffer.readInt();
 		startOrder = buffer.readInt();
 		fallback = buffer.readBoolean();

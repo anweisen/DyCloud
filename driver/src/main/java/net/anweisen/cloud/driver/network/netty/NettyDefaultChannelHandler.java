@@ -14,9 +14,9 @@ import java.io.IOException;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public abstract class NettyChannelHandler extends SimpleChannelInboundHandler<Packet> implements LoggingApiUser {
+public abstract class NettyDefaultChannelHandler extends SimpleChannelInboundHandler<Packet> implements LoggingApiUser {
 
-	protected NettyChannel channel;
+	protected NettySocketChannel channel;
 
 	@Override
 	public void channelInactive(@Nonnull ChannelHandlerContext context) throws Exception {

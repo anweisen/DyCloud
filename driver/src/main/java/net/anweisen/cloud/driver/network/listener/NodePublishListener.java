@@ -18,7 +18,7 @@ public class NodePublishListener implements PacketListener {
 	@Override
 	public void handlePacket(@Nonnull SocketChannel channel, @Nonnull Packet packet) throws Exception {
 
-		NodePublishPayload payload = packet.getBuffer().readEnumConstant(NodePublishPayload.class);
+		NodePublishPayload payload = packet.getBuffer().readEnum(NodePublishPayload.class);
 		NodeInfo nodeInfo = packet.getBuffer().readObject(NodeInfo.class);
 
 		CloudDriver.getInstance().getNodeManager().handleNodeUpdate(payload, nodeInfo);

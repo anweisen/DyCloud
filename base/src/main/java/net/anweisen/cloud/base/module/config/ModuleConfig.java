@@ -1,6 +1,6 @@
 package net.anweisen.cloud.base.module.config;
 
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 
 import javax.annotation.Nonnull;
@@ -31,7 +31,7 @@ public final class ModuleConfig implements SerializableObject {
 	}
 
 	@Override
-	public void write(@Nonnull Buffer buffer) {
+	public void write(@Nonnull PacketBuffer buffer) {
 		buffer.writeString(name);
 		buffer.writeString(author);
 		buffer.writeString(description);
@@ -39,12 +39,12 @@ public final class ModuleConfig implements SerializableObject {
 		buffer.writeString(mainClass);
 		buffer.writeOptionalString(website);
 		buffer.writeStringArray(depends);
-		buffer.writeEnumConstant(copyType);
-		buffer.writeEnumConstant(environment);
+		buffer.writeEnum(copyType);
+		buffer.writeEnum(environment);
 	}
 
 	@Override
-	public void read(@Nonnull Buffer buffer) {
+	public void read(@Nonnull PacketBuffer buffer) {
 		name = buffer.readString();
 		author = buffer.readString();
 		description = buffer.readString();
@@ -52,8 +52,8 @@ public final class ModuleConfig implements SerializableObject {
 		mainClass = buffer.readString();
 		website = buffer.readOptionalString();
 		depends = buffer.readStringArray();
-		copyType = buffer.readEnumConstant(ModuleCopyType.class);
-		environment = buffer.readEnumConstant(ModuleEnvironment.class);
+		copyType = buffer.readEnum(ModuleCopyType.class);
+		environment = buffer.readEnum(ModuleEnvironment.class);
 	}
 
 	@Nonnull

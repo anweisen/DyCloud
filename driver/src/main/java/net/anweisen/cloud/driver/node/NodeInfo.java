@@ -2,7 +2,7 @@ package net.anweisen.cloud.driver.node;
 
 import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.network.object.IpRange;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 
 import javax.annotation.Nonnull;
@@ -30,7 +30,7 @@ public final class NodeInfo implements SerializableObject {
 	}
 
 	@Override
-	public void write(@Nonnull Buffer buffer) {
+	public void write(@Nonnull PacketBuffer buffer) {
 		buffer.writeString(name);
 		buffer.writeObject(address);
 		buffer.writeString(gateway);
@@ -39,7 +39,7 @@ public final class NodeInfo implements SerializableObject {
 	}
 
 	@Override
-	public void read(@Nonnull Buffer buffer) {
+	public void read(@Nonnull PacketBuffer buffer) {
 		name = buffer.readString();
 		address = buffer.readObject(HostAndPort.class);
 		gateway = buffer.readString();

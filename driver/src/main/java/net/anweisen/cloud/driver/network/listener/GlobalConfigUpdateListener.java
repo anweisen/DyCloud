@@ -18,7 +18,7 @@ public class GlobalConfigUpdateListener implements PacketListener {
 
 	@Override
 	public void handlePacket(@Nonnull SocketChannel channel, @Nonnull Packet packet) throws Exception {
-		GlobalConfigPayload payload = packet.getBuffer().readEnumConstant(GlobalConfigPayload.class);
+		GlobalConfigPayload payload = packet.getBuffer().readEnum(GlobalConfigPayload.class);
 		switch (payload) {
 			case UPDATE: {
 				Document rawData = packet.getBuffer().readDocument();

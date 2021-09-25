@@ -3,7 +3,7 @@ package net.anweisen.cloud.driver.network.packet.def;
 import net.anweisen.cloud.driver.event.player.*;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketConstants;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import net.anweisen.cloud.driver.player.CloudPlayer;
 import net.anweisen.cloud.driver.player.connection.PlayerConnection;
@@ -22,7 +22,7 @@ import java.util.function.Consumer;
 public class PlayerEventPacket extends Packet {
 
 	public static PlayerEventPacket forProxyLoginRequest(@Nonnull UUID playerUniqueId, @Nonnull String playerName, @Nonnull PlayerConnection playerConnection) {
-		return new PlayerEventPacket(PlayerEventPayload.PROXY_LOGIN_REQUEST, buffer -> buffer.writeUUID(playerUniqueId).writeString(playerName).writeObject((SerializableObject) playerConnection));
+		return new PlayerEventPacket(PlayerEventPayload.PROXY_LOGIN_REQUEST, buffer -> buffer.writeUniqueId(playerUniqueId).writeString(playerName).writeObject((SerializableObject) playerConnection));
 	}
 
 	public static PlayerEventPacket forProxyLoginRequest(@Nonnull CloudPlayer player) {
@@ -30,51 +30,51 @@ public class PlayerEventPacket extends Packet {
 	}
 
 	public static PlayerEventPacket forProxyLoginSuccess(@Nonnull UUID playerUniqueId, @Nonnull PlayerSettings playerSettings) {
-		return new PlayerEventPacket(PlayerEventPayload.PROXY_LOGIN_SUCCESS, buffer -> buffer.writeUUID(playerUniqueId).writeObject((SerializableObject) playerSettings));
+		return new PlayerEventPacket(PlayerEventPayload.PROXY_LOGIN_SUCCESS, buffer -> buffer.writeUniqueId(playerUniqueId).writeObject((SerializableObject) playerSettings));
 	}
 
 	public static PlayerEventPacket forProxyServerConnectRequest(@Nonnull UUID playerUniqueId, @Nonnull UUID targetUniqueId) {
-		return new PlayerEventPacket(PlayerEventPayload.PROXY_SERVER_CONNECT_REQUEST, buffer -> buffer.writeUUID(playerUniqueId).writeUUID(targetUniqueId));
+		return new PlayerEventPacket(PlayerEventPayload.PROXY_SERVER_CONNECT_REQUEST, buffer -> buffer.writeUniqueId(playerUniqueId).writeUniqueId(targetUniqueId));
 	}
 
 	public static PlayerEventPacket forProxyServerSwitch(@Nonnull UUID playerUniqueId, @Nonnull UUID fromUniqueId, @Nonnull UUID toUniqueId) {
-		return new PlayerEventPacket(PlayerEventPayload.PROXY_SERVER_SWITCH, buffer -> buffer.writeUUID(playerUniqueId).writeUUID(fromUniqueId).writeUUID(toUniqueId));
+		return new PlayerEventPacket(PlayerEventPayload.PROXY_SERVER_SWITCH, buffer -> buffer.writeUniqueId(playerUniqueId).writeUniqueId(fromUniqueId).writeUniqueId(toUniqueId));
 	}
 
 	public static PlayerEventPacket forProxyDisconnect(@Nonnull UUID playerUniqueId) {
-		return new PlayerEventPacket(PlayerEventPayload.PROXY_DISCONNECT, buffer -> buffer.writeUUID(playerUniqueId));
+		return new PlayerEventPacket(PlayerEventPayload.PROXY_DISCONNECT, buffer -> buffer.writeUniqueId(playerUniqueId));
 	}
 
 	public static PlayerEventPacket forServerLoginRequest(@Nonnull UUID playerUniqueId) {
-		return new PlayerEventPacket(PlayerEventPayload.SERVER_LOGIN_REQUEST, buffer -> buffer.writeUUID(playerUniqueId));
+		return new PlayerEventPacket(PlayerEventPayload.SERVER_LOGIN_REQUEST, buffer -> buffer.writeUniqueId(playerUniqueId));
 	}
 
 	public static PlayerEventPacket forServerLoginRequest(@Nonnull UUID playerUniqueId, @Nonnull UUID serviceUniqueId) {
-		return new PlayerEventPacket(PlayerEventPayload.SERVER_LOGIN_REQUEST, buffer -> buffer.writeUUID(playerUniqueId).writeUUID(serviceUniqueId));
+		return new PlayerEventPacket(PlayerEventPayload.SERVER_LOGIN_REQUEST, buffer -> buffer.writeUniqueId(playerUniqueId).writeUniqueId(serviceUniqueId));
 	}
 
 	public static PlayerEventPacket forServerLoginSuccess(@Nonnull UUID playerUniqueId) {
-		return new PlayerEventPacket(PlayerEventPayload.SERVER_LOGIN_SUCCESS, buffer -> buffer.writeUUID(playerUniqueId));
+		return new PlayerEventPacket(PlayerEventPayload.SERVER_LOGIN_SUCCESS, buffer -> buffer.writeUniqueId(playerUniqueId));
 	}
 
 	public static PlayerEventPacket forServerLoginSuccess(@Nonnull UUID playerUniqueId, @Nonnull UUID serviceUniqueId) {
-		return new PlayerEventPacket(PlayerEventPayload.SERVER_LOGIN_SUCCESS, buffer -> buffer.writeUUID(playerUniqueId).writeUUID(serviceUniqueId));
+		return new PlayerEventPacket(PlayerEventPayload.SERVER_LOGIN_SUCCESS, buffer -> buffer.writeUniqueId(playerUniqueId).writeUniqueId(serviceUniqueId));
 	}
 
 	public static PlayerEventPacket forServerDisconnect(@Nonnull UUID playerUniqueId) {
-		return new PlayerEventPacket(PlayerEventPayload.SERVER_DISCONNECT, buffer -> buffer.writeUUID(playerUniqueId));
+		return new PlayerEventPacket(PlayerEventPayload.SERVER_DISCONNECT, buffer -> buffer.writeUniqueId(playerUniqueId));
 	}
 
 	public static PlayerEventPacket forServerDisconnect(@Nonnull UUID playerUniqueId, @Nonnull UUID serviceUniqueId) {
-		return new PlayerEventPacket(PlayerEventPayload.SERVER_DISCONNECT, buffer -> buffer.writeUUID(playerUniqueId).writeUUID(serviceUniqueId));
+		return new PlayerEventPacket(PlayerEventPayload.SERVER_DISCONNECT, buffer -> buffer.writeUniqueId(playerUniqueId).writeUniqueId(serviceUniqueId));
 	}
 
 	public static PlayerEventPacket forPlayerSettingsChange(@Nonnull UUID playerUniqueId, @Nonnull PlayerSettings settings) {
-		return new PlayerEventPacket(PlayerEventPayload.PLAYER_SETTINGS_CHANGE, buffer -> buffer.writeUUID(playerUniqueId).writeObject((SerializableObject) settings));
+		return new PlayerEventPacket(PlayerEventPayload.PLAYER_SETTINGS_CHANGE, buffer -> buffer.writeUniqueId(playerUniqueId).writeObject((SerializableObject) settings));
 	}
 
-	protected PlayerEventPacket(@Nonnull PlayerEventPayload payload, @Nonnull Consumer<? super Buffer> modifier) {
-		super(PacketConstants.PLAYER_EVENT_CHANNEL, Buffer.create().writeEnumConstant(payload));
+	protected PlayerEventPacket(@Nonnull PlayerEventPayload payload, @Nonnull Consumer<? super PacketBuffer> modifier) {
+		super(PacketConstants.PLAYER_EVENT_CHANNEL, newBuffer().writeEnum(payload));
 		modifier.accept(buffer);
 	}
 

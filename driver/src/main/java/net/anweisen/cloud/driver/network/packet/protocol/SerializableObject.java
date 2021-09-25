@@ -8,8 +8,8 @@ import javax.annotation.Nonnull;
  */
 public interface SerializableObject {
 
-	void write(@Nonnull Buffer buffer);
+	void write(@Nonnull PacketBuffer buffer);
 
-	void read(@Nonnull Buffer buffer);
+	void read(@Nonnull PacketBuffer buffer);
 
 }

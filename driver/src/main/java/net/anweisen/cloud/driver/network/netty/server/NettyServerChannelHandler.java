@@ -2,8 +2,8 @@ package net.anweisen.cloud.driver.network.netty.server;
 
 import io.netty.channel.ChannelHandlerContext;
 import net.anweisen.cloud.driver.network.SocketComponent;
-import net.anweisen.cloud.driver.network.netty.NettyChannel;
-import net.anweisen.cloud.driver.network.netty.NettyChannelHandler;
+import net.anweisen.cloud.driver.network.netty.NettySocketChannel;
+import net.anweisen.cloud.driver.network.netty.NettyDefaultChannelHandler;
 import net.anweisen.cloud.driver.network.object.HostAndPort;
 
 import javax.annotation.Nonnull;
@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class NettyServerChannelHandler extends NettyChannelHandler {
+public class NettyServerChannelHandler extends NettyDefaultChannelHandler {
 
 	protected final NettySocketServer server;
 	protected final HostAndPort address;
@@ -24,7 +24,7 @@ public class NettyServerChannelHandler extends NettyChannelHandler {
 
 	@Override
 	public void channelActive(@Nonnull ChannelHandlerContext context) throws Exception {
-		channel = new NettyChannel(
+		channel = new NettySocketChannel(
 			context.channel(),
 			server.getHandlerSupplier().get(),
 			address, // we are the server

@@ -1,6 +1,6 @@
 package net.anweisen.cloud.driver.player.settings;
 
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 
 import javax.annotation.Nonnull;
@@ -34,12 +34,12 @@ public class DefaultPlayerSettings implements PlayerSettings, SerializableObject
 	}
 
 	@Override
-	public void write(@Nonnull Buffer buffer) {
+	public void write(@Nonnull PacketBuffer buffer) {
 		buffer.writeByte(renderDistance);
 		buffer.writeBoolean(chatColors);
 		buffer.writeObject(skinParts);
-		buffer.writeEnumConstant(chatMode);
-		buffer.writeEnumConstant(mainHand);
+		buffer.writeEnum(chatMode);
+		buffer.writeEnum(mainHand);
 		buffer.writeBoolean(locale == null);
 		if (locale != null) {
 			buffer.writeOptionalString(locale.getLanguage());
@@ -49,12 +49,12 @@ public class DefaultPlayerSettings implements PlayerSettings, SerializableObject
 	}
 
 	@Override
-	public void read(@Nonnull Buffer buffer) {
+	public void read(@Nonnull PacketBuffer buffer) {
 		renderDistance = buffer.readByte();
 		chatColors = buffer.readBoolean();
 		skinParts = buffer.readObject(DefaultSkinParts.class);
-		chatMode = buffer.readEnumConstant(ChatMode.class);
-		mainHand = buffer.readEnumConstant(MainHand.class);
+		chatMode = buffer.readEnum(ChatMode.class);
+		mainHand = buffer.readEnum(MainHand.class);
 		locale = buffer.readBoolean() ? null : new Locale(
 			stringOrEmpty(buffer.readOptionalString()), // language
 			stringOrEmpty(buffer.readOptionalString()), // country

@@ -1,7 +1,7 @@
 package net.anweisen.cloud.driver.player.defaults;
 
 import com.google.common.base.Preconditions;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import net.anweisen.cloud.driver.player.CloudOfflinePlayer;
 import net.anweisen.cloud.driver.player.connection.DefaultPlayerConnection;
@@ -18,7 +18,7 @@ import java.util.UUID;
  */
 public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer, SerializableObject {
 
-	private UUID uuid;
+	private UUID uniqueId;
 	private String name;
 	private DefaultPlayerConnection lastNetworkConnection;
 	private PermissionData permissionData;
@@ -29,9 +29,9 @@ public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer, Serializab
 	private DefaultCloudOfflinePlayer() {
 	}
 
-	public DefaultCloudOfflinePlayer(@Nonnull UUID uuid, @Nonnull String name, @Nonnull DefaultPlayerConnection lastNetworkConnection,
+	public DefaultCloudOfflinePlayer(@Nonnull UUID uniqueId, @Nonnull String name, @Nonnull DefaultPlayerConnection lastNetworkConnection,
 	                                 @Nonnull PermissionData permissionData, long firstLogin, long lastOnline, @Nonnull Document properties) {
-		this.uuid = uuid;
+		this.uniqueId = uniqueId;
 		this.name = name;
 		this.lastNetworkConnection = lastNetworkConnection;
 		this.permissionData = permissionData;
@@ -41,8 +41,8 @@ public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer, Serializab
 	}
 
 	@Override
-	public void write(@Nonnull Buffer buffer) {
-		buffer.writeUUID(uuid);
+	public void write(@Nonnull PacketBuffer buffer) {
+		buffer.writeUniqueId(uniqueId);
 		buffer.writeString(name);
 		buffer.writeObject(lastNetworkConnection);
 		buffer.writeObject(permissionData);
@@ -52,8 +52,8 @@ public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer, Serializab
 	}
 
 	@Override
-	public void read(@Nonnull Buffer buffer) {
-		uuid = buffer.readUUID();
+	public void read(@Nonnull PacketBuffer buffer) {
+		uniqueId = buffer.readUniqueId();
 		name = buffer.readString();
 		lastNetworkConnection = buffer.readObject(DefaultPlayerConnection.class);
 		permissionData = buffer.readObject(PermissionData.class);
@@ -65,7 +65,7 @@ public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer, Serializab
 	@Nonnull
 	@Override
 	public UUID getUniqueId() {
-		return uuid;
+		return uniqueId;
 	}
 
 	@Nonnull
@@ -124,6 +124,6 @@ public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer, Serializab
 
 	@Override
 	public String toString() {
-		return "CloudOfflinePlayer[name=" + name + " uuid=" + uuid + "]";
+		return "CloudOfflinePlayer[name=" + name + " uuid=" + uniqueId + "]";
 	}
 }

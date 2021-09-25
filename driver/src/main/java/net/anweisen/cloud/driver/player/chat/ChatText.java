@@ -1,7 +1,7 @@
 package net.anweisen.cloud.driver.player.chat;
 
 import com.google.common.base.Preconditions;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 
 import javax.annotation.Nonnull;
@@ -29,17 +29,17 @@ public class ChatText implements SerializableObject {
 	}
 
 	@Override
-	public void write(@Nonnull Buffer buffer) {
+	public void write(@Nonnull PacketBuffer buffer) {
 		buffer.writeString(text);
-		buffer.writeOptionalEnumConstant(clickEvent);
+		buffer.writeOptionalEnum(clickEvent);
 		buffer.writeOptionalString(click);
 		buffer.writeOptionalString(hover);
 	}
 
 	@Override
-	public void read(@Nonnull Buffer buffer) {
+	public void read(@Nonnull PacketBuffer buffer) {
 		text = buffer.readString();
-		clickEvent = buffer.readOptionalEnumConstant(ChatClickEvent.class);
+		clickEvent = buffer.readOptionalEnum(ChatClickEvent.class);
 		click = buffer.readOptionalString();
 		hover = buffer.readOptionalString();
 	}

@@ -2,7 +2,7 @@ package net.anweisen.cloud.driver.network.packet.def;
 
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketConstants;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -18,8 +18,8 @@ public class RemoteDatabaseActionPacket extends Packet {
 		this(payload, null);
 	}
 
-	public RemoteDatabaseActionPacket(@Nonnull DatabaseActionPayload payload, @Nullable Consumer<? super Buffer> modifier) {
-		super(PacketConstants.DATABASE_CHANNEL, Buffer.create().writeEnumConstant(payload));
+	public RemoteDatabaseActionPacket(@Nonnull DatabaseActionPayload payload, @Nullable Consumer<? super PacketBuffer> modifier) {
+		super(PacketConstants.DATABASE_CHANNEL, newBuffer().writeEnum(payload));
 		if (modifier != null)
 			modifier.accept(buffer);
 	}

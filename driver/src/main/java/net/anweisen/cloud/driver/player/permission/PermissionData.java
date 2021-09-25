@@ -1,6 +1,6 @@
 package net.anweisen.cloud.driver.player.permission;
 
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 
 import javax.annotation.Nonnull;
@@ -27,13 +27,13 @@ public final class PermissionData implements SerializableObject {
 		}
 
 		@Override
-		public void write(@Nonnull Buffer buffer) {
+		public void write(@Nonnull PacketBuffer buffer) {
 			buffer.writeString(name);
 			buffer.writeString(task);
 		}
 
 		@Override
-		public void read(@Nonnull Buffer buffer) {
+		public void read(@Nonnull PacketBuffer buffer) {
 			name = buffer.readString();
 			task = buffer.readString();
 		}
@@ -64,14 +64,14 @@ public final class PermissionData implements SerializableObject {
 		}
 
 		@Override
-		public void write(@Nonnull Buffer buffer) {
-			buffer.writeUUID(uniqueId);
+		public void write(@Nonnull PacketBuffer buffer) {
+			buffer.writeUniqueId(uniqueId);
 			buffer.writeLong(timeout);
 		}
 
 		@Override
-		public void read(@Nonnull Buffer buffer) {
-			uniqueId = buffer.readUUID();
+		public void read(@Nonnull PacketBuffer buffer) {
+			uniqueId = buffer.readUniqueId();
 			timeout = buffer.readLong();
 		}
 
@@ -115,14 +115,14 @@ public final class PermissionData implements SerializableObject {
 	}
 
 	@Override
-	public void write(@Nonnull Buffer buffer) {
+	public void write(@Nonnull PacketBuffer buffer) {
 		buffer.writeStringCollection(permissions);
 		buffer.writeObjectCollection(taskPermissions);
 		buffer.writeObjectCollection(groups);
 	}
 
 	@Override
-	public void read(@Nonnull Buffer buffer) {
+	public void read(@Nonnull PacketBuffer buffer) {
 		permissions = buffer.readStringCollection();
 		taskPermissions = buffer.readObjectCollection(TaskPermissionData.class);
 		groups = buffer.readObjectCollection(PlayerGroupData.class);

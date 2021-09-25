@@ -1,7 +1,7 @@
 package net.anweisen.cloud.driver.network.packet.chunk;
 
 import net.anweisen.cloud.driver.network.packet.Packet;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.utilities.common.config.Document;
 
 import javax.annotation.Nonnull;
@@ -33,11 +33,11 @@ public class ChunkedPacket extends Packet {
 		this.chunks = chunks;
 	}
 
-	protected ChunkedPacket(int channel, @Nonnull UUID uniqueId, @Nonnull Document header, Buffer buffer) {
+	protected ChunkedPacket(int channel, @Nonnull UUID uniqueId, @Nonnull Document header, @Nonnull PacketBuffer buffer) {
 		super(channel, uniqueId, header, buffer);
 	}
 
-	public static ChunkedPacket createIncomingPacket(int channel, @Nonnull UUID uniqueId, @Nonnull Document header, Buffer buffer) {
+	public static ChunkedPacket createIncomingPacket(int channel, @Nonnull UUID uniqueId, @Nonnull Document header, @Nonnull PacketBuffer buffer) {
 		return new ChunkedPacket(channel, uniqueId, header, buffer);
 	}
 
@@ -46,7 +46,7 @@ public class ChunkedPacket extends Packet {
 			return this;
 		}
 
-		buffer = Buffer.create().writeVarInt(chunkId);
+		buffer = newBuffer().writeVarInt(chunkId);
 		if (this.chunkId == 0) {
 			buffer.writeInt(chunkSize);
 			return this;
@@ -58,7 +58,7 @@ public class ChunkedPacket extends Packet {
 			return this;
 		}
 
-		buffer.writeInt(dataLength).writeBytes(data, 0, dataLength);
+		buffer.writeInt(dataLength).write(data, 0, dataLength);
 		return this;
 	}
 
@@ -78,9 +78,9 @@ public class ChunkedPacket extends Packet {
 		return this;
 	}
 
-	public void readData(@Nonnull OutputStream outputStream) throws IOException {
+	public void readData(@Nonnull OutputStream out) throws IOException {
 		dataLength = buffer.readInt();
-		buffer.readBytes(outputStream, dataLength);
+		buffer.read(out, dataLength);
 	}
 
 	public int getChunks() {
@@ -104,12 +104,8 @@ public class ChunkedPacket extends Packet {
 	}
 
 	public void clearData() {
-		if (buffer != null) {
-			while (buffer.refCnt() > 0) {
-				buffer.release();
-			}
-		}
-
+		if (buffer != null)
+			buffer.release();
 		data = null;
 	}
 }

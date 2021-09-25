@@ -20,26 +20,21 @@ public final class NettyPacketEncoder extends MessageToByteEncoder<Packet> {
 		// channel
 		NettyUtils.writeVarInt(buffer, packet.getChannel());
 		// unique id
-		buffer
-			.writeLong(packet.getUniqueId().getMostSignificantBits())
-			.writeLong(packet.getUniqueId().getLeastSignificantBits());
+		buffer.writeLong(packet.getUniqueId().getMostSignificantBits())
+			  .writeLong(packet.getUniqueId().getLeastSignificantBits());
 		// header
-		this.writeHeader(packet, buffer);
-		// buffer
-		if (packet.getBuffer() != null) {
-			int amount = packet.getBuffer().readableBytes();
-			NettyUtils.writeVarInt(buffer, amount);
-			buffer.writeBytes(packet.getBuffer(), 0, amount);
-		} else {
-			NettyUtils.writeVarInt(buffer, 0);
-		}
-	}
-
-	private void writeHeader(@Nonnull Packet packet, @Nonnull ByteBuf buffer) {
-		if (packet.getHeader() == null || packet.getHeader().isEmpty()) {
+		if (packet.getRealHeader() == null || packet.getHeader().isEmpty()) {
 			NettyUtils.writeVarInt(buffer, 0);
 		} else {
 			NettyUtils.writeString(buffer, packet.getHeader().toJson());
+		}
+		// buffer
+		if (packet.getRealBuffer() != null) {
+			int amount = packet.getBuffer().length();
+			NettyUtils.writeVarInt(buffer, amount);
+			buffer.writeBytes(packet.getBuffer().asArray(), 0, amount);
+		} else {
+			NettyUtils.writeVarInt(buffer, 0);
 		}
 	}
 }

@@ -2,7 +2,6 @@ package net.anweisen.cloud.driver.network.packet.def;
 
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketConstants;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -15,11 +14,11 @@ import java.util.UUID;
 public class CommandSystemPacket extends Packet {
 
 	public CommandSystemPacket(@Nonnull CommandSystemPayload payload, @Nonnull UUID player, @Nonnull String input) {
-		super(PacketConstants.COMMAND_SYSTEM_CHANNEL, Buffer.create().writeEnumConstant(payload).writeUUID(player).writeString(input));
+		super(PacketConstants.COMMAND_SYSTEM_CHANNEL, newBuffer().writeEnum(payload).writeUniqueId(player).writeString(input));
 	}
 
 	public CommandSystemPacket(@Nonnull CommandSystemPayload payload, @Nonnull Collection<String> commands) {
-		super(PacketConstants.COMMAND_SYSTEM_CHANNEL, Buffer.create().writeEnumConstant(payload).writeStringCollection(commands));
+		super(PacketConstants.COMMAND_SYSTEM_CHANNEL, newBuffer().writeEnum(payload).writeStringCollection(commands));
 	}
 
 	public enum CommandSystemPayload {

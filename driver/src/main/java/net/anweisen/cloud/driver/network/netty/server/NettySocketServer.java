@@ -6,10 +6,10 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
-import net.anweisen.cloud.driver.network.DefaultSocketComponent;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.SocketServer;
 import net.anweisen.cloud.driver.network.handler.SocketChannelHandler;
+import net.anweisen.cloud.driver.network.netty.NettyDefaultSocketComponent;
 import net.anweisen.cloud.driver.network.netty.NettyUtils;
 import net.anweisen.cloud.driver.network.object.HostAndPort;
 
@@ -21,7 +21,7 @@ import java.util.function.Supplier;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class NettySocketServer extends DefaultSocketComponent implements SocketServer, LoggingApiUser {
+public class NettySocketServer extends NettyDefaultSocketComponent implements SocketServer, LoggingApiUser {
 
 	protected final EventLoopGroup bossEventLoopGroup = NettyUtils.newEventLoopGroup();
 	protected final EventLoopGroup workerEventLoopGroup = NettyUtils.newEventLoopGroup();

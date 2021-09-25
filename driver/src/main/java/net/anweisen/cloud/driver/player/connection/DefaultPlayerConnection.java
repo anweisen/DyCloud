@@ -1,7 +1,7 @@
 package net.anweisen.cloud.driver.player.connection;
 
 import net.anweisen.cloud.driver.network.object.HostAndPort;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 
 import javax.annotation.Nonnull;
@@ -29,7 +29,7 @@ public class DefaultPlayerConnection implements PlayerConnection, SerializableOb
 	}
 
 	@Override
-	public void write(@Nonnull Buffer buffer) {
+	public void write(@Nonnull PacketBuffer buffer) {
 		buffer.writeString(proxy);
 		buffer.writeObject(address);
 		buffer.writeInt(version);
@@ -38,7 +38,7 @@ public class DefaultPlayerConnection implements PlayerConnection, SerializableOb
 	}
 
 	@Override
-	public void read(@Nonnull Buffer buffer) {
+	public void read(@Nonnull PacketBuffer buffer) {
 		proxy = buffer.readString();
 		address = buffer.readObject(HostAndPort.class);
 		version = buffer.readInt();

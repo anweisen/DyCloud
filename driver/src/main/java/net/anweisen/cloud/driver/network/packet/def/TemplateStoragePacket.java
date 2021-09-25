@@ -2,7 +2,7 @@ package net.anweisen.cloud.driver.network.packet.def;
 
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketConstants;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;
@@ -13,8 +13,8 @@ import java.util.function.Consumer;
  */
 public class TemplateStoragePacket extends Packet {
 
-	public TemplateStoragePacket(@Nonnull TemplateStoragePayload payload, @Nonnull Consumer<? super Buffer> modifier) {
-		super(PacketConstants.TEMPLATE_STORAGE_CHANNEL, Buffer.create().writeEnumConstant(payload));
+	public TemplateStoragePacket(@Nonnull TemplateStoragePayload payload, @Nonnull Consumer<? super PacketBuffer> modifier) {
+		super(PacketConstants.TEMPLATE_STORAGE_CHANNEL, newBuffer().writeEnum(payload));
 		modifier.accept(buffer);
 	}
 

@@ -3,7 +3,7 @@ package net.anweisen.cloud.driver.service.specific;
 import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.network.object.HostAndPort;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import net.anweisen.cloud.driver.node.NodeInfo;
 import net.anweisen.cloud.driver.service.config.ServiceTask;
@@ -67,17 +67,17 @@ public final class ServiceInfo implements SerializableObject {
 	}
 
 	@Override
-	public void write(@Nonnull Buffer buffer) {
-		buffer.writeUUID(uniqueId);
+	public void write(@Nonnull PacketBuffer buffer) {
+		buffer.writeUniqueId(uniqueId);
 		buffer.writeString(taskName);
 		buffer.writeInt(serviceNumber);
 		buffer.writeString(nodeName);
 		buffer.writeString(nodeAddress);
-		buffer.writeEnumConstant(state);
-		buffer.writeEnumConstant(controlState);
+		buffer.writeEnum(state);
+		buffer.writeEnum(controlState);
 		buffer.writeOptionalString(dockerContainerId);
 		buffer.writeBoolean(ready);
-		buffer.writeEnumConstant(environment);
+		buffer.writeEnum(environment);
 		buffer.writeInt(port);
 		buffer.writeBoolean(permanent);
 		buffer.writeDocument(properties);
@@ -85,17 +85,17 @@ public final class ServiceInfo implements SerializableObject {
 	}
 
 	@Override
-	public void read(@Nonnull Buffer buffer) {
-		uniqueId = buffer.readUUID();
+	public void read(@Nonnull PacketBuffer buffer) {
+		uniqueId = buffer.readUniqueId();
 		taskName = buffer.readString();
 		serviceNumber = buffer.readInt();
 		nodeName = buffer.readString();
 		nodeAddress = buffer.readString();
-		state = buffer.readEnumConstant(ServiceState.class);
-		controlState = buffer.readEnumConstant(ServiceControlState.class);
+		state = buffer.readEnum(ServiceState.class);
+		controlState = buffer.readEnum(ServiceControlState.class);
 		dockerContainerId = buffer.readOptionalString();
 		ready = buffer.readBoolean();
-		environment = buffer.readEnumConstant(ServiceEnvironment.class);
+		environment = buffer.readEnum(ServiceEnvironment.class);
 		port = buffer.readInt();
 		permanent = buffer.readBoolean();
 		properties = buffer.readDocument();

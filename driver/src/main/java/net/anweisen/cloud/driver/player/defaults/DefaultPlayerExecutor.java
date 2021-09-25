@@ -3,7 +3,7 @@ package net.anweisen.cloud.driver.player.defaults;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.def.PlayerExecutorPacket;
 import net.anweisen.cloud.driver.network.packet.def.PlayerExecutorPacket.PlayerExecutorPayload;
-import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.player.PlayerExecutor;
 import net.anweisen.cloud.driver.player.chat.ChatText;
 
@@ -67,7 +67,7 @@ public abstract class DefaultPlayerExecutor implements PlayerExecutor {
 		sendPacket(PlayerExecutorPayload.DISCONNECT, buffer -> buffer.writeString(kickReason == null ? "§cNo kick reason given" : kickReason));
 	}
 
-	private void sendPacket(@Nonnull PlayerExecutorPayload payload, @Nonnull Consumer<? super Buffer> modifier) {
+	private void sendPacket(@Nonnull PlayerExecutorPayload payload, @Nonnull Consumer<? super PacketBuffer> modifier) {
 		sendPacket(new PlayerExecutorPacket(payload, playerUniqueId, modifier));
 	}
 
