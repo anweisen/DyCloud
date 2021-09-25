@@ -5,7 +5,7 @@ import net.anweisen.cloud.driver.event.player.PlayerUpdateEvent;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
-import net.anweisen.cloud.driver.network.packet.def.PlayerRemoteManagerPacket.PlayerRemoteManagerType;
+import net.anweisen.cloud.driver.network.packet.def.PlayerRemoteManagerPacket.PlayerRemoteManagerPayload;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.player.CloudPlayer;
 import net.anweisen.cloud.driver.player.defaults.DefaultCloudPlayer;
@@ -24,8 +24,8 @@ public class PlayerRemoteManagerListener implements PacketListener {
 		CloudDriver cloud = CloudDriver.getInstance();
 		Buffer buffer = packet.getBuffer();
 
-		PlayerRemoteManagerType type = buffer.readEnumConstant(PlayerRemoteManagerType.class);
-		switch (type) {
+		PlayerRemoteManagerPayload payload = buffer.readEnumConstant(PlayerRemoteManagerPayload.class);
+		switch (payload) {
 			case UPDATE_ONLINE_PLAYER: {
 				RemotePlayerManager manager = (RemotePlayerManager) cloud.getPlayerManager();
 				CloudPlayer player = buffer.readObject(DefaultCloudPlayer.class);

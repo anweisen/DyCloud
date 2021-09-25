@@ -6,7 +6,7 @@ import net.anweisen.cloud.driver.DriverEnvironment;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
-import net.anweisen.cloud.driver.network.packet.def.ModuleSystemPacket.ModuleSystemPacketType;
+import net.anweisen.cloud.driver.network.packet.def.ModuleSystemPacket.ModuleSystemPayload;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.master.CloudMaster;
 import net.anweisen.utilities.common.config.Document;
@@ -27,8 +27,8 @@ public class ModuleSystemListener implements PacketListener {
 	public void handlePacket(@Nonnull SocketChannel channel, @Nonnull Packet packet) throws Exception {
 		Buffer buffer = packet.getBuffer();
 
-		ModuleSystemPacketType type = buffer.readEnumConstant(ModuleSystemPacketType.class);
-		switch (type) {
+		ModuleSystemPayload payload = buffer.readEnumConstant(ModuleSystemPayload.class);
+		switch (payload) {
 			case GET_MODULES: {
 				channel.sendPacket(Packet.createResponseFor(packet, Buffer.create().writeStringArray(
 					getModules().stream().map(module -> module.getJarFile().getFileName().toString()).toArray(String[]::new)

@@ -14,13 +14,13 @@ import java.util.function.Consumer;
  */
 public class PlayerRemoteManagerPacket extends Packet {
 
-	public PlayerRemoteManagerPacket(@Nonnull PlayerRemoteManagerType type, @Nullable Consumer<? super Buffer> modifier) {
-		super(PacketConstants.PLAYER_REMOTE_MANAGER_CHANNEL, Buffer.create().writeEnumConstant(type));
+	public PlayerRemoteManagerPacket(@Nonnull PlayerRemoteManagerPayload payload, @Nullable Consumer<? super Buffer> modifier) {
+		super(PacketConstants.PLAYER_REMOTE_MANAGER_CHANNEL, Buffer.create().writeEnumConstant(payload));
 		if (modifier != null)
 			modifier.accept(buffer);
 	}
 
-	public enum PlayerRemoteManagerType {
+	public enum PlayerRemoteManagerPayload {
 		GET_REGISTERED_COUNT,
 		GET_REGISTERED_PLAYERS,
 		GET_OFFLINE_PLAYER_BY_NAME,

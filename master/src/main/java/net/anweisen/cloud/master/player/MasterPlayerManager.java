@@ -6,7 +6,7 @@ import net.anweisen.cloud.driver.database.DatabaseManager;
 import net.anweisen.cloud.driver.event.player.PlayerProxyLoginRequestEvent;
 import net.anweisen.cloud.driver.network.NetworkingApiUser;
 import net.anweisen.cloud.driver.network.packet.def.PlayerRemoteManagerPacket;
-import net.anweisen.cloud.driver.network.packet.def.PlayerRemoteManagerPacket.PlayerRemoteManagerType;
+import net.anweisen.cloud.driver.network.packet.def.PlayerRemoteManagerPacket.PlayerRemoteManagerPayload;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import net.anweisen.cloud.driver.player.CloudOfflinePlayer;
 import net.anweisen.cloud.driver.player.CloudPlayer;
@@ -155,7 +155,7 @@ public class MasterPlayerManager extends DefaultPlayerManager implements Logging
 	public void saveOfflinePlayer(@Nonnull CloudOfflinePlayer updatedPlayer) {
 		if (onlinePlayers.containsKey(updatedPlayer.getUniqueId())) {
 			CloudPlayer registeredPlayer = onlinePlayers.get(updatedPlayer.getUniqueId());
-			sendPacket(new PlayerRemoteManagerPacket(PlayerRemoteManagerType.UPDATE_ONLINE_PLAYER, buffer -> buffer.writeObject((SerializableObject) registeredPlayer)));
+			sendPacket(new PlayerRemoteManagerPacket(PlayerRemoteManagerPayload.UPDATE_ONLINE_PLAYER, buffer -> buffer.writeObject((SerializableObject) registeredPlayer)));
 		}
 
 		debug("Saving {}..", updatedPlayer);
@@ -182,7 +182,7 @@ public class MasterPlayerManager extends DefaultPlayerManager implements Logging
 		if (!onlinePlayers.containsKey(updatedPlayer.getUniqueId())) throw new IllegalStateException("CloudPlayer is no longer registered");
 
 		onlinePlayers.put(updatedPlayer.getUniqueId(), updatedPlayer);
-		sendPacket(new PlayerRemoteManagerPacket(PlayerRemoteManagerType.UPDATE_ONLINE_PLAYER, buffer -> buffer.writeObject((SerializableObject) updatedPlayer)));
+		sendPacket(new PlayerRemoteManagerPacket(PlayerRemoteManagerPayload.UPDATE_ONLINE_PLAYER, buffer -> buffer.writeObject((SerializableObject) updatedPlayer)));
 	}
 
 	@Nonnull

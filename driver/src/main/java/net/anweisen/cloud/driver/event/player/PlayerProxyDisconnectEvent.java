@@ -1,6 +1,6 @@
 package net.anweisen.cloud.driver.event.player;
 
-import net.anweisen.cloud.driver.network.packet.def.PlayerEventPacket.PlayerEventType;
+import net.anweisen.cloud.driver.network.packet.def.PlayerEventPacket.PlayerEventPayload;
 import net.anweisen.cloud.driver.player.CloudPlayer;
 
 import javax.annotation.Nonnull;
@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
  * Called when a player is being disconnected from a proxy.
  * The player is no longer online at the time this event is called.
  *
- * Triggered by {@link PlayerEventType#PROXY_DISCONNECT}
+ * Triggered by {@link PlayerEventPayload#PROXY_DISCONNECT}
  *
  * @author anweisen | https://github.com/anweisen
  * @since 1.0

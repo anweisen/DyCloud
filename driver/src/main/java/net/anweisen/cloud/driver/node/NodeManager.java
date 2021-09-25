@@ -1,7 +1,7 @@
 package net.anweisen.cloud.driver.node;
 
 import net.anweisen.cloud.driver.CloudDriver;
-import net.anweisen.cloud.driver.network.packet.def.NodePublishPacket.NodePublishType;
+import net.anweisen.cloud.driver.network.packet.def.NodePublishPacket.NodePublishPayload;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,6 +39,6 @@ public interface NodeManager {
 		return names;
 	}
 
-	void handleNodeUpdate(@Nonnull NodePublishType publishType, @Nonnull NodeInfo info);
+	void handleNodeUpdate(@Nonnull NodePublishPayload payload, @Nonnull NodeInfo info);
 
 }

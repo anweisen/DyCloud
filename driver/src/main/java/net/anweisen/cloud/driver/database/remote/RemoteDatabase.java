@@ -4,7 +4,7 @@ import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.database.remote.action.*;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.def.RemoteDatabaseActionPacket;
-import net.anweisen.cloud.driver.network.packet.def.RemoteDatabaseActionPacket.DatabaseActionType;
+import net.anweisen.cloud.driver.network.packet.def.RemoteDatabaseActionPacket.DatabaseActionPayload;
 import net.anweisen.utilities.database.DatabaseConfig;
 import net.anweisen.utilities.database.SQLColumn;
 import net.anweisen.utilities.database.action.*;
@@ -54,7 +54,7 @@ public class RemoteDatabase extends AbstractDatabase {
 	@Override
 	public void createTable(@Nonnull String name, @Nonnull SQLColumn... columns) throws DatabaseException {
 		CloudDriver.getInstance().getSocketComponent().getFirstChannel().sendPacket(
-			new RemoteDatabaseActionPacket(DatabaseActionType.CREATE_TABLE, buffer -> buffer.writeString(name).writeObjectCollection(
+			new RemoteDatabaseActionPacket(DatabaseActionPayload.CREATE_TABLE, buffer -> buffer.writeString(name).writeObjectCollection(
 				Arrays.stream(columns).map(SerializableSQLColumn::new).collect(Collectors.toList())
 			))
 		);

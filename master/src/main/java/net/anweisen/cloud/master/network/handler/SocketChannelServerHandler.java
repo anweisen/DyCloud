@@ -8,8 +8,8 @@ import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.handler.SocketChannelHandler;
 import net.anweisen.cloud.driver.network.internal.InternalQueryResponseManager;
 import net.anweisen.cloud.driver.network.packet.Packet;
-import net.anweisen.cloud.driver.network.packet.def.NodePublishPacket.NodePublishType;
-import net.anweisen.cloud.driver.network.packet.def.ServicePublishPacket.ServicePublishType;
+import net.anweisen.cloud.driver.network.packet.def.NodePublishPacket.NodePublishPayload;
+import net.anweisen.cloud.driver.network.packet.def.ServicePublishPacket.ServicePublishPayload;
 import net.anweisen.cloud.driver.node.NodeInfo;
 import net.anweisen.cloud.master.CloudMaster;
 import net.anweisen.cloud.master.cord.CordServer;
@@ -72,16 +72,16 @@ public class SocketChannelServerHandler implements SocketChannelHandler {
 		CloudService service = cloud.getServiceManager().getServiceByChannel(channel);
 		if (service != null) {
 			cloud.getLogger().info("Service '{}' has disconnected", service.getInfo().getName());
-			cloud.publishUpdate(ServicePublishType.DISCONNECTED, service.getInfo());
-			cloud.getServiceManager().handleServiceUpdate(ServicePublishType.DISCONNECTED, service.getInfo());
+			cloud.publishUpdate(ServicePublishPayload.DISCONNECTED, service.getInfo());
+			cloud.getServiceManager().handleServiceUpdate(ServicePublishPayload.DISCONNECTED, service.getInfo());
 			return;
 		}
 
 		NodeServer node = cloud.getNodeManager().getNodeServer(channel);
 		if (node != null) {
 			cloud.getLogger().warn("Node '{}' has disconnected", node.getInfo().getName());
-			cloud.publishUpdate(NodePublishType.DISCONNECTED, node.getInfo());
-			cloud.getNodeManager().handleNodeUpdate(NodePublishType.DISCONNECTED, node.getInfo());
+			cloud.publishUpdate(NodePublishPayload.DISCONNECTED, node.getInfo());
+			cloud.getNodeManager().handleNodeUpdate(NodePublishPayload.DISCONNECTED, node.getInfo());
 			cloud.getNodeManager().unregisterNode(node);
 			return;
 		}

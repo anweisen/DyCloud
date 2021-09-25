@@ -4,7 +4,7 @@ import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.event.node.NodeConnectedEvent;
 import net.anweisen.cloud.driver.event.node.NodeDisconnectedEvent;
-import net.anweisen.cloud.driver.network.packet.def.NodePublishPacket.NodePublishType;
+import net.anweisen.cloud.driver.network.packet.def.NodePublishPacket.NodePublishPayload;
 
 import javax.annotation.Nonnull;
 
@@ -15,10 +15,10 @@ import javax.annotation.Nonnull;
 public abstract class DefaultNodeManager implements NodeManager, LoggingApiUser {
 
 	@Override
-	public void handleNodeUpdate(@Nonnull NodePublishType type, @Nonnull NodeInfo info) {
-		debug("{} -> {}", type, info);
+	public void handleNodeUpdate(@Nonnull NodePublishPayload payload, @Nonnull NodeInfo info) {
+		debug("{} -> {}", payload, info);
 
-		switch (type) {
+		switch (payload) {
 			case CONNECTED:
 				CloudDriver.getInstance().getEventManager().callEvent(new NodeConnectedEvent(info));
 				break;

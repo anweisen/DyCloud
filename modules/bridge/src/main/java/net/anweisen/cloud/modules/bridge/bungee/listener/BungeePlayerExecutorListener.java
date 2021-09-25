@@ -4,7 +4,7 @@ import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
-import net.anweisen.cloud.driver.network.packet.def.PlayerExecutorPacket.PlayerExecutorPacketType;
+import net.anweisen.cloud.driver.network.packet.def.PlayerExecutorPacket.PlayerExecutorPayload;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.player.chat.ChatText;
 import net.anweisen.cloud.driver.player.defaults.DefaultPlayerExecutor;
@@ -32,15 +32,15 @@ public class BungeePlayerExecutorListener implements PacketListener, LoggingApiU
 	public void handlePacket(@Nonnull SocketChannel channel, @Nonnull Packet packet) throws Exception {
 		Buffer buffer = packet.getBuffer();
 
-		PlayerExecutorPacketType type = buffer.readEnumConstant(PlayerExecutorPacketType.class);
+		PlayerExecutorPayload payload = buffer.readEnumConstant(PlayerExecutorPayload.class);
 		UUID playerUniqueId = buffer.readUUID();
 		boolean global = playerUniqueId.equals(DefaultPlayerExecutor.GLOBAL_UUID);
 		ProxiedPlayer targetPlayer = ProxyServer.getInstance().getPlayer(playerUniqueId);
 		if (global && targetPlayer == null) return;
 		Collection<ProxiedPlayer> players = global ? ProxyServer.getInstance().getPlayers() : Collections.singletonList(targetPlayer);
 
-		debug("{} -> {}", type, players);
-		switch (type) {
+		debug("{} -> {}", payload, players);
+		switch (payload) {
 			case SEND_MESSAGE: {
 				String permission = buffer.readOptionalString();
 				ChatText[] messages = buffer.readObjectArray(ChatText.class);

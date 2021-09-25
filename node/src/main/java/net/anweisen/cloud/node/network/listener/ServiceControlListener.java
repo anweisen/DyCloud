@@ -7,8 +7,8 @@ import net.anweisen.cloud.driver.event.service.ServiceRegisteredEvent;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
-import net.anweisen.cloud.driver.network.packet.def.ServiceControlPacket.ServiceControlType;
-import net.anweisen.cloud.driver.network.packet.def.ServicePublishPacket.ServicePublishType;
+import net.anweisen.cloud.driver.network.packet.def.ServiceControlPacket.ServiceControlPayload;
+import net.anweisen.cloud.driver.network.packet.def.ServicePublishPacket.ServicePublishPayload;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.service.config.ServiceTask;
 import net.anweisen.cloud.driver.service.specific.ServiceControlState;
@@ -32,16 +32,16 @@ public class ServiceControlListener implements PacketListener, LoggingApiUser {
 		DockerServiceActor actor = cloud.getServiceActor();
 		Buffer buffer = packet.getBuffer();
 
-		ServiceControlType type = buffer.readEnumConstant(ServiceControlType.class);
+		ServiceControlPayload payload = buffer.readEnumConstant(ServiceControlPayload.class);
 
- 		if (type == ServiceControlType.CREATE) {
+ 		if (payload == ServiceControlPayload.CREATE) {
 		    ServiceInfo service = buffer.readObject(ServiceInfo.class);
 			cloud.getServiceManager().registerService(service);
 			cloud.getEventManager().callEvent(new ServiceRegisteredEvent(service));
 
-		    debug("{} -> {}", type, service);
+		    debug("{} -> {}", payload, service);
 		    ServiceTask task = service.findTask();
-		    Preconditions.checkNotNull(task, "ServiceTask of service for action " + type + " is null (" + service.getTaskName() + ")");
+		    Preconditions.checkNotNull(task, "ServiceTask of service for action " + payload + " is null (" + service.getTaskName() + ")");
 
 		    actor.createServiceHere(service, task);
 			channel.sendPacket(Packet.createResponseFor(packet, Buffer.create().writeObject(service)));
@@ -50,14 +50,14 @@ public class ServiceControlListener implements PacketListener, LoggingApiUser {
 
 		UUID uuid = buffer.readUUID();
 		ServiceInfo service = cloud.getServiceManager().getServiceInfoByUniqueId(uuid);
-		debug("{} -> {}", type, service);
-		Preconditions.checkNotNull(service, "Service for action " + type + " is null (" + uuid + ")");
+		debug("{} -> {}", payload, service);
+		Preconditions.checkNotNull(service, "Service for action " + payload + " is null (" + uuid + ")");
 
-		if (type == ServiceControlType.START || type == ServiceControlType.RESTART) {
+		if (payload == ServiceControlPayload.START || payload == ServiceControlPayload.RESTART) {
 			if (service.getDockerContainerId() == null) {
 				warn("Docker container id of service " + service.getName() + " for action is null");
 				service.setControlState(ServiceControlState.NONE);
-				cloud.publishUpdate(ServicePublishType.UPDATE, service);
+				cloud.publishUpdate(ServicePublishPayload.UPDATE, service);
 				channel.sendPacket(Packet.createResponseFor(packet));
 				return;
 			}
@@ -65,21 +65,21 @@ public class ServiceControlListener implements PacketListener, LoggingApiUser {
 
 		if (service.getDockerContainerId() != null) {
 			try {
-				doServiceAction(service, type, actor);
-				debug("Successfully done {} action on {}", type, service);
+				doServiceAction(service, payload, actor);
+				debug("Successfully done {} action on {}", payload, service);
 			} catch (DockerException ex) {
-				error("Unable to do service action {} on {}", type, service, ex);
+				error("Unable to do service action {} on {}", payload, service, ex);
 			}
 		}
 
 		service.setControlState(ServiceControlState.NONE);
-		service.setState(getServiceState(type));
-		cloud.publishUpdate(getPublishType(type), service);
+		service.setState(getServiceState(payload));
+		cloud.publishUpdate(getPublishPayload(payload), service);
 		channel.sendPacket(Packet.createResponseFor(packet));
 	}
 
-	private void doServiceAction(@Nonnull ServiceInfo service, @Nonnull ServiceControlType type, @Nonnull DockerServiceActor actor) {
-		switch (type) {
+	private void doServiceAction(@Nonnull ServiceInfo service, @Nonnull ServiceControlPayload payload, @Nonnull DockerServiceActor actor) {
+		switch (payload) {
 			case STOP:
 				actor.stopService(service);
 				break;
@@ -99,25 +99,25 @@ public class ServiceControlListener implements PacketListener, LoggingApiUser {
 	}
 
 	@Nonnull
-	private ServiceState getServiceState(@Nonnull ServiceControlType type) {
-		switch (type) {
+	private ServiceState getServiceState(@Nonnull ServiceControlPayload payload) {
+		switch (payload) {
 			case RESTART:
 			case STOP:
 			case KILL:      return ServiceState.STOPPED;
 			case DELETE:    return ServiceState.DELETED;
 			case START:     return ServiceState.RUNNING;
-			default:        throw new IllegalArgumentException(type.name());
+			default:        throw new IllegalArgumentException(payload.name());
 		}
 	}
 
-	private ServicePublishType getPublishType(@Nonnull ServiceControlType type) {
-		switch (type) {
-			case START:     return ServicePublishType.STARTED;
-			case RESTART:   return ServicePublishType.RESTARTED;
-			case KILL:      return ServicePublishType.KILLED;
-			case DELETE:    return ServicePublishType.UNREGISTER;
-			case STOP:      return ServicePublishType.STOPPED;
-			default:        throw new IllegalArgumentException(type.name());
+	private ServicePublishPayload getPublishPayload(@Nonnull ServiceControlPayload payload) {
+		switch (payload) {
+			case START:     return ServicePublishPayload.STARTED;
+			case RESTART:   return ServicePublishPayload.RESTARTED;
+			case KILL:      return ServicePublishPayload.KILLED;
+			case DELETE:    return ServicePublishPayload.UNREGISTER;
+			case STOP:      return ServicePublishPayload.STOPPED;
+			default:        throw new IllegalArgumentException(payload.name());
 		}
 	}
 

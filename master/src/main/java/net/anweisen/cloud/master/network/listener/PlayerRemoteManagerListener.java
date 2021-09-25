@@ -5,7 +5,7 @@ import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
-import net.anweisen.cloud.driver.network.packet.def.PlayerRemoteManagerPacket.PlayerRemoteManagerType;
+import net.anweisen.cloud.driver.network.packet.def.PlayerRemoteManagerPacket.PlayerRemoteManagerPayload;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import net.anweisen.cloud.driver.player.CloudOfflinePlayer;
@@ -29,17 +29,17 @@ public class PlayerRemoteManagerListener implements PacketListener, LoggingApiUs
 		Buffer buffer = packet.getBuffer();
 		PlayerManager manager = CloudDriver.getInstance().getPlayerManager();
 
-		PlayerRemoteManagerType type = buffer.readEnumConstant(PlayerRemoteManagerType.class);
+		PlayerRemoteManagerPayload payload = buffer.readEnumConstant(PlayerRemoteManagerPayload.class);
 
-		switch (type) {
+		switch (payload) {
 			case GET_REGISTERED_COUNT: {
-				debug("{}", type);
+				debug("{}", payload);
 				long count = manager.getRegisteredPlayerCount();
 				channel.sendPacket(Packet.createResponseFor(packet, Buffer.create().writeLong(count)));
 				break;
 			}
 			case GET_REGISTERED_PLAYERS: {
-				debug("{}", type);
+				debug("{}", payload);
 				@SuppressWarnings("unchecked")
 				Collection<? extends SerializableObject> players = (Collection<? extends SerializableObject>) (Collection<?>) manager.getRegisteredPlayers(); // Cannot cast directly to <? extends SerializableObject>
 				channel.sendPacket(Packet.createResponseFor(packet, Buffer.create().writeObjectCollection(players)));
@@ -47,33 +47,33 @@ public class PlayerRemoteManagerListener implements PacketListener, LoggingApiUs
 			}
 			case GET_OFFLINE_PLAYER_BY_UUID: {
 				UUID uuid = buffer.readUUID();
-				debug("{} -> {}", type, uuid);
+				debug("{} -> {}", payload, uuid);
 				SerializableObject player = (SerializableObject) manager.getOfflinePlayerByUniqueId(uuid);
 				channel.sendPacket(Packet.createResponseFor(packet, Buffer.create().writeOptionalObject(player)));
 				break;
 			}
 			case GET_OFFLINE_PLAYER_BY_NAME: {
 				String name = buffer.readString();
-				debug("{} -> {}", type, name);
+				debug("{} -> {}", payload, name);
 				SerializableObject player = (SerializableObject) manager.getOfflinePlayerByName(name);
 				channel.sendPacket(Packet.createResponseFor(packet, Buffer.create().writeOptionalObject(player)));
 				break;
 			}
 			case SAVE_OFFLINE_PLAYER: {
 				CloudOfflinePlayer player = buffer.readObject(DefaultCloudOfflinePlayer.class);
-				debug("{} -> {}", type, player);
+				debug("{} -> {}", payload, player);
 				manager.saveOfflinePlayer(player);
 				break;
 			}
 			case DELETE_OFFLINE_PLAYER: {
 				UUID uuid = buffer.readUUID();
-				debug("{} -> {}", type, uuid);
+				debug("{} -> {}", payload, uuid);
 				manager.deleteOfflinePlayer(uuid);
 				break;
 			}
 			case UPDATE_ONLINE_PLAYER: {
 				CloudPlayer player = buffer.readObject(DefaultCloudPlayer.class);
-				debug("{} -> {}", type, player);
+				debug("{} -> {}", payload, player);
 				manager.updateOnlinePlayer(player);
 				break;
 			}

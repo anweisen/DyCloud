@@ -1,6 +1,6 @@
 package net.anweisen.cloud.driver.event.player;
 
-import net.anweisen.cloud.driver.network.packet.def.PlayerEventPacket.PlayerEventType;
+import net.anweisen.cloud.driver.network.packet.def.PlayerEventPacket.PlayerEventPayload;
 import net.anweisen.cloud.driver.player.CloudPlayer;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 
@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 import java.util.UUID;
 
 /**
- * Triggered by {@link PlayerEventType#SERVER_DISCONNECT}
+ * Triggered by {@link PlayerEventPayload#SERVER_DISCONNECT}
  *
  * @author anweisen | https://github.com/anweisen
  * @since 1.0

@@ -3,7 +3,7 @@ package net.anweisen.cloud.master.config.global;
 import com.google.common.collect.ImmutableMap;
 import net.anweisen.cloud.driver.config.global.GlobalConfig;
 import net.anweisen.cloud.driver.network.packet.def.GlobalConfigPacket;
-import net.anweisen.cloud.driver.network.packet.def.GlobalConfigPacket.GlobalConfigPacketType;
+import net.anweisen.cloud.driver.network.packet.def.GlobalConfigPacket.GlobalConfigPayload;
 import net.anweisen.cloud.master.CloudMaster;
 import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.common.config.FileDocument;
@@ -49,7 +49,7 @@ public class MasterGlobalConfig implements GlobalConfig {
 		});
 		document.save();
 
-		CloudMaster.getInstance().getSocketComponent().sendPacket(new GlobalConfigPacket(GlobalConfigPacketType.UPDATE, rawData));
+		CloudMaster.getInstance().getSocketComponent().sendPacket(new GlobalConfigPacket(GlobalConfigPayload.UPDATE, rawData));
 	}
 
 	@Override

@@ -4,7 +4,7 @@ import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.DriverEnvironment;
 import net.anweisen.cloud.driver.event.Cancelable;
-import net.anweisen.cloud.driver.network.packet.def.PlayerEventPacket.PlayerEventType;
+import net.anweisen.cloud.driver.network.packet.def.PlayerEventPacket.PlayerEventPayload;
 import net.anweisen.cloud.driver.player.CloudPlayer;
 
 import javax.annotation.Nonnull;
@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 /**
  * Called when a player tries to connect to a proxy
  *
- * Triggered by {@link PlayerEventType#PROXY_LOGIN_REQUEST}
+ * Triggered by {@link PlayerEventPayload#PROXY_LOGIN_REQUEST}
  *
  * @author anweisen | https://github.com/anweisen
  * @since 1.0

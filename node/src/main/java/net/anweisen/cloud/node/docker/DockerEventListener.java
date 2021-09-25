@@ -2,7 +2,7 @@ package net.anweisen.cloud.node.docker;
 
 import com.github.dockerjava.api.async.ResultCallbackTemplate;
 import com.github.dockerjava.api.model.Event;
-import net.anweisen.cloud.driver.network.packet.def.ServicePublishPacket.ServicePublishType;
+import net.anweisen.cloud.driver.network.packet.def.ServicePublishPacket.ServicePublishPayload;
 import net.anweisen.cloud.driver.service.specific.ServiceControlState;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.driver.service.specific.ServiceState;
@@ -28,7 +28,7 @@ public class DockerEventListener extends ResultCallbackTemplate<DockerEventListe
 				if (service.getState() != ServiceState.STOPPED && service.getState() != ServiceState.DELETED) {
 					service.setState(ServiceState.STOPPED);
 					service.setControlState(ServiceControlState.NONE);
-					cloud.publishUpdate(ServicePublishType.STOPPED, service);
+					cloud.publishUpdate(ServicePublishPayload.STOPPED, service);
 				}
 				break;
 			}

@@ -2,7 +2,7 @@ package net.anweisen.cloud.driver.database.remote.action;
 
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.network.packet.def.RemoteDatabaseActionPacket;
-import net.anweisen.cloud.driver.network.packet.def.RemoteDatabaseActionPacket.DatabaseActionType;
+import net.anweisen.cloud.driver.network.packet.def.RemoteDatabaseActionPacket.DatabaseActionPayload;
 import net.anweisen.utilities.common.concurrent.task.Task;
 import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.database.Order;
@@ -88,7 +88,7 @@ public class RemoteDatabaseQuery implements DatabaseQuery, RemoteDatabaseCallbac
 	@Override
 	public Task<ExecutedQuery> executeAsync() {
 		return CloudDriver.getInstance().getSocketComponent().getFirstChannel()
-			.sendPacketQueryAsync(new RemoteDatabaseActionPacket(DatabaseActionType.QUERY, buffer -> buffer.writeString(table).writeDocument(document)))
+			.sendPacketQueryAsync(new RemoteDatabaseActionPacket(DatabaseActionPayload.QUERY, buffer -> buffer.writeString(table).writeDocument(document)))
 			.map(packet -> new DefaultExecutedQuery(new ArrayList<>(packet.getBuffer().readDocumentCollection())));
 	}
 

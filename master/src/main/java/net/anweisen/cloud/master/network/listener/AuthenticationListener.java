@@ -5,10 +5,10 @@ import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
-import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket.AuthenticationPacketType;
+import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket.AuthenticationPayload;
 import net.anweisen.cloud.driver.network.packet.def.AuthenticationResponsePacket;
-import net.anweisen.cloud.driver.network.packet.def.NodePublishPacket.NodePublishType;
-import net.anweisen.cloud.driver.network.packet.def.ServicePublishPacket.ServicePublishType;
+import net.anweisen.cloud.driver.network.packet.def.NodePublishPacket.NodePublishPayload;
+import net.anweisen.cloud.driver.network.packet.def.ServicePublishPacket.ServicePublishPayload;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.node.NodeInfo;
 import net.anweisen.cloud.master.CloudMaster;
@@ -33,19 +33,19 @@ public class AuthenticationListener implements PacketListener {
 
 		Buffer buffer = packet.getBuffer();
 
-		AuthenticationPacketType type = buffer.readEnumConstant(AuthenticationPacketType.class);
+		AuthenticationPayload payload = buffer.readEnumConstant(AuthenticationPayload.class);
 		UUID identity = buffer.readUUID();
 
-		cloud.getLogger().debug("Received authentication from {}: type={}", channel, type);
+		cloud.getLogger().debug("Received authentication from {}: type={}", channel, payload);
 
 		if (!cloud.getConfig().getIdentity().equals(identity)) {
-			cloud.getLogger().info("Authentication for some {} with identity {} was rejected: {}", type, identity, channel);
+			cloud.getLogger().info("Authentication for some {} with identity {} was rejected: {}", payload, identity, channel);
 			channel.sendPacket(new AuthenticationResponsePacket(false, "authentication failed"));
 			channel.close();
 			return;
 		}
 
-		switch (type) {
+		switch (payload) {
 
 			case NODE: {
 				String name = buffer.readString();
@@ -68,8 +68,8 @@ public class AuthenticationListener implements PacketListener {
 				cloud.getLogger().info("Node '{}' has connected successfully", name);
 				cloud.getLogger().extended("=> Subnet range for {}: {}", name, info.getSubnet());
 				cloud.getLogger().extended("=> Gateway ip for {}: {}", name, info.getGateway());
-				cloud.getNodeManager().handleNodeUpdate(NodePublishType.CONNECTED, info);
-				cloud.publishUpdate(NodePublishType.CONNECTED, info);
+				cloud.getNodeManager().handleNodeUpdate(NodePublishPayload.CONNECTED, info);
+				cloud.publishUpdate(NodePublishPayload.CONNECTED, info);
 				channel.sendPacket(new AuthenticationResponsePacket(true, "successful"));
 				break;
 			}
@@ -110,8 +110,8 @@ public class AuthenticationListener implements PacketListener {
 				}
 
 				service.setChannel(channel);
-				cloud.publishUpdate(ServicePublishType.CONNECTED, service.getInfo());
-				cloud.getServiceManager().handleServiceUpdate(ServicePublishType.CONNECTED, service.getInfo());
+				cloud.publishUpdate(ServicePublishPayload.CONNECTED, service.getInfo());
+				cloud.getServiceManager().handleServiceUpdate(ServicePublishPayload.CONNECTED, service.getInfo());
 
 				cloud.getLogger().info("Service '{}' has connected successfully", service.getInfo().getName());
 				channel.sendPacket(new AuthenticationResponsePacket(true, "successful"));

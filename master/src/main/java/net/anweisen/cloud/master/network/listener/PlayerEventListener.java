@@ -7,7 +7,7 @@ import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
 import net.anweisen.cloud.driver.network.packet.def.PlayerEventPacket;
-import net.anweisen.cloud.driver.network.packet.def.PlayerEventPacket.PlayerEventType;
+import net.anweisen.cloud.driver.network.packet.def.PlayerEventPacket.PlayerEventPayload;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import net.anweisen.cloud.driver.player.CloudPlayer;
@@ -34,17 +34,17 @@ public class PlayerEventListener implements PacketListener, LoggingApiUser {
 		CloudMaster cloud = CloudMaster.getInstance();
 		Buffer buffer = packet.getBuffer();
 
-		PlayerEventType type = buffer.readEnumConstant(PlayerEventType.class);
+		PlayerEventPayload payload = buffer.readEnumConstant(PlayerEventPayload.class);
 
 		CloudService service = cloud.getServiceManager().getServiceByChannel(channel);
-		Preconditions.checkNotNull(service, "Service from which a " + type + " packet was received is not registered");
+		Preconditions.checkNotNull(service, "Service from which a " + payload + " packet was received is not registered");
 		ServiceInfo serviceInfo = service.getInfo();
 
-		if (type.getType() == ServiceType.PROXY) {
+		if (payload.getType() == ServiceType.PROXY) {
 			UUID playerUniqueId = buffer.readUUID();
-			debug("{} '{}' -> {}", type, serviceInfo.getName(), playerUniqueId);
+			debug("{} '{}' -> {}", payload, serviceInfo.getName(), playerUniqueId);
 
-			switch (type) {
+			switch (payload) {
 				case PROXY_LOGIN_REQUEST: {
 					CloudPlayer player = cloud.getPlayerManager().loginPlayer(
 						playerUniqueId, buffer.readString(), buffer.readObject(DefaultPlayerConnection.class), serviceInfo,
@@ -109,11 +109,11 @@ public class PlayerEventListener implements PacketListener, LoggingApiUser {
 					break;
 				}
 			}
-		} else if (type.getType() == ServiceType.SERVER) {
+		} else if (payload.getType() == ServiceType.SERVER) {
 			UUID playerUniqueId = buffer.readUUID();
-			debug("{} '{}' -> {}", type, serviceInfo.getName(), playerUniqueId);
+			debug("{} '{}' -> {}", payload, serviceInfo.getName(), playerUniqueId);
 
-			switch (type) {
+			switch (payload) {
 				case SERVER_LOGIN_REQUEST: {
 					CloudPlayer player = findPlayer(playerUniqueId);
 
@@ -136,12 +136,12 @@ public class PlayerEventListener implements PacketListener, LoggingApiUser {
 					break;
 				}
 			}
-		} else if (type.getType() == null) {
+		} else if (payload.getType() == null) {
 			UUID playerUniqueId = buffer.readUUID();
-			debug("{} '{}' -> {}", type, serviceInfo.getName(), playerUniqueId);
+			debug("{} '{}' -> {}", payload, serviceInfo.getName(), playerUniqueId);
 			CloudPlayer player = findPlayer(playerUniqueId);
 
-			switch (type) {
+			switch (payload) {
 				case PLAYER_SETTINGS_CHANGE: {
 					PlayerSettings from = player.getSettings();
 					PlayerSettings to = buffer.readObject(DefaultPlayerSettings.class);

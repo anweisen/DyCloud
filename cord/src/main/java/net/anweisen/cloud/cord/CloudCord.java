@@ -21,7 +21,7 @@ import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.network.packet.PacketConstants;
 import net.anweisen.cloud.driver.network.packet.PacketListenerRegistry;
 import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket;
-import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket.AuthenticationPacketType;
+import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket.AuthenticationPayload;
 import net.anweisen.cloud.driver.node.NodeManager;
 import net.anweisen.cloud.driver.player.PlayerManager;
 import net.anweisen.cloud.driver.player.defaults.RemotePlayerManager;
@@ -132,7 +132,7 @@ public final class CloudCord extends CloudDriver {
 
 	private void sendAuthentication() {
 		logger.debug("Sending authentication to master.. Cord: '{}'", config.getCordName());
-		socketClient.sendPacket(new AuthenticationPacket(AuthenticationPacketType.CORD, config.getIdentity(), config.getCordName(), buffer -> buffer.writeObject(config.getBindAddress())));
+		socketClient.sendPacket(new AuthenticationPacket(AuthenticationPayload.CORD, config.getIdentity(), config.getCordName(), buffer -> buffer.writeObject(config.getBindAddress())));
 	}
 
 	private void loadNetworkListeners(@Nonnull PacketListenerRegistry registry) {

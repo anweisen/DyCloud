@@ -5,7 +5,7 @@ import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
 import net.anweisen.cloud.driver.network.packet.def.ServiceControlPacket;
-import net.anweisen.cloud.driver.network.packet.def.ServiceControlPacket.ServiceControlType;
+import net.anweisen.cloud.driver.network.packet.def.ServiceControlPacket.ServiceControlPayload;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.service.config.ServiceTask;
 import net.anweisen.cloud.master.CloudMaster;
@@ -26,8 +26,8 @@ public class ServiceControlListener implements PacketListener, LoggingApiUser {
 		CloudMaster cloud = CloudMaster.getInstance();
 		Buffer buffer = packet.getBuffer();
 
-		ServiceControlType type = buffer.readEnumConstant(ServiceControlType.class);
-		switch (type) {
+		ServiceControlPayload payload = buffer.readEnumConstant(ServiceControlPayload.class);
+		switch (payload) {
 			case CREATE: {
 				ServiceTask task = buffer.readObject(ServiceTask.class);
 				debug("{} -> {}", task, task);
@@ -41,9 +41,9 @@ public class ServiceControlListener implements PacketListener, LoggingApiUser {
 
 		UUID uuid = buffer.readUUID();
 		CloudService service = cloud.getServiceManager().getServiceByUniqueId(uuid);
-		debug("{} -> {}", type, service.getInfo().getName());
+		debug("{} -> {}", payload, service.getInfo().getName());
 		NodeServer node = cloud.getNodeManager().getNodeServer(service.getInfo().getNodeName());
-		node.getChannel().sendPacketQueryAsync(new ServiceControlPacket(type, uuid))
+		node.getChannel().sendPacketQueryAsync(new ServiceControlPacket(payload, uuid))
 			.onComplete(response -> channel.sendPacket(Packet.createResponseFor(packet)));
 	}
 

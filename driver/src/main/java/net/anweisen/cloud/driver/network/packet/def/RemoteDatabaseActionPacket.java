@@ -14,17 +14,17 @@ import java.util.function.Consumer;
  */
 public class RemoteDatabaseActionPacket extends Packet {
 
-	public RemoteDatabaseActionPacket(@Nonnull DatabaseActionType type) {
-		this(type, null);
+	public RemoteDatabaseActionPacket(@Nonnull DatabaseActionPayload payload) {
+		this(payload, null);
 	}
 
-	public RemoteDatabaseActionPacket(@Nonnull DatabaseActionType type, @Nullable Consumer<? super Buffer> modifier) {
-		super(PacketConstants.DATABASE_CHANNEL, Buffer.create().writeEnumConstant(type));
+	public RemoteDatabaseActionPacket(@Nonnull DatabaseActionPayload payload, @Nullable Consumer<? super Buffer> modifier) {
+		super(PacketConstants.DATABASE_CHANNEL, Buffer.create().writeEnumConstant(payload));
 		if (modifier != null)
 			modifier.accept(buffer);
 	}
 
-	public enum DatabaseActionType {
+	public enum DatabaseActionPayload {
 
 		QUERY(true),
 		UPDATE(true),
@@ -38,7 +38,7 @@ public class RemoteDatabaseActionPacket extends Packet {
 
 		private final boolean specific;
 
-		DatabaseActionType(boolean specific) {
+		DatabaseActionPayload(boolean specific) {
 			this.specific = specific;
 		}
 

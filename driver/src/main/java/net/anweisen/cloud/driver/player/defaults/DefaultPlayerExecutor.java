@@ -2,7 +2,7 @@ package net.anweisen.cloud.driver.player.defaults;
 
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.def.PlayerExecutorPacket;
-import net.anweisen.cloud.driver.network.packet.def.PlayerExecutorPacket.PlayerExecutorPacketType;
+import net.anweisen.cloud.driver.network.packet.def.PlayerExecutorPacket.PlayerExecutorPayload;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.player.PlayerExecutor;
 import net.anweisen.cloud.driver.player.chat.ChatText;
@@ -39,36 +39,36 @@ public abstract class DefaultPlayerExecutor implements PlayerExecutor {
 
 	@Override
 	public void sendMessage(@Nullable String permission, @Nonnull ChatText... message) {
-		sendPacket(PlayerExecutorPacketType.SEND_MESSAGE, buffer -> buffer.writeOptionalString(permission).writeObjectArray(message));
+		sendPacket(PlayerExecutorPayload.SEND_MESSAGE, buffer -> buffer.writeOptionalString(permission).writeObjectArray(message));
 	}
 
 	@Override
 	public void sendActionbar(@Nonnull String message) {
-		sendPacket(PlayerExecutorPacketType.SEND_ACTIONBAR, buffer -> buffer.writeString(message));
+		sendPacket(PlayerExecutorPayload.SEND_ACTIONBAR, buffer -> buffer.writeString(message));
 	}
 
 	@Override
 	public void sendTitle(@Nonnull String title, @Nonnull String subtitle, int fadeIn, int stay, int fadeOut) {
-		sendPacket(PlayerExecutorPacketType.SEND_TITLE, buffer -> buffer.writeString(title).writeString(subtitle).writeVarInt(fadeIn).writeVarInt(stay).writeVarInt(fadeOut));
+		sendPacket(PlayerExecutorPayload.SEND_TITLE, buffer -> buffer.writeString(title).writeString(subtitle).writeVarInt(fadeIn).writeVarInt(stay).writeVarInt(fadeOut));
 	}
 
 	@Override
 	public void connect(@Nonnull String serverName) {
-		sendPacket(PlayerExecutorPacketType.CONNECT_SERVER, buffer -> buffer.writeString(serverName));
+		sendPacket(PlayerExecutorPayload.CONNECT_SERVER, buffer -> buffer.writeString(serverName));
 	}
 
 	@Override
 	public void connectFallback() {
-		sendPacket(PlayerExecutorPacketType.CONNECT_FALLBACK, buffer -> {});
+		sendPacket(PlayerExecutorPayload.CONNECT_FALLBACK, buffer -> {});
 	}
 
 	@Override
 	public void disconnect(@Nullable String kickReason) {
-		sendPacket(PlayerExecutorPacketType.DISCONNECT, buffer -> buffer.writeString(kickReason == null ? "§cNo kick reason given" : kickReason));
+		sendPacket(PlayerExecutorPayload.DISCONNECT, buffer -> buffer.writeString(kickReason == null ? "§cNo kick reason given" : kickReason));
 	}
 
-	private void sendPacket(@Nonnull PlayerExecutorPacketType type, @Nonnull Consumer<? super Buffer> modifier) {
-		sendPacket(new PlayerExecutorPacket(type, playerUniqueId, modifier));
+	private void sendPacket(@Nonnull PlayerExecutorPayload payload, @Nonnull Consumer<? super Buffer> modifier) {
+		sendPacket(new PlayerExecutorPacket(payload, playerUniqueId, modifier));
 	}
 
 	protected abstract void sendPacket(@Nonnull Packet packet);

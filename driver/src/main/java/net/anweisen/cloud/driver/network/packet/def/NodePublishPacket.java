@@ -13,11 +13,11 @@ import javax.annotation.Nonnull;
  */
 public class NodePublishPacket extends Packet {
 
-	public NodePublishPacket(@Nonnull NodePublishType publishType, @Nonnull NodeInfo info) {
-		super(PacketConstants.NODE_INFO_PUBLISH_CHANNEL, Buffer.create().writeEnumConstant(publishType).writeObject(info));
+	public NodePublishPacket(@Nonnull NodePublishPayload payload, @Nonnull NodeInfo info) {
+		super(PacketConstants.NODE_INFO_PUBLISH_CHANNEL, Buffer.create().writeEnumConstant(payload).writeObject(info));
 	}
 
-	public enum NodePublishType {
+	public enum NodePublishPayload {
 		CONNECTED,
 		DISCONNECTED
 	}

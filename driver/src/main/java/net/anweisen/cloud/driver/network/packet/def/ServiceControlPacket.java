@@ -16,19 +16,19 @@ import java.util.UUID;
 public class ServiceControlPacket extends Packet {
 
 	/** @see net.anweisen.cloud.driver.service.RemoteServiceFactory#createServiceAsync(ServiceTask) */
-	public ServiceControlPacket(@Nonnull ServiceControlType type, @Nonnull ServiceTask task) {
-		super(PacketConstants.SERVICE_CONTROL_CHANNEL, Buffer.create().writeEnumConstant(type).writeObject(task));
+	public ServiceControlPacket(@Nonnull ServiceControlPayload payload, @Nonnull ServiceTask task) {
+		super(PacketConstants.SERVICE_CONTROL_CHANNEL, Buffer.create().writeEnumConstant(payload).writeObject(task));
 	}
 
-	public ServiceControlPacket(@Nonnull ServiceControlType type, @Nonnull ServiceInfo service) {
-		super(PacketConstants.SERVICE_CONTROL_CHANNEL, Buffer.create().writeEnumConstant(type).writeObject(service));
+	public ServiceControlPacket(@Nonnull ServiceControlPayload payload, @Nonnull ServiceInfo service) {
+		super(PacketConstants.SERVICE_CONTROL_CHANNEL, Buffer.create().writeEnumConstant(payload).writeObject(service));
 	}
 
-	public ServiceControlPacket(@Nonnull ServiceControlType type, @Nonnull UUID service) {
-		super(PacketConstants.SERVICE_CONTROL_CHANNEL, Buffer.create().writeEnumConstant(type).writeUUID(service));
+	public ServiceControlPacket(@Nonnull ServiceControlPayload payload, @Nonnull UUID service) {
+		super(PacketConstants.SERVICE_CONTROL_CHANNEL, Buffer.create().writeEnumConstant(payload).writeUUID(service));
 	}
 
-	public enum ServiceControlType {
+	public enum ServiceControlPayload {
 		CREATE,
 		START,
 		STOP,

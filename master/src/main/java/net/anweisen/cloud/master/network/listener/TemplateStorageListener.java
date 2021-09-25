@@ -4,7 +4,7 @@ import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
-import net.anweisen.cloud.driver.network.packet.def.TemplateStoragePacket.TemplateStoragePacketType;
+import net.anweisen.cloud.driver.network.packet.def.TemplateStoragePacket.TemplateStoragePayload;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.service.config.ServiceTemplate;
 import net.anweisen.cloud.driver.service.config.TemplateStorage;
@@ -27,8 +27,8 @@ public class TemplateStorageListener implements PacketListener, LoggingApiUser {
 		CloudMaster cloud = CloudMaster.getInstance();
 		Buffer buffer = packet.getBuffer();
 
-		TemplateStoragePacketType type = buffer.readEnumConstant(TemplateStoragePacketType.class);
-		switch (type) {
+		TemplateStoragePayload payload = buffer.readEnumConstant(TemplateStoragePayload.class);
+		switch (payload) {
 			case LOAD_TEMPLATE_STREAM: {
 				ServiceTemplate template = buffer.readObject(ServiceTemplate.class);
 				TemplateStorage storage = template.findStorage();

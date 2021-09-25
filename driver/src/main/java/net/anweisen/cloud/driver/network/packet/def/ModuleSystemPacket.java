@@ -12,19 +12,19 @@ import javax.annotation.Nonnull;
  */
 public class ModuleSystemPacket extends Packet {
 
-	public ModuleSystemPacket(@Nonnull ModuleSystemPacketType type) {
-		super(PacketConstants.MODULE_SYSTEM_CHANNEL, Buffer.create().writeEnumConstant(type));
+	public ModuleSystemPacket(@Nonnull ModuleSystemPayload payload) {
+		super(PacketConstants.MODULE_SYSTEM_CHANNEL, Buffer.create().writeEnumConstant(payload));
 	}
 
-	public ModuleSystemPacket(@Nonnull ModuleSystemPacketType type, int index) {
-		this(type);
+	public ModuleSystemPacket(@Nonnull ModuleSystemPayload payload, int index) {
+		this(payload);
 		buffer.writeInt(index);
 	}
 
-	public enum ModuleSystemPacketType {
+	public enum ModuleSystemPayload {
 		GET_MODULES,
 		GET_MODULE_JAR,
-		GET_MODULE_DATA_FOLDER,
+		GET_MODULE_DATA_FOLDER
 	}
 
 }

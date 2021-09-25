@@ -5,7 +5,7 @@ import net.anweisen.cloud.driver.database.remote.SerializableSQLColumn;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
-import net.anweisen.cloud.driver.network.packet.def.RemoteDatabaseActionPacket.DatabaseActionType;
+import net.anweisen.cloud.driver.network.packet.def.RemoteDatabaseActionPacket.DatabaseActionPayload;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.database.Order;
@@ -35,13 +35,13 @@ public class RemoteDatabaseActionListener implements PacketListener {
 	public void handlePacket(@Nonnull SocketChannel channel, @Nonnull Packet packet) throws Exception {
 		Buffer buffer = packet.getBuffer();
 
-		DatabaseActionType type = buffer.readEnumConstant(DatabaseActionType.class);
+		DatabaseActionPayload payload = buffer.readEnumConstant(DatabaseActionPayload.class);
 
-		if (type.isSpecific()) {
+		if (payload.isSpecific()) {
 			String table = buffer.readString();
 			Document document = buffer.isReadable(1) ? buffer.readDocument() : null;
 
-			switch (type) {
+			switch (payload) {
 				case QUERY: {
 					DatabaseQuery action = manager.getDatabase().query(table);
 					applyWhere(document, action);
@@ -88,7 +88,7 @@ public class RemoteDatabaseActionListener implements PacketListener {
 				}
 			}
 		} else {
-			switch (type) {
+			switch (payload) {
 				case LIST_TABLES: {
 					Collection<String> tables = manager.getDatabase().listTables().execute();
 					channel.sendPacket(Packet.createResponseFor(packet, Buffer.create().writeStringCollection(tables)));

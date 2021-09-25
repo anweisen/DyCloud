@@ -13,18 +13,18 @@ import javax.annotation.Nonnull;
  */
 public class GlobalConfigPacket extends Packet {
 
-	public GlobalConfigPacket(@Nonnull GlobalConfigPacketType packetType) {
-		super(PacketConstants.GLOBAL_CONFIG_CHANNEL, Buffer.create().writeEnumConstant(packetType));
+	public GlobalConfigPacket(@Nonnull GlobalConfigPayload payload) {
+		super(PacketConstants.GLOBAL_CONFIG_CHANNEL, Buffer.create().writeEnumConstant(payload));
 	}
 
-	public GlobalConfigPacket(@Nonnull GlobalConfigPacketType packetType, @Nonnull Document data) {
-		this(packetType);
+	public GlobalConfigPacket(@Nonnull GlobalConfigPayload payload, @Nonnull Document data) {
+		this(payload);
 		buffer.writeDocument(data);
 	}
 
-	public enum GlobalConfigPacketType {
+	public enum GlobalConfigPayload {
 		UPDATE,
-		FETCH,
+		FETCH
 	}
 
 }

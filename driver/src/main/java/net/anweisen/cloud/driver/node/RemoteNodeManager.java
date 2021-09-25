@@ -1,6 +1,6 @@
 package net.anweisen.cloud.driver.node;
 
-import net.anweisen.cloud.driver.network.packet.def.NodePublishPacket.NodePublishType;
+import net.anweisen.cloud.driver.network.packet.def.NodePublishPacket.NodePublishPayload;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -21,13 +21,13 @@ public class RemoteNodeManager extends DefaultNodeManager {
 	}
 
 	@Override
-	public void handleNodeUpdate(@Nonnull NodePublishType type, @Nonnull NodeInfo info) {
-		if (type == NodePublishType.CONNECTED) {
+	public void handleNodeUpdate(@Nonnull NodePublishPayload payload, @Nonnull NodeInfo info) {
+		if (payload == NodePublishPayload.CONNECTED) {
 			nodes.add(info);
-		} else if (type == NodePublishType.DISCONNECTED) {
+		} else if (payload == NodePublishPayload.DISCONNECTED) {
 			nodes.remove(info);
 		}
 
-		super.handleNodeUpdate(type, info);
+		super.handleNodeUpdate(payload, info);
 	}
 }

@@ -6,7 +6,7 @@ import net.anweisen.cloud.driver.event.player.*;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
-import net.anweisen.cloud.driver.network.packet.def.PlayerEventPacket.PlayerEventType;
+import net.anweisen.cloud.driver.network.packet.def.PlayerEventPacket.PlayerEventPayload;
 import net.anweisen.cloud.driver.network.packet.protocol.Buffer;
 import net.anweisen.cloud.driver.player.CloudPlayer;
 import net.anweisen.cloud.driver.player.defaults.DefaultCloudPlayer;
@@ -28,9 +28,9 @@ public class PlayerEventListener implements PacketListener {
 		CloudDriver cloud = CloudDriver.getInstance();
 		Buffer buffer = packet.getBuffer();
 
-		PlayerEventType type = buffer.readEnumConstant(PlayerEventType.class);
+		PlayerEventPayload payload = buffer.readEnumConstant(PlayerEventPayload.class);
 
-		if (type == PlayerEventType.PROXY_LOGIN_REQUEST) {
+		if (payload == PlayerEventPayload.PROXY_LOGIN_REQUEST) {
 			CloudPlayer player = buffer.readObject(DefaultCloudPlayer.class);
 			cloud.getPlayerManager().registerPlayer(player);
 			cloud.getEventManager().callEvent(new PlayerProxyLoginRequestEvent(player));
@@ -40,14 +40,14 @@ public class PlayerEventListener implements PacketListener {
 		UUID uuid = buffer.readUUID();
 		CloudPlayer player = cloud.getPlayerManager().getOnlinePlayerByUniqueId(uuid);
 
-		if (type == PlayerEventType.SERVER_DISCONNECT) {
+		if (payload == PlayerEventPayload.SERVER_DISCONNECT) {
 			ServiceInfo service = findService(buffer.readUUID());
 			cloud.getEventManager().callEvent(new PlayerServerDisconnectEvent(player, service, uuid));
 			return;
 		}
 
 		Preconditions.checkNotNull(player, "Online CloudPlayer for " + uuid + " is null");
-		switch (type) {
+		switch (payload) {
 			case PROXY_LOGIN_SUCCESS: {
 				PlayerSettings settings = buffer.readObject(DefaultPlayerSettings.class);
 				player.setSettings(settings);

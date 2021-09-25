@@ -2,7 +2,7 @@ package net.anweisen.cloud.driver.config.global;
 
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.network.packet.def.GlobalConfigPacket;
-import net.anweisen.cloud.driver.network.packet.def.GlobalConfigPacket.GlobalConfigPacketType;
+import net.anweisen.cloud.driver.network.packet.def.GlobalConfigPacket.GlobalConfigPayload;
 import net.anweisen.utilities.common.config.Document;
 
 import javax.annotation.Nonnull;
@@ -31,13 +31,13 @@ public class RemoteGlobalConfig implements GlobalConfig {
 	@Override
 	public void update() {
 		CloudDriver.getInstance().getSocketComponent()
-			.sendPacket(new GlobalConfigPacket(GlobalConfigPacketType.UPDATE, rawData));
+			.sendPacket(new GlobalConfigPacket(GlobalConfigPayload.UPDATE, rawData));
 	}
 
 	@Override
 	public void fetch() {
 		rawData = CloudDriver.getInstance().getSocketComponent().getFirstChannel()
-			.sendPacketQuery(new GlobalConfigPacket(GlobalConfigPacketType.FETCH))
+			.sendPacketQuery(new GlobalConfigPacket(GlobalConfigPayload.FETCH))
 			.getBuffer().readDocument();
 	}
 }

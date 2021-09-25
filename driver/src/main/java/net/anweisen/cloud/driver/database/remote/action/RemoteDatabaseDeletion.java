@@ -2,7 +2,7 @@ package net.anweisen.cloud.driver.database.remote.action;
 
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.network.packet.def.RemoteDatabaseActionPacket;
-import net.anweisen.cloud.driver.network.packet.def.RemoteDatabaseActionPacket.DatabaseActionType;
+import net.anweisen.cloud.driver.network.packet.def.RemoteDatabaseActionPacket.DatabaseActionPayload;
 import net.anweisen.utilities.common.concurrent.task.Task;
 import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.database.action.DatabaseDeletion;
@@ -64,7 +64,7 @@ public class RemoteDatabaseDeletion implements DatabaseDeletion {
 
 	public Void execute() throws DatabaseException {
 		CloudDriver.getInstance().getSocketComponent().getFirstChannel().sendPacket(
-			new RemoteDatabaseActionPacket(DatabaseActionType.DELETE, buffer -> buffer.writeString(table).writeDocument(document))
+			new RemoteDatabaseActionPacket(DatabaseActionPayload.DELETE, buffer -> buffer.writeString(table).writeDocument(document))
 		);
 		return null;
 	}

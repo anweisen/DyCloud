@@ -13,7 +13,7 @@ import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.network.packet.PacketConstants;
 import net.anweisen.cloud.driver.network.packet.PacketListenerRegistry;
 import net.anweisen.cloud.driver.network.packet.def.NodePublishPacket;
-import net.anweisen.cloud.driver.network.packet.def.NodePublishPacket.NodePublishType;
+import net.anweisen.cloud.driver.network.packet.def.NodePublishPacket.NodePublishPayload;
 import net.anweisen.cloud.driver.node.NodeInfo;
 import net.anweisen.cloud.driver.service.ServiceFactory;
 import net.anweisen.cloud.driver.service.config.LocalTemplateStorage;
@@ -163,8 +163,8 @@ public final class CloudMaster extends CloudBase {
 
 	}
 
-	public void publishUpdate(@Nonnull NodePublishType publishType, @Nonnull NodeInfo nodeInfo) {
-		getSocketComponent().sendPacketSync(new NodePublishPacket(publishType, nodeInfo));
+	public void publishUpdate(@Nonnull NodePublishPayload payload, @Nonnull NodeInfo nodeInfo) {
+		getSocketComponent().sendPacketSync(new NodePublishPacket(payload, nodeInfo));
 	}
 
 	@Nonnull

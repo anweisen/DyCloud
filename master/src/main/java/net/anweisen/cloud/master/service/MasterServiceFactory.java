@@ -1,8 +1,8 @@
 package net.anweisen.cloud.master.service;
 
 import net.anweisen.cloud.driver.network.packet.def.ServiceControlPacket;
-import net.anweisen.cloud.driver.network.packet.def.ServiceControlPacket.ServiceControlType;
-import net.anweisen.cloud.driver.network.packet.def.ServicePublishPacket.ServicePublishType;
+import net.anweisen.cloud.driver.network.packet.def.ServiceControlPacket.ServiceControlPayload;
+import net.anweisen.cloud.driver.network.packet.def.ServicePublishPacket.ServicePublishPayload;
 import net.anweisen.cloud.driver.service.ServiceFactory;
 import net.anweisen.cloud.driver.service.config.ServiceTask;
 import net.anweisen.cloud.driver.service.specific.ServiceControlState;
@@ -87,18 +87,18 @@ public class MasterServiceFactory implements ServiceFactory {
 
 		CloudService service = new DefaultCloudService(info);
 		cloud.getServiceManager().registerService(service);
-		cloud.publishUpdate(ServicePublishType.REGISTER, info, node.getChannel());
-		cloud.getServiceManager().handleServiceUpdate(ServicePublishType.REGISTER, info);
+		cloud.publishUpdate(ServicePublishPayload.REGISTER, info, node.getChannel());
+		cloud.getServiceManager().handleServiceUpdate(ServicePublishPayload.REGISTER, info);
 
 		cloud.getLogger().info("Told '{}' to create '{}'", node.getInfo().getName(), info.getName());
 		cloud.getLogger().extended("- {}", node);
 		cloud.getLogger().extended("- {}", info);
 		cloud.getLogger().extended("- {}", task);
 
-		return node.getChannel().sendPacketQueryAsync(new ServiceControlPacket(ServiceControlType.CREATE, info)).map(packet -> {
+		return node.getChannel().sendPacketQueryAsync(new ServiceControlPacket(ServiceControlPayload.CREATE, info)).map(packet -> {
 			ServiceInfo response = packet.getBuffer().readObject(ServiceInfo.class);
-			cloud.getServiceManager().handleServiceUpdate(ServicePublishType.UPDATE, response);
-			cloud.publishUpdate(ServicePublishType.UPDATE, response, node.getChannel());
+			cloud.getServiceManager().handleServiceUpdate(ServicePublishPayload.UPDATE, response);
+			cloud.publishUpdate(ServicePublishPayload.UPDATE, response, node.getChannel());
 			return response;
 		});
 	}

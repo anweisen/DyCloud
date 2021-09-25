@@ -2,7 +2,7 @@ package net.anweisen.cloud.driver.database.remote.action;
 
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.network.packet.def.RemoteDatabaseActionPacket;
-import net.anweisen.cloud.driver.network.packet.def.RemoteDatabaseActionPacket.DatabaseActionType;
+import net.anweisen.cloud.driver.network.packet.def.RemoteDatabaseActionPacket.DatabaseActionPayload;
 import net.anweisen.utilities.common.concurrent.task.Task;
 import net.anweisen.utilities.database.action.DatabaseListTables;
 import net.anweisen.utilities.database.exceptions.DatabaseException;
@@ -21,7 +21,7 @@ public class RemoteDatabaseListTables implements DatabaseListTables, RemoteDatab
 	@Override
 	public Task<List<String>> executeAsync() {
 		return CloudDriver.getInstance().getSocketComponent().getFirstChannel()
-			.sendPacketQueryAsync(new RemoteDatabaseActionPacket(DatabaseActionType.LIST_TABLES))
+			.sendPacketQueryAsync(new RemoteDatabaseActionPacket(DatabaseActionPayload.LIST_TABLES))
 			.map(packet -> new ArrayList<>(packet.getBuffer().readStringCollection()));
 	}
 
