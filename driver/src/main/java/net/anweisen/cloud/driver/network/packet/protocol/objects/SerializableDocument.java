@@ -1,6 +1,8 @@
-package net.anweisen.cloud.driver.network.packet.protocol;
+package net.anweisen.cloud.driver.network.packet.protocol.objects;
 
 import com.google.common.base.Preconditions;
+import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
+import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.common.config.document.wrapper.WrappedDocument;
 
@@ -29,12 +31,12 @@ public class SerializableDocument implements WrappedDocument<SerializableDocumen
 	}
 
 	@Override
-	public void write(@Nonnull Buffer buffer) {
+	public void write(@Nonnull PacketBuffer buffer) {
 		buffer.writeString(document.toJson());
 	}
 
 	@Override
-	public void read(@Nonnull Buffer buffer) {
+	public void read(@Nonnull PacketBuffer buffer) {
 		document = Document.parseJson(buffer.readString());
 	}
 }
