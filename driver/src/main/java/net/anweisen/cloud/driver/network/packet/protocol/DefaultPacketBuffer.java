@@ -8,6 +8,7 @@ import net.anweisen.utilities.common.misc.SimpleCollectionUtils;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -214,7 +215,10 @@ public abstract class DefaultPacketBuffer implements PacketBuffer {
 	@Override
 	public <T extends SerializableObject> T readObject(@Nonnull Class<T> objectClass) {
 		try {
-			T object = objectClass.getDeclaredConstructor().newInstance();
+			Constructor<T> constructor = objectClass.getDeclaredConstructor();
+			constructor.setAccessible(true);
+
+			T object = constructor.newInstance();
 			object.read(this);
 			return object;
 		} catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
