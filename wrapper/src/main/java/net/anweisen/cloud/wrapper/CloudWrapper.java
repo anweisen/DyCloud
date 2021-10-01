@@ -81,6 +81,7 @@ public final class CloudWrapper extends CloudDriver {
 	private final Thread mainThread = Thread.currentThread();
 	private Thread applicationThread;
 	private ClassLoader applicationClassLoader;
+	private final ClassLoader bootClassLoader = getClass().getClassLoader();
 	private Path applicationFile;
 
 	private SocketClient socketClient;
@@ -327,6 +328,11 @@ public final class CloudWrapper extends CloudDriver {
 	@Nonnull
 	public ClassLoader getApplicationClassLoader() {
 		return applicationClassLoader;
+	}
+
+	@Nonnull
+	public ClassLoader getBootClassLoader() {
+		return bootClassLoader;
 	}
 
 	@Nonnull
