@@ -116,6 +116,8 @@ I would recommend you to use one of the **following cloud systems**:
 ❌ | Service Screens
 ❌ | Message Translations
 ❌ | Proxy Commands (+ Cloud Command API?)
+❌ | Migrate to Gradle
+❌ | Relocate google depends & netty to prevent issues from server software using older versions
 ⚠️ | Service Deployments
 ⚠️ | Static Services
 ⚠️ | NPC Module
