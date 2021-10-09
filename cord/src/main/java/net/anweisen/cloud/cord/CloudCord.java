@@ -73,7 +73,7 @@ public final class CloudCord extends CloudDriver {
 		permissionManager = new RemotePermissionManager();
 		globalConfig = new RemoteGlobalConfig();
 
-		HeaderPrinter.printHeader(console, this);
+		HeaderPrinter.printHeader(console);
 	}
 
 	public synchronized void start() throws Exception {

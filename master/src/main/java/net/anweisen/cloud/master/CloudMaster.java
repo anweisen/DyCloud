@@ -80,7 +80,7 @@ public final class CloudMaster extends CloudBase {
 		playerManager = new MasterPlayerManager();
 		globalConfig = new MasterGlobalConfig();
 
-		HeaderPrinter.printHeader(console, this);
+		HeaderPrinter.printHeader(console);
 	}
 
 	public synchronized void start() throws Exception {

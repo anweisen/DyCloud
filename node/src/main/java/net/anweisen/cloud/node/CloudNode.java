@@ -104,7 +104,7 @@ public final class CloudNode extends CloudBase {
 		serviceActor = new DockerServiceActor();
 		globalConfig = new RemoteGlobalConfig();
 
-		HeaderPrinter.printHeader(console, this);
+		HeaderPrinter.printHeader(console);
 	}
 
 	public synchronized void start() throws Exception {
