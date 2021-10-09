@@ -15,8 +15,7 @@ public final class BukkitCloudPermsHelper {
 
 	public static void injectPermissible(@Nonnull Player player) {
 		try {
-			Class<?> clazz = player.getClass();
-			Field field = ReflectionUtils.getInheritedPrivateField(clazz, "perm");
+			Field field = ReflectionUtils.getInheritedPrivateField(player.getClass(), "perm");
 			field.setAccessible(true);
 			field.set(player, new BukkitCloudPermsPermissible(player));
 		} catch (NoSuchFieldException | IllegalAccessException ex) {
