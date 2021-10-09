@@ -1,5 +1,6 @@
 package net.anweisen.cloud.master.translate;
 
+import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.translate.Language;
 import net.anweisen.cloud.driver.translate.LanguageConfig;
 import net.anweisen.cloud.driver.translate.Translatable;
@@ -13,24 +14,27 @@ import net.anweisen.utilities.common.misc.FileUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class MasterTranslationManager implements TranslationManager {
+public class MasterTranslationManager implements TranslationManager, LoggingApiUser {
 
 	private static final Path directory = Paths.get("translations");
-	private static final String configPath = ".json";
+	private static final String configPath = "_.json";
 
 	private final Map<String, Language> languages = new LinkedHashMap<>();
+
+	public MasterTranslationManager() {
+		setup();
+	}
 
 	@Nonnull
 	@Override
@@ -55,6 +59,40 @@ public class MasterTranslationManager implements TranslationManager {
 		this.languages.clear();
 		for (Language language : languages)
 			this.languages.put(language.getId(), language);
+	}
+
+	private void setup() {
+		FileUtils.createDirectory(directory);
+
+		List<Document> documents = Document.parseJsonArray(getClass().getClassLoader().getResourceAsStream("language/_.json"));
+		for (Document document : documents) {
+			try {
+				InputStream stream = getClass().getClassLoader().getResourceAsStream("language/" + document.getString("file"));
+				if (stream == null) {
+					warn("Language file for {} could not be found", document);
+					continue;
+				}
+				Document values = Document.parseJson(stream);
+
+				Path languageDirectory = directory.resolve(FileUtils.getFileName(document.getString("file")));
+				FileUtils.createDirectory(languageDirectory);
+
+				// Write language file
+				Path languageConfig = languageDirectory.resolve(configPath);
+				if (!Files.exists(languageConfig)) {
+					Document.create()
+						.set("name", document.getString("name"))
+						.set("name.local", document.getString("name.local"))
+						.saveToFile(languageConfig);
+				}
+
+				// Write cloud section
+				values.saveToFile(languageDirectory.resolve("cloud.json"));
+
+			} catch (Exception ex) {
+				error("Could not copy default language {}", document, ex);
+			}
+		}
 	}
 
 	@Override
