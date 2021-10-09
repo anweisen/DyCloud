@@ -14,6 +14,8 @@ import net.anweisen.cloud.driver.service.config.RemoteTemplateStorage;
 import net.anweisen.cloud.driver.service.config.ServiceTask;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.driver.service.specific.ServiceType;
+import net.anweisen.cloud.driver.translate.LanguageConfig;
+import net.anweisen.cloud.driver.translate.defaults.DefaultRequestingLanguage;
 import net.anweisen.utilities.common.collection.ArrayWalker;
 import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.common.logging.LogLevel;
@@ -125,6 +127,12 @@ public class AuthenticationResponseListener implements PacketListener, LoggingAp
 			}
 			case GLOBAL_CONFIG: {
 				cloud.getGlobalConfig().setRawData(buffer.readDocument());
+				break;
+			}
+			case LANGUAGES: {
+				cloud.getTranslationManager().setLanguages(
+					buffer.readCollection(() -> new DefaultRequestingLanguage(buffer.readString(), buffer.readObject(LanguageConfig.class)))
+				);
 				break;
 			}
 		}

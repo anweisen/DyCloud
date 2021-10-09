@@ -31,6 +31,8 @@ import net.anweisen.cloud.driver.service.ServiceFactory;
 import net.anweisen.cloud.driver.service.ServiceManager;
 import net.anweisen.cloud.driver.service.config.RemoteServiceConfigManager;
 import net.anweisen.cloud.driver.service.config.ServiceConfigManager;
+import net.anweisen.cloud.driver.translate.TranslationManager;
+import net.anweisen.cloud.driver.translate.defaults.RemoteTranslationManager;
 import net.anweisen.utilities.common.logging.handler.HandledLogger;
 
 import javax.annotation.Nonnull;
@@ -55,6 +57,7 @@ public final class CloudCord extends CloudDriver {
 	private final ServiceConfigManager serviceConfigManager;
 	private final PlayerManager playerManager;
 	private final GlobalConfig globalConfig;
+	private final TranslationManager translationManager;
 
 	private SocketClient socketClient;
 	private NettyCordSocketServer cordServer;
@@ -72,6 +75,7 @@ public final class CloudCord extends CloudDriver {
 		playerManager = new RemotePlayerManager();
 		permissionManager = new RemotePermissionManager();
 		globalConfig = new RemoteGlobalConfig();
+		translationManager = new RemoteTranslationManager();
 
 		HeaderPrinter.printHeader(console);
 	}
@@ -231,6 +235,12 @@ public final class CloudCord extends CloudDriver {
 	@Override
 	public PlayerManager getPlayerManager() {
 		return playerManager;
+	}
+
+	@Nonnull
+	@Override
+	public TranslationManager getTranslationManager() {
+		return translationManager;
 	}
 
 	@Nonnull

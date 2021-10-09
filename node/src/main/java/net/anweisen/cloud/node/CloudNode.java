@@ -45,6 +45,8 @@ import net.anweisen.cloud.driver.service.ServiceFactory;
 import net.anweisen.cloud.driver.service.ServiceManager;
 import net.anweisen.cloud.driver.service.config.RemoteServiceConfigManager;
 import net.anweisen.cloud.driver.service.config.ServiceConfigManager;
+import net.anweisen.cloud.driver.translate.TranslationManager;
+import net.anweisen.cloud.driver.translate.defaults.RemoteTranslationManager;
 import net.anweisen.cloud.node.config.NodeConfig;
 import net.anweisen.cloud.node.docker.DockerEventListener;
 import net.anweisen.cloud.node.docker.DockerServiceActor;
@@ -82,6 +84,7 @@ public final class CloudNode extends CloudBase {
 	private final NodeManager nodeManager;
 	private final PlayerManager playerManager;
 	private final GlobalConfig globalConfig;
+	private final TranslationManager translationManager;
 	private final DockerServiceActor serviceActor;
 
 	private SocketClient socketClient;
@@ -103,6 +106,7 @@ public final class CloudNode extends CloudBase {
 		playerManager = new RemotePlayerManager();
 		serviceActor = new DockerServiceActor();
 		globalConfig = new RemoteGlobalConfig();
+		translationManager = new RemoteTranslationManager();
 
 		HeaderPrinter.printHeader(console);
 	}
@@ -327,6 +331,12 @@ public final class CloudNode extends CloudBase {
 	@Override
 	public PlayerManager getPlayerManager() {
 		return playerManager;
+	}
+
+	@Nonnull
+	@Override
+	public TranslationManager getTranslationManager() {
+		return translationManager;
 	}
 
 	@Nonnull

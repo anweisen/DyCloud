@@ -27,6 +27,14 @@ public interface CloudOfflinePlayer {
 
 	void setName(@Nonnull String name);
 
+	/**
+	 * @return the selected language or an empty string if no language is set
+	 */
+	@Nonnull
+	String getLanguage();
+
+	void setLanguage(@Nonnull String language);
+
 	@Nonnull
 	PlayerConnection getLastConnection();
 

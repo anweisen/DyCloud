@@ -1,0 +1,18 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema",
+	"$id": "https://raw.githubusercontent.com/anweisen/MinecraftCloud/master/language-section-schema.json",
+	"title": "MinecraftCloud Language",
+	"description": "Configuration of a MinecraftCloud language",
+	"type": "object",
+	"required": [ "name", "name.local" ],
+	"properties": {
+		"name": {
+			"type": "string",
+			"description": "The english name of the language"
+		},
+		"name.local": {
+			"type": "string",
+			"description": "The translated name of the language"
+		}
+	}
+}

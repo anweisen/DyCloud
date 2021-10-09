@@ -14,6 +14,7 @@ import net.anweisen.cloud.driver.player.permission.PermissionManager;
 import net.anweisen.cloud.driver.service.ServiceFactory;
 import net.anweisen.cloud.driver.service.ServiceManager;
 import net.anweisen.cloud.driver.service.config.ServiceConfigManager;
+import net.anweisen.cloud.driver.translate.TranslationManager;
 import net.anweisen.utilities.common.collection.NamedThreadFactory;
 import net.anweisen.utilities.common.function.ExceptionallyRunnable;
 import net.anweisen.utilities.common.logging.ILogger;
@@ -123,6 +124,9 @@ public abstract class CloudDriver {
 
 	@Nonnull
 	public abstract PlayerManager getPlayerManager();
+
+	@Nonnull
+	public abstract TranslationManager getTranslationManager();
 
 	@Nonnull
 	public PermissionManager getPermissionManager() {

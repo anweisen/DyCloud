@@ -26,6 +26,7 @@ public final class PacketConstants {
 	public static final int COMMAND_SYSTEM_CHANNEL = 12;            // master  <-> wrapper, node
 	public static final int GLOBAL_CONFIG_CHANNEL = 13;             // master  <-> wrapper, node
 	public static final int TEMPLATE_STORAGE_CHANNEL = 14;          // master  <-| wrapper, node
+	public static final int TRANSLATION_SYSTEM_CHANNEL = 15;               // master  <-| wrapper, node
 
 	private static final Map<Integer, String> channelNames = new LinkedHashMap<>();
 	static {

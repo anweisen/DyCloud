@@ -18,6 +18,8 @@ import net.anweisen.cloud.driver.node.NodeInfo;
 import net.anweisen.cloud.driver.service.ServiceFactory;
 import net.anweisen.cloud.driver.service.config.LocalTemplateStorage;
 import net.anweisen.cloud.driver.service.config.ServiceConfigManager;
+import net.anweisen.cloud.driver.translate.TranslationManager;
+import net.anweisen.cloud.master.command.MasterCommandManager;
 import net.anweisen.cloud.master.config.MasterConfig;
 import net.anweisen.cloud.master.config.global.MasterGlobalConfig;
 import net.anweisen.cloud.master.cord.CordServerManager;
@@ -33,6 +35,7 @@ import net.anweisen.cloud.master.service.CloudServiceManager;
 import net.anweisen.cloud.master.service.MasterServiceFactory;
 import net.anweisen.cloud.master.service.MasterServiceManager;
 import net.anweisen.cloud.master.service.config.MasterServiceConfigManager;
+import net.anweisen.cloud.master.translate.MasterTranslationManager;
 import net.anweisen.utilities.common.collection.NamedThreadFactory;
 import net.anweisen.utilities.common.logging.handler.HandledLogger;
 
@@ -63,6 +66,7 @@ public final class CloudMaster extends CloudBase {
 	private final ServiceFactory serviceFactory;
 	private final MasterPlayerManager playerManager;
 	private final GlobalConfig globalConfig;
+	private final TranslationManager translationManager;
 
 	private SocketServer socketServer;
 
@@ -79,6 +83,7 @@ public final class CloudMaster extends CloudBase {
 		serviceFactory = new MasterServiceFactory(this);
 		playerManager = new MasterPlayerManager();
 		globalConfig = new MasterGlobalConfig();
+		translationManager = new MasterTranslationManager();
 
 		HeaderPrinter.printHeader(console);
 	}
@@ -90,6 +95,8 @@ public final class CloudMaster extends CloudBase {
 		logger.info("Loading cloud configuration..");
 		config.load();
 
+		logger.info("Loading translations..");
+		translationManager.retrieve();
 		logger.info("Loading service configurations..");
 		serviceConfigManager.loadTasks();
 		serviceConfigManager.registerTemplateStorage(LocalTemplateStorage.createDefault());

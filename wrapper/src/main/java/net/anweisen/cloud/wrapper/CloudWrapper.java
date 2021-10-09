@@ -31,6 +31,8 @@ import net.anweisen.cloud.driver.service.config.ServiceConfigManager;
 import net.anweisen.cloud.driver.service.specific.ServiceControlState;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.driver.service.specific.ServiceState;
+import net.anweisen.cloud.driver.translate.TranslationManager;
+import net.anweisen.cloud.driver.translate.defaults.RemoteTranslationManager;
 import net.anweisen.cloud.wrapper.config.WrapperConfig;
 import net.anweisen.cloud.wrapper.event.service.ServiceInfoConfigureEvent;
 import net.anweisen.utilities.common.collection.WrappedException;
@@ -77,6 +79,7 @@ public final class CloudWrapper extends CloudDriver {
 	private final ServiceFactory serviceFactory;
 	private final PlayerManager playerManager;
 	private final GlobalConfig globalConfig;
+	private final TranslationManager translationManager;
 
 	private final Thread mainThread = Thread.currentThread();
 	private Thread applicationThread;
@@ -102,6 +105,7 @@ public final class CloudWrapper extends CloudDriver {
 		serviceFactory = new RemoteServiceFactory();
 		playerManager = new RemotePlayerManager();
 		permissionManager = new RemotePermissionManager();
+		translationManager = new RemoteTranslationManager();
 	}
 
 	public synchronized void start() throws Exception {
@@ -401,6 +405,12 @@ public final class CloudWrapper extends CloudDriver {
 	@Override
 	public PlayerManager getPlayerManager() {
 		return playerManager;
+	}
+
+	@Nonnull
+	@Override
+	public TranslationManager getTranslationManager() {
+		return translationManager;
 	}
 
 	@Nonnull

@@ -20,6 +20,7 @@ public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer, Serializab
 
 	private UUID uniqueId;
 	private String name;
+	private String language;
 	private DefaultPlayerConnection lastNetworkConnection;
 	private PermissionData permissionData;
 	private long firstLogin;
@@ -29,10 +30,11 @@ public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer, Serializab
 	private DefaultCloudOfflinePlayer() {
 	}
 
-	public DefaultCloudOfflinePlayer(@Nonnull UUID uniqueId, @Nonnull String name, @Nonnull DefaultPlayerConnection lastNetworkConnection,
+	public DefaultCloudOfflinePlayer(@Nonnull UUID uniqueId, @Nonnull String name, @Nonnull String language, @Nonnull DefaultPlayerConnection lastNetworkConnection,
 	                                 @Nonnull PermissionData permissionData, long firstLogin, long lastOnline, @Nonnull Document properties) {
 		this.uniqueId = uniqueId;
 		this.name = name;
+		this.language = language;
 		this.lastNetworkConnection = lastNetworkConnection;
 		this.permissionData = permissionData;
 		this.firstLogin = firstLogin;
@@ -82,11 +84,24 @@ public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer, Serializab
 
 	@Nonnull
 	@Override
+	public String getLanguage() {
+		return language;
+	}
+
+	@Override
+	public void setLanguage(@Nonnull String language) {
+		Preconditions.checkNotNull(language, "Cannot set language to null (empty string for unset)");
+		this.language = language;
+	}
+
+	@Nonnull
+	@Override
 	public DefaultPlayerConnection getLastConnection() {
 		return lastNetworkConnection;
 	}
 
 	public void setLastConnection(@Nonnull PlayerConnection connectionData) {
+		Preconditions.checkNotNull(connectionData, "Cannot set the last connection to null");
 		this.lastNetworkConnection = (DefaultPlayerConnection) connectionData;
 	}
 
