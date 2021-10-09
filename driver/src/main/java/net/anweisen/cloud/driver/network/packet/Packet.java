@@ -8,6 +8,7 @@ import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class Packet {
 
@@ -81,6 +82,11 @@ public class Packet {
 		return Document.create();
 	}
 
+	protected void apply(@Nullable Consumer<? super PacketBuffer> modifier) {
+		if (modifier != null)
+			modifier.accept(buffer != null ? buffer : (buffer = newBuffer()));
+	}
+
 	public int getChannel() {
 		return channel;
 	}
@@ -97,6 +103,7 @@ public class Packet {
 	public Document getHeader() {
 		return header == null ? Document.empty() : header;
 	}
+
 	@Nullable
 	public Document getRealHeader() {
 		return header;

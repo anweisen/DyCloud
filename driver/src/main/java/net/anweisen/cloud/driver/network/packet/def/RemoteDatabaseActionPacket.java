@@ -20,8 +20,7 @@ public class RemoteDatabaseActionPacket extends Packet {
 
 	public RemoteDatabaseActionPacket(@Nonnull DatabaseActionPayload payload, @Nullable Consumer<? super PacketBuffer> modifier) {
 		super(PacketConstants.DATABASE_CHANNEL, newBuffer().writeEnum(payload));
-		if (modifier != null)
-			modifier.accept(buffer);
+		apply(modifier);
 	}
 
 	public enum DatabaseActionPayload {

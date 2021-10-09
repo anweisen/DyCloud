@@ -36,6 +36,11 @@ public class NettyPacketBuffer extends DefaultPacketBuffer {
 		return buffer.readableBytes();
 	}
 
+	@Override
+	public boolean remain(int amount) {
+		return remaining() >= amount;
+	}
+
 	@Nonnull
 	@Override
 	public byte[] asArray() {

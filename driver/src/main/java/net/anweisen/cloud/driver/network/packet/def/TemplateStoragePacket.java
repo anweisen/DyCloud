@@ -15,7 +15,7 @@ public class TemplateStoragePacket extends Packet {
 
 	public TemplateStoragePacket(@Nonnull TemplateStoragePayload payload, @Nonnull Consumer<? super PacketBuffer> modifier) {
 		super(PacketConstants.TEMPLATE_STORAGE_CHANNEL, newBuffer().writeEnum(payload));
-		modifier.accept(buffer);
+		apply(modifier);
 	}
 
 	public enum TemplateStoragePayload {

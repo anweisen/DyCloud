@@ -26,13 +26,13 @@ public abstract class DefaultPermissionManager implements PermissionManager {
 
 	@Nullable
 	@Override
-	public PermissionGroup getDefaultGroup() {
+	public PermissionGroup getDefaultGroup() { // TODO cache?
 		return groups.values().stream().filter(PermissionGroup::isDefaultGroup).findFirst().orElse(null);
 	}
 
 	@Nullable
 	@Override
-	public PermissionGroup getHighestGroup() {
+	public PermissionGroup getHighestGroup() { // TODO cache?
 		return groups.values().stream().max(Comparator.comparingInt(PermissionGroup::getSortId)).orElse(null);
 	}
 

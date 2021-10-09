@@ -16,7 +16,7 @@ public class PlayerExecutorPacket extends Packet {
 
 	public PlayerExecutorPacket(@Nonnull PlayerExecutorPayload payload, @Nonnull UUID playerUniqueId, @Nonnull Consumer<? super PacketBuffer> modifier) {
 		super(PacketConstants.PLAYER_EXECUTOR_CHANNEL, newBuffer().writeEnum(payload).writeUniqueId(playerUniqueId));
-		modifier.accept(buffer);
+		apply(modifier);
 	}
 
 	public enum PlayerExecutorPayload {

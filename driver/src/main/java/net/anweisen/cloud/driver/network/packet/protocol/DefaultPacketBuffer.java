@@ -13,10 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -48,13 +45,13 @@ public abstract class DefaultPacketBuffer implements PacketBuffer {
 	@Nullable
 	@Override
 	public byte[] readOptionalArray() {
-		return _readOpt(this::readArray);
+		return readOptional(this::readArray);
 	}
 
 	@Nonnull
 	@Override
 	public PacketBuffer writeOptionalArray(@Nullable byte[] array) {
-		return _writeOpt(array, this::writeArray);
+		return writeOptional(array, this::writeArray);
 	}
 
 	@Nonnull
@@ -73,37 +70,37 @@ public abstract class DefaultPacketBuffer implements PacketBuffer {
 	@Nullable
 	@Override
 	public String readOptionalString() {
-		return _readOpt(this::readString);
+		return readOptional(this::readString);
 	}
 
 	@Nonnull
 	@Override
 	public PacketBuffer writeOptionalString(@Nullable String string) {
-		return _writeOpt(string, this::writeString);
+		return writeOptional(string, this::writeString);
 	}
 
 	@Nonnull
 	@Override
-	public Collection<String> readStringCollection() {
-		return _readCollection(this::readString);
+	public List<String> readStringCollection() {
+		return readCollection(this::readString);
 	}
 
 	@Nonnull
 	@Override
 	public PacketBuffer writeStringCollection(@Nonnull Collection<? extends String> strings) {
-		return _writeCollection(strings, this::writeString);
+		return writeCollection(strings, this::writeString);
 	}
 
 	@Nonnull
 	@Override
 	public String[] readStringArray() {
-		return _readArray(String.class, this::readString);
+		return readArray(String.class, this::readString);
 	}
 
 	@Nonnull
 	@Override
 	public PacketBuffer writeStringArray(@Nonnull String[] strings) {
-		return _writeArray(strings, this::writeString);
+		return writeArray(strings, this::writeString);
 	}
 
 	@Nonnull
@@ -123,25 +120,25 @@ public abstract class DefaultPacketBuffer implements PacketBuffer {
 	@Nullable
 	@Override
 	public UUID readOptionalUniqueId() {
-		return _readOpt(this::readUniqueId);
+		return readOptional(this::readUniqueId);
 	}
 
 	@Nonnull
 	@Override
 	public PacketBuffer writeOptionalUniqueId(@Nullable UUID uniqueId) {
-		return _writeOpt(uniqueId, this::writeUniqueId);
+		return writeOptional(uniqueId, this::writeUniqueId);
 	}
 
 	@Nonnull
 	@Override
-	public Collection<UUID> readUniqueIdCollection() {
-		return _readCollection(this::readUniqueId);
+	public List<UUID> readUniqueIdCollection() {
+		return readCollection(this::readUniqueId);
 	}
 
 	@Nonnull
 	@Override
 	public PacketBuffer writeUniqueIdCollection(@Nonnull Collection<? extends UUID> uniqueIds) {
-		return _writeCollection(uniqueIds, this::writeUniqueId);
+		return writeCollection(uniqueIds, this::writeUniqueId);
 	}
 
 	@Nonnull
@@ -189,8 +186,8 @@ public abstract class DefaultPacketBuffer implements PacketBuffer {
 	@Nonnull
 	@Override
 	@SuppressWarnings("unchecked")
-	public Collection<Document> readDocumentCollection() {
-		return (Collection<Document>) (Collection<? extends Document>) readObjectCollection(SerializableDocument.class);
+	public List<Document> readDocumentCollection() {
+		return (List<Document>) (List<? extends Document>) readObjectCollection(SerializableDocument.class);
 	}
 
 	@Nonnull
@@ -236,37 +233,37 @@ public abstract class DefaultPacketBuffer implements PacketBuffer {
 	@Nullable
 	@Override
 	public <T extends SerializableObject> T readOptionalObject(@Nonnull Class<T> objectClass) {
-		return _readOpt(() -> readObject(objectClass));
+		return readOptional(() -> readObject(objectClass));
 	}
 
 	@Nonnull
 	@Override
 	public PacketBuffer writeOptionalObject(@Nullable SerializableObject object) {
-		return _writeOpt(object, this::writeObject);
+		return writeOptional(object, this::writeObject);
 	}
 
 	@Nonnull
 	@Override
 	public <T extends SerializableObject> Collection<T> readObjectCollection(@Nonnull Class<T> objectClass) {
-		return _readCollection(() -> readObject(objectClass));
+		return readCollection(() -> readObject(objectClass));
 	}
 
 	@Nonnull
 	@Override
 	public PacketBuffer writeObjectCollection(@Nonnull Collection<? extends SerializableObject> objects) {
-		return _writeCollection(objects, this::writeObject);
+		return writeCollection(objects, this::writeObject);
 	}
 
 	@Nonnull
 	@Override
 	public <T extends SerializableObject> T[] readObjectArray(@Nonnull Class<T> objectClass) {
-		return _readArray(objectClass, () -> readObject(objectClass));
+		return readArray(objectClass, () -> readObject(objectClass));
 	}
 
 	@Nonnull
 	@Override
 	public <T extends SerializableObject> PacketBuffer writeObjectArray(@Nonnull T[] objects) {
-		return _writeArray(objects, this::writeObject);
+		return writeArray(objects, this::writeObject);
 	}
 
 	@Nonnull
@@ -285,31 +282,31 @@ public abstract class DefaultPacketBuffer implements PacketBuffer {
 	@Nullable
 	@Override
 	public <E extends Enum<?>> E readOptionalEnum(@Nonnull Class<E> enumClass) {
-		return _readOpt(() -> readEnum(enumClass));
+		return readOptional(() -> readEnum(enumClass));
 	}
 
 	@Nonnull
 	@Override
 	public PacketBuffer writeOptionalEnum(@Nonnull Enum<?> value) {
-		return _writeOpt(value, this::writeEnum);
+		return writeOptional(value, this::writeEnum);
 	}
 
 	@Nonnull
 	@Override
-	public <E extends Enum<?>> Collection<E> readEnumCollection(@Nonnull Class<E> enumClass) {
-		return _readCollection(() -> readEnum(enumClass));
+	public <E extends Enum<?>> List<E> readEnumCollection(@Nonnull Class<E> enumClass) {
+		return readCollection(() -> readEnum(enumClass));
 	}
 
 	@Nonnull
 	@Override
 	public PacketBuffer writeEnumCollection(@Nonnull Collection<? extends Enum<?>> enums) {
-		return _writeCollection(enums, this::writeEnum);
+		return writeCollection(enums, this::writeEnum);
 	}
 
 	@Nonnull
-	protected <T> Collection<T> _readCollection(@Nonnull Supplier<T> reader) {
+	public <T> List<T> readCollection(@Nonnull Supplier<T> reader) {
 		int length = readVarInt();
-		Collection<T> collection = new ArrayList<>(length);
+		List<T> collection = new ArrayList<>(length);
 
 		for (int i = 0; i < length; i++) {
 			collection.add(reader.get());
@@ -318,7 +315,7 @@ public abstract class DefaultPacketBuffer implements PacketBuffer {
 		return collection;
 	}
 	@Nonnull
-	protected <T> PacketBuffer _writeCollection(@Nonnull Collection<? extends T> collection, @Nonnull Consumer<T> writer) {
+	public <T> PacketBuffer writeCollection(@Nonnull Collection<? extends T> collection, @Nonnull Consumer<T> writer) {
 		writeVarInt(collection.size());
 		for (T object : collection) {
 			writer.accept(object);
@@ -328,7 +325,7 @@ public abstract class DefaultPacketBuffer implements PacketBuffer {
 
 	@Nonnull
 	@SuppressWarnings("unchecked")
-	protected <T> T[] _readArray(@Nonnull Class<T> theClass, @Nonnull Supplier<T> reader) {
+	public <T> T[] readArray(@Nonnull Class<T> theClass, @Nonnull Supplier<T> reader) {
 		int length = readVarInt();
 		Object array = Array.newInstance(theClass, length);
 
@@ -340,7 +337,7 @@ public abstract class DefaultPacketBuffer implements PacketBuffer {
 	}
 
 	@Nonnull
-	protected <T> PacketBuffer _writeArray(@Nonnull T[] array, @Nonnull Consumer<T> writer) {
+	public <T> PacketBuffer writeArray(@Nonnull T[] array, @Nonnull Consumer<T> writer) {
 		writeVarInt(array.length);
 		for (T object : array) {
 			writer.accept(object);
@@ -349,12 +346,12 @@ public abstract class DefaultPacketBuffer implements PacketBuffer {
 	}
 
 	@Nullable
-	protected <T> T _readOpt(@Nonnull Supplier<T> reader) {
+	public <T> T readOptional(@Nonnull Supplier<T> reader) {
 		return readBoolean() ? reader.get() : null;
 	}
 
 	@Nonnull
-	protected <T> PacketBuffer _writeOpt(@Nullable T object, @Nonnull Consumer<T> writer) {
+	public <T> PacketBuffer writeOptional(@Nullable T object, @Nonnull Consumer<T> writer) {
 		writeBoolean(object != null);
 		if (object != null)
 			writer.accept(object);

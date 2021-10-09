@@ -16,12 +16,12 @@ public class AuthenticationPacket extends Packet {
 
 	public AuthenticationPacket(@Nonnull AuthenticationPayload payload, @Nonnull UUID identity, @Nonnull UUID id, @Nonnull Consumer<? super PacketBuffer> modifier) {
 		super(PacketConstants.AUTH_CHANNEL, newBuffer().writeEnum(payload).writeUniqueId(identity).writeUniqueId(id));
-		modifier.accept(buffer);
+		apply(modifier);
 	}
 
 	public AuthenticationPacket(@Nonnull AuthenticationPayload payload, @Nonnull UUID identity, @Nonnull String name, @Nonnull Consumer<? super PacketBuffer> modifier) {
 		super(PacketConstants.AUTH_CHANNEL, newBuffer().writeEnum(payload).writeUniqueId(identity).writeString(name));
-		modifier.accept(buffer);
+		apply(modifier);
 	}
 
 	public enum AuthenticationPayload {

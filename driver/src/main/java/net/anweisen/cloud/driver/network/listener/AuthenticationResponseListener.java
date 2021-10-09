@@ -82,7 +82,7 @@ public class AuthenticationResponseListener implements PacketListener, LoggingAp
 	}
 
 	private void readConfigProperties0(@Nonnull SocketChannel channel, @Nonnull PacketBuffer buffer) {
-		if (buffer.remaining() < 1) return;
+		if (!buffer.remain(1)) return;
 
 		PropertySection section = buffer.readEnum(PropertySection.class);
 		readConfigProperty(section, channel, buffer);
