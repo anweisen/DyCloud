@@ -7,6 +7,7 @@ import net.anweisen.cloud.driver.network.packet.def.TranslationSystemPacket.Tran
 import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.translate.LanguageConfig;
 import net.anweisen.cloud.driver.translate.LanguageSection;
+import net.anweisen.cloud.driver.translate.TranslatedValue;
 
 import javax.annotation.Nonnull;
 import java.util.LinkedHashMap;
@@ -35,7 +36,7 @@ public class DefaultRequestingLanguage extends AbstractLanguage implements Loggi
 			debug("Requesting language section '{}' for language '{}'", id, this.id);
 			PacketBuffer response = sendPacketQuery(new TranslationSystemPacket(TranslationPayload.GET_SECTION, buffer -> buffer.writeString(this.id).writeString(id))).getBuffer();
 
-			Map<String, DefaultTranslatedValue> values = new LinkedHashMap<>();
+			Map<String, TranslatedValue> values = new LinkedHashMap<>();
 			section = new DefaultLanguageSection(this, id, values);
 
 			while (response.remain(1)) {
