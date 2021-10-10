@@ -18,6 +18,7 @@ import java.util.function.Supplier;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  *
+ * @see Packet#newBuffer()
  * @see Packet#getBuffer()
  * @see SerializableObject
  */
