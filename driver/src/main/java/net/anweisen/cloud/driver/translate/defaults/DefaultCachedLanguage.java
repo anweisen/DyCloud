@@ -4,7 +4,7 @@ import net.anweisen.cloud.driver.translate.LanguageConfig;
 import net.anweisen.cloud.driver.translate.LanguageSection;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
+import java.util.LinkedHashMap;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -22,7 +22,7 @@ public class DefaultCachedLanguage extends AbstractLanguage {
 		LanguageSection section = sections.get(id);
 		if (section != null) return section;
 
-		sections.put(id, section = new DefaultLanguageSection(this, id, Collections.emptyMap()));
+		sections.put(id, section = new DefaultLanguageSection(this, id, new LinkedHashMap<>()));
 		return section;
 	}
 
