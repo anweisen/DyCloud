@@ -1,5 +1,7 @@
 package net.anweisen.cloud.driver.translate;
 
+import net.anweisen.cloud.driver.player.chat.ChatText;
+
 import javax.annotation.Nonnull;
 import java.util.List;
 
@@ -44,5 +46,8 @@ public interface TranslatedValue {
 
 	@Nonnull
 	List<String> asList(@Nonnull Object... args);
+
+	@Nonnull
+	ChatText[] asText(@Nonnull Object... args);
 
 }
