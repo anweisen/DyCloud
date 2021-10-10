@@ -105,7 +105,7 @@ public class PlayerEventListener implements PacketListener, LoggingApiUser {
 					cloud.getPlayerManager().unregisterPlayer(player.getUniqueId());
 					cloud.getEventManager().callEvent(new PlayerProxyDisconnectEvent(player));
 					cloud.getSocketComponent().sendPacket(PlayerEventPacket.forProxyDisconnect(playerUniqueId));
-					player.save();
+					player.update();
 					break;
 				}
 			}

@@ -1,12 +1,14 @@
 package net.anweisen.cloud.driver.player.defaults;
 
 import com.google.common.base.Preconditions;
+import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import net.anweisen.cloud.driver.player.CloudOfflinePlayer;
 import net.anweisen.cloud.driver.player.connection.DefaultPlayerConnection;
 import net.anweisen.cloud.driver.player.connection.PlayerConnection;
 import net.anweisen.cloud.driver.player.permission.PermissionData;
+import net.anweisen.cloud.driver.translate.TranslationManager;
 import net.anweisen.utilities.common.config.Document;
 
 import javax.annotation.Nonnull;
@@ -84,8 +86,15 @@ public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer, Serializab
 
 	@Nonnull
 	@Override
-	public String getLanguage() {
+	public String getRawLanguage() {
 		return language;
+	}
+
+	@Nonnull
+	@Override
+	public String getLanguage() {
+		TranslationManager manager = CloudDriver.getInstance().getTranslationManager();
+		return manager.hasLanguage(language) ? language : manager.getDefaultLanguage();
 	}
 
 	@Override

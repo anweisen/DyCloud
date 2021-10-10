@@ -44,6 +44,7 @@ public class AuthenticationResponsePacket extends Packet {
 		append(PropertySection.ONLINE_PLAYERS, buffer -> buffer.writeObjectCollection((Collection<? extends SerializableObject>) (Collection<?>) driver.getPlayerManager().getOnlinePlayers()));
 		append(PropertySection.GLOBAL_CONFIG, buffer -> buffer.writeDocument(driver.getGlobalConfig().getRawData()));
 		append(PropertySection.LANGUAGES, buffer -> buffer.writeCollection(driver.getTranslationManager().getAvailableLanguages(), language -> buffer.writeString(language.getId()).writeObject(language.getConfig())));
+		append(PropertySection.DEFAULT_LANGUAGE, buffer -> buffer.writeString(driver.getTranslationManager().getDefaultLanguage()));
 	}
 
 	private void append(@Nonnull PropertySection section, boolean condition, @Nonnull Consumer<? super PacketBuffer> modifier) {
@@ -65,6 +66,7 @@ public class AuthenticationResponsePacket extends Packet {
 		PERMISSION_GROUPS,
 		ONLINE_PLAYERS,
 		GLOBAL_CONFIG,
-		LANGUAGES
+		LANGUAGES,
+		DEFAULT_LANGUAGE
 	}
 }

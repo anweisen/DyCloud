@@ -45,10 +45,11 @@ public class TranslationSystemListener implements PacketListener, LoggingApiUser
 				channel.sendPacket(Packet.createResponseFor(packet, buffer));
 				break;
 			}
-			case GET_LANGUAGES: {
+			case RETRIEVE: {
 				trace("{}", payload);
 
 				PacketBuffer buffer = Packet.newBuffer();
+				buffer.writeString(CloudDriver.getInstance().getTranslationManager().getDefaultLanguage());
 
 				for (Language language : CloudDriver.getInstance().getTranslationManager().getAvailableLanguages()) {
 					buffer.writeString(language.getId());

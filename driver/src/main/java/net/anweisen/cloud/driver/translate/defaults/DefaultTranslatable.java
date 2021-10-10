@@ -28,6 +28,12 @@ public class DefaultTranslatable implements Translatable {
 
 	@Nonnull
 	@Override
+	public TranslatedValue translateDefault() {
+		return translate(CloudDriver.getInstance().getTranslationManager().getDefaultLanguage());
+	}
+
+	@Nonnull
+	@Override
 	public TranslatedValue translate(@Nonnull String language) {
 		return CloudDriver.getInstance().getTranslationManager().getLanguage(language).getValue(name);
 	}

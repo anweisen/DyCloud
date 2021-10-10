@@ -135,6 +135,10 @@ public class AuthenticationResponseListener implements PacketListener, LoggingAp
 				);
 				break;
 			}
+			case DEFAULT_LANGUAGE: {
+				cloud.getTranslationManager().setDefaultLanguage(buffer.readString());
+				break;
+			}
 		}
 	}
 }

@@ -4,6 +4,7 @@ import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.player.connection.PlayerConnection;
 import net.anweisen.cloud.driver.player.permission.PermissionData;
 import net.anweisen.cloud.driver.player.permission.PermissionPlayer;
+import net.anweisen.cloud.driver.translate.TranslationManager;
 import net.anweisen.utilities.common.config.Document;
 
 import javax.annotation.Nonnull;
@@ -29,6 +30,12 @@ public interface CloudOfflinePlayer {
 
 	/**
 	 * @return the selected language or an empty string if no language is set
+	 */
+	@Nonnull
+	String getRawLanguage();
+
+	/**
+	 * @return the selected language or the {@link TranslationManager#getDefaultLanguage() default language} if none is selected
 	 */
 	@Nonnull
 	String getLanguage();
@@ -68,7 +75,7 @@ public interface CloudOfflinePlayer {
 		return getOnlinePlayer() != null;
 	}
 
-	default void save() {
+	default void update() {
 		CloudDriver.getInstance().getPlayerManager().saveOfflinePlayer(this);
 	}
 

@@ -21,6 +21,6 @@ public class TranslationSystemPacket extends Packet {
 
 	public enum TranslationPayload {
 		GET_SECTION,
-		GET_LANGUAGES
+		RETRIEVE
 	}
 }

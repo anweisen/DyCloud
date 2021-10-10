@@ -91,6 +91,12 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 
 	@Nonnull
 	@Override
+	public String getRawLanguage() {
+		return offlinePlayer.getRawLanguage();
+	}
+
+	@Nonnull
+	@Override
 	public String getLanguage() {
 		return offlinePlayer.getLanguage();
 	}

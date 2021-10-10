@@ -23,6 +23,9 @@ public interface Translatable {
 	String getName();
 
 	@Nonnull
+	TranslatedValue translateDefault();
+
+	@Nonnull
 	TranslatedValue translate(@Nonnull String language);
 
 	@Nonnull

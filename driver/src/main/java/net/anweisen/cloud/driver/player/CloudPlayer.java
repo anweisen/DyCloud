@@ -62,6 +62,7 @@ public interface CloudPlayer extends CloudOfflinePlayer {
 		return this;
 	}
 
+	@Override
 	default void update() {
 		CloudDriver.getInstance().getPlayerManager().updateOnlinePlayer(this);
 	}
