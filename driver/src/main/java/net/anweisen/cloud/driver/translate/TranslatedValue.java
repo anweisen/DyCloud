@@ -6,6 +6,9 @@ import java.util.List;
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
+ *
+ * @see LanguageSection#getValue(String)
+ * @see LanguageSection#getValues()
  */
 public interface TranslatedValue {
 
