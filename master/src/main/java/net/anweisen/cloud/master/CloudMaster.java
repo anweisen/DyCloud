@@ -80,7 +80,7 @@ public final class CloudMaster extends CloudBase {
 		databaseManager = new MasterDatabaseManager();
 		serviceConfigManager = new MasterServiceConfigManager();
 		serviceManager = new MasterServiceManager();
-		serviceFactory = new MasterServiceFactory(this);
+		serviceFactory = new MasterServiceFactory();
 		playerManager = new MasterPlayerManager();
 		globalConfig = new MasterGlobalConfig();
 		translationManager = new MasterTranslationManager();
