@@ -170,7 +170,7 @@ public final class CloudWrapper extends CloudDriver {
 	}
 
 	private void loadNetworkListeners(@Nonnull PacketListenerRegistry registry) {
-		logger.info("Registering network listeners..");
+		logger.debug("Registering network listeners..");
 
 		registry.addListener(PacketConstants.NODE_INFO_PUBLISH_CHANNEL, new NodePublishListener());
 		registry.addListener(PacketConstants.SERVICE_INFO_PUBLISH_CHANNEL, new ServicePublishListener());

@@ -50,11 +50,16 @@ public abstract class AbstractLanguage implements Language {
 	@Override
 	public TranslatedValue getValue(@Nonnull String name) {
 		String[] split = name.split("\\.");
-		Preconditions.checkArgument(split.length > 1, "Illegal translation name '" + name + "'");
+		Preconditions.checkArgument(split.length > 1, "Illegal translation name '" + name + "'; Must consist of 'section.name'");
 
 		LanguageSection section = getSection(split[0]);
 		String subname = name.substring(name.indexOf("."));
 
 		return section.getValue(subname);
+	}
+
+	@Override
+	public String toString() {
+		return "Language[id=" + id + " name=" + config.getName() + " sections=" + sections.keySet() + "]";
 	}
 }

@@ -1,10 +1,7 @@
 package net.anweisen.cloud.master.translate;
 
 import net.anweisen.cloud.driver.console.LoggingApiUser;
-import net.anweisen.cloud.driver.translate.Language;
-import net.anweisen.cloud.driver.translate.LanguageConfig;
-import net.anweisen.cloud.driver.translate.Translatable;
-import net.anweisen.cloud.driver.translate.TranslationManager;
+import net.anweisen.cloud.driver.translate.*;
 import net.anweisen.cloud.driver.translate.defaults.DefaultCachedLanguage;
 import net.anweisen.cloud.driver.translate.defaults.DefaultLanguageSection;
 import net.anweisen.cloud.driver.translate.defaults.DefaultTranslatable;
@@ -109,7 +106,7 @@ public class MasterTranslationManager implements TranslationManager, LoggingApiU
 
 			for (Path sectionPath : FileUtils.list(languageDirectory).filter(current -> !current.getFileName().toString().equals(configPath)).collect(Collectors.toList())) {
 
-				Map<String, DefaultTranslatedValue> values = new LinkedHashMap<>();
+				Map<String, TranslatedValue> values = new LinkedHashMap<>();
 				DefaultLanguageSection section = new DefaultLanguageSection(language, FileUtils.getFileName(sectionPath), values);
 				Document sectionData = Document.readJsonFile(sectionPath);
 				for (String key : sectionData.keys()) {

@@ -52,9 +52,9 @@ public class IngameServiceStatusListener {
 		);
 
 		if (connect) {
-			text.addClick(ChatClickEvent.RUN_COMMAND, "/server " + service.getName());
+			text.setClick(ChatClickEvent.RUN_COMMAND, "/server " + service.getName());
 			if (CloudNotifyModule.getInstance().getNotifyConfig().getIngame().getHoverConnectMessage() != null)
-				text.addHover(CloudNotifyModule.getInstance().getNotifyConfig().getIngame().getHoverConnectMessage());
+				text.setHover(CloudNotifyModule.getInstance().getNotifyConfig().getIngame().getHoverConnectMessage());
 		}
 
 		CloudDriver.getInstance().getPlayerManager().getGlobalExecutor().sendMessage(Permissions.NOTIFY, text);

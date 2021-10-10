@@ -18,8 +18,8 @@ import java.util.stream.Collectors;
  */
 public class DefaultModuleManager implements ModuleManager, LoggingApiUser {
 
-	private Path directory;
 	private List<DefaultModuleController> modules = Collections.emptyList();
+	private Path directory;
 
 	@Nonnull
 	public Path getModulesDirectory() {
