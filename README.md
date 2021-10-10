@@ -114,7 +114,8 @@ I would recommend you to use one of the **following cloud systems**:
 ✔️ | Synced Proxy Module
 ❌ | Cloud Commands
 ❌ | Service Screens
-❌ | Message Translations
+🚧 | Message Translations
+🚧 | Advanced Translations (link to other messages & chatevents eg run command)
 ❌ | Proxy Commands (+ Cloud Command API?)
 ❌ | Migrate to Gradle
 ❌ | Relocate google depends & netty to prevent issues from server software using older versions
