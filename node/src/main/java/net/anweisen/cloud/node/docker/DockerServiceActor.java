@@ -145,13 +145,12 @@ public class DockerServiceActor implements LoggingApiUser {
 			return;
 		}
 
-		// Create docker container
 		String image = "openjdk:" + task.getJavaVersion();
 		debug("Creating docker container using image '{}' for {}..", image, info);
 		DockerClient dockerClient = cloud.getDockerClient();
 
-		// Pull image if not downloaded
-		// TODO maybe pull when received the task
+		// Normally, all required images are pulled on startup
+		// But if the image is not installed here, we will just pull it again
 		try {
 			trace("Searching for image '{}'", image);
 			dockerClient.inspectImageCmd(image).exec();
@@ -169,8 +168,8 @@ public class DockerServiceActor implements LoggingApiUser {
 		List<String> arguments = new ArrayList<>(Collections.singletonList("java"));
 		arguments.addAll(Arrays.asList(
 			"-DIReallyKnowWhatIAmDoingISwear=true", // skip deprecated build warning
-			"-Djline.terminal=jline.UnsupportedTerminal",
-			"-Dfile.encoding=UTF-8",
+			"-Djline.terminal=jline.UnsupportedTerminal", // docker container dont support these, skip warning
+			"-Dfile.encoding=UTF-8", // we want to use utf8 as standard everywhere
 			"-Dclient.encoding.override=UTF-8",
 			"-XX:+UseStringDeduplication",
 			"-XX:-UseAdaptiveSizePolicy",
@@ -185,16 +184,20 @@ public class DockerServiceActor implements LoggingApiUser {
 			"-jar", "wrapper.jar", applicationFile.getFileName().toString()
 		));
 
+		// Create docker container
 		String containerId = dockerClient.createContainerCmd(image)
 			.withName(info.getName())
 			.withWorkingDir(serverDirectory)
 			.withCmd(arguments)
 			.withPortSpecs(containerPort + "")
-			.withExposedPorts(ExposedPort.tcp(containerPort)) // we need to expose the port in order to get the port binding working
-			.withHostName(CloudNode.getInstance().getConfig().getMasterAddress().getHost()) // TODO
+			.withExposedPorts(ExposedPort.tcp(containerPort), ExposedPort.udp(containerPort)) // we need to expose the port in order to get the port binding working
+			.withHostName(CloudNode.getInstance().getConfig().getMasterAddress().getHost()) // TODO is this needed?
 			.withHostConfig(new HostConfig()
 				.withNetworkMode(cloud.getConfig().getDockerNetworkMode())
-				.withPortBindings(new PortBinding(Binding.bindPort(info.getPort()), ExposedPort.tcp(containerPort)))
+				.withPortBindings(
+					new PortBinding(Binding.bindPort(info.getPort()), ExposedPort.tcp(containerPort)),
+					new PortBinding(Binding.bindPort(info.getPort()), ExposedPort.udp(containerPort))
+				)
 				.withMemory(task.getMemoryLimit() < 1 ? null : 1024L * 1024L * task.getMemoryLimit()) // bytes -> kilobytes -> megabytes
 			).exec().getId();
 		info.setDockerContainerId(containerId);
