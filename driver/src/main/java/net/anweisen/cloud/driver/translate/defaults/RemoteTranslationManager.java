@@ -24,6 +24,14 @@ public class RemoteTranslationManager implements TranslationManager, NetworkingA
 
 	private final Map<String, Language> languages = new LinkedHashMap<>();
 
+	private String defaultLanguage;
+
+	@Nonnull
+	@Override
+	public String getDefaultLanguage() {
+		return defaultLanguage;
+	}
+
 	@Nonnull
 	@Override
 	public Translatable getTranslatable(@Nonnull String name) {
@@ -43,6 +51,16 @@ public class RemoteTranslationManager implements TranslationManager, NetworkingA
 	}
 
 	@Override
+	public boolean hasLanguage(@Nonnull String id) {
+		return languages.containsKey(id);
+	}
+
+	@Override
+	public void setDefaultLanguage(@Nonnull String language) {
+		this.defaultLanguage = language;
+	}
+
+	@Override
 	public void setLanguages(@Nonnull Collection<? extends Language> languages) {
 		this.languages.clear();
 		for (Language language : languages)
@@ -51,7 +69,9 @@ public class RemoteTranslationManager implements TranslationManager, NetworkingA
 
 	@Override
 	public synchronized void retrieve() {
-		PacketBuffer buffer = sendPacketQuery(new TranslationSystemPacket(TranslationPayload.GET_LANGUAGES, null)).getBuffer();
+		PacketBuffer buffer = sendPacketQuery(new TranslationSystemPacket(TranslationPayload.RETRIEVE, null)).getBuffer();
+
+		defaultLanguage = buffer.readString();
 
 		languages.clear();
 		while (buffer.remain(1)) {

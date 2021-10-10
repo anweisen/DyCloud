@@ -29,8 +29,16 @@ public class MasterTranslationManager implements TranslationManager, LoggingApiU
 
 	private final Map<String, Language> languages = new LinkedHashMap<>();
 
+	private String defaultLanguage = "en"; // TODO customizable
+
 	public MasterTranslationManager() {
 		setup();
+	}
+
+	@Nonnull
+	@Override
+	public String getDefaultLanguage() {
+		return defaultLanguage;
 	}
 
 	@Nonnull
@@ -49,6 +57,16 @@ public class MasterTranslationManager implements TranslationManager, LoggingApiU
 	@Override
 	public Language getLanguage(@Nonnull String id) {
 		return languages.get(id);
+	}
+
+	@Override
+	public boolean hasLanguage(@Nonnull String id) {
+		return languages.containsKey(id);
+	}
+
+	@Override
+	public void setDefaultLanguage(@Nonnull String language) {
+		this.defaultLanguage = language;
 	}
 
 	@Override

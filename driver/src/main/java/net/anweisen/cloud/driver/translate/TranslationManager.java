@@ -15,6 +15,14 @@ import java.util.Collection;
 public interface TranslationManager {
 
 	@Nonnull
+	String getDefaultLanguage();
+
+	/**
+	 * @return a new {@link Translatable} with the given name
+	 *
+	 * @see Translatable#of(String)
+	 */
+	@Nonnull
 	Translatable getTranslatable(@Nonnull String name);
 
 	@Nonnull
@@ -22,6 +30,10 @@ public interface TranslationManager {
 
 	@Nullable
 	Language getLanguage(@Nonnull String id);
+
+	boolean hasLanguage(@Nonnull String id);
+
+	void setDefaultLanguage(@Nonnull String language);
 
 	void setLanguages(@Nonnull Collection<? extends Language> languages);
 
