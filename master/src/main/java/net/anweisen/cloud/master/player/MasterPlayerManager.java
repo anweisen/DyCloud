@@ -90,6 +90,7 @@ public class MasterPlayerManager extends DefaultPlayerManager implements Logging
 			offlinePlayer = new DefaultCloudOfflinePlayer(
 				uniqueId,
 				name,
+				"",
 				playerConnection,
 				new PermissionData(new ArrayList<>(), new ArrayList<>(), new ArrayList<>()),
 				System.currentTimeMillis(),
@@ -190,6 +191,7 @@ public class MasterPlayerManager extends DefaultPlayerManager implements Logging
 		return new DefaultCloudOfflinePlayer(
 			document.getUUID(PlayerConstants.UUID_FIELD),
 			document.getString(PlayerConstants.NAME_FIELD),
+			document.getString(PlayerConstants.LANGUAGE_FIELD),
 			document.getInstance(PlayerConstants.LAST_CONNECTION_FIELD, DefaultPlayerConnection.class),
 			document.getInstance(PlayerConstants.PERMISSION_DATA_FIELD, PermissionData.class),
 			document.getLong(PlayerConstants.FIRST_LOGIN_TIME_FIELD),

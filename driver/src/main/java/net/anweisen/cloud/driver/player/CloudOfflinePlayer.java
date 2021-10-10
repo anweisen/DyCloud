@@ -38,7 +38,7 @@ public interface CloudOfflinePlayer {
 	@Nonnull
 	PlayerConnection getLastConnection();
 
-	void setLastConnection(@Nonnull PlayerConnection connectionData);
+	void setLastConnection(@Nonnull PlayerConnection connection);
 
 	long getFirstLoginTime();
 

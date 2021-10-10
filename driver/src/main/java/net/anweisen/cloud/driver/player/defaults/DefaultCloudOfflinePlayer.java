@@ -100,9 +100,9 @@ public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer, Serializab
 		return lastNetworkConnection;
 	}
 
-	public void setLastConnection(@Nonnull PlayerConnection connectionData) {
-		Preconditions.checkNotNull(connectionData, "Cannot set the last connection to null");
-		this.lastNetworkConnection = (DefaultPlayerConnection) connectionData;
+	public void setLastConnection(@Nonnull PlayerConnection connection) {
+		Preconditions.checkNotNull(connection, "Cannot set the last connection to null");
+		this.lastNetworkConnection = (DefaultPlayerConnection) connection;
 	}
 
 	@Nonnull

@@ -91,13 +91,24 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 
 	@Nonnull
 	@Override
+	public String getLanguage() {
+		return offlinePlayer.getLanguage();
+	}
+
+	@Override
+	public void setLanguage(@Nonnull String language) {
+		offlinePlayer.setLanguage(language);
+	}
+
+	@Nonnull
+	@Override
 	public PlayerConnection getLastConnection() {
 		return offlinePlayer.getLastConnection();
 	}
 
 	@Override
-	public void setLastConnection(@Nonnull PlayerConnection connectionData) {
-		offlinePlayer.setLastConnection(connectionData);
+	public void setLastConnection(@Nonnull PlayerConnection connection) {
+		offlinePlayer.setLastConnection(connection);
 	}
 
 	@Override
