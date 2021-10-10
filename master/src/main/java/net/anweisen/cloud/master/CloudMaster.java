@@ -97,6 +97,7 @@ public final class CloudMaster extends CloudBase {
 
 		logger.info("Loading translations..");
 		translationManager.retrieve();
+
 		logger.info("Loading service configurations..");
 		serviceConfigManager.loadTasks();
 		serviceConfigManager.registerTemplateStorage(LocalTemplateStorage.createDefault());
