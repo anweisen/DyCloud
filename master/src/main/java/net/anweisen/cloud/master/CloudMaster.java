@@ -228,6 +228,18 @@ public final class CloudMaster extends CloudBase {
 
 	@Nonnull
 	@Override
+	public GlobalConfig getGlobalConfig() {
+		return globalConfig;
+	}
+
+	@Nonnull
+	@Override
+	public TranslationManager getTranslationManager() {
+		return translationManager;
+	}
+
+	@Nonnull
+	@Override
 	public String getComponentName() {
 		return "Master";
 	}
@@ -236,12 +248,6 @@ public final class CloudMaster extends CloudBase {
 	@Override
 	public MasterConfig getConfig() {
 		return config;
-	}
-
-	@Nonnull
-	@Override
-	public GlobalConfig getGlobalConfig() {
-		return globalConfig;
 	}
 
 	private static CloudMaster instance;
