@@ -43,8 +43,13 @@ public class ServiceControlListener implements PacketListener, LoggingApiUser {
 		    ServiceTask task = service.findTask();
 		    Preconditions.checkNotNull(task, "ServiceTask of service for action " + payload + " is null (" + service.getTaskName() + ")");
 
-		    actor.createServiceHere(service, task);
-			channel.sendPacket(Packet.createResponseFor(packet, Packet.newBuffer().writeObject(service)));
+			try {
+				actor.createServiceHere(service, task);
+				channel.sendPacket(Packet.createResponseFor(packet, Packet.newBuffer().writeObject(service)));
+			} catch (Throwable ex) {
+				error("Error while creating service {}", service, ex);
+				// Response with empty / failure data
+			}
 			return;
 	    }
 
@@ -110,6 +115,7 @@ public class ServiceControlListener implements PacketListener, LoggingApiUser {
 		}
 	}
 
+	@Nonnull
 	private ServicePublishPayload getPublishPayload(@Nonnull ServiceControlPayload payload) {
 		switch (payload) {
 			case START:     return ServicePublishPayload.STARTED;
