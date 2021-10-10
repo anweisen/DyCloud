@@ -13,7 +13,7 @@ import java.util.Map;
 public interface LanguageSection {
 
 	/**
-	 * @return the parent section
+	 * @return the parent language
 	 */
 	@Nonnull
 	Language getParent();
@@ -30,7 +30,22 @@ public interface LanguageSection {
 	@Nonnull
 	Map<String, TranslatedValue> getValues();
 
+	boolean hasValue(@Nonnull String name);
+
+	/**
+	 * Gets the corresponding value if it {@link #hasValue(String) exists} or creates a new empty value using {@link #createEmptyValue(String)}
+	 *
+	 * @return the corresponding value or an empty value
+	 */
 	@Nonnull
 	TranslatedValue getValue(@Nonnull String name);
+
+	/**
+	 * Returns a new empty {@link TranslatedValue} for the given name
+	 *
+	 * @return a new empty {@link TranslatedValue}
+	 */
+	@Nonnull
+	TranslatedValue createEmptyValue(@Nonnull String name);
 
 }

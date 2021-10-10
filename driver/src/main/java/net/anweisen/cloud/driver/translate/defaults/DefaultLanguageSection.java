@@ -16,9 +16,9 @@ public class DefaultLanguageSection implements LanguageSection {
 
 	private final Language parent;
 	private final String id;
-	private final Map<String, DefaultTranslatedValue> values;
+	private final Map<String, TranslatedValue> values;
 
-	public DefaultLanguageSection(@Nonnull Language parent, @Nonnull String id, @Nonnull Map<String, DefaultTranslatedValue> values) {
+	public DefaultLanguageSection(@Nonnull Language parent, @Nonnull String id, @Nonnull Map<String, TranslatedValue> values) {
 		this.parent = parent;
 		this.id = id;
 		this.values = values;
@@ -42,12 +42,24 @@ public class DefaultLanguageSection implements LanguageSection {
 		return Collections.unmodifiableMap(values);
 	}
 
+	@Override
+	public boolean hasValue(@Nonnull String name) {
+		return values.containsKey(name);
+	}
+
 	@Nonnull
 	@Override
 	public TranslatedValue getValue(@Nonnull String name) {
 		TranslatedValue value = values.get(name);
 		if (value != null) return value;
 
-		return new DefaultTranslatedValue(this, name, Collections.singletonList("N/A"));
+		values.put(name, value = createEmptyValue(name));
+		return value;
+	}
+
+	@Nonnull
+	@Override
+	public TranslatedValue createEmptyValue(@Nonnull String name) {
+		return new DefaultTranslatedValue(this, name, Collections.singletonList("{" + name + "}"));
 	}
 }
