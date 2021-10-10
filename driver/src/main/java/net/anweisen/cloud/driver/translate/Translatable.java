@@ -1,6 +1,7 @@
 package net.anweisen.cloud.driver.translate;
 
 import net.anweisen.cloud.driver.CloudDriver;
+import net.anweisen.cloud.driver.player.CloudOfflinePlayer;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
@@ -26,5 +27,8 @@ public interface Translatable {
 
 	@Nonnull
 	TranslatedValue translate(@Nonnull UUID playerUniqueId);
+
+	@Nonnull
+	TranslatedValue translate(@Nonnull CloudOfflinePlayer player);
 
 }
