@@ -43,6 +43,8 @@ public final class CloudMainLoop implements Runnable, LoggingApiUser {
 			Collection<CloudService> services = cloud.getServiceManager().getServicesByTask(task.getName());
 			int createdServiceCount = countWithState(services, Arrays.asList(ServiceState.DEFINED, ServiceState.PREPARED, ServiceState.RUNNING));
 
+			trace("=> {} - created:{} min:{} max:{}", task.getName(), createdServiceCount, task.getMinCount(), task.getMaxCount());
+
 			if (createdServiceCount < task.getMinCount()) {
 				cloud.getServiceFactory().createServiceAsync(task);
 				return;

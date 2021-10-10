@@ -104,6 +104,8 @@ public final class CloudMaster extends CloudBase {
 		logger.info("Opening socket server on {}..", config.getHostAddress());
 		socketServer = new NettySocketServer(SocketChannelServerHandler::new);
 		socketServer.addListener(config.getHostAddress());
+
+		logger.info("Loading global config");
 		globalConfig.fetch();
 
 		loadNetworkListeners(socketServer.getListenerRegistry());
