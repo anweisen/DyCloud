@@ -1,5 +1,6 @@
 package net.anweisen.cloud.base.module;
 
+import net.anweisen.cloud.base.CloudBase;
 import net.anweisen.cloud.base.module.config.ModuleConfig;
 import net.anweisen.cloud.base.module.config.ModuleState;
 import net.anweisen.cloud.driver.CloudDriver;
@@ -32,6 +33,11 @@ public abstract class CloudModule implements Module {
 	}
 
 	@Nonnull
+	public final CloudBase getBase() {
+		return CloudBase.getInstance();
+	}
+
+	@Nonnull
 	public ILogger getLogger() {
 		return getDriver().getLogger();
 	}
@@ -43,6 +49,10 @@ public abstract class CloudModule implements Module {
 
 	public final void registerListeners(@Nonnull Object... listeners) {
 		getEventManager().registerListeners(listeners);
+	}
+
+	public final void registerCommands(@Nonnull Object... commands) {
+		getBase().getCommandManager().registerCommands(commands);
 	}
 
 	@Nonnull

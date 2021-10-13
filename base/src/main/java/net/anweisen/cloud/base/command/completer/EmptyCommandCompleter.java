@@ -1,0 +1,20 @@
+package net.anweisen.cloud.base.command.completer;
+
+import net.anweisen.cloud.base.command.sender.CommandSender;
+
+import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.Collections;
+
+/**
+ * @author anweisen | https://github.com/anweisen
+ * @since 1.0
+ */
+public class EmptyCommandCompleter implements CommandCompleter {
+
+	@Nonnull
+	@Override
+	public Collection<String> complete(@Nonnull CommandSender sender, @Nonnull String message, @Nonnull String argument) {
+		return Collections.emptyList();
+	}
+}

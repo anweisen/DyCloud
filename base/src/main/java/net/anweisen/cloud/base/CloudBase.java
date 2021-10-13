@@ -4,6 +4,7 @@ import net.anweisen.cloud.base.module.DefaultModuleManager;
 import net.anweisen.cloud.base.module.ModuleManager;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.DriverEnvironment;
+import net.anweisen.cloud.base.command.CommandManager;
 import net.anweisen.cloud.driver.console.Console;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.def.ServicePublishPacket;
@@ -46,6 +47,14 @@ public abstract class CloudBase extends CloudDriver {
 	public ModuleManager getModuleManager() {
 		return moduleManager;
 	}
+
+	@Nonnull
+	public Console getConsole() {
+		return console;
+	}
+
+	@Nonnull
+	public abstract CommandManager getCommandManager();
 
 	private static CloudBase instance;
 
