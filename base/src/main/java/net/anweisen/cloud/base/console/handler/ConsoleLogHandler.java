@@ -1,6 +1,7 @@
-package net.anweisen.cloud.driver.console.handler;
+package net.anweisen.cloud.base.console.handler;
 
-import net.anweisen.cloud.driver.console.Console;
+import net.anweisen.cloud.base.console.Console;
+import net.anweisen.cloud.driver.console.handler.UncoloredMessageFormatter;
 import net.anweisen.utilities.common.logging.handler.LogEntry;
 import net.anweisen.utilities.common.logging.handler.LogHandler;
 
@@ -20,7 +21,7 @@ public class ConsoleLogHandler implements LogHandler {
 
 	@Override
 	public void handle(@Nonnull LogEntry entry) {
-		console.writeLine(MessageFormatter.formatColored(entry));
+		console.writeLine(ColoredMessageFormatter.format(entry));
 	}
 
 }

@@ -1,4 +1,4 @@
-package net.anweisen.cloud.driver.console.jline3;
+package net.anweisen.cloud.base.console.jline3;
 
 import net.anweisen.utilities.common.concurrent.task.CompletableTask;
 import net.anweisen.utilities.common.concurrent.task.Task;

@@ -1,7 +1,7 @@
-package net.anweisen.cloud.driver.console.handler;
+package net.anweisen.cloud.base.console.handler;
 
-import net.anweisen.cloud.driver.console.ConsoleColor;
-import net.anweisen.cloud.driver.console.SpacePadder;
+import net.anweisen.cloud.base.console.ConsoleColor;
+import net.anweisen.cloud.base.console.SpacePadder;
 import net.anweisen.utilities.common.logging.handler.LogEntry;
 import net.anweisen.utilities.common.logging.handler.LogHandler;
 
@@ -14,31 +14,10 @@ import java.util.Date;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public final class MessageFormatter {
+public final class ColoredMessageFormatter {
 
 	@Nonnull
-	public static String formatUncolored(@Nonnull LogEntry entry) {
-		StringBuilder builder = new StringBuilder()
-			.append("[")
-			.append(LogHandler.TIME_FORMAT.format(Date.from(entry.getTimestamp())))
-			.append(" ")
-			.append(entry.getThreadName())
-			.append("] ")
-			.append(entry.getLevel().getUpperCaseName())
-			.append(": ")
-			.append(entry.getMessage());
-
-		if (entry.getException() != null) {
-			StringWriter writer = new StringWriter();
-			entry.getException().printStackTrace(new PrintWriter(writer));
-			builder.append(System.lineSeparator()).append(writer);
-		}
-
-		return builder.toString();
-	}
-
-	@Nonnull
-	public static String formatColored(@Nonnull LogEntry entry) {
+	public static String format(@Nonnull LogEntry entry) {
 		StringBuilder builder = new StringBuilder()
 			.append(ConsoleColor.DARK_GRAY)
 			.append("[")
@@ -67,6 +46,5 @@ public final class MessageFormatter {
 		return builder.toString();
 	}
 
-	private MessageFormatter() {}
-
+	private ColoredMessageFormatter() {}
 }

@@ -1,4 +1,4 @@
-package net.anweisen.cloud.driver.console;
+package net.anweisen.cloud.base.console;
 
 import net.anweisen.utilities.common.concurrent.task.Task;
 

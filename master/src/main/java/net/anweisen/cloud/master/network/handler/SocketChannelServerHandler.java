@@ -12,7 +12,6 @@ import net.anweisen.cloud.driver.network.packet.def.NodePublishPacket.NodePublis
 import net.anweisen.cloud.driver.network.packet.def.ServicePublishPacket.ServicePublishPayload;
 import net.anweisen.cloud.driver.node.NodeInfo;
 import net.anweisen.cloud.master.CloudMaster;
-import net.anweisen.cloud.master.cord.CordServer;
 import net.anweisen.cloud.master.node.NodeServer;
 import net.anweisen.cloud.master.service.specific.CloudService;
 
@@ -86,19 +85,9 @@ public class SocketChannelServerHandler implements SocketChannelHandler {
 			return;
 		}
 
-		// TODO publish
-		CordServer cord = cloud.getCordManager().getCordServer(channel);
-		if (cord != null) {
-			cloud.getLogger().warn("Cord '{}' has disconnected", cord.getInfo().getName());
-			cloud.getCordManager().getCordServers().remove(cord);
-			return;
-		}
-
 		cloud.getLogger().warn("Channel[client={} server={}] was neither a node/service/cord", channel.getClientAddress(), channel.getServerAddress());
 		cloud.getLogger().extended("Nodes:");
 		cloud.getNodeManager().getNodeServers().stream().map(current -> current.getInfo().getName() + " | " + current.getChannel()).forEach(line -> cloud.getLogger().extended("=> {}", line));
-		cloud.getLogger().extended("Cords:");
-		cloud.getCordManager().getCordServers().stream().map(current -> current.getInfo().getName() + " | " + current.getChannel()).forEach(line -> cloud.getLogger().extended("=> {}", line));
 		cloud.getLogger().extended("Services:");
 		cloud.getServiceManager().getServices().stream().map(current -> current.getInfo().getName() + " | " + current.getChannel()).forEach(line -> cloud.getLogger().extended("=> {}", line));
 	}

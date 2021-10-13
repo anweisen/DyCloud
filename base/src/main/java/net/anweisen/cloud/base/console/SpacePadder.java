@@ -1,4 +1,4 @@
-package net.anweisen.cloud.driver.console;
+package net.anweisen.cloud.base.console;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

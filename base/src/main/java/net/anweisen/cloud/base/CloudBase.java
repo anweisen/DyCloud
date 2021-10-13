@@ -5,7 +5,7 @@ import net.anweisen.cloud.base.module.ModuleManager;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.DriverEnvironment;
 import net.anweisen.cloud.base.command.CommandManager;
-import net.anweisen.cloud.driver.console.Console;
+import net.anweisen.cloud.base.console.Console;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.def.ServicePublishPacket;
 import net.anweisen.cloud.driver.network.packet.def.ServicePublishPacket.ServicePublishPayload;

@@ -92,7 +92,7 @@ public class FileLogHandler implements LogHandler {
 	}
 
 	private void write(@Nonnull OutputStream stream, @Nonnull LogEntry entry) throws Exception {
-		stream.write((MessageFormatter.formatUncolored(entry) + System.lineSeparator()).getBytes(StandardCharsets.UTF_8));
+		stream.write((UncoloredMessageFormatter.format(entry) + System.lineSeparator()).getBytes(StandardCharsets.UTF_8));
 		stream.flush();
 		stream.close();
 	}

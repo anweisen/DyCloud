@@ -1,8 +1,8 @@
 package net.anweisen.cloud.base.command.sender.defaults;
 
 import net.anweisen.cloud.base.command.sender.ConsoleCommandSender;
-import net.anweisen.cloud.driver.console.Console;
-import net.anweisen.cloud.driver.console.ConsoleColor;
+import net.anweisen.cloud.base.console.Console;
+import net.anweisen.cloud.base.console.ConsoleColor;
 import net.anweisen.cloud.driver.player.chat.ChatText;
 import net.anweisen.cloud.driver.translate.Translatable;
 
