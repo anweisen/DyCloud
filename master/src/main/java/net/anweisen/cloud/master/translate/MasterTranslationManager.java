@@ -132,6 +132,7 @@ public class MasterTranslationManager implements TranslationManager, LoggingApiU
 				}
 
 				language.registerSection(section);
+				trace("=> {} - {} ({})", language.getId(), section.getId(), sectionPath.getFileName());
 
 			}
 
