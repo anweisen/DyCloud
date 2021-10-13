@@ -27,14 +27,14 @@ public class ProxyUpstreamHandler extends SimpleChannelInboundHandler<ByteBuf> i
 
 	@Override
 	protected void channelRead0(ChannelHandlerContext context, ByteBuf buffer) throws Exception {
-//		CloudCord.getInstance().getLogger().trace("Forwarding upstream packet from {} to proxy", downstreamHandler.getClientAddress());
+//		trace("Forwarding upstream packet from {} to proxy", downstreamHandler.getClientAddress());
 		CloudCord.getInstance().getTrafficReporter().reportUpstreamPacket(buffer.readableBytes());
 		channel.writeAndFlush(buffer.retain());
 	}
 
 	@Override
 	public void channelInactive(ChannelHandlerContext context) throws Exception {
-		CloudCord.getInstance().getLogger().info("[{}] Upstream got disconnected", downstreamHandler.getClientAddress());
+		info("[{}] Upstream got disconnected", downstreamHandler.getClientAddress());
 		channel.close();
 	}
 

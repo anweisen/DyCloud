@@ -4,7 +4,6 @@ import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.DriverEnvironment;
 import net.anweisen.cloud.driver.config.global.GlobalConfig;
 import net.anweisen.cloud.driver.config.global.RemoteGlobalConfig;
-import net.anweisen.cloud.driver.cord.CordManager;
 import net.anweisen.cloud.driver.database.DatabaseManager;
 import net.anweisen.cloud.driver.database.remote.RemoteDatabaseManager;
 import net.anweisen.cloud.driver.network.SocketClient;
@@ -393,12 +392,6 @@ public final class CloudWrapper extends CloudDriver {
 	@Override
 	public NodeManager getNodeManager() {
 		return nodeManager;
-	}
-
-	@Nonnull
-	@Override
-	public CordManager getCordManager() {
-		return null;
 	}
 
 	@Nonnull

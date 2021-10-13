@@ -5,6 +5,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import net.anweisen.cloud.cord.CloudCord;
+import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.network.object.HostAndPort;
 
 import javax.annotation.Nonnull;
@@ -15,7 +16,7 @@ import javax.annotation.Nonnull;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class ProxyDownstreamHandler extends SimpleChannelInboundHandler<ByteBuf> {
+public class ProxyDownstreamHandler extends SimpleChannelInboundHandler<ByteBuf> implements LoggingApiUser {
 
 	private final Channel channel;
 	private final HostAndPort clientAddress;
@@ -27,14 +28,14 @@ public class ProxyDownstreamHandler extends SimpleChannelInboundHandler<ByteBuf>
 
 	@Override
 	protected void channelRead0(ChannelHandlerContext context, ByteBuf buffer) throws Exception {
-//		CloudCord.getInstance().getLogger().trace("Forwarding downstream packet to client {}", clientAddress);
+//		trace("Forwarding downstream packet to client {}", clientAddress);
 		CloudCord.getInstance().getTrafficReporter().reportDownstreamPacket(buffer.readableBytes());
 		channel.writeAndFlush(buffer.retain());
 	}
 
 	@Override
 	public void channelInactive(ChannelHandlerContext context) throws Exception {
-		CloudCord.getInstance().getLogger().info("[{}] Downstream got disconnected", clientAddress);
+		info("[{}] Downstream got disconnected", clientAddress);
 		channel.close();
 	}
 

@@ -1,8 +1,6 @@
 package net.anweisen.cloud.master.network.listener;
 
-import net.anweisen.cloud.driver.cord.CordInfo;
 import net.anweisen.cloud.driver.network.SocketChannel;
-import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
 import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket.AuthenticationPayload;
@@ -12,8 +10,6 @@ import net.anweisen.cloud.driver.network.packet.def.ServicePublishPacket.Service
 import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.node.NodeInfo;
 import net.anweisen.cloud.master.CloudMaster;
-import net.anweisen.cloud.master.cord.CordServer;
-import net.anweisen.cloud.master.cord.DefaultCordServer;
 import net.anweisen.cloud.master.node.DefaultNodeServer;
 import net.anweisen.cloud.master.node.NodeServer;
 import net.anweisen.cloud.master.service.specific.CloudService;
@@ -70,31 +66,6 @@ public class AuthenticationListener implements PacketListener {
 				cloud.getLogger().extended("=> Gateway ip for {}: {}", name, info.getGateway());
 				cloud.getNodeManager().handleNodeUpdate(NodePublishPayload.CONNECTED, info);
 				cloud.publishUpdate(NodePublishPayload.CONNECTED, info);
-				channel.sendPacket(new AuthenticationResponsePacket(true, "successful"));
-				break;
-			}
-
-			case CORD: {
-				String name = buffer.readString();
-				if (cloud.getCordManager().getCordInfos().stream().anyMatch(info -> info.getClientAddress().equals(channel.getClientAddress()))) {
-					cloud.getLogger().warn("{} tried to authenticate again with cord name '{}'", channel, name);
-					channel.sendPacket(new AuthenticationResponsePacket(false, "cord address already registered"));
-					return;
-				}
-				if (cloud.getCordManager().getCordInfos().stream().anyMatch(info -> info.getName().equalsIgnoreCase(name))) {
-					cloud.getLogger().warn("{} tried to register with duplicate cord name '{}'", channel, name);
-					channel.sendPacket(new AuthenticationResponsePacket(false, "cord already registered"));
-					channel.close();
-					return;
-				}
-
-				HostAndPort proxyAddress = buffer.readObject(HostAndPort.class);
-
-				CordInfo info = new CordInfo(name, channel.getClientAddress(), proxyAddress);
-				CordServer server = new DefaultCordServer(info, channel);
-				cloud.getCordManager().getCordServers().add(server);
-
-				cloud.getLogger().info("Cord '{}' has connected successfully", name);
 				channel.sendPacket(new AuthenticationResponsePacket(true, "successful"));
 				break;
 			}

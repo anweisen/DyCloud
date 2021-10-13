@@ -89,11 +89,6 @@ public class NettyMinecraftDecoder extends SimpleChannelInboundHandler<ByteBuf> 
 			channel.close();
 			return;
 		}
-//		// TODO
-//		ServiceInfo proxyService = new ServiceInfo(
-//			UUID.randomUUID(), null, "Proxy", 1, ServiceEnvironment.BUNGEECORD,
-//			ServiceState.RUNNING, "Node-1", "45.13.227.194", 25565, true, Document.create()
-//		);
 
 		connectClient(channel, proxyService, hostname, handshakePacket);
 	}

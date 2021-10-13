@@ -22,8 +22,6 @@ import net.anweisen.cloud.driver.translate.TranslationManager;
 import net.anweisen.cloud.master.command.MasterCommandManager;
 import net.anweisen.cloud.master.config.MasterConfig;
 import net.anweisen.cloud.master.config.global.MasterGlobalConfig;
-import net.anweisen.cloud.master.cord.CordServerManager;
-import net.anweisen.cloud.master.cord.DefaultCordServerManager;
 import net.anweisen.cloud.master.database.MasterDatabaseManager;
 import net.anweisen.cloud.master.loop.CloudMainLoop;
 import net.anweisen.cloud.master.network.handler.SocketChannelServerHandler;
@@ -61,7 +59,6 @@ public final class CloudMaster extends CloudBase {
 	private final MasterDatabaseManager databaseManager;
 	private final MasterServiceConfigManager serviceConfigManager;
 	private final NodeServerManager nodeManager;
-	private final CordServerManager cordManager;
 	private final CloudServiceManager serviceManager;
 	private final ServiceFactory serviceFactory;
 	private final MasterPlayerManager playerManager;
@@ -76,7 +73,6 @@ public final class CloudMaster extends CloudBase {
 		setInstance(this);
 
 		nodeManager = new DefaultNodeServerManager();
-		cordManager = new DefaultCordServerManager();
 		databaseManager = new MasterDatabaseManager();
 		serviceConfigManager = new MasterServiceConfigManager();
 		serviceManager = new MasterServiceManager();

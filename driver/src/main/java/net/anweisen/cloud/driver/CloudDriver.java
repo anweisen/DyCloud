@@ -3,7 +3,6 @@ package net.anweisen.cloud.driver;
 import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.config.DriverConfig;
 import net.anweisen.cloud.driver.config.global.GlobalConfig;
-import net.anweisen.cloud.driver.cord.CordManager;
 import net.anweisen.cloud.driver.database.DatabaseManager;
 import net.anweisen.cloud.driver.event.EventManager;
 import net.anweisen.cloud.driver.event.defaults.DefaultEventManager;
@@ -118,9 +117,6 @@ public abstract class CloudDriver {
 
 	@Nonnull
 	public abstract NodeManager getNodeManager();
-
-	@Nonnull
-	public abstract CordManager getCordManager();
 
 	@Nonnull
 	public abstract PlayerManager getPlayerManager();

@@ -22,7 +22,7 @@
 
 		<dependency>
 			<groupId>net.anweisen.cloud</groupId>
-			<artifactId>driver</artifactId>
+			<artifactId>wrapper</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

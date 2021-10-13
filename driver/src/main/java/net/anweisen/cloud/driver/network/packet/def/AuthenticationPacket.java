@@ -26,7 +26,6 @@ public class AuthenticationPacket extends Packet {
 
 	public enum AuthenticationPayload {
 		NODE,
-		CORD,
 		SERVICE
 	}
 

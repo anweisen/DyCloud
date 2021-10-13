@@ -18,7 +18,6 @@ import net.anweisen.cloud.driver.config.global.GlobalConfig;
 import net.anweisen.cloud.driver.config.global.RemoteGlobalConfig;
 import net.anweisen.cloud.driver.console.Console;
 import net.anweisen.cloud.driver.console.HeaderPrinter;
-import net.anweisen.cloud.driver.cord.CordManager;
 import net.anweisen.cloud.driver.database.DatabaseManager;
 import net.anweisen.cloud.driver.database.remote.RemoteDatabaseManager;
 import net.anweisen.cloud.driver.network.SocketChannel;
@@ -324,8 +323,8 @@ public final class CloudNode extends CloudBase {
 
 	@Nonnull
 	@Override
-	public CordManager getCordManager() {
-		return null;
+	public CommandManager getCommandManager() {
+		return commandManager;
 	}
 
 	@Nonnull
