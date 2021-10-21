@@ -46,9 +46,9 @@ public interface ServiceProperty<T> {
 	ServiceProperty<Collection<String>> MESSAGING_CHANNELS = newServiceProperty("channels", Document::getStringList);
 
 	/**
-	 * A string representing the current status of the service like LOBBY, FULL, INGAME, defaults to LOBBY when started
+	 * A string representing the current phase of the service like LOBBY, FULL, INGAME, defaults to LOBBY when started
 	 */
-	ServiceProperty<String> STATUS = newServiceProperty("status", Document::getString);
+	ServiceProperty<String> PHASE = newServiceProperty("phase", Document::getString);
 
 	/**
 	 * A string with no internal use, can be used for the map name example

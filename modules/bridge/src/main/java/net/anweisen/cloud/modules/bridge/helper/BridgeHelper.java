@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 public final class BridgeHelper {
 
 	private static int maxPlayers, lastOnlineCount;
-	private static String motd, status, extra;
+	private static String motd, phase, extra;
 
 	/**
 	 * @see net.anweisen.cloud.driver.service.specific.ServiceProperty#MAX_PLAYERS
@@ -58,21 +58,21 @@ public final class BridgeHelper {
 	}
 
 	/**
-	 * A string representing the current status of the service like LOBBY, FULL, INGAME, defaults to LOBBY when started
+	 * A string representing the current phase of the service like LOBBY, FULL, INGAME, defaults to LOBBY when started
 	 *
-	 * @see net.anweisen.cloud.driver.service.specific.ServiceProperty#STATUS
+	 * @see net.anweisen.cloud.driver.service.specific.ServiceProperty#PHASE
 	 */
-	public static String getStatus() {
-		return status;
+	public static String getPhase() {
+		return phase;
 	}
 
 	/**
-	 * A string representing the current status of the service like LOBBY, FULL, INGAME, defaults to LOBBY when started
+	 * A string representing the current phase of the service like LOBBY, FULL, INGAME, defaults to LOBBY when started
 	 *
-	 * @see net.anweisen.cloud.driver.service.specific.ServiceProperty#STATUS
+	 * @see net.anweisen.cloud.driver.service.specific.ServiceProperty#PHASE
 	 */
-	public static void setStatus(@Nullable String status) {
-		BridgeHelper.status = status;
+	public static void setPhase(@Nullable String phase) {
+		BridgeHelper.phase = phase;
 	}
 
 	/**

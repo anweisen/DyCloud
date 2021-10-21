@@ -10,7 +10,7 @@ import java.util.Collections;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class EmptyCommandCompleter implements CommandCompleter {
+public class EmptyCompleter implements CommandCompleter {
 
 	@Nonnull
 	@Override
