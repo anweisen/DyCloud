@@ -15,11 +15,11 @@ import org.jline.utils.InfoCmp;
 
 import javax.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -29,6 +29,7 @@ public class JLine3Console implements Console {
 
 	private final ConsoleReadThread consoleReadThread = new ConsoleReadThread(this);
 	private final ExecutorService animationThreadPool = Executors.newCachedThreadPool();
+	private final Collection<Consumer<? super String>> inputHandlers = new ArrayList<>();
 
 	private final Terminal terminal;
 	private final LineReaderImpl lineReader;
@@ -48,7 +49,7 @@ public class JLine3Console implements Console {
 
 		terminal = TerminalBuilder.builder().system(true).encoding(StandardCharsets.UTF_8).build();
 		lineReader = new InternalLineReaderBuilder(terminal)
-//			.completer(new JLine3Completer(this))
+			.completer(new JLine3Completer())
 			.option(LineReader.Option.DISABLE_EVENT_EXPANSION, true)
 			.variable(LineReader.BELL_STYLE, "off")
 			.build();
@@ -179,6 +180,17 @@ public class JLine3Console implements Console {
 	public void setScreenName(@Nonnull String screenName) {
 		this.screenName = screenName;
 		resetPrompt();
+	}
+
+	@Override
+	public void addInputHandler(@Nonnull Consumer<? super String> handler) {
+		inputHandlers.add(handler);
+	}
+
+	@Nonnull
+	@Override
+	public Collection<Consumer<? super String>> getInputHandlers() {
+		return Collections.unmodifiableCollection(inputHandlers);
 	}
 
 	private void updatePrompt() {

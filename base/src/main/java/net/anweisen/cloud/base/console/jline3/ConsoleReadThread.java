@@ -7,6 +7,7 @@ import org.jline.reader.UserInterruptException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Consumer;
 
 public class ConsoleReadThread extends Thread {
 
@@ -24,6 +25,10 @@ public class ConsoleReadThread extends Thread {
 			if (currentTask != null) {
 				currentTask.complete(line);
 				currentTask = null;
+			}
+
+			for (Consumer<? super String> handler : console.getInputHandlers()) {
+				handler.accept(line);
 			}
 		}
 	}

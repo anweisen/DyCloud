@@ -3,6 +3,8 @@ package net.anweisen.cloud.base.console;
 import net.anweisen.utilities.common.concurrent.task.Task;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.function.Consumer;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -53,5 +55,10 @@ public interface Console {
 
 	@Nonnull
 	Console writeLine(@Nonnull String text);
+
+	void addInputHandler(@Nonnull Consumer<? super String> handler);
+
+	@Nonnull
+	Collection<Consumer<? super String>> getInputHandlers();
 
 }
