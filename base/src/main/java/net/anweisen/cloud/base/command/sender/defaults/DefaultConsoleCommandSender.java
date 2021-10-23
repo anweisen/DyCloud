@@ -1,10 +1,12 @@
 package net.anweisen.cloud.base.command.sender.defaults;
 
+import net.anweisen.cloud.base.CloudBase;
 import net.anweisen.cloud.base.command.sender.ConsoleCommandSender;
 import net.anweisen.cloud.base.console.Console;
 import net.anweisen.cloud.base.console.ConsoleColor;
 import net.anweisen.cloud.driver.player.chat.ChatText;
 import net.anweisen.cloud.driver.translate.Translatable;
+import net.anweisen.utilities.common.logging.ILogger;
 
 import javax.annotation.Nonnull;
 
@@ -14,20 +16,14 @@ import javax.annotation.Nonnull;
  */
 public class DefaultConsoleCommandSender implements ConsoleCommandSender {
 
-	private final Console console;
-
-	public DefaultConsoleCommandSender(@Nonnull Console console) {
-		this.console = console;
-	}
-
 	@Override
 	public void sendMessage(@Nonnull String message) {
-		console.writeLine(ConsoleColor.toColoredString('§', message));
+		getLogger().info(ConsoleColor.toUncoloredString('§', message));
 	}
 
 	@Override
 	public void sendMessage(@Nonnull ChatText... message) {
-		console.writeLine(ConsoleColor.toColoredString('§', ChatText.toString(message)));
+		sendMessage(ChatText.toString(message));
 	}
 
 	@Override
@@ -48,7 +44,13 @@ public class DefaultConsoleCommandSender implements ConsoleCommandSender {
 	@Nonnull
 	@Override
 	public Console getConsole() {
-		return console;
+		return CloudBase.getInstance().getConsole();
+	}
+
+	@Nonnull
+	@Override
+	public ILogger getLogger() {
+		return CloudBase.getInstance().getLogger();
 	}
 
 	@Nonnull
@@ -61,4 +63,10 @@ public class DefaultConsoleCommandSender implements ConsoleCommandSender {
 	public String toString() {
 		return "ConsoleCommandSender[]";
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		return o instanceof DefaultConsoleCommandSender;
+	}
+
 }
