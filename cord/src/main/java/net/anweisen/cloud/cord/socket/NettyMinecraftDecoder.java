@@ -142,9 +142,6 @@ public class NettyMinecraftDecoder extends SimpleChannelInboundHandler<ByteBuf> 
 
 	}
 
-	// TODO max players
-	// TODO move to helper class
-
 	private static final Comparator<ServiceInfo> comparator = (service1, service2) -> {
 		int online1 = service1.get(ServiceProperty.ONLINE_PLAYERS);
 		int online2 = service2.get(ServiceProperty.ONLINE_PLAYERS);
@@ -160,7 +157,7 @@ public class NettyMinecraftDecoder extends SimpleChannelInboundHandler<ByteBuf> 
 
 		List<ServiceInfo> services = new ArrayList<>();
 		proxyTasks.forEach(task -> services.addAll(task.findServices()));
-		services.removeIf(service -> !service.isReady());
+		services.removeIf(service -> !service.isReady() || service.get(ServiceProperty.ONLINE_PLAYERS) >= service.get(ServiceProperty.MAX_PLAYERS));
 		services.sort(comparator);
 
 		if (services.isEmpty()) return null;
