@@ -30,11 +30,12 @@ I would recommend you to use one of the **following cloud systems**:
 
 ## Permissions
 
-- **cloud.join.maintenance**: Player with this permission will be able to join during maintenance (provided by *Cloud-Bridge*)
-- **cloud.join.full**: Player with this permission will be able to join although the server is full (provided by *Cloud-Bridge*)
-- **cloud.auto.op**: Player with this permission will automatically be set as operators on bukkit servers (provided by *Cloud-Perms*)
-- **cloud.notify**: Player with this permission will receive messages when services are started/stopped (provided by *Cloud-Notify*)
-- **cloud.chat.color**: Player with this permission will be able to send colored message using ``&`` (provided by *Cloud-ChatTab*)
+- **cloud.join.maintenance**: Player with this permission will be able to join during maintenance (*Cloud-Bridge*)
+- **cloud.join.full**: Player with this permission will be able to join although the server is full (*Cloud-Bridge*)
+- **cloud.auto.op**: Player with this permission will automatically be set as operators on bukkit servers (*Cloud-Perms*)
+- **cloud.notify**: Player with this permission will receive messages when services are started/stopped (*Cloud-Notify*)
+- **cloud.chat.color**: Player with this permission will be able to send colored message using ``&`` (*Cloud-ChatTab*)
+- **cloud.command.use**: Player with this permission will be able to use ``/cloud`` commands (*Cloud.Bridge*)
 
 ## Modules
 
