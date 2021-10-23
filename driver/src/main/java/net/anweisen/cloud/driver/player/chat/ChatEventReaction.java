@@ -6,7 +6,7 @@ import javax.annotation.Nonnull;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public enum ChatClickEvent {
+public enum ChatEventReaction {
 
 	RUN_COMMAND("run"),
 	SUGGEST_COMMAND("suggest"),
@@ -14,7 +14,7 @@ public enum ChatClickEvent {
 
 	private final String shortcut;
 
-	ChatClickEvent(@Nonnull String shortcut) {
+	ChatEventReaction(@Nonnull String shortcut) {
 		this.shortcut = shortcut;
 	}
 
@@ -24,11 +24,11 @@ public enum ChatClickEvent {
 	}
 
 	@Nonnull
-	public static ChatClickEvent getClickEvent(@Nonnull String shortcut) {
-		for (ChatClickEvent event : values()) {
+	public static ChatEventReaction getByShortcut(@Nonnull String shortcut) {
+		for (ChatEventReaction event : values()) {
 			if (event.getShortCut().equals(shortcut))
 				return event;
 		}
-		throw new IllegalArgumentException("Unknown ChatClickEvent for '" + shortcut + "'");
+		throw new IllegalArgumentException("Unknown ChatEventReaction for '" + shortcut + "'");
 	}
 }
