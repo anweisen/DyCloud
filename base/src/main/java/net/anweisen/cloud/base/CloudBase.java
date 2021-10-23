@@ -1,11 +1,13 @@
 package net.anweisen.cloud.base;
 
+import net.anweisen.cloud.base.command.CommandManager;
+import net.anweisen.cloud.base.command.commands.PlayerCommand;
+import net.anweisen.cloud.base.command.sender.ConsoleCommandSender;
+import net.anweisen.cloud.base.console.Console;
 import net.anweisen.cloud.base.module.DefaultModuleManager;
 import net.anweisen.cloud.base.module.ModuleManager;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.DriverEnvironment;
-import net.anweisen.cloud.base.command.CommandManager;
-import net.anweisen.cloud.base.console.Console;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.def.ServicePublishPacket;
 import net.anweisen.cloud.driver.network.packet.def.ServicePublishPacket.ServicePublishPayload;
@@ -37,6 +39,18 @@ public abstract class CloudBase extends CloudDriver {
 		logger.info("Thank you and good bye!");
 		console.close();
 
+	}
+
+	protected void runConsole() {
+		console.addInputHandler(input -> {
+			getCommandManager().executeCommand(ConsoleCommandSender.INSTANCE, input);
+		});
+	}
+
+	protected void registerDefaultCommands() {
+		getCommandManager().registerCommands(
+			new PlayerCommand()
+		);
 	}
 
 	public void publishUpdate(@Nonnull ServicePublishPayload payload, @Nonnull ServiceInfo serviceInfo, @Nonnull SocketChannel... skipChannels) {
