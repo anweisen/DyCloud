@@ -8,6 +8,7 @@ import net.anweisen.cloud.driver.player.permission.PermissionPlayer;
 import net.anweisen.cloud.driver.translate.Translatable;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -80,5 +81,18 @@ public class DefaultPlayerCommandSender implements PlayerCommandSender {
 	@Override
 	public String toString() {
 		return "PlayerCommandSender[name=" + getName() + " uuid=" + getUniqueId() + "]";
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		DefaultPlayerCommandSender that = (DefaultPlayerCommandSender) o;
+		return Objects.equals(this.getUniqueId(), that.getUniqueId());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getUniqueId());
 	}
 }
