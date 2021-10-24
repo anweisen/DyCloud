@@ -34,7 +34,7 @@ public final class CloudCord {
 			startCord();
 		} catch (Exception ex) {
 			logger.error("Unable to start cord", ex);
-			// TODO stop
+			System.exit(4);
 		}
 
 	}
