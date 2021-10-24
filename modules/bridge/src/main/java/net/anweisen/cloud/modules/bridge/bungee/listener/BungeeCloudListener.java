@@ -29,7 +29,7 @@ public class BungeeCloudListener {
 		event.getServiceInfo().setReady();
 		event.getServiceInfo()
 			.set(ServiceProperty.MOTD, BridgeHelper.getMotd())
-			.set(ServiceProperty.STATUS, BridgeHelper.getStatus())
+			.set(ServiceProperty.PHASE, BridgeHelper.getPhase())
 			.set(ServiceProperty.EXTRA, BridgeHelper.getExtra())
 			.set(ServiceProperty.MAX_PLAYERS, BridgeHelper.getMaxPlayers())
 			.set(ServiceProperty.ONLINE_PLAYERS, ProxyServer.getInstance().getOnlineCount())

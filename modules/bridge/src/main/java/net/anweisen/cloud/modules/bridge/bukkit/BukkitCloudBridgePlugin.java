@@ -31,7 +31,7 @@ public final class BukkitCloudBridgePlugin extends JavaPlugin {
 	private void initHelpers() {
 		BridgeHelper.setMaxPlayers(Bukkit.getMaxPlayers());
 		BridgeHelper.setMotd(Bukkit.getMotd());
-		BridgeHelper.setStatus("LOBBY");
+		BridgeHelper.setPhase("LOBBY");
 		BridgeHelper.updateServiceInfo();
 	}
 
