@@ -44,6 +44,15 @@ public enum ConsoleColor {
 		return text;
 	}
 
+	@Nonnull
+	public static String toUncoloredString(char triggerChar, @Nonnull String text) {
+		for (ConsoleColor consoleColour : values()) {
+			text = text.replace(triggerChar + "" + consoleColour.index, "");
+		}
+
+		return text;
+	}
+
 	@Nullable
 	public static ConsoleColor getByChar(char index) {
 		for (ConsoleColor color : values()) {
