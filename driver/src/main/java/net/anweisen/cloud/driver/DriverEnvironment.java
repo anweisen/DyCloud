@@ -1,7 +1,7 @@
 package net.anweisen.cloud.driver;
 
 /**
- * TODO docs
+ * The DriverEnvironment indicates in what cloud application the driver is embedded in.
  *
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
