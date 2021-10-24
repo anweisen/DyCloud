@@ -4,7 +4,7 @@ import net.anweisen.cloud.base.command.CommandScope;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -17,7 +17,7 @@ public final class RegisteredCommand {
 	private final String path;
 	private final String permission;
 	private final CommandScope scope;
-	private final Collection<RegisteredCommandArgument> arguments;
+	private final List<RegisteredCommandArgument> arguments;
 	private final Method method;
 	private final Object instance;
 
@@ -33,7 +33,7 @@ public final class RegisteredCommand {
 	}
 
 	@Nonnull
-	public String[] getName() {
+	public String[] getNames() {
 		return name;
 	}
 
@@ -53,8 +53,17 @@ public final class RegisteredCommand {
 	}
 
 	@Nonnull
-	public Collection<RegisteredCommandArgument> getArguments() {
+	public List<RegisteredCommandArgument> getArguments() {
 		return arguments;
+	}
+
+	@Nonnull
+	public RegisteredCommandArgument getArgument(@Nonnull String name) {
+		for (RegisteredCommandArgument argument : arguments) {
+			if (argument.getName().equalsIgnoreCase(name))
+				return argument;
+		}
+		throw new IllegalStateException("No such argument: " + name + " in " + this);
 	}
 
 	@Nonnull
@@ -65,5 +74,10 @@ public final class RegisteredCommand {
 	@Nonnull
 	public Object getInstance() {
 		return instance;
+	}
+
+	@Override
+	public String toString() {
+		return "{" + "name=" + Arrays.toString(name) + " path='" + path + '\'' + " permission='" + permission + "' scope=" + scope + '}';
 	}
 }
