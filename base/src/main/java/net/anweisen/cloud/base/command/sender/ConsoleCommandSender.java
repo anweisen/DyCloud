@@ -1,8 +1,8 @@
 package net.anweisen.cloud.base.command.sender;
 
-import net.anweisen.cloud.base.CloudBase;
 import net.anweisen.cloud.base.command.sender.defaults.DefaultConsoleCommandSender;
 import net.anweisen.cloud.base.console.Console;
+import net.anweisen.utilities.common.logging.ILogger;
 
 import javax.annotation.Nonnull;
 
@@ -12,9 +12,12 @@ import javax.annotation.Nonnull;
  */
 public interface ConsoleCommandSender extends CommandSender {
 
-	ConsoleCommandSender INSTANCE = new DefaultConsoleCommandSender(CloudBase.getInstance().getConsole());
+	ConsoleCommandSender INSTANCE = new DefaultConsoleCommandSender();
 
 	@Nonnull
 	Console getConsole();
+
+	@Nonnull
+	ILogger getLogger();
 
 }
