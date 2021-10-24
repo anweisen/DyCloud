@@ -11,6 +11,7 @@ public final class Permissions {
 	public static final String CHAT_COLORS      = "cloud.chat.color";
 	public static final String AUTO_OP          = "cloud.auto.op";
 	public static final String NOTIFY           = "cloud.notify";
+	public static final String CLOUD_COMMAND    = "cloud.command.use";
 
 	private Permissions() {}
 
