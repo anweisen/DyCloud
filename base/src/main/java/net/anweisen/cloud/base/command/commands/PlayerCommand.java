@@ -4,7 +4,7 @@ import net.anweisen.cloud.base.command.CommandScope;
 import net.anweisen.cloud.base.command.annotation.Command;
 import net.anweisen.cloud.base.command.annotation.CommandArgument;
 import net.anweisen.cloud.base.command.annotation.CommandPath;
-import net.anweisen.cloud.base.command.completer.CommandCompleter;
+import net.anweisen.cloud.base.command.completer.OnlinePlayerCompleter;
 import net.anweisen.cloud.base.command.sender.CommandSender;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.player.CloudPlayer;
@@ -31,7 +31,7 @@ public class PlayerCommand {
 	}
 
 	@CommandPath("kick <player>")
-	public void onKickCommand(@Nonnull CommandSender sender, @CommandArgument(value = "player", completer = CommandCompleter.ONLINE_PLAYER) String playerName) {
+	public void onKickCommand(@Nonnull CommandSender sender, @CommandArgument(value = "player", completer = OnlinePlayerCompleter.class) String playerName) {
 		CloudPlayer player = CloudDriver.getInstance().getPlayerManager().getOnlinePlayerByName(playerName);
 
 		if (player == null) {
