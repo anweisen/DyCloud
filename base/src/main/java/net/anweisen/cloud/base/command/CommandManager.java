@@ -1,20 +1,25 @@
 package net.anweisen.cloud.base.command;
 
+import net.anweisen.cloud.base.CloudBase;
 import net.anweisen.cloud.base.command.annotation.data.RegisteredCommand;
 import net.anweisen.cloud.base.command.completer.CommandCompleter;
 import net.anweisen.cloud.base.command.sender.CommandSender;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collection;
 
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
+ *
+ * @see CloudBase#getCommandManager()
  */
 public interface CommandManager {
 
 	void executeCommand(@Nonnull CommandSender sender, @Nonnull String input);
+
+	@Nonnull
+	Collection<String> completeCommand(@Nonnull CommandSender sender, @Nonnull String input);
 
 	void registerCommand(@Nonnull Object command);
 
@@ -41,15 +46,6 @@ public interface CommandManager {
 
 	@Nonnull
 	Collection<RegisteredCommand> getCommands();
-
-	@Nonnull
-	Collection<RegisteredCommand> matchCommandName(@Nonnull String name);
-
-	@Nullable
-	RegisteredCommand selectCommand(@Nonnull String input);
-
-	@Nonnull
-	Collection<String> completeCommand(@Nonnull CommandSender sender, @Nonnull String input);
 
 	@Nonnull
 	CommandCompleter getCompleter(@Nonnull Class<? extends CommandCompleter> completerClass);
