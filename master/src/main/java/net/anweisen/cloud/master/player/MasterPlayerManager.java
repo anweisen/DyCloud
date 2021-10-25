@@ -19,6 +19,7 @@ import net.anweisen.cloud.driver.player.defaults.DefaultPlayerManager;
 import net.anweisen.cloud.driver.player.permission.PermissionData;
 import net.anweisen.cloud.driver.player.permission.Permissions;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
+import net.anweisen.cloud.driver.translate.Translatable;
 import net.anweisen.cloud.master.CloudMaster;
 import net.anweisen.utilities.common.concurrent.task.Task;
 import net.anweisen.utilities.common.config.Document;
@@ -65,9 +66,9 @@ public class MasterPlayerManager extends DefaultPlayerManager implements Logging
 		} else {
 			CloudOfflinePlayer offlinePlayer = getOrCreateOfflinePlayer(uniqueId, name, playerConnection);
 			if (CloudMaster.getInstance().getGlobalConfig().getMaintenance() && !offlinePlayer.getPermissionPlayer().hasPermission(Permissions.JOIN_MAINTENANCE)) {
-				cancelReason = "§cThe network is currently in maintenance";
+				cancelReason = Translatable.of("cloud.kick.maintenance").translate(uniqueId).asString();
 			} else if (CloudMaster.getInstance().getGlobalConfig().getMaxPlayers() > 0 && getOnlinePlayerCount() >= CloudMaster.getInstance().getGlobalConfig().getMaxPlayers() && !offlinePlayer.getPermissionPlayer().hasPermission(Permissions.JOIN_FULL)) {
-				cancelReason = "§cThe network is currently full";
+				cancelReason = Translatable.of("cloud.kick.full").translate(uniqueId).asString();
 			} else {
 				player = registerOnlinePlayer(offlinePlayer, playerConnection, serviceInfo);
 				PlayerProxyLoginRequestEvent event = CloudMaster.getInstance().getEventManager().callEvent(new PlayerProxyLoginRequestEvent(player));
