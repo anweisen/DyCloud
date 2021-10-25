@@ -21,7 +21,7 @@ import java.util.UUID;
  */
 public final class ServiceInfo implements SerializableObject {
 
-	public static final int PUBLISH_INTERVAL = 90_000; // publish all 1.5 minute
+	public static final int PUBLISH_INTERVAL = 90_000; // publish all 1.5 minutes
 	public static final int CYCLE_TIMEOUT = 2; // service times out after 3 minutes
 
 	private UUID uniqueId;
@@ -34,6 +34,7 @@ public final class ServiceInfo implements SerializableObject {
 	private ServiceState state;
 	private ServiceControlState controlState;
 	private boolean ready;
+	private boolean connected;
 
 	private String nodeName;
 	private String nodeAddress;
@@ -49,7 +50,7 @@ public final class ServiceInfo implements SerializableObject {
 	}
 
 	public ServiceInfo(@Nonnull UUID uniqueId, @Nullable String dockerContainerId, @Nonnull String taskName, @Nonnegative int serviceNumber, @Nonnull ServiceEnvironment environment,
-	                   @Nonnull ServiceState state, @Nonnull ServiceControlState controlState, @Nonnull String nodeName, @Nonnull String nodeAddress, int port, boolean permanent,
+	                   @Nonnull ServiceState state, @Nonnull ServiceControlState controlState, boolean connected, @Nonnull String nodeName, @Nonnull String nodeAddress, int port, boolean permanent,
 	                   @Nonnull Document properties) {
 		this.uniqueId = uniqueId;
 		this.dockerContainerId = dockerContainerId;
@@ -58,6 +59,7 @@ public final class ServiceInfo implements SerializableObject {
 		this.environment = environment;
 		this.state = state;
 		this.controlState = controlState;
+		this.connected = connected;
 		this.nodeName = nodeName;
 		this.nodeAddress = nodeAddress;
 		this.port = port;
@@ -75,6 +77,7 @@ public final class ServiceInfo implements SerializableObject {
 		buffer.writeString(nodeAddress);
 		buffer.writeEnum(state);
 		buffer.writeEnum(controlState);
+		buffer.writeBoolean(connected);
 		buffer.writeOptionalString(dockerContainerId);
 		buffer.writeBoolean(ready);
 		buffer.writeEnum(environment);
@@ -93,6 +96,7 @@ public final class ServiceInfo implements SerializableObject {
 		nodeAddress = buffer.readString();
 		state = buffer.readEnum(ServiceState.class);
 		controlState = buffer.readEnum(ServiceControlState.class);
+		connected = buffer.readBoolean();
 		dockerContainerId = buffer.readOptionalString();
 		ready = buffer.readBoolean();
 		environment = buffer.readEnum(ServiceEnvironment.class);
@@ -160,6 +164,10 @@ public final class ServiceInfo implements SerializableObject {
 		return state == ServiceState.RUNNING && (ready || !environment.hasBridge());
 	}
 
+	public boolean isConnected() {
+		return connected;
+	}
+
 	@Nonnull
 	public ServiceEnvironment getEnvironment() {
 		return environment;
@@ -204,7 +212,11 @@ public final class ServiceInfo implements SerializableObject {
 
 	@Nullable
 	public ServiceTask findTask() {
-		return CloudDriver.getInstance().getServiceConfigManager().getTask(taskName);
+		return CloudDriver.getInstance().getServiceConfigManager().getServiceTask(taskName);
+	}
+
+	public void setConnected(boolean connected) {
+		this.connected = connected;
 	}
 
 	public void setDockerContainerId(@Nonnull String dockerContainerId) {
@@ -231,6 +243,10 @@ public final class ServiceInfo implements SerializableObject {
 	public String toString() {
 		return "Service[name=" + getName() + " node=" + nodeName + " port=" + port
 					+ " state=" + state + (state == ServiceState.RUNNING ? ":" + (ready ? "ready" : "unready") : "") + (controlState != ServiceControlState.NONE ? "->" + controlState : "") + "]";
+	}
+
+	public String toShortString() {
+		return getName() + ":" + state + (state == ServiceState.RUNNING ? ":" + (ready ? "ready" : "unready") : "") + (controlState != ServiceControlState.NONE ? "->" + controlState : "") + " " + environment + " (" + nodeName + ":" + port + ")";
 	}
 
 	public String toFullString() {

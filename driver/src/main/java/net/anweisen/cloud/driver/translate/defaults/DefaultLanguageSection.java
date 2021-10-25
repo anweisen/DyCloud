@@ -1,5 +1,6 @@
 package net.anweisen.cloud.driver.translate.defaults;
 
+import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.translate.Language;
 import net.anweisen.cloud.driver.translate.LanguageSection;
 import net.anweisen.cloud.driver.translate.TranslatedValue;
@@ -12,7 +13,7 @@ import java.util.Map;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class DefaultLanguageSection implements LanguageSection {
+public class DefaultLanguageSection implements LanguageSection, LoggingApiUser {
 
 	private final Language parent;
 	private final String id;
@@ -52,6 +53,7 @@ public class DefaultLanguageSection implements LanguageSection {
 	public TranslatedValue getValue(@Nonnull String name) {
 		TranslatedValue value = values.get(name);
 		if (value != null) return value;
+		warn("Could not find translation '{}' in '{}' ({})", name, id, parent.getId());
 
 		values.put(name, value = createEmptyValue(name));
 		return value;
@@ -60,6 +62,11 @@ public class DefaultLanguageSection implements LanguageSection {
 	@Nonnull
 	@Override
 	public TranslatedValue createEmptyValue(@Nonnull String name) {
-		return new DefaultTranslatedValue(this, name, Collections.singletonList("{" + name + "}"));
+		return new DefaultTranslatedValue(this, name, Collections.singletonList("[" + name + "]"));
+	}
+
+	@Override
+	public String toString() {
+		return "LanguageSection[language=" + parent.getId() + " id=" + id + " size=" + values.size() + "]";
 	}
 }

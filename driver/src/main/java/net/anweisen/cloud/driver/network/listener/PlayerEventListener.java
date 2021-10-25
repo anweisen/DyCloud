@@ -32,7 +32,7 @@ public class PlayerEventListener implements PacketListener {
 
 		if (payload == PlayerEventPayload.PROXY_LOGIN_REQUEST) {
 			CloudPlayer player = buffer.readObject(DefaultCloudPlayer.class);
-			cloud.getPlayerManager().registerPlayer(player);
+			cloud.getPlayerManager().registerOnlinePlayer(player);
 			cloud.getEventManager().callEvent(new PlayerProxyLoginRequestEvent(player));
 			return;
 		}
@@ -68,7 +68,7 @@ public class PlayerEventListener implements PacketListener {
 			}
 			case PROXY_DISCONNECT: { // TODO this does not feel right
 				player.setOnline(false);
-				cloud.getPlayerManager().unregisterPlayer(uuid);
+				cloud.getPlayerManager().unregisterOnlinePlayer(uuid);
 				cloud.getEventManager().callEvent(new PlayerProxyDisconnectEvent(player));
 				break;
 			}

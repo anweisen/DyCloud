@@ -226,7 +226,7 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 
 	@Override
 	public String toString() {
-		return "CloudPlayer[name=" + getName() + " uuid=" + getUniqueId() + " address=" + connection.getAddress() + " version=" + connection.getVersion().getName() + " proxy=" + getProxy().getName() + " server=" + (getServer() == null ? null : getServer().getName()) + (online ? "" : " online=false") + "]";
+		return "CloudPlayer[name=" + getName() + " uuid=" + getUniqueId() + " address=" + connection.getAddress() + " version='" + connection.getVersion().getName() + "' proxy=" + getProxy().getName() + " server=" + (getServer() == null ? null : getServer().getName()) + (online ? "" : " online=false") + "]";
 	}
 
 	@Override

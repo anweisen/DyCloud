@@ -3,7 +3,7 @@ package net.anweisen.cloud.modules.notify.listener;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.event.EventListener;
 import net.anweisen.cloud.driver.event.service.*;
-import net.anweisen.cloud.driver.player.chat.ChatClickEvent;
+import net.anweisen.cloud.driver.player.chat.ChatClickReaction;
 import net.anweisen.cloud.driver.player.chat.ChatText;
 import net.anweisen.cloud.driver.player.permission.Permissions;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
@@ -52,7 +52,7 @@ public class IngameServiceStatusListener {
 		);
 
 		if (connect) {
-			text.setClick(ChatClickEvent.RUN_COMMAND, "/server " + service.getName());
+			text.setClick(ChatClickReaction.RUN_COMMAND, "/server " + service.getName());
 			if (CloudNotifyModule.getInstance().getNotifyConfig().getIngame().getHoverConnectMessage() != null)
 				text.setHover(CloudNotifyModule.getInstance().getNotifyConfig().getIngame().getHoverConnectMessage());
 		}

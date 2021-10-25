@@ -1,7 +1,7 @@
 package net.anweisen.cloud.driver.translate.defaults;
 
 import net.anweisen.cloud.driver.console.LoggingApiUser;
-import net.anweisen.cloud.driver.player.chat.ChatClickEvent;
+import net.anweisen.cloud.driver.player.chat.ChatClickReaction;
 import net.anweisen.cloud.driver.player.chat.ChatText;
 import net.anweisen.cloud.driver.translate.LanguageSection;
 import net.anweisen.cloud.driver.translate.TranslatedValue;
@@ -10,17 +10,16 @@ import net.anweisen.utilities.common.misc.StringUtils;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * {n}       -> args[n]         | argument at given index
- * ${t}      -> trans(t)        | given translation; in section or other section
- * (t)(e:c) -> text(t, e, c)    | embed events in ChatText; t=text e=eventType c=eventContent
- *
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
+ *
+ * @see TranslatedValue
  */
 public class DefaultTranslatedValue implements TranslatedValue, LoggingApiUser {
 
@@ -115,9 +114,7 @@ public class DefaultTranslatedValue implements TranslatedValue, LoggingApiUser {
 		StringBuilder content = new StringBuilder();
 		StringBuilder text = new StringBuilder();
 		for (char c : sequence.toCharArray()) {
-			System.out.println("phase:" + phase + " -> " + c);
 			if (c == start) {
-
 				if (phase == 0) {
 					if (text.length() > 0) {
 						output.add(new ChatText(text));
@@ -140,7 +137,7 @@ public class DefaultTranslatedValue implements TranslatedValue, LoggingApiUser {
 					continue;
 				}
 				if (phase == 4) {
-					output.add(new ChatText(argument).setClick(ChatClickEvent.getClickEvent(type.toString()), content.toString()));
+					output.add(new ChatText(argument).setClick(ChatClickReaction.getByShortcut(type.toString()), content.toString()));
 					argument.setLength(0);
 					type.setLength(0);
 					content.setLength(0);
@@ -246,4 +243,21 @@ public class DefaultTranslatedValue implements TranslatedValue, LoggingApiUser {
 		return builder.toString();
 	}
 
+	@Override
+	public String toString() {
+		return "TranslatedValue[name=" + section.getId() + "." + name + " value=" + value + "]";
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		DefaultTranslatedValue that = (DefaultTranslatedValue) o;
+		return Objects.equals(section, that.section) && Objects.equals(name, that.name);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(section, name);
+	}
 }

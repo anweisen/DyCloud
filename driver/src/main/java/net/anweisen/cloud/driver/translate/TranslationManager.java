@@ -35,7 +35,7 @@ public interface TranslationManager {
 
 	void setDefaultLanguage(@Nonnull String language);
 
-	void setLanguages(@Nonnull Collection<? extends Language> languages);
+	void setLanguageCache(@Nonnull Collection<? extends Language> languages);
 
 	void retrieve();
 

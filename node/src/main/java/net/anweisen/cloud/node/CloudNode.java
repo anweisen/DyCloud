@@ -10,14 +10,16 @@ import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.jaxrs.JerseyDockerHttpClient;
 import com.github.dockerjava.transport.DockerHttpClient;
 import net.anweisen.cloud.base.CloudBase;
+import net.anweisen.cloud.base.command.CommandManager;
+import net.anweisen.cloud.base.command.ConsoleOnlyCommandManager;
 import net.anweisen.cloud.base.module.ModuleController;
 import net.anweisen.cloud.base.node.NodeCycleData;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.DriverEnvironment;
 import net.anweisen.cloud.driver.config.global.GlobalConfig;
 import net.anweisen.cloud.driver.config.global.RemoteGlobalConfig;
-import net.anweisen.cloud.driver.console.Console;
-import net.anweisen.cloud.driver.console.HeaderPrinter;
+import net.anweisen.cloud.base.console.Console;
+import net.anweisen.cloud.base.console.HeaderPrinter;
 import net.anweisen.cloud.driver.database.DatabaseManager;
 import net.anweisen.cloud.driver.database.remote.RemoteDatabaseManager;
 import net.anweisen.cloud.driver.network.SocketChannel;
@@ -83,6 +85,7 @@ public final class CloudNode extends CloudBase {
 	private final NodeManager nodeManager;
 	private final PlayerManager playerManager;
 	private final GlobalConfig globalConfig;
+	private final CommandManager commandManager;
 	private final TranslationManager translationManager;
 	private final DockerServiceActor serviceActor;
 
@@ -105,6 +108,7 @@ public final class CloudNode extends CloudBase {
 		playerManager = new RemotePlayerManager();
 		serviceActor = new DockerServiceActor();
 		globalConfig = new RemoteGlobalConfig();
+		commandManager = new ConsoleOnlyCommandManager();
 		translationManager = new RemoteTranslationManager();
 
 		HeaderPrinter.printHeader(console);
@@ -132,6 +136,9 @@ public final class CloudNode extends CloudBase {
 		pullJavaImages();
 
 		executor.scheduleAtFixedRate(this::publishDataCycle, 1_000, NodeCycleData.PUBLISH_INTERVAL, TimeUnit.MILLISECONDS);
+
+		runConsole();
+		registerDefaultCommands();
 
 	}
 
@@ -221,12 +228,12 @@ public final class CloudNode extends CloudBase {
 	private void pullJavaImages() {
 		logger.info("Pulling docker java images..");
 		Set<Integer> javaVersions = new TreeSet<>();
-		serviceConfigManager.getTasks().forEach(task -> javaVersions.add(task.getJavaVersion()));
+		serviceConfigManager.getServiceTasks().forEach(task -> javaVersions.add(task.getJavaVersion()));
 		logger.debug("Pulling java images for {}", javaVersions);
 		for (int javaVersion : javaVersions) {
 			String image = "openjdk:" + javaVersion;
 			try {
-				logger.info("Pulling image '{}' for java-{}..", image, javaVersion);
+				logger.info("Pulling image '{}' for Java {}..", image, javaVersion);
 				dockerClient.pullImageCmd(image).start().awaitCompletion();
 				logger.info("Successfully pulled image '{}'", image);
 			} catch (Exception ex) {

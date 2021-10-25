@@ -31,10 +31,6 @@ public class MasterTranslationManager implements TranslationManager, LoggingApiU
 
 	private String defaultLanguage = "en"; // TODO customizable
 
-	public MasterTranslationManager() {
-		setup();
-	}
-
 	@Nonnull
 	@Override
 	public String getDefaultLanguage() {
@@ -70,13 +66,13 @@ public class MasterTranslationManager implements TranslationManager, LoggingApiU
 	}
 
 	@Override
-	public void setLanguages(@Nonnull Collection<? extends Language> languages) {
+	public void setLanguageCache(@Nonnull Collection<? extends Language> languages) {
 		this.languages.clear();
 		for (Language language : languages)
 			this.languages.put(language.getId(), language);
 	}
 
-	private void setup() {
+	public void setup() {
 		FileUtils.createDirectory(directory);
 
 		List<Document> documents = Document.parseJsonArray(getClass().getClassLoader().getResourceAsStream("language/_.json"));
@@ -114,25 +110,26 @@ public class MasterTranslationManager implements TranslationManager, LoggingApiU
 	public void retrieve() {
 		languages.clear();
 
-		for (Path languageDirectory : FileUtils.list(directory).collect(Collectors.toList())) {
+		for (Path languageDirectory : FileUtils.list(directory).filter(Files::isDirectory).collect(Collectors.toList())) {
 			String languageId = languageDirectory.getFileName().toString();
 
 			Path config = languageDirectory.resolve(configPath);
 			Document data = Document.readJsonFile(config);
 
 			DefaultCachedLanguage language = new DefaultCachedLanguage(languageId, new LanguageConfig(data));
+			languages.put(languageId, language);
 
 			for (Path sectionPath : FileUtils.list(languageDirectory).filter(current -> !current.getFileName().toString().equals(configPath)).collect(Collectors.toList())) {
 
 				Map<String, TranslatedValue> values = new LinkedHashMap<>();
-				DefaultLanguageSection section = new DefaultLanguageSection(language, FileUtils.getFileName(sectionPath), values);
+				DefaultLanguageSection section = new DefaultLanguageSection(language, FileUtils.getFileName(sectionPath.getFileName()), values);
 				Document sectionData = Document.readJsonFile(sectionPath);
 				for (String key : sectionData.keys()) {
 					values.put(key, new DefaultTranslatedValue(section, key, sectionData.getStringList(key)));
 				}
 
 				language.registerSection(section);
-				trace("=> {} - {} ({})", language.getId(), section.getId(), sectionPath.getFileName());
+				trace("=> {} - {} ({})", language.getId(), section.getId(), sectionPath);
 
 			}
 

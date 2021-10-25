@@ -1,11 +1,12 @@
 package net.anweisen.cloud.master;
 
 import net.anweisen.cloud.base.CloudBase;
+import net.anweisen.cloud.base.command.CommandManager;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.DriverEnvironment;
 import net.anweisen.cloud.driver.config.global.GlobalConfig;
-import net.anweisen.cloud.driver.console.Console;
-import net.anweisen.cloud.driver.console.HeaderPrinter;
+import net.anweisen.cloud.base.console.Console;
+import net.anweisen.cloud.base.console.HeaderPrinter;
 import net.anweisen.cloud.driver.database.DatabaseManager;
 import net.anweisen.cloud.driver.network.SocketServer;
 import net.anweisen.cloud.driver.network.netty.server.NettySocketServer;
@@ -58,12 +59,13 @@ public final class CloudMaster extends CloudBase {
 
 	private final MasterDatabaseManager databaseManager;
 	private final MasterServiceConfigManager serviceConfigManager;
+	private final MasterPlayerManager playerManager;
+	private final MasterTranslationManager translationManager;
 	private final NodeServerManager nodeManager;
 	private final CloudServiceManager serviceManager;
 	private final ServiceFactory serviceFactory;
-	private final MasterPlayerManager playerManager;
 	private final GlobalConfig globalConfig;
-	private final TranslationManager translationManager;
+	private final CommandManager commandManager;
 
 	private SocketServer socketServer;
 
@@ -79,6 +81,7 @@ public final class CloudMaster extends CloudBase {
 		serviceFactory = new MasterServiceFactory();
 		playerManager = new MasterPlayerManager();
 		globalConfig = new MasterGlobalConfig();
+		commandManager = new MasterCommandManager();
 		translationManager = new MasterTranslationManager();
 
 		HeaderPrinter.printHeader(console);
@@ -92,6 +95,7 @@ public final class CloudMaster extends CloudBase {
 		config.load();
 
 		logger.info("Loading translations..");
+		translationManager.setup();
 		translationManager.retrieve();
 
 		logger.info("Loading service configurations..");
@@ -122,6 +126,9 @@ public final class CloudMaster extends CloudBase {
 
 		mainLoopExecutor.scheduleAtFixedRate(mainLoop, 1, 1, TimeUnit.SECONDS);
 		logger.info("Started main loop execution");
+
+		runConsole();
+		registerDefaultCommands();
 
 		logger.info("The cloud master is ready and running!");
 
@@ -213,8 +220,8 @@ public final class CloudMaster extends CloudBase {
 
 	@Nonnull
 	@Override
-	public CordServerManager getCordManager() {
-		return cordManager;
+	public CommandManager getCommandManager() {
+		return commandManager;
 	}
 
 	@Nonnull

@@ -18,24 +18,27 @@ import java.util.stream.Collectors;
 public interface ServiceConfigManager {
 
 	@Nonnull
-	Collection<ServiceTask> getTasks();
+	Collection<ServiceTask> getServiceTasks();
 
 	@Nonnull
-	default Collection<ServiceTask> getTasks(@Nonnull ServiceType type) {
-		return getTasks().stream().filter(task -> task.getEnvironment().getServiceType() == type).collect(Collectors.toList());
+	Collection<String> getServiceTaskNames();
+
+	@Nonnull
+	default Collection<ServiceTask> getServiceTasks(@Nonnull ServiceType type) {
+		return getServiceTasks().stream().filter(task -> task.getEnvironment().getServiceType() == type).collect(Collectors.toList());
 	}
 
 	@Nonnull
-	default Collection<ServiceTask> getTasks(@Nonnull ServiceEnvironment environment) {
-		return getTasks().stream().filter(task -> task.getEnvironment() == environment).collect(Collectors.toList());
+	default Collection<ServiceTask> getServiceTasks(@Nonnull ServiceEnvironment environment) {
+		return getServiceTasks().stream().filter(task -> task.getEnvironment() == environment).collect(Collectors.toList());
 	}
 
 	@Nullable
-	ServiceTask getTask(@Nonnull String name);
+	ServiceTask getServiceTask(@Nonnull String name);
 
 	void registerServiceTask(@Nonnull ServiceTask task);
 
-	void setServiceTasks(@Nonnull Collection<? extends ServiceTask> tasks);
+	void setServiceTaskCache(@Nonnull Collection<? extends ServiceTask> tasks);
 
 	@Nonnull
 	Collection<TemplateStorage> getTemplateStorages();

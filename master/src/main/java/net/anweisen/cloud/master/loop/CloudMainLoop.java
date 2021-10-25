@@ -37,13 +37,13 @@ public final class CloudMainLoop implements Runnable, LoggingApiUser {
 	private void startRequiredServices() {
 		trace("Checking to start required services..");
 
-		List<ServiceTask> tasks = new ArrayList<>(cloud.getServiceConfigManager().getTasks());
+		List<ServiceTask> tasks = new ArrayList<>(cloud.getServiceConfigManager().getServiceTasks());
 		tasks.sort(Comparator.comparingInt(ServiceTask::getStartOrder));
 		for (ServiceTask task : tasks) {
 			Collection<CloudService> services = cloud.getServiceManager().getServicesByTask(task.getName());
 			int createdServiceCount = countWithState(services, Arrays.asList(ServiceState.DEFINED, ServiceState.PREPARED, ServiceState.RUNNING));
 
-			trace("=> {} - created:{} min:{} max:{}", task.getName(), createdServiceCount, task.getMinCount(), task.getMaxCount());
+			trace("- {} - created:{} min:{} max:{}", task.getName(), createdServiceCount, task.getMinCount(), task.getMaxCount());
 
 			if (createdServiceCount < task.getMinCount()) {
 				cloud.getServiceFactory().createServiceAsync(task);

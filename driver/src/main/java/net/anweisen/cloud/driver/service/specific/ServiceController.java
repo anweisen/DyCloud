@@ -11,7 +11,6 @@ import java.util.concurrent.TimeUnit;
  * @since 1.0
  *
  * @see ServiceInfo#getController()
- *
  * @see ServiceManager#getController(ServiceInfo)
  */
 public interface ServiceController {

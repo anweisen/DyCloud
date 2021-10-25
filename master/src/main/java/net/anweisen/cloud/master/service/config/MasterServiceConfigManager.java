@@ -11,10 +11,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -45,13 +42,21 @@ public class MasterServiceConfigManager implements ServiceConfigManager, Logging
 
 	@Nonnull
 	@Override
-	public Collection<ServiceTask> getTasks() {
+	public Collection<ServiceTask> getServiceTasks() {
 		return Collections.unmodifiableCollection(tasks.values());
+	}
+
+	@Nonnull
+	@Override
+	public Collection<String> getServiceTaskNames() {
+		List<String> names = new ArrayList<>(tasks.size());
+		tasks.forEach((key, task) -> names.add(task.getName()));
+		return names;
 	}
 
 	@Nullable
 	@Override
-	public ServiceTask getTask(@Nonnull String name) {
+	public ServiceTask getServiceTask(@Nonnull String name) {
 		return tasks.get(name);
 	}
 
@@ -61,7 +66,7 @@ public class MasterServiceConfigManager implements ServiceConfigManager, Logging
 	}
 
 	@Override
-	public void setServiceTasks(@Nonnull Collection<? extends ServiceTask> tasks) {
+	public void setServiceTaskCache(@Nonnull Collection<? extends ServiceTask> tasks) {
 		this.tasks.clear();
 		for (ServiceTask task : tasks)
 			registerServiceTask(task);

@@ -27,6 +27,12 @@ public interface PlayerManager {
 	@Nonnull
 	Collection<CloudPlayer> getOnlinePlayers();
 
+	@Nonnull
+	Collection<String> getOnlinePlayerNames();
+
+	@Nonnull
+	Collection<UUID> getOnlinePlayerUniqueIds();
+
 	int getOnlineTaskPlayerCount(@Nonnull String taskName);
 
 	@Nonnull
@@ -40,9 +46,9 @@ public interface PlayerManager {
 
 	void setOnlinePlayerCache(@Nonnull Collection<? extends CloudPlayer> players);
 
-	void registerPlayer(@Nonnull CloudPlayer player);
+	void registerOnlinePlayer(@Nonnull CloudPlayer player);
 
-	void unregisterPlayer(@Nonnull UUID uniqueId);
+	void unregisterOnlinePlayer(@Nonnull UUID uniqueId);
 
 	long getRegisteredPlayerCount();
 
@@ -69,11 +75,11 @@ public interface PlayerManager {
 
 	void saveOfflinePlayer(@Nonnull CloudOfflinePlayer updatedPlayer);
 
+	void deleteOfflinePlayer(@Nonnull UUID playerUniqueId);
+
 	default void deleteOfflinePlayer(@Nonnull CloudOfflinePlayer player) {
 		deleteOfflinePlayer(player.getUniqueId());
 	}
-
-	void deleteOfflinePlayer(@Nonnull UUID playerUniqueId);
 
 	void updateOnlinePlayer(@Nonnull CloudPlayer updatedPlayer);
 

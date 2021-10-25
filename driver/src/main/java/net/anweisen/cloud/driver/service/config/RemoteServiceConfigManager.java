@@ -4,10 +4,7 @@ import net.anweisen.cloud.driver.network.NetworkingApiUser;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -20,13 +17,21 @@ public class RemoteServiceConfigManager implements ServiceConfigManager, Network
 
 	@Nonnull
 	@Override
-	public Collection<ServiceTask> getTasks() {
+	public Collection<ServiceTask> getServiceTasks() {
 		return Collections.unmodifiableCollection(tasks.values());
+	}
+
+	@Nonnull
+	@Override
+	public Collection<String> getServiceTaskNames() {
+		List<String> names = new ArrayList<>(tasks.size());
+		tasks.forEach((key, task) -> names.add(task.getName()));
+		return names;
 	}
 
 	@Nullable
 	@Override
-	public ServiceTask getTask(@Nonnull String name) {
+	public ServiceTask getServiceTask(@Nonnull String name) {
 		return tasks.get(name);
 	}
 
@@ -36,7 +41,7 @@ public class RemoteServiceConfigManager implements ServiceConfigManager, Network
 	}
 
 	@Override
-	public void setServiceTasks(@Nonnull Collection<? extends ServiceTask> tasks) {
+	public void setServiceTaskCache(@Nonnull Collection<? extends ServiceTask> tasks) {
 		this.tasks.clear();
 		for (ServiceTask task : tasks)
 			registerServiceTask(task);

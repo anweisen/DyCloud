@@ -17,6 +17,9 @@ public final class ModuleConfig implements SerializableObject {
 	private ModuleCopyType copyType;
 	private ModuleEnvironment environment;
 
+	private ModuleConfig() {
+	}
+
 	public ModuleConfig(@Nonnull String name, @Nonnull String author, @Nonnull String description, @Nonnull String version, @Nonnull String mainClass,
 	                    @Nullable String website, @Nonnull String[] depends, @Nonnull ModuleCopyType copyType, @Nonnull ModuleEnvironment environment) {
 		this.name = name;

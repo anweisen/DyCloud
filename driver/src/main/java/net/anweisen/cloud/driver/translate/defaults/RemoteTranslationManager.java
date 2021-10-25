@@ -61,7 +61,7 @@ public class RemoteTranslationManager implements TranslationManager, NetworkingA
 	}
 
 	@Override
-	public void setLanguages(@Nonnull Collection<? extends Language> languages) {
+	public void setLanguageCache(@Nonnull Collection<? extends Language> languages) {
 		this.languages.clear();
 		for (Language language : languages)
 			this.languages.put(language.getId(), language);

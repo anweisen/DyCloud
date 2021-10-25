@@ -30,6 +30,20 @@ public abstract class DefaultPlayerManager implements PlayerManager {
 		return Collections.unmodifiableCollection(onlinePlayers.values());
 	}
 
+	@Nonnull
+	@Override
+	public Collection<String> getOnlinePlayerNames() {
+		Collection<String> names = new ArrayList<>(onlinePlayers.size());
+		onlinePlayers.forEach((uuid, player) -> names.add(player.getName()));
+		return names;
+	}
+
+	@Nonnull
+	@Override
+	public Collection<UUID> getOnlinePlayerUniqueIds() {
+		return onlinePlayers.keySet();
+	}
+
 	@Override
 	public int getOnlineTaskPlayerCount(@Nonnull String taskName) {
 		int count = 0;
@@ -76,12 +90,12 @@ public abstract class DefaultPlayerManager implements PlayerManager {
 	}
 
 	@Override
-	public void registerPlayer(@Nonnull CloudPlayer player) {
+	public void registerOnlinePlayer(@Nonnull CloudPlayer player) {
 		onlinePlayers.put(player.getUniqueId(), player);
 	}
 
 	@Override
-	public void unregisterPlayer(@Nonnull UUID uniqueId) {
+	public void unregisterOnlinePlayer(@Nonnull UUID uniqueId) {
 		onlinePlayers.remove(uniqueId);
 	}
 

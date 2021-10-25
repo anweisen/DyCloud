@@ -152,7 +152,7 @@ public class NettyMinecraftDecoder extends SimpleChannelInboundHandler<ByteBuf> 
 
 	@Nullable
 	private static ServiceInfo findProxyForHostName(@Nonnull String hostname) {
-		Collection<ServiceTask> proxyTasks = CloudDriver.getInstance().getServiceConfigManager().getTasks(ServiceType.PROXY);
+		Collection<ServiceTask> proxyTasks = CloudDriver.getInstance().getServiceConfigManager().getServiceTasks(ServiceType.PROXY);
 		proxyTasks.removeIf(task -> !matchesHostName(hostname, task));
 
 		List<ServiceInfo> services = new ArrayList<>();

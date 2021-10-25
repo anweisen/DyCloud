@@ -21,7 +21,7 @@ public class ChatText implements SerializableObject {
 
 	private String text;
 
-	private ChatClickEvent clickEvent;
+	private ChatClickReaction clickReaction;
 	private String click;
 
 	private String hover;
@@ -48,7 +48,7 @@ public class ChatText implements SerializableObject {
 	@Override
 	public void write(@Nonnull PacketBuffer buffer) {
 		buffer.writeString(text);
-		buffer.writeOptionalEnum(clickEvent);
+		buffer.writeOptionalEnum(clickReaction);
 		buffer.writeOptionalString(click);
 		buffer.writeOptionalString(hover);
 	}
@@ -56,7 +56,7 @@ public class ChatText implements SerializableObject {
 	@Override
 	public void read(@Nonnull PacketBuffer buffer) {
 		text = buffer.readString();
-		clickEvent = buffer.readOptionalEnum(ChatClickEvent.class);
+		clickReaction = buffer.readOptionalEnum(ChatClickReaction.class);
 		click = buffer.readOptionalString();
 		hover = buffer.readOptionalString();
 	}
@@ -68,8 +68,8 @@ public class ChatText implements SerializableObject {
 	}
 
 	@Nonnull
-	public ChatText setClick(@Nonnull ChatClickEvent event, @Nonnull String value) {
-		this.clickEvent = event;
+	public ChatText setClick(@Nonnull ChatClickReaction reaction, @Nonnull String value) {
+		this.clickReaction = reaction;
 		this.click = value;
 		return this;
 	}
@@ -97,8 +97,8 @@ public class ChatText implements SerializableObject {
 	}
 
 	@Nullable
-	public ChatClickEvent getClickEvent() {
-		return clickEvent;
+	public ChatClickReaction getClickReaction() {
+		return clickReaction;
 	}
 
 	@Nullable
@@ -112,7 +112,7 @@ public class ChatText implements SerializableObject {
 
 	@Override
 	public String toString() {
-		return "ChatText[text='" + text + "' hover='" + hover + "' click=" + (clickEvent == null ? null : clickEvent + "=:'" + click + "'") + "]";
+		return "ChatText[text='" + text + "' hover=" + (hover == null ? null : "'" + hover + "'") + " click=" + (clickReaction == null ? null : clickReaction + ":'" + click + "'") + "]";
 	}
 
 	@Override
@@ -120,7 +120,7 @@ public class ChatText implements SerializableObject {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		ChatText chatText = (ChatText) o;
-		return clickEvent == chatText.clickEvent
+		return clickReaction == chatText.clickReaction
 			&& Objects.equals(text, chatText.text)
 			&& Objects.equals(click, chatText.click)
 			&& Objects.equals(hover, chatText.hover);
@@ -128,7 +128,7 @@ public class ChatText implements SerializableObject {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(text, clickEvent, click, hover);
+		return Objects.hash(text, clickReaction, click, hover);
 	}
 
 	@Nonnull

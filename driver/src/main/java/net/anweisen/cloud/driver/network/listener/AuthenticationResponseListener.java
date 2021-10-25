@@ -100,7 +100,7 @@ public class AuthenticationResponseListener implements PacketListener, LoggingAp
 				break;
 			}
 			case TASKS: {
-				cloud.getServiceConfigManager().setServiceTasks(buffer.readObjectCollection(ServiceTask.class));
+				cloud.getServiceConfigManager().setServiceTaskCache(buffer.readObjectCollection(ServiceTask.class));
 				break;
 			}
 			case SERVICES: {
@@ -130,7 +130,7 @@ public class AuthenticationResponseListener implements PacketListener, LoggingAp
 				break;
 			}
 			case LANGUAGES: {
-				cloud.getTranslationManager().setLanguages(
+				cloud.getTranslationManager().setLanguageCache(
 					buffer.readCollection(() -> new DefaultRequestingLanguage(buffer.readString(), buffer.readObject(LanguageConfig.class)))
 				);
 				break;

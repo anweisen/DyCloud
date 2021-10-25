@@ -1,7 +1,6 @@
 package net.anweisen.cloud.base.command.annotation;
 
 import net.anweisen.cloud.base.command.completer.CommandCompleter;
-import net.anweisen.cloud.base.command.completer.EmptyCompleter;
 
 import javax.annotation.Nonnull;
 import java.lang.annotation.ElementType;
@@ -30,7 +29,7 @@ public @interface CommandArgument {
 	 * @return the class of the argument completer
 	 */
 	@Nonnull
-	Class<? extends CommandCompleter> completer() default EmptyCompleter.class;
+	Class<? extends CommandCompleter> completer() default CommandCompleter.EMPTY;
 
 	/**
 	 * The amount of words used for this argument or {@code -1} for all words left

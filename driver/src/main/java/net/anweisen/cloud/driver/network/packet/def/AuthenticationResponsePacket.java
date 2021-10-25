@@ -36,7 +36,7 @@ public class AuthenticationResponsePacket extends Packet {
 		CloudDriver driver = CloudDriver.getInstance();
 
 		append(PropertySection.LOG_LEVEL, buffer -> buffer.writeEnum(driver.getLogger().getMinLevel()));
-		append(PropertySection.TASKS, buffer -> buffer.writeObjectCollection(driver.getServiceConfigManager().getTasks()));
+		append(PropertySection.TASKS, buffer -> buffer.writeObjectCollection(driver.getServiceConfigManager().getServiceTasks()));
 		append(PropertySection.TEMPLATE_STORAGES, buffer -> buffer.writeStringCollection(driver.getServiceConfigManager().getTemplateStorageNames()));
 		append(PropertySection.SERVICES, buffer -> buffer.writeObjectCollection(driver.getServiceManager().getServiceInfos()));
 		append(PropertySection.START_PORTS, buffer -> ArrayWalker.walk(ServiceType.values()).forEach(type -> buffer.writeVarInt(type.getStartPort())));
