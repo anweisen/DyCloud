@@ -1,5 +1,6 @@
 package net.anweisen.cloud.driver.translate.defaults;
 
+import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.player.CloudOfflinePlayer;
 import net.anweisen.cloud.driver.translate.Translatable;
@@ -35,7 +36,7 @@ public class DefaultTranslatable implements Translatable {
 	@Nonnull
 	@Override
 	public TranslatedValue translate(@Nonnull String language) {
-		return CloudDriver.getInstance().getTranslationManager().getLanguage(language).getValue(name);
+		return Preconditions.checkNotNull(CloudDriver.getInstance().getTranslationManager().getLanguage(language), "Unknown language '" + language + "'").getValue(name);
 	}
 
 	@Nonnull
