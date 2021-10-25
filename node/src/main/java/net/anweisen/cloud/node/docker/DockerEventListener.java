@@ -22,14 +22,26 @@ public class DockerEventListener extends ResultCallbackTemplate<DockerEventListe
 		ServiceInfo service = cloud.getServiceManager().getServiceInfoByDockerId(containerId);
 		cloud.getLogger().trace("Detected {} of {}", event, service);
 		if (service == null) return;
+
 		switch (event.getStatus()) {
 			case "die": {
-				cloud.getLogger().info("Docker Container of {} died!", service);
-				if (service.getState() != ServiceState.STOPPED && service.getState() != ServiceState.DELETED) {
+				if (service.getState() != ServiceState.STOPPED && service.getState() != ServiceState.DELETED && service.getControlState() != ServiceControlState.STOPPING) {
+					cloud.getLogger().info("Docker Container of {} died!", service);
 					service.setState(ServiceState.STOPPED);
 					service.setControlState(ServiceControlState.NONE);
 					cloud.publishUpdate(ServicePublishPayload.STOPPED, service);
 				}
+				break;
+			}
+			case "destroy": {
+				if (service.getState() != ServiceState.DELETED && service.getControlState() != ServiceControlState.DELETING) {
+					cloud.getLogger().info("Docker container of {} was destroyed!", service);
+					service.setState(ServiceState.DELETED);
+					service.setControlState(ServiceControlState.NONE);
+					cloud.publishUpdate(ServicePublishPayload.UNREGISTER, service);
+					cloud.getServiceManager().handleServiceUpdate(ServicePublishPayload.UNREGISTER, service);
+				}
+
 				break;
 			}
 		}
