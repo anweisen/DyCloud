@@ -3,6 +3,7 @@ package net.anweisen.cloud.driver.translate.defaults;
 import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.player.CloudOfflinePlayer;
+import net.anweisen.cloud.driver.translate.Language;
 import net.anweisen.cloud.driver.translate.Translatable;
 import net.anweisen.cloud.driver.translate.TranslatedValue;
 
@@ -36,19 +37,26 @@ public class DefaultTranslatable implements Translatable {
 	@Nonnull
 	@Override
 	public TranslatedValue translate(@Nonnull String language) {
-		return Preconditions.checkNotNull(CloudDriver.getInstance().getTranslationManager().getLanguage(language), "Unknown language '" + language + "'").getValue(name);
+		return translate(Preconditions.checkNotNull(CloudDriver.getInstance().getTranslationManager().getLanguage(language), "Unknown language '" + language + "'"));
 	}
 
 	@Nonnull
 	@Override
 	public TranslatedValue translate(@Nonnull UUID playerUniqueId) {
-		return translate(CloudDriver.getInstance().getPlayerManager().getOfflinePlayerByUniqueId(playerUniqueId));
+		CloudOfflinePlayer player = CloudDriver.getInstance().getPlayerManager().getOfflinePlayerByUniqueId(playerUniqueId);
+		return player == null ? translateDefault() : translate(player);
 	}
 
 	@Nonnull
 	@Override
 	public TranslatedValue translate(@Nonnull CloudOfflinePlayer player) {
 		return translate(player.getLanguage());
+	}
+
+	@Nonnull
+	@Override
+	public TranslatedValue translate(@Nonnull Language language) {
+		return language.getValue(name);
 	}
 
 	@Override

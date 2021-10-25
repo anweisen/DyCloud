@@ -34,4 +34,7 @@ public interface Translatable {
 	@Nonnull
 	TranslatedValue translate(@Nonnull CloudOfflinePlayer player);
 
+	@Nonnull
+	TranslatedValue translate(@Nonnull Language language);
+
 }
