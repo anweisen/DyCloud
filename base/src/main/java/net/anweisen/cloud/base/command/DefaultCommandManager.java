@@ -176,7 +176,8 @@ public abstract class DefaultCommandManager implements CommandManager {
 							CommandCompleter completer = getCompleter(argument.getCompleterClass());
 							Collection<String> supplied = completer.complete(sender, input, currentGivenArg);
 
-							if (argument.getRaw()) {
+							if (supplied.isEmpty()) {
+							} else if (argument.getRaw()) {
 								suggestions.addAll(supplied);
 							} else {
 								List<String> list = supplied instanceof ArrayList ? (List<String>) supplied : new ArrayList<>(supplied);
@@ -201,7 +202,9 @@ public abstract class DefaultCommandManager implements CommandManager {
 
 		}
 
-		return suggestions;
+		List<String> list = new ArrayList<>(suggestions);
+		Collections.sort(list);
+		return list;
 	}
 
 	@Override
