@@ -53,7 +53,7 @@ public abstract class AbstractLanguage implements Language {
 		Preconditions.checkArgument(split.length > 1, "Illegal translation name '" + name + "'; Must consist of 'section.name'");
 
 		LanguageSection section = getSection(split[0]);
-		String subname = name.substring(name.indexOf("."));
+		String subname = name.substring(name.indexOf(".") + 1);
 
 		return section.getValue(subname);
 	}
