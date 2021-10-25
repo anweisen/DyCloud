@@ -109,14 +109,14 @@ public class DockerServiceActor implements LoggingApiUser {
 					continue;
 				}
 
-				trace("Copying module '{}' to '{}..'", module.getJarFile().getFileName(), info.getName());
+				trace("Copying module '{}' to {}..", module.getJarFile().getFileName(), info.getName());
 				FileUtils.copy(module.getJarFile(), tempTemplateDirectory.resolve(task.getEnvironment().getPluginsFolder() + "/" + module.getJarFile().getFileName()));
 			}
 		}
 		// Copy config files
 		ServiceEnvironment environment = task.getEnvironment();
 		for (String config : environment.getConfigs()) {
-			trace("Copying config resource '{}' to '{}'..", config, info.getName());
+			trace("Copying config resource '{}' to {}..", config, info.getName());
 			InputStream input = getClass().getClassLoader().getResourceAsStream("files/" + config);
 			if (input == null) {
 				warn("Unable to find config resource '{}'", config);
