@@ -1,6 +1,7 @@
 package net.anweisen.cloud.modules.bridge.bungee.listener;
 
 import net.anweisen.cloud.driver.event.EventListener;
+import net.anweisen.cloud.driver.event.global.GlobalConfigUpdatedEvent;
 import net.anweisen.cloud.driver.event.service.ServiceReadyEvent;
 import net.anweisen.cloud.driver.event.service.ServiceRegisteredEvent;
 import net.anweisen.cloud.driver.event.service.ServiceStartedEvent;
@@ -8,8 +9,8 @@ import net.anweisen.cloud.driver.event.service.ServiceUnregisteredEvent;
 import net.anweisen.cloud.driver.service.specific.ServiceProperty;
 import net.anweisen.cloud.driver.service.specific.data.PlayerInfo;
 import net.anweisen.cloud.driver.service.specific.data.PluginInfo;
-import net.anweisen.cloud.modules.bridge.bungee.BungeeBridgeHelper;
 import net.anweisen.cloud.modules.bridge.helper.BridgeHelper;
+import net.anweisen.cloud.modules.bridge.helper.BridgeProxyHelper;
 import net.anweisen.cloud.wrapper.event.service.ServiceInfoConfigureEvent;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -46,7 +47,7 @@ public class BungeeCloudListener {
 	@EventListener
 	public void onServiceRegister(@Nonnull ServiceRegisteredEvent event) {
 		if (event.getServiceInfo().getEnvironment().isServer()) {
-			BungeeBridgeHelper.registerServer(event.getServiceInfo());
+			BridgeProxyHelper.registerServer(event.getServiceInfo());
 		}
 	}
 
@@ -54,7 +55,7 @@ public class BungeeCloudListener {
 	public void onServiceStarted(@Nonnull ServiceStartedEvent event) {
 		// Sometimes the servers are not registered in the proxy, so register the server again to be safe
 		if (event.getServiceInfo().getEnvironment().isServer()) {
-			BungeeBridgeHelper.registerServer(event.getServiceInfo());
+			BridgeProxyHelper.registerServer(event.getServiceInfo());
 		}
 	}
 
@@ -62,15 +63,20 @@ public class BungeeCloudListener {
 	public void onServiceReady(@Nonnull ServiceReadyEvent event) {
 		// Sometimes the servers are not registered in the proxy, so register the server again to be safe
 		if (event.getServiceInfo().getEnvironment().isServer()) {
-			BungeeBridgeHelper.registerServer(event.getServiceInfo());
+			BridgeProxyHelper.registerServer(event.getServiceInfo());
 		}
 	}
 
 	@EventListener
 	public void onServiceUnregister(@Nonnull ServiceUnregisteredEvent event) {
 		if (event.getServiceInfo().getEnvironment().isServer()) {
-			BungeeBridgeHelper.unregisterServer(event.getServiceInfo().getName());
+			BridgeProxyHelper.unregisterServer(event.getServiceInfo().getName());
 		}
+	}
+
+	@EventListener
+	public void onGlobalConfigUpdate(@Nonnull GlobalConfigUpdatedEvent event) {
+		BridgeProxyHelper.updateCommands();
 	}
 
 }

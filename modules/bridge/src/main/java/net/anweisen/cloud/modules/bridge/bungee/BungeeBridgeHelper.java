@@ -1,13 +1,16 @@
 package net.anweisen.cloud.modules.bridge.bungee;
 
 import net.anweisen.cloud.driver.CloudDriver;
+import net.anweisen.cloud.driver.config.global.objects.CommandObject;
 import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.player.chat.ChatText;
 import net.anweisen.cloud.driver.player.connection.DefaultPlayerConnection;
 import net.anweisen.cloud.driver.player.connection.PlayerConnection;
 import net.anweisen.cloud.driver.player.settings.*;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
-import net.anweisen.cloud.modules.bridge.helper.ProxyBridgeHelper;
+import net.anweisen.cloud.modules.bridge.bungee.command.BungeeCommand;
+import net.anweisen.cloud.modules.bridge.helper.BridgeProxyHelper;
+import net.anweisen.cloud.modules.bridge.helper.BridgeProxyMethods;
 import net.anweisen.cloud.wrapper.CloudWrapper;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
@@ -21,9 +24,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -66,16 +67,17 @@ public final class BungeeBridgeHelper {
 
 	@Nullable
 	public static ServerInfo getNextFallback(@Nonnull ProxiedPlayer player) {
-		ServiceInfo service = ProxyBridgeHelper.getNextFallback(player.getUniqueId(), player::hasPermission);
+		ServiceInfo service = BridgeProxyHelper.getNextFallback(player.getUniqueId(), player::hasPermission);
 		if (service == null) return null;
 
 		ServerInfo server = ProxyServer.getInstance().getServerInfo(service.getName());
 		if (server == null) {
 			CloudDriver.getInstance().getLogger().warn("Server {} is not registered in the proxy", service);
 			for (ServerInfo current : ProxyServer.getInstance().getServers().values()) {
-				CloudDriver.getInstance().getLogger().extended("=> {}: {}", current.getName(),current.getSocketAddress());
+				CloudDriver.getInstance().getLogger().extended("=> {}: {}", current.getName(), current.getSocketAddress());
 			}
 			registerServer(service);
+			server = ProxyServer.getInstance().getServerInfo(service.getName());
 		}
 
 		return server;
@@ -94,27 +96,61 @@ public final class BungeeBridgeHelper {
 		ProxyServer.getInstance().getServers().remove(name);
 	}
 
+	public static void updateCommands(@Nonnull Map<String, Collection<CommandObject>> mapping) {
+		ProxyServer.getInstance().getPluginManager().unregisterCommands(BungeeCloudBridgePlugin.getInstance());
+		mapping.forEach((name, commands) -> {
+			CloudDriver.getInstance().getLogger().trace("- '{}' | {}", name, commands);
+			ProxyServer.getInstance().getPluginManager().registerCommand(BungeeCloudBridgePlugin.getInstance(), new BungeeCommand(name, commands));
+		});
+	}
+
+	@Nonnull
 	@SuppressWarnings("deprecation")
 	public static BaseComponent[] buildChatTextComponents(@Nonnull ChatText[] messages) {
 		List<BaseComponent> components = new ArrayList<>(messages.length);
 		ChatColor lastColor = ChatColor.WHITE;
 		for (ChatText message : messages) {
 
-			BaseComponent[] component = TextComponent.fromLegacyText(message.getText(), lastColor);
-			for (BaseComponent current : component) {
-				if (message.getClickEvent() != null)
-					current.setClickEvent(new ClickEvent(ClickEvent.Action.valueOf(message.getClickEvent().toString()), message.getClick()));
+			BaseComponent[] current = TextComponent.fromLegacyText(message.getText(), lastColor);
+			for (BaseComponent child : current) {
+				if (message.getClickReaction() != null)
+					child.setClickEvent(new ClickEvent(ClickEvent.Action.valueOf(message.getClickReaction().toString()), message.getClick()));
 				if (message.getHover() != null)
-					current.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(message.getHover())));
+					child.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(message.getHover())));
+
+				components.add(child);
+
+				if (child.getColorRaw() != null) {
+					lastColor = child.getColorRaw();
+				} else  {
+					child.setColor(lastColor);
+				}
 			}
-
-			if (component.length > 0)
-				lastColor = component[component.length - 1].getColor();
-
-			components.addAll(Arrays.asList(component));
 		}
 
 		return components.toArray(new BaseComponent[0]);
+	}
+
+	@Nonnull
+	public static BridgeProxyMethods methods() {
+		return new BridgeProxyMethods() {
+
+			@Override
+			public void updateCommands(@Nonnull Map<String, Collection<CommandObject>> mapping) {
+				BungeeBridgeHelper.updateCommands(mapping);
+			}
+
+			@Override
+			public void registerServer(@Nonnull ServiceInfo service) {
+				BungeeBridgeHelper.registerServer(service);
+			}
+
+			@Override
+			public void unregisterServer(@Nonnull String name) {
+				BungeeBridgeHelper.unregisterServer(name);
+			}
+
+		};
 	}
 
 }

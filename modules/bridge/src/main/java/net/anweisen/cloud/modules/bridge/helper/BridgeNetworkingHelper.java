@@ -1,5 +1,7 @@
 package net.anweisen.cloud.modules.bridge.helper;
 
+import net.anweisen.cloud.driver.network.packet.def.CommandSystemPacket;
+import net.anweisen.cloud.driver.network.packet.def.CommandSystemPacket.CommandSystemPayload;
 import net.anweisen.cloud.driver.network.packet.def.PlayerEventPacket;
 import net.anweisen.cloud.driver.player.CloudPlayer;
 import net.anweisen.cloud.driver.player.connection.PlayerConnection;
@@ -9,6 +11,8 @@ import net.anweisen.cloud.wrapper.CloudWrapper;
 import net.anweisen.utilities.common.collection.pair.Tuple;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -57,6 +61,18 @@ public final class BridgeNetworkingHelper {
 
 	public static void sendPlayerSettingsChangePacket(@Nonnull UUID playerUniqueId, @Nonnull PlayerSettings settings) {
 		CloudWrapper.getInstance().getSocketComponent().sendPacket(PlayerEventPacket.forPlayerSettingsChange(playerUniqueId, settings));
+	}
+
+	@Nullable
+	public static List<String> sendCommandCompletePacket(@Nonnull UUID playerUniqueId, @Nonnull String input) {
+		return Optional.ofNullable(
+			CloudWrapper.getInstance().getSocketComponent().getFirstChannel().sendPacketQuery(new CommandSystemPacket(CommandSystemPayload.COMPLETE, playerUniqueId, input))
+		).map(packet -> packet.getBuffer().readStringCollection())
+		.orElse(null);
+	}
+
+	public static void sendCommandExecutePacket(@Nonnull UUID playerUniqueId, @Nonnull String input) {
+		CloudWrapper.getInstance().getSocketComponent().sendPacket(new CommandSystemPacket(CommandSystemPayload.EXECUTE, playerUniqueId, input));
 	}
 
 	private BridgeNetworkingHelper() {}

@@ -1,15 +1,15 @@
 package net.anweisen.cloud.modules.bridge.helper;
 
+import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.CloudDriver;
+import net.anweisen.cloud.driver.config.global.objects.CommandObject;
 import net.anweisen.cloud.driver.service.config.ServiceTask;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.driver.service.specific.ServiceProperty;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -18,7 +18,7 @@ import java.util.stream.Stream;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public final class ProxyBridgeHelper {
+public final class BridgeProxyHelper {
 
 	private static final Map<UUID, PlayerFallbackHistory> playerFallbacks = new ConcurrentHashMap<>();
 	private static final Comparator<ServiceInfo> fallbackServiceComparator = (service1, service2) -> {
@@ -34,6 +34,18 @@ public final class ProxyBridgeHelper {
 
 		return 0;
 	};
+
+	private static BridgeProxyMethods methods;
+
+	@Nonnull
+	public static BridgeProxyMethods getMethods() {
+		return methods;
+	}
+
+	public static void setMethods(@Nonnull BridgeProxyMethods methods) {
+		Preconditions.checkNotNull(methods);
+		BridgeProxyHelper.methods = methods;
+	}
 
 	public static void clearFallbackHistory(@Nonnull UUID playerUUID) {
 		playerFallbacks.remove(playerUUID);
@@ -68,6 +80,24 @@ public final class ProxyBridgeHelper {
 			.sorted(fallbackServiceComparator);
 	}
 
-	private ProxyBridgeHelper() {}
+	public static void updateCommands() {
+		Collection<CommandObject> commands = CloudDriver.getInstance().getGlobalConfig().getIngameCommands();
+
+		Map<String, Collection<CommandObject>> mapping = new LinkedHashMap<>();
+		for (CommandObject command : commands)
+			mapping.computeIfAbsent(command.getPath().split(" ")[0], key -> new ArrayList<>()).add(command);
+
+		methods.updateCommands(mapping);
+	}
+
+	public static void registerServer(@Nonnull ServiceInfo service) {
+		methods.registerServer(service);
+	}
+
+	public static void unregisterServer(@Nonnull String name) {
+		methods.unregisterServer(name);
+	}
+
+	private BridgeProxyHelper() {}
 
 }

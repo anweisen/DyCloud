@@ -6,11 +6,12 @@ import net.anweisen.cloud.driver.event.player.PlayerProxyLoginRequestEvent;
 import net.anweisen.cloud.driver.player.CloudPlayer;
 import net.anweisen.cloud.driver.player.settings.PlayerSettings;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
+import net.anweisen.cloud.driver.translate.Translatable;
 import net.anweisen.cloud.modules.bridge.bungee.BungeeBridgeHelper;
 import net.anweisen.cloud.modules.bridge.bungee.BungeeCloudBridgePlugin;
 import net.anweisen.cloud.modules.bridge.helper.BridgeHelper;
 import net.anweisen.cloud.modules.bridge.helper.BridgeNetworkingHelper;
-import net.anweisen.cloud.modules.bridge.helper.ProxyBridgeHelper;
+import net.anweisen.cloud.modules.bridge.helper.BridgeProxyHelper;
 import net.anweisen.utilities.common.collection.pair.Tuple;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -44,7 +45,7 @@ public class BungeePlayerListener implements Listener, LoggingApiUser {
 		}
 
 		CloudPlayer player = response.getFirst();
-		CloudDriver.getInstance().getPlayerManager().registerPlayer(player);
+		CloudDriver.getInstance().getPlayerManager().registerOnlinePlayer(player);
 		CloudDriver.getInstance().getEventManager().callEvent(new PlayerProxyLoginRequestEvent(player));
 	}
 
@@ -67,7 +68,7 @@ public class BungeePlayerListener implements Listener, LoggingApiUser {
 	@EventHandler
 	public void onServerSwitch(@Nonnull ServerSwitchEvent event) {
 
-		ProxyBridgeHelper.clearFallbackHistory(event.getPlayer().getUniqueId());
+		BridgeProxyHelper.clearFallbackHistory(event.getPlayer().getUniqueId());
 
 		if (event.getFrom() == null) return;
 		ServiceInfo from = CloudDriver.getInstance().getServiceManager().getServiceInfoByName(event.getFrom().getName());
@@ -91,9 +92,13 @@ public class BungeePlayerListener implements Listener, LoggingApiUser {
 				return;
 			}
 
-			ProxyBridgeHelper.getOrCreateFallbackHistory(player.getUniqueId()).addFailedConnection(kickedFrom.getName());
+			BridgeProxyHelper.getOrCreateFallbackHistory(player.getUniqueId()).addFailedConnection(kickedFrom.getName());
 			ServerInfo fallback = BungeeBridgeHelper.getNextFallback(player);
-			if (fallback != null) {
+			if (fallback == null) {
+				player.disconnect(BungeeBridgeHelper.buildChatTextComponents(
+					Translatable.of("cloud.kick.fallback.none").translate(player.getUniqueId()).asText()
+				));
+			} else {
 				event.setCancelled(true);
 				event.setCancelServer(fallback);
 				player.sendMessage(event.getKickReasonComponent());
@@ -106,7 +111,7 @@ public class BungeePlayerListener implements Listener, LoggingApiUser {
 		ProxyServer.getInstance().getScheduler().schedule(BungeeCloudBridgePlugin.getInstance(), () -> {
 			BridgeHelper.updateServiceInfo();
 			BridgeNetworkingHelper.sendProxyDisconnectPacket(event.getPlayer().getUniqueId());
-			ProxyBridgeHelper.clearFallbackHistory(event.getPlayer().getUniqueId());
+			BridgeProxyHelper.clearFallbackHistory(event.getPlayer().getUniqueId());
 		}, 50, TimeUnit.MILLISECONDS);
 	}
 

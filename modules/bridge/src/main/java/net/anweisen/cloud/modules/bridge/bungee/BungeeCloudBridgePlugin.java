@@ -7,6 +7,7 @@ import net.anweisen.cloud.modules.bridge.bungee.listener.BungeeCloudListener;
 import net.anweisen.cloud.modules.bridge.bungee.listener.BungeePlayerExecutorListener;
 import net.anweisen.cloud.modules.bridge.bungee.listener.BungeePlayerListener;
 import net.anweisen.cloud.modules.bridge.helper.BridgeHelper;
+import net.anweisen.cloud.modules.bridge.helper.BridgeProxyHelper;
 import net.anweisen.cloud.wrapper.CloudWrapper;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -28,6 +29,7 @@ public final class BungeeCloudBridgePlugin extends Plugin implements LoggingApiU
 		initListeners();
 		initHelpers();
 		initServers();
+		initCommands();
 
 		getProxy().setReconnectHandler(new BungeeCloudReconnectHandler());
 	}
@@ -40,8 +42,9 @@ public final class BungeeCloudBridgePlugin extends Plugin implements LoggingApiU
 	private void initHelpers() {
 		BridgeHelper.setMaxPlayers(this.getProxy().getConfig().getPlayerLimit());
 		BridgeHelper.setMotd(new ArrayList<>(this.getProxy().getConfig().getListeners()).get(0).getMotd());
-		BridgeHelper.setStatus("LOBBY");
+		BridgeHelper.setPhase("LOBBY");
 		BridgeHelper.updateServiceInfo();
+		BridgeProxyHelper.setMethods(BungeeBridgeHelper.methods());
 	}
 
 	private void initListeners() {
@@ -52,13 +55,17 @@ public final class BungeeCloudBridgePlugin extends Plugin implements LoggingApiU
 
 	private void initServers() {
 		debug("Registering services in proxy registry..");
-		for (ServiceInfo serviceInfo : CloudWrapper.getInstance().getServiceManager().getServiceInfos()) {
-			trace("Found {} ({}) -> {}:{}", serviceInfo.getName(), serviceInfo.getEnvironment(), serviceInfo.getState(), serviceInfo.isReady() ? "ready" : "unready");
-			if (!serviceInfo.getEnvironment().isServer())
+		for (ServiceInfo service : CloudWrapper.getInstance().getServiceManager().getServiceInfos()) {
+			trace("- {} ", service.toShortString());
+			if (!service.getEnvironment().isServer())
 				continue;
 
-			BungeeBridgeHelper.registerServer(serviceInfo);
+			BungeeBridgeHelper.registerServer(service);
 		}
+	}
+
+	private void initCommands() {
+		BridgeProxyHelper.updateCommands();
 	}
 
 	public static BungeeCloudBridgePlugin getInstance() {
