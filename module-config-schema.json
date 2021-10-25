@@ -1,8 +1,8 @@
 {
 	"$schema": "http://json-schema.org/draft-07/schema",
-	"$id": "https://raw.githubusercontent.com/anweisen/MinecraftCloud/master/module-config-schema.json",
-	"title": "MinecraftCloud Module Configuration",
-	"description": "Configuration of a MinecraftCloud module",
+	"$id": "https://raw.githubusercontent.com/anweisen/DyCloud/master/module-config-schema.json",
+	"title": "DyCloud Module Configuration",
+	"description": "Configuration of a DyCloud module",
 	"type": "object",
 	"required": [ "name", "version", "author", "main" ],
 	"properties": {

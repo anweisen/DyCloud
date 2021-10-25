@@ -3,7 +3,7 @@
 	"author": "anweisen",
 	"version": "1.0",
 	"main": "net.anweisen.cloud.modules.proxy.CloudProxyModule",
-	"website": "https://github.com/anweisen/MinecraftCloud",
+	"website": "https://github.com/anweisen/DyCloud",
 	"description": "Runtime module to enable to use of proxy systems & configs",
 	"environment": "MASTER",
 	"copy": "PROXY"

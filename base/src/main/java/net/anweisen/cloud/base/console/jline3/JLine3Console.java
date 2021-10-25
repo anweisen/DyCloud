@@ -40,7 +40,7 @@ public class JLine3Console implements Console {
 	private boolean printingEnabled = true;
 
 	public JLine3Console() throws Exception {
-		System.setProperty("library.jansi.version", "MinecraftCloud");
+		System.setProperty("library.jansi.version", "DyCloud");
 
 		try {
 			AnsiConsole.systemInstall();

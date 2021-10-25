@@ -1,6 +1,6 @@
-[![CI](https://github.com/anweisen/MinecraftCloud/actions/workflows/ci.yml/badge.svg)](https://github.com/anweisen/MinecraftCloud/actions/workflows/ci.yml)
+[![CI](https://github.com/anweisen/DyCloud/actions/workflows/ci.yml/badge.svg)](https://github.com/anweisen/DyCloud/actions/workflows/ci.yml)
 
-# MinecraftCloud
+# DyCloud
 A minecraft cloud system using docker & netty supporting multiroot & multiproxy for learning purpose
 
 **This project is only intended as a learning experience**.
@@ -95,7 +95,9 @@ I would recommend you to use one of the **following cloud systems**:
 🧪 | Shutdown mechanism
 ❌ | Template Cache
 ✔️ | Proxy Bridge
-🚧 | Proxy modules for Velocity
+🚧 | Support for Velocity
+🚧 | Support for MineStorm
+🚧 | Support for SpongePowered
 ✔️ | Dynamic Proxy Server Registry
 🧪 | MultiProxy Cord
 ✔️ | Lobby Balancing

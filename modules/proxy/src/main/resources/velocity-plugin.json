@@ -3,7 +3,7 @@
 	"name": "Cloud-Proxy",
 	"version": "1.0",
 	"description": "Runtime module to enable to use of proxy systems & configs",
-	"url": "https://github.com/anweisen/MinecraftCloud",
+	"url": "https://github.com/anweisen/DyCloud",
 	"authors": [ "anweisen" ],
 	"main": "net.anweisen.cloud.modules.proxy.velocity.VelocityCloudProxyPlugin"
 }

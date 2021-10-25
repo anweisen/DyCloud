@@ -76,7 +76,7 @@
 		<repository>
 			<id>github</id>
 			<name>GitHub anweisen Apache Maven Packages</name>
-			<url>https://maven.pkg.github.com/anweisen/MinecraftCloud</url>
+			<url>https://maven.pkg.github.com/anweisen/DyCloud</url>
 		</repository>
 	</distributionManagement>
 

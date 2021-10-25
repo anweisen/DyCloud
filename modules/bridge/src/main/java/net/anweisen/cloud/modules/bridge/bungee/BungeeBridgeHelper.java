@@ -87,7 +87,7 @@ public final class BungeeBridgeHelper {
 		CloudWrapper.getInstance().getLogger().debug("Registering server '{}' -> {}", serviceInfo.getName(), serviceInfo.getAddress());
 		ProxyServer.getInstance().getServers().put(serviceInfo.getName(), ProxyServer.getInstance().constructServerInfo(
 			serviceInfo.getName(),
-			serviceInfo.getAddress().toSocketAddress(), "A MinecraftCloud service", false
+			serviceInfo.getAddress().toSocketAddress(), "A DyCloud service", false
 		));
 	}
 

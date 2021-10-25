@@ -27,13 +27,13 @@ public final class PacketUtils {
 		NettyUtils.writeVarInt(buffer, 0);
 		NettyUtils.writeString(buffer, Document.create()
 			.set("version", Document.create()
-				.set("name", "MinecraftCloudCord v1.0")
+				.set("name", "DyCloud v1.0")
 				.set("protocol", protocolVersion)
 			).set("players", Document.create()
 				.set("max", 1)
 				.set("online", 0)
 			).set("description", Document.create()
-				.set("text", "§8» §7github.com/anweisen/§e§lMinecraftCloud")
+				.set("text", "§8» §7github.com/anweisen/§e§lDyCloud")
 			).toJson());
 		return buffer;
 	}

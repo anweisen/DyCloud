@@ -3,7 +3,7 @@
 	"name": "Cloud-Perms",
 	"version": "1.0",
 	"description": "Runtime module to enable the use of an integrated permission system",
-	"url": "https://github.com/anweisen/MinecraftCloud",
+	"url": "https://github.com/anweisen/DyCloud",
 	"authors": [ "anweisen" ],
 	"main": "net.anweisen.cloud.modules.perms.velocity.VelocityCloudPermsPlugin"
 }

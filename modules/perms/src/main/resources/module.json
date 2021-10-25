@@ -3,7 +3,7 @@
 	"author": "anweisen",
 	"version": "1.0",
 	"main": "net.anweisen.cloud.modules.perms.CloudPermsModule",
-	"website": "https://github.com/anweisen/MinecraftCloud",
+	"website": "https://github.com/anweisen/DyCloud",
 	"description": "Runtime module to enable to use of an integrated permission system",
 	"environment": "MASTER",
 	"copy": "ALL"
