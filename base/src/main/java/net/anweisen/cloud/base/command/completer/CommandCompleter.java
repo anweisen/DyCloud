@@ -14,6 +14,14 @@ import java.util.Collection;
  */
 public interface CommandCompleter {
 
+	Class<? extends CommandCompleter>
+		EMPTY = EmptyCompleter.class,
+		ONLINE_PLAYER = OnlinePlayerCompleter.class,
+		PERMISSION_GROUP = PermissionGroupCompleter.class,
+		SERVICE_ENVIRONMENT = ServiceEnvironmentCompleter.class,
+		SERVICE_NAME = ServiceNameCompleter.class,
+		SERVICE_TASK = ServiceTaskCompleter.class;
+
 	@Nonnull
 	Collection<String> complete(@Nonnull CommandSender sender, @Nonnull String message, @Nonnull String argument);
 
