@@ -140,6 +140,7 @@ public final class CloudMaster extends CloudBase {
 		registry.addListener(PacketConstants.PLAYER_EXECUTOR_CHANNEL, new PlayerExecutorListener());
 		registry.addListener(PacketConstants.PLAYER_REMOTE_MANAGER_CHANNEL, new PlayerRemoteManagerListener());
 		registry.addListener(PacketConstants.MODULE_SYSTEM_CHANNEL, new ModuleSystemListener());
+		registry.addListener(PacketConstants.COMMAND_SYSTEM_CHANNEL, new CommandSystemListener());
 		registry.addListener(PacketConstants.GLOBAL_CONFIG_CHANNEL, new GlobalConfigListener());
 		registry.addListener(PacketConstants.TEMPLATE_STORAGE_CHANNEL, new TemplateStorageListener());
 		registry.addListener(PacketConstants.TRANSLATION_SYSTEM_CHANNEL, new TranslationSystemListener());
