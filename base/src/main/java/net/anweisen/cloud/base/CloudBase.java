@@ -2,6 +2,7 @@ package net.anweisen.cloud.base;
 
 import net.anweisen.cloud.base.command.CommandManager;
 import net.anweisen.cloud.base.command.commands.PlayerCommand;
+import net.anweisen.cloud.base.command.commands.ServiceCommand;
 import net.anweisen.cloud.base.command.sender.ConsoleCommandSender;
 import net.anweisen.cloud.base.console.Console;
 import net.anweisen.cloud.base.module.DefaultModuleManager;
@@ -49,7 +50,8 @@ public abstract class CloudBase extends CloudDriver {
 
 	protected void registerDefaultCommands() {
 		getCommandManager().registerCommands(
-			new PlayerCommand()
+			new PlayerCommand(),
+			new ServiceCommand()
 		);
 	}
 
