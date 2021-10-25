@@ -6,11 +6,17 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
+ * {n}       -> args[n]         | argument at given index
+ * ${t}      -> trans(t)        | given translation; in section or other section
+ * (t)(e:c)  -> text(t, e, c)   | embed events in ChatText; t=text e=eventType c=eventContent
+ *
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  *
  * @see LanguageSection#getValue(String)
  * @see LanguageSection#getValues()
+ *
+ * @see Translatable#translate(String)
  */
 public interface TranslatedValue {
 
