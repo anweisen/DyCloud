@@ -22,4 +22,9 @@ public class GlobalConfigUpdatedEvent implements Event {
 	public Document getData() {
 		return getConfig().getRawData();
 	}
+
+	@Nonnull
+	public <T> T get(@Nonnull String path, @Nonnull Class<T> classOfT) {
+		return getConfig().get(path, classOfT);
+	}
 }
