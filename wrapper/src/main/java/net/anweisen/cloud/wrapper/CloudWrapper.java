@@ -292,6 +292,7 @@ public final class CloudWrapper extends CloudDriver {
 			serviceInfo.getEnvironment(),
 			ServiceState.RUNNING,
 			ServiceControlState.NONE,
+			serviceInfo.isConnected(),
 			serviceInfo.getNodeName(),
 			serviceInfo.getNodeAddress(),
 			serviceInfo.getPort(),

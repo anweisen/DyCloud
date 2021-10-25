@@ -78,7 +78,7 @@ public class MasterServiceFactory implements ServiceFactory, LoggingApiUser {
 		debug("Chosen port {} to start new service of '{}' on '{}'", port, task.getName(), node.getInfo().getName());
 		ServiceInfo info = new ServiceInfo(
 				UUID.randomUUID(), null, task.getName(), serviceNumber, task.getEnvironment(),
-				ServiceState.DEFINED, ServiceControlState.CREATING, node.getInfo().getName(), node.getInfo().getAddress().getHost(),
+				ServiceState.DEFINED, ServiceControlState.CREATING, false, node.getInfo().getName(), node.getInfo().getAddress().getHost(),
 				port, true, Document.create()
 		);
 

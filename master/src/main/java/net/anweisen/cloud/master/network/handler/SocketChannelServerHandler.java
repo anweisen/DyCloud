@@ -71,6 +71,7 @@ public class SocketChannelServerHandler implements SocketChannelHandler {
 		CloudService service = cloud.getServiceManager().getServiceByChannel(channel);
 		if (service != null) {
 			cloud.getLogger().info("Service '{}' has disconnected", service.getInfo().getName());
+			service.getInfo().setConnected(false);
 			cloud.publishUpdate(ServicePublishPayload.DISCONNECTED, service.getInfo());
 			cloud.getServiceManager().handleServiceUpdate(ServicePublishPayload.DISCONNECTED, service.getInfo());
 			return;

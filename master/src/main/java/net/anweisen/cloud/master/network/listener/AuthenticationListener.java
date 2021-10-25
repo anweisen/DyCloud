@@ -81,6 +81,7 @@ public class AuthenticationListener implements PacketListener {
 				}
 
 				service.setChannel(channel);
+				service.getInfo().setConnected(true);
 				cloud.publishUpdate(ServicePublishPayload.CONNECTED, service.getInfo());
 				cloud.getServiceManager().handleServiceUpdate(ServicePublishPayload.CONNECTED, service.getInfo());
 
