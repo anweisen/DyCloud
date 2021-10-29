@@ -97,8 +97,14 @@ public class MasterTranslationManager implements TranslationManager, LoggingApiU
 						.saveToFile(languageConfig);
 				}
 
-				// Write cloud section
-				values.saveToFile(languageDirectory.resolve("cloud.json"));
+				// Write new translations to cloud section
+				Path cloudSection = languageDirectory.resolve("cloud.json");
+				Document existing = Document.readJsonFile(cloudSection);
+				values.forEach((key, value) -> {
+					if (!existing.contains(key))
+						existing.set(key, value);
+				});
+				values.saveToFile(cloudSection);
 
 			} catch (Exception ex) {
 				error("Could not copy default language {}", document, ex);
