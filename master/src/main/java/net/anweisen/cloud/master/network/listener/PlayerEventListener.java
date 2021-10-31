@@ -99,7 +99,7 @@ public class PlayerEventListener implements PacketListener, LoggingApiUser {
 					info("Player[name={} uuid={}] left the network on '{}'", player.getName(), player.getUniqueId(), serviceInfo.getName());
 
 					player.setCurrentServer(null);
-					player.setOnline(false);
+					player.setOffline();
 					player.setLastOnlineTime(System.currentTimeMillis());
 
 					cloud.getPlayerManager().unregisterOnlinePlayer(player.getUniqueId());

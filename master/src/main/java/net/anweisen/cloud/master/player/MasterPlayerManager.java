@@ -96,6 +96,7 @@ public class MasterPlayerManager extends DefaultPlayerManager implements Logging
 				new PermissionData(new ArrayList<>(), new ArrayList<>(), new ArrayList<>()),
 				System.currentTimeMillis(),
 				System.currentTimeMillis(),
+				0,
 				Document.create()
 			);
 			saveOfflinePlayer(offlinePlayer);
@@ -181,7 +182,7 @@ public class MasterPlayerManager extends DefaultPlayerManager implements Logging
 
 	@Override
 	public void updateOnlinePlayer(@Nonnull CloudPlayer updatedPlayer) {
-		if (!onlinePlayers.containsKey(updatedPlayer.getUniqueId())) throw new IllegalStateException("CloudPlayer is no longer registered");
+		if (!onlinePlayers.containsKey(updatedPlayer.getUniqueId())) throw new IllegalStateException("CloudPlayer is no longer online");
 
 		onlinePlayers.put(updatedPlayer.getUniqueId(), updatedPlayer);
 		sendPacket(new PlayerRemoteManagerPacket(PlayerRemoteManagerPayload.UPDATE_ONLINE_PLAYER, buffer -> buffer.writeObject((SerializableObject) updatedPlayer)));
@@ -197,6 +198,7 @@ public class MasterPlayerManager extends DefaultPlayerManager implements Logging
 			document.getInstance(PlayerConstants.PERMISSION_DATA_FIELD, PermissionData.class),
 			document.getLong(PlayerConstants.FIRST_LOGIN_TIME_FIELD),
 			document.getLong(PlayerConstants.LAST_ONLINE_TIME_FIELD),
+			document.getLong(PlayerConstants.ONLINE_DURATION_FIELD),
 			document.getDocument(PlayerConstants.PROPERTIES_FIELD)
 		);
 	}

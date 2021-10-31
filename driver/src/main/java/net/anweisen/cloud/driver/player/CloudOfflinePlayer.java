@@ -3,6 +3,7 @@ package net.anweisen.cloud.driver.player;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.player.connection.PlayerConnection;
 import net.anweisen.cloud.driver.player.permission.PermissionData;
+import net.anweisen.cloud.driver.player.permission.PermissionManager;
 import net.anweisen.cloud.driver.player.permission.PermissionPlayer;
 import net.anweisen.cloud.driver.translate.TranslationManager;
 import net.anweisen.utilities.common.config.Document;
@@ -55,27 +56,49 @@ public interface CloudOfflinePlayer {
 
 	void setLastOnlineTime(long time);
 
+	/**
+	 * @return the total duration the player was on this network
+	 */
+	long getOnlineDuration();
+
+	void setOnlineDuration(long duration);
+
 	@Nonnull
 	PermissionData getStoredPermissionData();
 
 	@Nonnull
 	Document getProperties();
 
+	/**
+	 * @return the {@link PermissionPlayer} instance returned by the {@link CloudDriver#getPermissionManager() PermissionManager}
+	 *
+	 * @throws IllegalStateException
+	 *         If this driver does not have a {@link PermissionManager} set
+	 */
 	@Nonnull
 	default PermissionPlayer getPermissionPlayer() {
 		return CloudDriver.getInstance().getPermissionManager().getPlayer(this);
 	}
 
+	/**
+	 * @return the current {@link CloudPlayer} instance, or {@code null} if the player is offline
+	 */
 	@Nullable
 	default CloudPlayer getOnlinePlayer() {
 		return CloudDriver.getInstance().getPlayerManager().getOnlinePlayerByUniqueId(getUniqueId());
 	}
 
+	/**
+	 * @return whether this player is currently online
+	 */
 	default boolean isOnline() {
 		return getOnlinePlayer() != null;
 	}
 
-	default void update() {
+	/**
+	 * Saves this {@link CloudOfflinePlayer} to the database using {@link PlayerManager#saveOfflinePlayer(CloudOfflinePlayer)}
+	 */
+	default void save() {
 		CloudDriver.getInstance().getPlayerManager().saveOfflinePlayer(this);
 	}
 

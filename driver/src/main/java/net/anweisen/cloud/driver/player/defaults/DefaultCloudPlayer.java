@@ -199,13 +199,28 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 	}
 
 	@Override
+	public long getSessionDuration() {
+		return System.currentTimeMillis() - joinTime;
+	}
+
+	@Override
 	public boolean isOnline() {
 		return online;
 	}
 
 	@Override
-	public void setOnline(boolean online) {
-		this.online = online;
+	public void setOffline() {
+		online = false;
+	}
+
+	@Override
+	public void setOnlineDuration(long duration) {
+		offlinePlayer.setOnlineDuration(duration);
+	}
+
+	@Override
+	public long getOnlineDuration() {
+		return offlinePlayer.getOnlineDuration() + getSessionDuration();
 	}
 
 	@Nonnull

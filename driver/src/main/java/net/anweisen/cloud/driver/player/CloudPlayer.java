@@ -39,11 +39,28 @@ public interface CloudPlayer extends CloudOfflinePlayer {
 
 	void setCurrentServer(@Nullable UUID server);
 
+	/**
+	 * @return the time in millis the player joined the network
+	 */
 	long getJoinTime();
 
+	/**
+	 * @return the duration in millis this player is on the network (since he joined, not the total time)
+	 *
+	 * @see #getOnlineDuration()
+	 */
+	long getSessionDuration();
+
+	/**
+	 * @return whether this player is still online
+	 */
 	boolean isOnline();
 
-	void setOnline(boolean online);
+	/**
+	 * Marks this player as offline.
+	 * {@link #isOnline()} will then return {@code false}.
+	 */
+	void setOffline();
 
 	@Nonnull
 	Document getOnlineProperties();
@@ -62,7 +79,9 @@ public interface CloudPlayer extends CloudOfflinePlayer {
 		return this;
 	}
 
-	@Override
+	/**
+	 * Synchronizes this player with the
+	 */
 	default void update() {
 		CloudDriver.getInstance().getPlayerManager().updateOnlinePlayer(this);
 	}

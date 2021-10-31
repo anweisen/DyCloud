@@ -27,13 +27,14 @@ public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer, Serializab
 	private PermissionData permissionData;
 	private long firstLogin;
 	private long lastOnline;
+	private long onlineDuration;
 	private Document properties;
 
 	private DefaultCloudOfflinePlayer() {
 	}
 
 	public DefaultCloudOfflinePlayer(@Nonnull UUID uniqueId, @Nonnull String name, @Nonnull String language, @Nonnull DefaultPlayerConnection lastNetworkConnection,
-	                                 @Nonnull PermissionData permissionData, long firstLogin, long lastOnline, @Nonnull Document properties) {
+	                                 @Nonnull PermissionData permissionData, long firstLogin, long lastOnline, long onlineDuration, @Nonnull Document properties) {
 		this.uniqueId = uniqueId;
 		this.name = name;
 		this.language = language;
@@ -42,6 +43,7 @@ public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer, Serializab
 		this.firstLogin = firstLogin;
 		this.lastOnline = lastOnline;
 		this.properties = properties;
+		this.onlineDuration = onlineDuration;
 	}
 
 	@Override
@@ -138,6 +140,16 @@ public class DefaultCloudOfflinePlayer implements CloudOfflinePlayer, Serializab
 	@Override
 	public void setLastOnlineTime(long time) {
 		this.lastOnline = time;
+	}
+
+	@Override
+	public long getOnlineDuration() {
+		return onlineDuration;
+	}
+
+	@Override
+	public void setOnlineDuration(long duration) {
+		this.onlineDuration = duration;
 	}
 
 	@Nonnull
