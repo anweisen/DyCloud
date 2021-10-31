@@ -1,0 +1,9 @@
+{
+	"name": "Cloud-HubCommand",
+	"author": "anweisen",
+	"version": "1.0",
+	"main": "net.anweisen.cloud.modules.hub.CloudHubCommandModule",
+	"website": "https://github.com/anweisen/DyCloud",
+	"description": "Runtime module to enable the use of the /hub command ingame",
+	"environment": "MASTER"
+}
