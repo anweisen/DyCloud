@@ -3,9 +3,11 @@ package net.anweisen.cloud.modules.bridge.helper;
 import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.config.global.objects.CommandObject;
+import net.anweisen.cloud.driver.player.CloudPlayer;
 import net.anweisen.cloud.driver.service.config.ServiceTask;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.driver.service.specific.ServiceProperty;
+import net.anweisen.cloud.wrapper.CloudWrapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -88,6 +90,14 @@ public final class BridgeProxyHelper {
 			mapping.computeIfAbsent(command.getPath().split(" ")[0], key -> new ArrayList<>()).add(command);
 
 		methods.updateCommands(mapping);
+	}
+
+	public static void checkPlayerDisconnects() {
+		for (CloudPlayer player : CloudDriver.getInstance().getPlayerManager().getOnlinePlayers()) {
+			if (player.getProxy().getUniqueId().equals(CloudWrapper.getInstance().getServiceInfo().getUniqueId())) {
+				methods.checkPlayerDisconnect(player);
+			}
+		}
 	}
 
 	public static void registerServer(@Nonnull ServiceInfo service) {

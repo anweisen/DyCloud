@@ -1,6 +1,7 @@
 package net.anweisen.cloud.modules.bridge.helper;
 
 import net.anweisen.cloud.driver.config.global.objects.CommandObject;
+import net.anweisen.cloud.driver.player.CloudPlayer;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 
 import javax.annotation.Nonnull;
@@ -18,5 +19,7 @@ public interface BridgeProxyMethods {
 	void registerServer(@Nonnull ServiceInfo service);
 
 	void unregisterServer(@Nonnull String name);
+
+	void checkPlayerDisconnect(@Nonnull CloudPlayer player);
 
 }

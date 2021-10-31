@@ -3,12 +3,14 @@ package net.anweisen.cloud.modules.bridge.bungee;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.config.global.objects.CommandObject;
 import net.anweisen.cloud.driver.network.object.HostAndPort;
+import net.anweisen.cloud.driver.player.CloudPlayer;
 import net.anweisen.cloud.driver.player.chat.ChatText;
 import net.anweisen.cloud.driver.player.connection.DefaultPlayerConnection;
 import net.anweisen.cloud.driver.player.connection.PlayerConnection;
 import net.anweisen.cloud.driver.player.settings.*;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.modules.bridge.bungee.command.BungeeCommand;
+import net.anweisen.cloud.modules.bridge.helper.BridgeNetworkingHelper;
 import net.anweisen.cloud.modules.bridge.helper.BridgeProxyHelper;
 import net.anweisen.cloud.modules.bridge.helper.BridgeProxyMethods;
 import net.anweisen.cloud.wrapper.CloudWrapper;
@@ -104,6 +106,14 @@ public final class BungeeBridgeHelper {
 		});
 	}
 
+	public static void checkPlayerDisconnect(@Nonnull CloudPlayer player) {
+		ProxiedPlayer proxiedPlayer = ProxyServer.getInstance().getPlayer(player.getUniqueId());
+		if (proxiedPlayer == null) {
+			BridgeNetworkingHelper.sendProxyRemovePacket(player.getUniqueId());
+			CloudDriver.getInstance().getPlayerManager().unregisterOnlinePlayer(player.getUniqueId());
+		}
+	}
+
 	@Nonnull
 	@SuppressWarnings("deprecation")
 	public static BaseComponent[] buildChatTextComponents(@Nonnull ChatText[] messages) {
@@ -150,6 +160,10 @@ public final class BungeeBridgeHelper {
 				BungeeBridgeHelper.unregisterServer(name);
 			}
 
+			@Override
+			public void checkPlayerDisconnect(@Nonnull CloudPlayer player) {
+				BungeeBridgeHelper.checkPlayerDisconnect(player);
+			}
 		};
 	}
 

@@ -13,6 +13,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -32,6 +33,7 @@ public final class BungeeCloudBridgePlugin extends Plugin implements LoggingApiU
 		initCommands();
 
 		getProxy().setReconnectHandler(new BungeeCloudReconnectHandler());
+		getProxy().getScheduler().schedule(this, BridgeProxyHelper::checkPlayerDisconnects, 3, 3, TimeUnit.SECONDS);
 	}
 
 	@Override
