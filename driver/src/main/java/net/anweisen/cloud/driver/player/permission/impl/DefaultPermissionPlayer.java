@@ -212,7 +212,7 @@ public class DefaultPermissionPlayer implements PermissionPlayer {
 
 	@Override
 	public void save() {
-		player.update();
+		player.save();
 	}
 
 	@Override
