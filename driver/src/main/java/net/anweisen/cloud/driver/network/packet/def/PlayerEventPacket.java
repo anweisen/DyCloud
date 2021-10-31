@@ -45,6 +45,10 @@ public class PlayerEventPacket extends Packet {
 		return new PlayerEventPacket(PlayerEventPayload.PROXY_DISCONNECT, buffer -> buffer.writeUniqueId(playerUniqueId));
 	}
 
+	public static PlayerEventPacket forProxyRemove(@Nonnull UUID playerUniqueId) {
+		return new PlayerEventPacket(PlayerEventPayload.PROXY_REMOVE, buffer -> buffer.writeUniqueId(playerUniqueId));
+	}
+
 	public static PlayerEventPacket forServerLoginRequest(@Nonnull UUID playerUniqueId) {
 		return new PlayerEventPacket(PlayerEventPayload.SERVER_LOGIN_REQUEST, buffer -> buffer.writeUniqueId(playerUniqueId));
 	}
@@ -103,6 +107,8 @@ public class PlayerEventPacket extends Packet {
 
 		/** @see PlayerProxyDisconnectEvent */
 		PROXY_DISCONNECT,
+
+		PROXY_REMOVE,
 
 
 		/** @see PlayerServerLoginRequestEvent */

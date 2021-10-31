@@ -94,6 +94,7 @@ public class PlayerEventListener implements PacketListener, LoggingApiUser {
 					cloud.getSocketComponent().sendPacket(PlayerEventPacket.forProxyServerSwitch(playerUniqueId, fromUniqueId, toUniqueId));
 					break;
 				}
+				case PROXY_REMOVE:
 				case PROXY_DISCONNECT: {
 					CloudPlayer player = findPlayer(playerUniqueId);
 					info("Player[name={} uuid={}] left the network on '{}'", player.getName(), player.getUniqueId(), serviceInfo.getName());

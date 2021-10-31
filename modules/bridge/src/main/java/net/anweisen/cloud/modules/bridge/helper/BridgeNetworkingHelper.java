@@ -47,6 +47,10 @@ public final class BridgeNetworkingHelper {
 		CloudWrapper.getInstance().getSocketComponent().sendPacket(PlayerEventPacket.forProxyDisconnect(playerUniqueId));
 	}
 
+	public static void sendProxyRemovePacket(@Nonnull UUID playerUniqueId) {
+		CloudWrapper.getInstance().getSocketComponent().sendPacket(PlayerEventPacket.forProxyRemove(playerUniqueId));
+	}
+
 	public static void sendServerLoginRequestPacket(@Nonnull UUID playerUniqueId) {
 		CloudWrapper.getInstance().getSocketComponent().sendPacket(PlayerEventPacket.forServerLoginRequest(playerUniqueId));
 	}
