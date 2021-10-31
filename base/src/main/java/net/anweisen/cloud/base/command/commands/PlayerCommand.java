@@ -7,10 +7,13 @@ import net.anweisen.cloud.base.command.annotation.CommandPath;
 import net.anweisen.cloud.base.command.completer.OnlinePlayerCompleter;
 import net.anweisen.cloud.base.command.sender.CommandSender;
 import net.anweisen.cloud.driver.CloudDriver;
+import net.anweisen.cloud.driver.player.CloudOfflinePlayer;
 import net.anweisen.cloud.driver.player.CloudPlayer;
+import net.anweisen.cloud.driver.player.PlayerManager;
 import net.anweisen.cloud.driver.player.permission.Permissions;
 
 import javax.annotation.Nonnull;
+import java.util.UUID;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -30,14 +33,58 @@ public class PlayerCommand {
 		sender.sendTranslation("cloud.command.player.list.count", CloudDriver.getInstance().getPlayerManager().getOnlinePlayerCount());
 	}
 
-	@CommandPath("kick <player>")
-	public void onKickCommand(@Nonnull CommandSender sender, @CommandArgument(value = "player", completer = OnlinePlayerCompleter.class) String playerName) {
-		CloudPlayer player = CloudDriver.getInstance().getPlayerManager().getOnlinePlayerByName(playerName);
+	@CommandPath("kick <player> <reason>")
+	public void onKickCommand(@Nonnull CommandSender sender,
+	                          @CommandArgument(value = "player", completer = OnlinePlayerCompleter.class) String playerName,
+	                          @CommandArgument(value = "reason", optional = true) String reason) {
+		CloudPlayer player = online(sender, playerName);
+		if (player == null) return;
 
-		if (player == null) {
+		player.getExecutor().disconnect(reason);
+		sender.sendTranslation("cloud.command.player.kick");
+	}
 
-			return;
+	@CommandPath("delete <player>")
+	public void onDeleteCommand(@Nonnull CommandSender sender,
+	                            @CommandArgument(value = "player") String playerName)  {
+		CloudOfflinePlayer player = offline(sender, playerName);
+		if (player == null) return;
+
+		CloudDriver.getInstance().getPlayerManager().deleteOfflinePlayer(player);
+		sender.sendTranslation("cloud.command.player.delete");
+	}
+
+	private CloudPlayer online(@Nonnull CommandSender sender, @Nonnull String input) {
+		System.out.println("'" + input + "'");
+		PlayerManager manager = CloudDriver.getInstance().getPlayerManager();
+		CloudPlayer player = manager.getOnlinePlayerByName(input);
+		if (player != null) return player;
+
+		try {
+			player = manager.getOnlinePlayerByUniqueId(UUID.fromString(input));
+			if (player != null) return player;
+		} catch (Exception ex) {
+			// Input is not a valid uuid
 		}
+
+		sender.sendTranslation("cloud.player.offline");
+		return null;
+	}
+
+	private CloudOfflinePlayer offline(@Nonnull CommandSender sender, @Nonnull String input) {
+		PlayerManager manager = CloudDriver.getInstance().getPlayerManager();
+		CloudOfflinePlayer player = manager.getOfflinePlayerByName(input);
+		if (player != null) return player;
+
+		try {
+			player = manager.getOfflinePlayerByUniqueId(UUID.fromString(input));
+			if (player != null) return player;
+		} catch (Exception ex) {
+			// Input is not a valid uuid
+		}
+
+		sender.sendTranslation("cloud.player.unregistered");
+		return null;
 	}
 
 }
