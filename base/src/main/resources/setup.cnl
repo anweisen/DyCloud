@@ -1,0 +1,12 @@
+# You can add or change properties for the DyCloud runtime
+# You can use the '#' symbol to make a comment
+
+# Available log levels TRACE, DEBUG, EXTENDED, INFO, WARN, ERROR
+var dycloud.logging.level INFO
+var dycloud.logging.file.size 16
+var dycloud.logging.file.extension .log
+
+var dycloud.console.prompt §8| §bCloud §8» §b%screen% §8» §r
+
+var dycloud.tempdir .temp
+

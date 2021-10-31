@@ -48,7 +48,7 @@ public abstract class CloudDriver {
 	{
 		Runtime.getRuntime().addShutdownHook(new Thread((ExceptionallyRunnable) this::shutdown, "ShutdownHook"));
 
-		tempDirectory = Paths.get(System.getProperty("cloud.temp", ".temp"));
+		tempDirectory = Paths.get(System.getProperty("dycloud.tempdir", ".temp"));
 		FileUtils.createDirectory(tempDirectory);
 		FileUtils.setTempDirectory(tempDirectory);
 		FileUtils.setHiddenAttribute(tempDirectory, true);

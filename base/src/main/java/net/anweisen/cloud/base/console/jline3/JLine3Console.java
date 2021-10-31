@@ -34,7 +34,7 @@ public class JLine3Console implements Console {
 	private final Terminal terminal;
 	private final LineReaderImpl lineReader;
 
-	private final String promptTemplate = System.getProperty("cloud.console.prompt", "&8| &bCloud &8» &b%screen% &8» &r");
+	private final String promptTemplate = System.getProperty("dycloud.console.prompt", "§8| §bCloud §8» §b%screen% §8» §r");
 	private String prompt = null;
 	private String screenName = "Console";
 	private boolean printingEnabled = true;

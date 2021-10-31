@@ -2,8 +2,9 @@ package net.anweisen.cloud.master;
 
 import net.anweisen.cloud.base.console.Console;
 import net.anweisen.cloud.base.console.handler.ConsoleLogHandler;
-import net.anweisen.cloud.driver.console.handler.FileLogHandler;
 import net.anweisen.cloud.base.console.jline3.JLine3Console;
+import net.anweisen.cloud.base.setup.SetupRunner;
+import net.anweisen.cloud.driver.console.handler.FileLogHandler;
 import net.anweisen.utilities.common.logging.ILogger;
 import net.anweisen.utilities.common.logging.LogLevel;
 import net.anweisen.utilities.common.logging.handler.HandledAsyncLogger;
@@ -18,8 +19,10 @@ import javax.annotation.Nonnull;
 public final class Launcher {
 
 	public static void main(String[] args) throws Exception {
+		SetupRunner.runSetupJob();
+
 		Console console = new JLine3Console();
-		HandledLogger logger = new HandledAsyncLogger(LogLevel.TRACE);
+		HandledLogger logger = new HandledAsyncLogger(LogLevel.fromName(System.getProperty("dycloud.logging.level", "INFO")));
 		init(console, logger);
 
 		CloudMaster cloud = new CloudMaster(logger, console);
@@ -27,7 +30,7 @@ public final class Launcher {
 	}
 
 	private static void init(@Nonnull Console console, @Nonnull HandledLogger logger) {
-		logger.addHandler(new ConsoleLogHandler(console), new FileLogHandler(FileLogHandler.SIZE_32MB));
+		logger.addHandler(new ConsoleLogHandler(console), new FileLogHandler());
 
 		ILogger.setConstantFactory(logger);
 
