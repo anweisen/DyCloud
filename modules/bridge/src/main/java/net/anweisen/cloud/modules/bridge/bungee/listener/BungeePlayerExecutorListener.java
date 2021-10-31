@@ -39,7 +39,7 @@ public class BungeePlayerExecutorListener implements PacketListener, LoggingApiU
 		if (global && targetPlayer == null) return;
 		Collection<ProxiedPlayer> players = global ? ProxyServer.getInstance().getPlayers() : Collections.singletonList(targetPlayer);
 
-		debug("{} -> {}", payload, players);
+		debug("PlayerExecutorPayload.{} -> {}", payload, players);
 		switch (payload) {
 			case SEND_MESSAGE: {
 				String permission = buffer.readOptionalString();

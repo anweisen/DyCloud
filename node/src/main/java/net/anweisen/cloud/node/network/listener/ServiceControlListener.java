@@ -39,7 +39,7 @@ public class ServiceControlListener implements PacketListener, LoggingApiUser {
 			cloud.getServiceManager().registerService(service);
 			cloud.getEventManager().callEvent(new ServiceRegisteredEvent(service));
 
-		    debug("{} -> {}", payload, service);
+		    debug("ServiceControlPayload.{} -> {}", payload, service);
 		    ServiceTask task = service.findTask();
 		    Preconditions.checkNotNull(task, "ServiceTask of service for action " + payload + " is null (" + service.getTaskName() + ")");
 
@@ -55,7 +55,7 @@ public class ServiceControlListener implements PacketListener, LoggingApiUser {
 
 		UUID uuid = buffer.readUniqueId();
 		ServiceInfo service = cloud.getServiceManager().getServiceInfoByUniqueId(uuid);
-		debug("{} -> {}", payload, service);
+		debug("ServiceControlPayload.{} -> {}", payload, service);
 		Preconditions.checkNotNull(service, "Service for action " + payload + " is null (" + uuid + ")");
 
 		if (payload == ServiceControlPayload.START || payload == ServiceControlPayload.RESTART) {

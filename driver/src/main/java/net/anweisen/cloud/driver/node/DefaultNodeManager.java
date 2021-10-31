@@ -16,7 +16,7 @@ public abstract class DefaultNodeManager implements NodeManager, LoggingApiUser 
 
 	@Override
 	public void handleNodeUpdate(@Nonnull NodePublishPayload payload, @Nonnull NodeInfo info) {
-		debug("{} -> {}", payload, info);
+		debug("NodePublishPayload.{} -> {}", payload, info);
 
 		switch (payload) {
 			case CONNECTED:

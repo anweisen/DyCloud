@@ -28,7 +28,7 @@ public class CommandSystemListener implements PacketListener, LoggingApiUser {
 		UUID uniqueId = buffer.readUniqueId();
 		String command = buffer.readString();
 
-		debug("{} -> {} '{}'", payload, uniqueId, command);
+		debug("CommandSystemPayload.{} -> {} '{}'", payload, uniqueId, command);
 
 		CloudPlayer player = CloudMaster.getInstance().getPlayerManager().getOnlinePlayerByUniqueId(uniqueId);
 		PlayerCommandSender sender = PlayerCommandSender.of(player);

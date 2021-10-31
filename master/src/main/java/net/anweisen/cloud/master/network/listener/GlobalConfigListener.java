@@ -20,13 +20,13 @@ public class GlobalConfigListener implements PacketListener {
 		GlobalConfigPayload payload = packet.getBuffer().readEnum(GlobalConfigPayload.class);
 		switch (payload) {
 			case FETCH: {
-				CloudDriver.getInstance().getLogger().debug("{} -> {}", CloudDriver.getInstance().getGlobalConfig().getRawData());
+				CloudDriver.getInstance().getLogger().debug("GlobalConfigPayload.{} -> {}", CloudDriver.getInstance().getGlobalConfig().getRawData());
 				channel.sendPacket(Packet.createResponseFor(packet,Packet.newBuffer().writeDocument(CloudDriver.getInstance().getGlobalConfig().getRawData())));
 				break;
 			}
 			case UPDATE: {
 				CloudDriver.getInstance().getGlobalConfig().setRawData(packet.getBuffer().readDocument());
-				CloudDriver.getInstance().getLogger().debug("{} -> {}", CloudDriver.getInstance().getGlobalConfig().getRawData());
+				CloudDriver.getInstance().getLogger().debug("GlobalConfigPayload.{} -> {}", CloudDriver.getInstance().getGlobalConfig().getRawData());
 				CloudDriver.getInstance().getEventManager().callEvent(new GlobalConfigUpdatedEvent());
 				break;
 			}

@@ -30,7 +30,7 @@ public class TranslationSystemListener implements PacketListener, LoggingApiUser
 			case GET_SECTION: {
 				String languageId = packet.getBuffer().readString();
 				String sectionId = packet.getBuffer().readString();
-				trace("{} -> {}.{}", payload, languageId, sectionId);
+				trace("TranslationPayload.{} -> {}.{}", payload, languageId, sectionId);
 
 				Language language = CloudDriver.getInstance().getTranslationManager().getLanguage(languageId);
 				LanguageSection section = language.getSection(sectionId);

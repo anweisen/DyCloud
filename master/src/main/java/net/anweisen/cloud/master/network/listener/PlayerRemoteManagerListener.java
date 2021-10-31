@@ -47,33 +47,33 @@ public class PlayerRemoteManagerListener implements PacketListener, LoggingApiUs
 			}
 			case GET_OFFLINE_PLAYER_BY_UUID: {
 				UUID uuid = buffer.readUniqueId();
-				debug("{} -> {}", payload, uuid);
+				debug("PlayerRemoteManagerPayload.{} -> {}", payload, uuid);
 				SerializableObject player = (SerializableObject) manager.getOfflinePlayerByUniqueId(uuid);
 				channel.sendPacket(Packet.createResponseFor(packet, Packet.newBuffer().writeOptionalObject(player)));
 				break;
 			}
 			case GET_OFFLINE_PLAYER_BY_NAME: {
 				String name = buffer.readString();
-				debug("{} -> {}", payload, name);
+				debug("PlayerRemoteManagerPayload.{} -> {}", payload, name);
 				SerializableObject player = (SerializableObject) manager.getOfflinePlayerByName(name);
 				channel.sendPacket(Packet.createResponseFor(packet, Packet.newBuffer().writeOptionalObject(player)));
 				break;
 			}
 			case SAVE_OFFLINE_PLAYER: {
 				CloudOfflinePlayer player = buffer.readObject(DefaultCloudOfflinePlayer.class);
-				debug("{} -> {}", payload, player);
+				debug("PlayerRemoteManagerPayload.{} -> {}", payload, player);
 				manager.saveOfflinePlayer(player);
 				break;
 			}
 			case DELETE_OFFLINE_PLAYER: {
 				UUID uuid = buffer.readUniqueId();
-				debug("{} -> {}", payload, uuid);
+				debug("PlayerRemoteManagerPayload.{} -> {}", payload, uuid);
 				manager.deleteOfflinePlayer(uuid);
 				break;
 			}
 			case UPDATE_ONLINE_PLAYER: {
 				CloudPlayer player = buffer.readObject(DefaultCloudPlayer.class);
-				debug("{} -> {}", payload, player);
+				debug("PlayerRemoteManagerPayload.{} -> {}", payload, player);
 				manager.updateOnlinePlayer(player);
 				break;
 			}

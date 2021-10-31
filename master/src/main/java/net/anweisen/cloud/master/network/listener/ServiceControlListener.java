@@ -30,7 +30,7 @@ public class ServiceControlListener implements PacketListener, LoggingApiUser {
 		switch (payload) {
 			case CREATE: {
 				ServiceTask task = buffer.readObject(ServiceTask.class);
-				debug("{} -> {}", task, task);
+				debug("ServiceControlPayload.{} -> {}", payload, task);
 				cloud.getServiceFactory().createServiceAsync(task)
 					.onComplete(service -> channel.sendPacket(Packet.createResponseFor(packet, Packet.newBuffer().writeOptionalObject(service))))
 					.onFailure(ex       -> channel.sendPacket(Packet.createResponseFor(packet, Packet.newBuffer().writeOptionalObject(null))))
@@ -41,7 +41,7 @@ public class ServiceControlListener implements PacketListener, LoggingApiUser {
 
 		UUID uuid = buffer.readUniqueId();
 		CloudService service = cloud.getServiceManager().getServiceByUniqueId(uuid);
-		debug("{} -> {}", payload, service.getInfo().getName());
+		debug("ServiceControlPayload.{} -> {}", payload, service.getInfo().getName());
 		NodeServer node = cloud.getNodeManager().getNodeServer(service.getInfo().getNodeName());
 		node.getChannel().sendPacketQueryAsync(new ServiceControlPacket(payload, uuid))
 			.onComplete(response -> channel.sendPacket(Packet.createResponseFor(packet)));
