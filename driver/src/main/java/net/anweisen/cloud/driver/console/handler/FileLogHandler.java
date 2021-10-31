@@ -24,28 +24,16 @@ import java.util.stream.Collectors;
  */
 public class FileLogHandler implements LogHandler {
 
-	public static final long SIZE_1MB  = 1024 * 1024;
-	public static final long SIZE_2MB  = 2  * SIZE_1MB;
-	public static final long SIZE_4MB  = 4  * SIZE_1MB;
-	public static final long SIZE_8MB  = 8  * SIZE_1MB;
-	public static final long SIZE_12MB = 12 * SIZE_1MB;
-	public static final long SIZE_16MB = 16 * SIZE_1MB;
-	public static final long SIZE_32MB = 32 * SIZE_1MB;
-	public static final long SIZE_64MB = 64 * SIZE_1MB;
-	public static final long SIZE_72MB = 72 * SIZE_1MB;
+	public static final long mbConversion = 1024 * 1024;
 
-	private static final String fileExtension = ".log";
+	private static final String fileExtension = System.getProperty("dycloud.logging.file.extension", ".log");
+	private static final long maxBytes = Long.parseLong(System.getProperty("dycloud.logging.file.size", "16")) * mbConversion;
+	private static final Path directory = Paths.get("logs");
 
-	private final long maxBytes;
-
-	private final Path directory;
 	private final AtomicReference<Path> errorFile = new AtomicReference<>();
 	private final AtomicReference<Path> outFile = new AtomicReference<>();
 
-	public FileLogHandler(long maxBytes) {
-		this.maxBytes = maxBytes;
-
-		directory = Paths.get("logs");
+	public FileLogHandler() {
 		FileUtils.createDirectory(directory);
 	}
 
