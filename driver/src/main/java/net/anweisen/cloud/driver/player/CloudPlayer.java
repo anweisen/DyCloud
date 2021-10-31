@@ -62,9 +62,21 @@ public interface CloudPlayer extends CloudOfflinePlayer {
 	 */
 	void setOffline();
 
+	/**
+	 * Custom properties which are not saved in the database (like {@link #getProperties()}) and are only available while the player is online.
+	 *
+	 * @return properties which are not saved in the database
+	 *
+	 * @see #getProperties()
+	 */
 	@Nonnull
 	Document getOnlineProperties();
 
+	/**
+	 * Custom properties which are not saved in the database (like {@link ##setOnlineProperties(Document)}) and are only available while the player is online.
+	 *
+	 * @see #setOnlineProperties(Document)
+	 */
 	void setOnlineProperties(@Nonnull Document properties);
 
 	@Nonnull

@@ -23,10 +23,6 @@ I would recommend you to use one of the **following cloud systems**:
 - **wrapper** (*remote*): <br>
   Runs a service, connects to the master. <br>
   *Probably known as runner or bridge from other cloud systems*
-- ~~**cord** (*remote*)~~: <br>
-  A really simple multi proxy cord. When a client connect to the cord all its packets will be forwarded (client <-> cord <-> proxy). <br>
-  But using this cord basically is of no use and as you then just have one big proxy, the cord, which can then be easily crashed. <br>
-  **For a multiproxy setup you should use something like a round-robin dns load balancing system and not this like provided by the Cloudflare module**
 
 ## Permissions
 
@@ -89,6 +85,7 @@ I would recommend you to use one of the **following cloud systems**:
 ❌ | Node Load Balancing
 ❌ | Auto Client Reconnect
 ❌ | Encryption
+❌ | Pre launch setup
 ✔️ | ServiceInfo publish
 ✔️ | Basic Service Events
 🧪 | Service auto start (minCount & maxCount)

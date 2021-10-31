@@ -19,12 +19,16 @@ public interface PlayerExecutor {
 
 	/**
 	 * @return the uuid of the player this executor is managing
+	 *
+	 * @see PlayerManager#getPlayerExecutor(UUID)
 	 */
 	@Nonnull
 	UUID getPlayerUniqueId();
 
 	/**
 	 * @return whether this executor covers all players
+	 *
+	 * @see PlayerManager#getGlobalExecutor()
 	 */
 	boolean isGlobal();
 

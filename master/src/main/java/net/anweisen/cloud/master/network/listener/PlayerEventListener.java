@@ -42,7 +42,7 @@ public class PlayerEventListener implements PacketListener, LoggingApiUser {
 
 		if (payload.getType() == ServiceType.PROXY) {
 			UUID playerUniqueId = buffer.readUniqueId();
-			debug("{} '{}' -> {}", payload, serviceInfo.getName(), playerUniqueId);
+			debug("PlayerEventPayload.{} '{}' -> {}", payload, serviceInfo.getName(), playerUniqueId);
 
 			switch (payload) {
 				case PROXY_LOGIN_REQUEST: {
@@ -112,7 +112,7 @@ public class PlayerEventListener implements PacketListener, LoggingApiUser {
 			}
 		} else if (payload.getType() == ServiceType.SERVER) {
 			UUID playerUniqueId = buffer.readUniqueId();
-			debug("{} '{}' -> {}", payload, serviceInfo.getName(), playerUniqueId);
+			debug("PlayerEventPayload.{} '{}' -> {}", payload, serviceInfo.getName(), playerUniqueId);
 
 			switch (payload) {
 				case SERVER_LOGIN_REQUEST: {
@@ -139,7 +139,7 @@ public class PlayerEventListener implements PacketListener, LoggingApiUser {
 			}
 		} else if (payload.getType() == null) {
 			UUID playerUniqueId = buffer.readUniqueId();
-			debug("{} '{}' -> {}", payload, serviceInfo.getName(), playerUniqueId);
+			debug("PlayerEventPayload.{} '{}' -> {}", payload, serviceInfo.getName(), playerUniqueId);
 			CloudPlayer player = findPlayer(playerUniqueId);
 
 			switch (payload) {
