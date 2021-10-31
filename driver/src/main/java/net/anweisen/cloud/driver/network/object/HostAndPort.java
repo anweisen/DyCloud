@@ -6,7 +6,6 @@ import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.*;
@@ -44,15 +43,6 @@ public final class HostAndPort implements SerializableObject {
 			return new HostAndPort(args[0], Integer.parseInt(args[1]));
 
 		throw new IllegalStateException("Unable to parse '" + input + "'");
-	}
-
-	@Nullable
-	public static HostAndPort parseOrNull(@Nullable String input) {
-		try {
-			return parse(input);
-		} catch (Exception ex) {
-			return null;
-		}
 	}
 
 	@Nonnull
