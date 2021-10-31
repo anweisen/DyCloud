@@ -124,9 +124,15 @@ public abstract class CloudDriver {
 	@Nonnull
 	public abstract TranslationManager getTranslationManager();
 
+	/**
+	 * @return the current {@link PermissionManager} instance
+	 *
+	 * @throws IllegalStateException
+	 *         If this driver does not have a {@link PermissionManager} set
+	 */
 	@Nonnull
 	public PermissionManager getPermissionManager() {
-		Preconditions.checkNotNull(permissionManager, "No Permission System available");
+		Preconditions.checkState(permissionManager != null, "No Permission System available");
 		return permissionManager;
 	}
 
