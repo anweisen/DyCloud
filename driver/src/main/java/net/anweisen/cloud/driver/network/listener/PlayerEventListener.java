@@ -66,8 +66,9 @@ public class PlayerEventListener implements PacketListener {
 				cloud.getEventManager().callEvent(new PlayerProxyServerSwitchEvent(player, from, to));
 				break;
 			}
+			case PROXY_REMOVE:
 			case PROXY_DISCONNECT: { // TODO this does not feel right
-				player.setOnline(false);
+				player.setOffline();
 				cloud.getPlayerManager().unregisterOnlinePlayer(uuid);
 				cloud.getEventManager().callEvent(new PlayerProxyDisconnectEvent(player));
 				break;
