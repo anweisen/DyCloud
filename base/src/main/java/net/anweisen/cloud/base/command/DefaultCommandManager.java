@@ -251,11 +251,12 @@ public abstract class DefaultCommandManager implements CommandManager {
 					// a: the current given args index
 
 					String currentPathArg = pathArgs[p];
-					String currentGivenArg = args[a];
 					boolean dynamicArg = currentPathArg.startsWith("<") && currentPathArg.endsWith(">");
 					if (dynamicArg) {
 						RegisteredCommandArgument argument = command.getArgument(currentPathArg.replace("<", "").replace(">", ""));
-						if (args.length <= a + argument.getWords()) continue command;
+						if (args.length <= a + argument.getWords()) {
+							if (!argument.getOptional()) continue command;
+						}
 						String[] valueArray = Arrays.copyOfRange(args, a, a + argument.getWords());
 						String value = StringUtils.getArrayAsString(valueArray, " ");
 
@@ -266,7 +267,8 @@ public abstract class DefaultCommandManager implements CommandManager {
 
 						if (args.length <= a) continue command;
 					} else {
-						if (!currentPathArg.equalsIgnoreCase(currentGivenArg))  // incorrect path, skip command
+						if (args.length <= a) continue command;
+						if (!currentPathArg.equalsIgnoreCase(args[a]))  // incorrect path, skip command
 							continue command;
 					}
 
@@ -301,16 +303,18 @@ public abstract class DefaultCommandManager implements CommandManager {
 		Object[] parameters = new Object[methodsParameters.length];
 		for (int i = 0; i < methodsParameters.length; i++) {
 			Parameter parameter = methodsParameters[i];
-			if (CommandSender.class.isAssignableFrom(parameter.getType()))
+			if (CommandSender.class.isAssignableFrom(parameter.getType())) {
 				parameters[i] = sender;
-			else
-				parameters[i] = argumentValues.get(parameter.getName());
+			} else if (parameter.isAnnotationPresent(CommandArgument.class)) {
+				parameters[i] = argumentValues.get(parameter.getAnnotation(CommandArgument.class).value());
+			}
 		}
 
 		try {
 			command.getMethod().invoke(command.getInstance(), parameters);
 		} catch (Throwable ex) {
 			sender.sendTranslation("cloud.command.invoke.error");
+			CloudDriver.getInstance().getLogger().error("An error occurred while handling command '{}'", command.getNames()[0], ex);
 		}
 	}
 
