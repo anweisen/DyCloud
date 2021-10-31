@@ -47,4 +47,12 @@ public @interface CommandArgument {
 	 */
 	boolean raw() default false;
 
+	/**
+	 * Whether this argument can be left out.
+	 * This can only be used if this is the last argument.
+	 *
+	 * @return whether this argument can be left out
+	 */
+	boolean optional() default false; // TODO implement
+
 }

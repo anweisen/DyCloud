@@ -14,12 +14,14 @@ public final class RegisteredCommandArgument {
 	private final Class<? extends CommandCompleter> completerClass;
 	private final int words;
 	private final boolean raw;
+	private final boolean optional;
 
-	public RegisteredCommandArgument(@Nonnull String name, @Nonnull Class<? extends CommandCompleter> completerClass, int words, boolean raw) {
+	public RegisteredCommandArgument(@Nonnull String name, @Nonnull Class<? extends CommandCompleter> completerClass, int words, boolean raw, boolean optional) {
 		this.name = name;
 		this.completerClass = completerClass;
 		this.words = words;
 		this.raw = raw;
+		this.optional = optional;
 	}
 
 	@Nonnull
@@ -38,5 +40,9 @@ public final class RegisteredCommandArgument {
 
 	public boolean getRaw() {
 		return raw;
+	}
+
+	public boolean getOptional() {
+		return optional;
 	}
 }
