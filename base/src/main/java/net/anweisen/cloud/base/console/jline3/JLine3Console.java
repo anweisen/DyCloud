@@ -194,7 +194,7 @@ public class JLine3Console implements Console {
 	}
 
 	private void updatePrompt() {
-		prompt = ConsoleColor.toColoredString('&', prompt).replace("%screen%", screenName);
+		prompt = ConsoleColor.toColoredString('§', prompt).replace("%screen%", screenName);
 		lineReader.setPrompt(prompt);
 	}
 

@@ -23,7 +23,7 @@ public class BukkitChatListener implements Listener {
 
 		String message = event.getMessage().replace("%", "%%").trim();
 		if (event.getPlayer().hasPermission(Permissions.CHAT_COLORS)) {
-			message = ChatColor.translateAlternateColorCodes('&', message);
+			message = ChatColor.translateAlternateColorCodes('§', message);
 		}
 
 		if (ChatColor.stripColor(message).trim().isEmpty()) {
