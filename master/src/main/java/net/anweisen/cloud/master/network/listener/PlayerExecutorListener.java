@@ -33,6 +33,9 @@ public class PlayerExecutorListener implements PacketListener {
 			case SEND_MESSAGE:
 				executor.sendMessage(buffer.readOptionalString(), buffer.readObjectArray(ChatText.class));
 				return;
+			case SEND_TRANSLATION:
+				executor.sendTranslation(buffer.readString(), (Object[]) buffer.readStringArray());
+				return;
 			case SEND_ACTIONBAR:
 				executor.sendActionbar(buffer.readString());
 				return;

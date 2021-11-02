@@ -8,6 +8,7 @@ import net.anweisen.cloud.driver.network.packet.def.PlayerExecutorPacket.PlayerE
 import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.player.chat.ChatText;
 import net.anweisen.cloud.driver.player.defaults.DefaultPlayerExecutor;
+import net.anweisen.cloud.driver.translate.Translatable;
 import net.anweisen.cloud.modules.bridge.bungee.BungeeBridgeHelper;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.ProxyServer;
@@ -48,6 +49,18 @@ public class BungeePlayerExecutorListener implements PacketListener, LoggingApiU
 				BaseComponent[] components = BungeeBridgeHelper.buildChatTextComponents(messages);
 				for (ProxiedPlayer player : players) {
 					if (permission != null && !player.hasPermission(permission)) break;
+					player.sendMessage(components);
+				}
+				break;
+			}
+			case SEND_TRANSLATION: {
+				String name = buffer.readString();
+				String[] args = buffer.readStringArray();
+
+				Translatable translatable = Translatable.of(name);
+				for (ProxiedPlayer player : players) {
+					ChatText[] messages = translatable.translate(player.getUniqueId()).asText((Object[]) args);
+					BaseComponent[] components = BungeeBridgeHelper.buildChatTextComponents(messages);
 					player.sendMessage(components);
 				}
 				break;

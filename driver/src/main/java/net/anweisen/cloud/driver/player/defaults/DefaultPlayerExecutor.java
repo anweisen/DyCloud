@@ -1,5 +1,6 @@
 package net.anweisen.cloud.driver.player.defaults;
 
+import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.def.PlayerExecutorPacket;
 import net.anweisen.cloud.driver.network.packet.def.PlayerExecutorPacket.PlayerExecutorPayload;
@@ -10,7 +11,9 @@ import net.anweisen.cloud.driver.player.chat.ChatText;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -40,6 +43,27 @@ public abstract class DefaultPlayerExecutor implements PlayerExecutor {
 	@Override
 	public void sendMessage(@Nullable String permission, @Nonnull ChatText... message) {
 		sendPacket(PlayerExecutorPayload.SEND_MESSAGE, buffer -> buffer.writeOptionalString(permission).writeObjectArray(message));
+	}
+
+	@Override
+	public void sendTranslation(@Nonnull String translation, @Nonnull Object... args) {
+		// convert the Objects to Strings in order to send them correctly
+		String[] stringArgs = new String[args.length];
+		for (int i = 0; i < args.length; i++) {
+			Object current = args[i];
+			try {
+				Object unpacked =
+						  current instanceof Supplier ? ((Supplier<?>)current).get()
+						: current instanceof Callable ? ((Callable<?>)current).call()
+						: current;
+
+				stringArgs[i] = String.valueOf(unpacked);
+			} catch (Exception ex) {
+				CloudDriver.getInstance().getLogger().error("Could not unpack arguments for '{}'", translation, ex);
+			}
+		}
+
+		sendPacket(PlayerExecutorPayload.SEND_TRANSLATION, buffer -> buffer.writeString(translation).writeStringArray(stringArgs));
 	}
 
 	@Override

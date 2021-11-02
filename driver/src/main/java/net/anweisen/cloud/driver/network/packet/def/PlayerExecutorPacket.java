@@ -21,6 +21,7 @@ public class PlayerExecutorPacket extends Packet {
 
 	public enum PlayerExecutorPayload {
 		SEND_MESSAGE,
+		SEND_TRANSLATION,
 		SEND_ACTIONBAR,
 		SEND_TITLE,
 		CONNECT_SERVER,

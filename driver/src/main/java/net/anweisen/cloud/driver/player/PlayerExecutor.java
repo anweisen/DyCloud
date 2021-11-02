@@ -1,6 +1,8 @@
 package net.anweisen.cloud.driver.player;
 
 import net.anweisen.cloud.driver.player.chat.ChatText;
+import net.anweisen.cloud.driver.service.specific.ServiceInfo;
+import net.anweisen.cloud.driver.translate.Translatable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -69,6 +71,30 @@ public interface PlayerExecutor {
 	void sendMessage(@Nullable String permission, @Nonnull ChatText... message);
 
 	/**
+	 * Sends the translation to the player in their selected language and replaces the given arguments.
+	 * The translation will be done on the player's proxy, as the player search is done there (due to implementation of global executor)
+	 *
+	 * @param translation the name of the translation
+	 * @param args the arguments to replace
+	 *
+	 * @see net.anweisen.cloud.driver.translate.TranslatedValue
+	 */
+	void sendTranslation(@Nonnull String translation, @Nonnull Object... args);
+
+	/**
+	 * Sends the translation to the player in their selected language and replaces the given arguments.
+	 * The translation will be done on the player's proxy, as the player search is done there (due to implementation of global executor)
+	 *
+	 * @param translation the name of the translation
+	 * @param args the arguments to replace
+	 *
+	 * @see net.anweisen.cloud.driver.translate.TranslatedValue
+	 */
+	default void sendTranslation(@Nonnull Translatable translation, @Nonnull Object... args) {
+		sendTranslation(translation.getName(), args);
+	}
+
+	/**
 	 * Sends an action to the player.
 	 *
 	 * @param message the message to send
@@ -94,12 +120,21 @@ public interface PlayerExecutor {
 	void connect(@Nonnull String serverName);
 
 	/**
+	 * Sends the player to the given server.
+	 *
+	 * @param service the target server
+	 */
+	default void connect(@Nonnull ServiceInfo service) {
+		connect(service.getName());
+	}
+
+	/**
 	 * Sends the player to a fallback server (Lobby) just like in the /hub command.
 	 */
 	void connectFallback();
 
 	/**
-	 * Disconnects the player from the proxy.
+	 * Disconnects the player from the proxy with the given reason.
 	 *
 	 * @param kickReason the reason with which the player should be kicked
 	 */
