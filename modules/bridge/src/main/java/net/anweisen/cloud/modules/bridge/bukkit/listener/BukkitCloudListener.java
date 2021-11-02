@@ -4,6 +4,7 @@ import net.anweisen.cloud.driver.event.EventListener;
 import net.anweisen.cloud.driver.service.specific.ServiceProperty;
 import net.anweisen.cloud.driver.service.specific.data.PlayerInfo;
 import net.anweisen.cloud.driver.service.specific.data.PluginInfo;
+import net.anweisen.cloud.driver.service.specific.data.WorldInfo;
 import net.anweisen.cloud.modules.bridge.helper.BridgeHelper;
 import net.anweisen.cloud.wrapper.event.service.ServiceInfoConfigureEvent;
 import net.anweisen.utilities.common.misc.SimpleCollectionUtils;
@@ -37,7 +38,11 @@ public class BukkitCloudListener {
 			}).collect(Collectors.toList()))
 			.set(ServiceProperty.PLUGINS, Arrays.stream(Bukkit.getPluginManager().getPlugins()).map(Plugin::getDescription).map(plugin -> {
 				return new PluginInfo(plugin.getName(), plugin.getAuthors().toArray(new String[0]), plugin.getVersion(), plugin.getMain(), plugin.getDescription());
-			}).collect(Collectors.toList()));
+			}).collect(Collectors.toList()))
+			.set(ServiceProperty.WORLDS, Bukkit.getWorlds().stream().map(world -> {
+				return new WorldInfo(world.getUID(), world.getName(), world.getDifficulty().name().toLowerCase());
+			}).collect(Collectors.toList()))
+		;
 	}
 
 }

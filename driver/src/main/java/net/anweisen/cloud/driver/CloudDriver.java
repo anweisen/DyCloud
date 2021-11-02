@@ -27,8 +27,14 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 /**
+ * The core api instance from which all managers can be set.
+ * All api embeds extend this class and will add more specific managers and getters to it.
+ * Using this {@link CloudDriver} you can write code which can be run on manager, wrapper and nodes.
+ *
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
+ *
+ * @see DriverEnvironment
  */
 public abstract class CloudDriver {
 
@@ -142,16 +148,27 @@ public abstract class CloudDriver {
 
 	public void setPermissionManager(@Nonnull PermissionManager manager) {
 		this.permissionManager = manager;
-		logger.trace("PermissionManager was set to {}", manager.getClass().getName());
+		logger.debug("PermissionManager was set to {}", manager.getClass().getName());
 	}
 
+	/**
+	 * The name of this driver's component like 'Master', 'Lobby-1' (the name of the service if it's a wrapper) or 'Node-1' (the node name if its a node)
+	 *
+	 * @return the name of this driver
+	 */
 	@Nonnull
 	public abstract String getComponentName();
 
+	/**
+	 * @return the timestamp in millis this driver was started
+	 */
 	public long getStartupTime() {
 		return startupTime;
 	}
 
+	/**
+	 * @return the time in millis this driver is running
+	 */
 	public long getUpTime() {
 		return System.currentTimeMillis() - startupTime;
 	}

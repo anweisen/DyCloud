@@ -13,6 +13,7 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -186,6 +187,13 @@ public final class ServiceInfo implements SerializableObject {
 		return properties;
 	}
 
+	/**
+	 * The creation timestamp in millis of this info.
+	 * Caching any properties of this info will not influence this timestamp.
+	 * The timestamp is final.
+	 *
+	 * @return the creation timestamp in millis
+	 */
 	public long getTimestamp() {
 		return timestamp;
 	}
@@ -195,7 +203,12 @@ public final class ServiceInfo implements SerializableObject {
 	}
 
 	@Nonnull
-	public <T> ServiceInfo set(@Nonnull ServiceProperty<T> property, T value) {
+	public <T> Optional<T> getOptional(@Nonnull ServiceProperty<T> property) {
+		return Optional.ofNullable(get(property));
+	}
+
+	@Nonnull
+	public <T> ServiceInfo set(@Nonnull ServiceProperty<T> property, @Nullable T value) {
 		property.setProperty(this, value);
 		return this;
 	}

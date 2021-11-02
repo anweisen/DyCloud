@@ -2,9 +2,11 @@ package net.anweisen.cloud.driver.service.specific;
 
 import net.anweisen.cloud.driver.service.specific.data.PlayerInfo;
 import net.anweisen.cloud.driver.service.specific.data.PluginInfo;
+import net.anweisen.cloud.driver.service.specific.data.WorldInfo;
 import net.anweisen.utilities.common.config.Document;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -41,6 +43,11 @@ public interface ServiceProperty<T> {
 	ServiceProperty<List<PluginInfo>> PLUGINS = newServiceListProperty("plugins", PluginInfo.class);
 
 	/**
+	 * The worlds on the service, represented by a {@link WorldInfo} object, holding name, uniqueId and difficulty
+	 */
+	ServiceProperty<List<WorldInfo>> WORLDS = newServiceListProperty("worlds", WorldInfo.class);
+
+	/**
 	 * The registered plugin messaging channels of the proxy messenger
 	 */
 	ServiceProperty<Collection<String>> MESSAGING_CHANNELS = newServiceProperty("channels", Document::getStringList);
@@ -70,7 +77,7 @@ public interface ServiceProperty<T> {
 
 	T getProperty(@Nonnull ServiceInfo service);
 
-	void setProperty(@Nonnull ServiceInfo service, T value);
+	void setProperty(@Nonnull ServiceInfo service, @Nullable T value);
 
 	@Nonnull
 	static <T> ServiceProperty<T> newServiceProperty(@Nonnull String name, @Nonnull BiFunction<Document, String, T> getter) {
