@@ -191,12 +191,12 @@ public final class ServiceInfo implements SerializableObject {
 	}
 
 	public <T> T get(@Nonnull ServiceProperty<T> property) {
-		return property.getProperty(properties);
+		return property.getProperty(this);
 	}
 
 	@Nonnull
 	public <T> ServiceInfo set(@Nonnull ServiceProperty<T> property, T value) {
-		property.setProperty(properties, value);
+		property.setProperty(this, value);
 		return this;
 	}
 

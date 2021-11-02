@@ -68,9 +68,9 @@ public interface ServiceProperty<T> {
 	@Nonnull
 	String getPropertyName();
 
-	T getProperty(@Nonnull Document properties);
+	T getProperty(@Nonnull ServiceInfo service);
 
-	void setProperty(@Nonnull Document properties, T value);
+	void setProperty(@Nonnull ServiceInfo service, T value);
 
 	@Nonnull
 	static <T> ServiceProperty<T> newServiceProperty(@Nonnull String name, @Nonnull BiFunction<Document, String, T> getter) {
@@ -83,13 +83,13 @@ public interface ServiceProperty<T> {
 			}
 
 			@Override
-			public T getProperty(@Nonnull Document properties) {
-				return getter.apply(properties, name);
+			public T getProperty(@Nonnull ServiceInfo service) {
+				return getter.apply(service.getProperties(), name);
 			}
 
 			@Override
-			public void setProperty(@Nonnull Document properties, T value) {
-				properties.set(name, value);
+			public void setProperty(@Nonnull ServiceInfo service, T value) {
+				service.getProperties().set(name, value);
 			}
 		};
 	}
