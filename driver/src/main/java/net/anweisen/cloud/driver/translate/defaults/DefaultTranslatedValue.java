@@ -214,7 +214,7 @@ public class DefaultTranslatedValue implements TranslatedValue, LoggingApiUser {
 							: current;
 						builder.append(replacement);
 					} catch (NumberFormatException | IndexOutOfBoundsException ex) {
-						warn("Invalid argument index '{}'", argument);
+						warn("Invalid argument index '{}' in {}", argument, this);
 						builder.append(start).append(argument).append(end);
 					} catch (Exception ex) {
 						warn("Error while getting argument index '{}'", ex);
@@ -245,7 +245,7 @@ public class DefaultTranslatedValue implements TranslatedValue, LoggingApiUser {
 
 	@Override
 	public String toString() {
-		return "TranslatedValue[name=" + section.getId() + "." + name + " value=" + value + "]";
+		return "TranslatedValue[name=" + section.getId() + "." + name + " language=" + section.getParent().getId() + " value=" + value + "]";
 	}
 
 	@Override
