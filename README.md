@@ -112,11 +112,11 @@ I would recommend you to use one of the **following cloud systems**:
 ✔️ | Module Copy
 ✔️ | Notify Module
 ✔️ | Synced Proxy Module
-❌ | Cloud Commands
 ❌ | Service Screens
-🚧 | Message Translations
-🚧 | Advanced Translations (link to other messages & chatevents eg run command)
-❌ | Proxy Commands (+ Cloud Command API?)
+✔️ | Message Translations
+✔️ | Advanced Translations (link to other messages & chatevents eg run command)
+✔️ | Proxy Commands (+ Cloud Command API?)
+🚧 | Cloud Commands
 ❌ | Migrate to Gradle
 ❌ | Relocate google depends & netty to prevent issues from server software using older versions
 ⚠️ | Service Deployments
