@@ -40,7 +40,7 @@ public interface CloudPlayer extends CloudOfflinePlayer {
 	void setCurrentServer(@Nullable UUID server);
 
 	/**
-	 * @return the time in millis the player joined the network
+	 * @return the timestamp in millis the player joined the network
 	 */
 	long getJoinTime();
 
@@ -57,7 +57,7 @@ public interface CloudPlayer extends CloudOfflinePlayer {
 	boolean isOnline();
 
 	/**
-	 * Marks this player as offline.
+	 * Marks this player instance as offline.
 	 * {@link #isOnline()} will then return {@code false}.
 	 */
 	void setOffline();

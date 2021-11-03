@@ -43,9 +43,9 @@ public final class ServiceInfo implements SerializableObject {
 	private int port;
 	private boolean permanent;
 
-	private long timestamp; // The timestamp this ServiceInfo was created (changing any property will not influence this timestamp)
+	private long timestamp; // the timestamp this ServiceInfo was created (changing any property will not influence this timestamp)
 
-	private Document properties; // Custom properties, which are not used internally
+	private Document properties; // custom properties, which are not used internally
 
 	private ServiceInfo() {
 	}
