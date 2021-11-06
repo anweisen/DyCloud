@@ -43,7 +43,7 @@ public final class MasterConfig implements DriverConfig, LoggingApiUser {
 
 		hostAddress = document.getInstance("address", HostAndPort.class);
 		if (hostAddress == null)
-			document.set("address", hostAddress = HostAndPort.localhost(CloudDriver.DEFAULT_HTTP_PORT));
+			document.set("address", hostAddress = HostAndPort.localhost(CloudDriver.DEFAULT_PORT));
 
 		if (!document.contains("httpListeners"))
 			document.set("httpListeners", Collections.singletonList(HostAndPort.localhost(CloudDriver.DEFAULT_HTTP_PORT)));
