@@ -57,6 +57,9 @@ public interface SocketChannel extends PacketSender {
 	@Nonnull
 	HostAndPort getClientAddress();
 
+	/**
+	 * @return whether this is the client
+	 */
 	boolean isClientSide();
 
 }

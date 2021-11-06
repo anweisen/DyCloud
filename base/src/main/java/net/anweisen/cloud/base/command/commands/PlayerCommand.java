@@ -55,7 +55,6 @@ public class PlayerCommand {
 	}
 
 	private CloudPlayer online(@Nonnull CommandSender sender, @Nonnull String input) {
-		System.out.println("'" + input + "'");
 		PlayerManager manager = CloudDriver.getInstance().getPlayerManager();
 		CloudPlayer player = manager.getOnlinePlayerByName(input);
 		if (player != null) return player;

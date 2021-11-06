@@ -40,7 +40,7 @@ public abstract class DefaultCommandManager implements CommandManager {
 			List<RegisteredCommandArgument> arguments = new ArrayList<>();
 			for (Parameter parameter : method.getParameters()) {
 				if (!parameter.isAnnotationPresent(CommandArgument.class)) continue;
-				CommandArgument argumentAnnotation= parameter.getAnnotation(CommandArgument.class);
+				CommandArgument argumentAnnotation = parameter.getAnnotation(CommandArgument.class);
 				arguments.add(new RegisteredCommandArgument(argumentAnnotation.value(), argumentAnnotation.completer(), argumentAnnotation.words(), argumentAnnotation.raw(), argumentAnnotation.optional()));
 			}
 
