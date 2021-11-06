@@ -39,6 +39,7 @@ import java.util.concurrent.ScheduledExecutorService;
 public abstract class CloudDriver {
 
 	public static final int DEFAULT_PORT = 3507;
+	public static final int DEFAULT_HTTP_PORT = 4518;
 
 	protected final ScheduledExecutorService executor = Executors.newScheduledThreadPool(4, new NamedThreadFactory("CloudTask"));
 	protected final EventManager eventManager = new DefaultEventManager();

@@ -28,6 +28,7 @@ public final class MasterConfig implements DriverConfig, LoggingApiUser {
 
 	private UUID identity;
 	private HostAndPort hostAddress;
+	private Collection<HostAndPort> httpListeners;
 	private Collection<String> ipWhitelist;
 	private Document databaseConfig;
 
@@ -42,7 +43,11 @@ public final class MasterConfig implements DriverConfig, LoggingApiUser {
 
 		hostAddress = document.getInstance("address", HostAndPort.class);
 		if (hostAddress == null)
-			document.set("address", hostAddress = HostAndPort.localhost(CloudDriver.DEFAULT_PORT));
+			document.set("address", hostAddress = HostAndPort.localhost(CloudDriver.DEFAULT_HTTP_PORT));
+
+		if (!document.contains("httpListeners"))
+			document.set("httpListeners", Collections.singletonList(HostAndPort.localhost(CloudDriver.DEFAULT_HTTP_PORT)));
+		httpListeners = document.getInstanceList("httpListeners", HostAndPort.class);
 
 		ipWhitelist = document.getStringList("ipWhitelist");
 		if (!document.contains("ipWhitelist"))
@@ -62,10 +67,11 @@ public final class MasterConfig implements DriverConfig, LoggingApiUser {
 
 		Document startPorts = document.getDocument("startPorts");
 		for (ServiceType type : ServiceType.values()) {
-			if (!startPorts.contains(type.name()))
+			if (!startPorts.contains(type.name())) {
 				startPorts.set(type.name(), type.getStartPort());
-			else
+			} else {
 				type.setStartPort(startPorts.getInt(type.name()));
+			}
 
 			extended("=> Startport for {} = {}", type, type.getStartPort());
 		}
@@ -82,6 +88,11 @@ public final class MasterConfig implements DriverConfig, LoggingApiUser {
 	@Nonnull
 	public HostAndPort getHostAddress() {
 		return hostAddress;
+	}
+
+	@Nonnull
+	public Collection<HostAndPort> getHttpListeners() {
+		return httpListeners;
 	}
 
 	@Nonnull

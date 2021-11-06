@@ -2,13 +2,16 @@ package net.anweisen.cloud.master;
 
 import net.anweisen.cloud.base.CloudBase;
 import net.anweisen.cloud.base.command.CommandManager;
+import net.anweisen.cloud.base.console.Console;
+import net.anweisen.cloud.base.console.HeaderPrinter;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.DriverEnvironment;
 import net.anweisen.cloud.driver.config.global.GlobalConfig;
-import net.anweisen.cloud.base.console.Console;
-import net.anweisen.cloud.base.console.HeaderPrinter;
 import net.anweisen.cloud.driver.database.DatabaseManager;
 import net.anweisen.cloud.driver.network.SocketServer;
+import net.anweisen.cloud.driver.network.http.HttpServer;
+import net.anweisen.cloud.driver.network.http.handler.TestHttpHandler;
+import net.anweisen.cloud.driver.network.netty.http.NettyHttpServer;
 import net.anweisen.cloud.driver.network.netty.server.NettySocketServer;
 import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.network.packet.PacketConstants;
@@ -68,6 +71,7 @@ public final class CloudMaster extends CloudBase {
 	private final CommandManager commandManager;
 
 	private SocketServer socketServer;
+	private HttpServer httpServer;
 
 	CloudMaster(@Nonnull HandledLogger logger, @Nonnull Console console) {
 		super(logger, console, DriverEnvironment.MASTER);
@@ -102,11 +106,19 @@ public final class CloudMaster extends CloudBase {
 		serviceConfigManager.loadTasks();
 		serviceConfigManager.registerTemplateStorage(LocalTemplateStorage.createDefault());
 
+		httpServer = new NettyHttpServer();
+		for (HostAndPort address : config.getHttpListeners()) {
+			logger.info("Starting http server on {}..", address);
+			httpServer.addListener(address);
+		}
+
+		httpServer.getHandlerRegistry().registerHandler(new TestHttpHandler());
+
 		logger.info("Opening socket server on {}..", config.getHostAddress());
 		socketServer = new NettySocketServer(SocketChannelServerHandler::new);
 		socketServer.addListener(config.getHostAddress());
 
-		logger.info("Loading global config");
+		logger.info("Loading global config..");
 		globalConfig.fetch();
 
 		loadNetworkListeners(socketServer.getListenerRegistry());
@@ -173,6 +185,9 @@ public final class CloudMaster extends CloudBase {
 		logger.info("Shutting down socket server..");
 		socketServer.shutdown();
 
+		logger.info("Shutting down http server..");
+		httpServer.shutdown();
+
 		shutdownBase();
 		shutdownDriver();
 
@@ -186,6 +201,11 @@ public final class CloudMaster extends CloudBase {
 	@Override
 	public SocketServer getSocketComponent() {
 		return socketServer;
+	}
+
+	@Nonnull
+	public HttpServer getHttpServer() {
+		return httpServer;
 	}
 
 	@Nonnull
