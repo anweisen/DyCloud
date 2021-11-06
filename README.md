@@ -84,8 +84,11 @@ I would recommend you to use one of the **following cloud systems**:
 🚧 | Node Information Cycle & Timeout
 ❌ | Node Load Balancing
 ❌ | Auto Client Reconnect
-❌ | Encryption
+❌ | Encryption for sockets
 ❌ | Pre launch setup
+🚧 | REST API
+🚧 | Websocket API for Dashboard
+❌ | SSL Encryption for http server
 ✔️ | ServiceInfo publish
 ✔️ | Basic Service Events
 🧪 | Service auto start (minCount & maxCount)
