@@ -10,7 +10,6 @@ import net.anweisen.cloud.driver.config.global.GlobalConfig;
 import net.anweisen.cloud.driver.database.DatabaseManager;
 import net.anweisen.cloud.driver.network.SocketServer;
 import net.anweisen.cloud.driver.network.http.HttpServer;
-import net.anweisen.cloud.driver.network.http.handler.TestHttpHandler;
 import net.anweisen.cloud.driver.network.netty.http.NettyHttpServer;
 import net.anweisen.cloud.driver.network.netty.server.NettySocketServer;
 import net.anweisen.cloud.driver.network.object.HostAndPort;
@@ -111,8 +110,6 @@ public final class CloudMaster extends CloudBase {
 			logger.info("Starting http server on {}..", address);
 			httpServer.addListener(address);
 		}
-
-		httpServer.getHandlerRegistry().registerHandler(new TestHttpHandler());
 
 		logger.info("Opening socket server on {}..", config.getHostAddress());
 		socketServer = new NettySocketServer(SocketChannelServerHandler::new);

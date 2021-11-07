@@ -9,8 +9,10 @@ import net.anweisen.cloud.driver.network.http.HttpVersion;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -80,7 +82,13 @@ public class NettyHttpRequest implements HttpRequest {
 	@Nonnull
 	@Override
 	public Map<String, String> getHeaders() {
-		return null;
+		Map<String, String> maps = new HashMap<>(request.headers().size());
+
+		for (Entry<String, String> entry : request.headers().entries()) {
+			maps.put(entry.getKey(), entry.getValue());
+		}
+
+		return maps;
 	}
 
 	@Nonnull

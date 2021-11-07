@@ -80,9 +80,6 @@ public class NettyHttpChannelHandler extends SimpleChannelInboundHandler<HttpReq
 
 	private boolean checkPath(@Nonnull String[] pathEntries, @Nonnull String[] handlerPathEntries, @Nonnull Map<String, String> pathParameters) {
 
-		System.out.println(Arrays.toString(pathEntries));
-		System.out.println(Arrays.toString(handlerPathEntries));
-
 		for (int i = 0; i < handlerPathEntries.length; i++) {
 
 			String handlerPathEntry = handlerPathEntries[i];

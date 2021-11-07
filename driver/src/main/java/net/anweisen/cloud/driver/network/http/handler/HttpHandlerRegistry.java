@@ -23,15 +23,19 @@ public class HttpHandlerRegistry {
 		handlers.add(handler);
 	}
 
-	public void registerHandler(@Nonnull Object handler) {
-		registerHandler("", handler);
+	@Nonnull
+	public HttpHandlerRegistry registerHandler(@Nonnull Object handler) {
+		return registerHandler("", handler);
 	}
 
-	public void registerHandler(@Nonnull String pathPrefix, @Nonnull Object handler) {
+	@Nonnull
+	public HttpHandlerRegistry registerHandler(@Nonnull String pathPrefix, @Nonnull Object handler) {
 		HttpRouter routerAnnotation = handler.getClass().getAnnotation(HttpRouter.class);
 
 		if (pathPrefix.equals("/"))
 			pathPrefix = "";
+		if (!pathPrefix.endsWith("/"))
+			pathPrefix = pathPrefix + "/";
 
 		for (Method method : ReflectionUtils.getMethodsAnnotatedWith(handler.getClass(), HttpEndpoint.class)) {
 			HttpEndpoint endpointAnnotation = method.getAnnotation(HttpEndpoint.class);
@@ -53,47 +57,67 @@ public class HttpHandlerRegistry {
 
 			addHandler(new DefaultRegisteredHandler(handler, method, fullPath, endpointAnnotation.permission(), endpointAnnotation.method()));
 		}
+
+		return this;
 	}
 
-	public void registerHandlers(@Nonnull Object... handlers) {
+	@Nonnull
+	public HttpHandlerRegistry registerHandlers(@Nonnull Object... handlers) {
 		for (Object handler : handlers)
 			registerHandler(handler);
+		return this;
 	}
 
-	public void registerHandlers(@Nonnull String pathPrefix, @Nonnull Object... handlers) {
+	@Nonnull
+	public HttpHandlerRegistry registerHandlers(@Nonnull String pathPrefix, @Nonnull Object... handlers) {
 		for (Object handler : handlers)
 			registerHandler(pathPrefix, handler);
+		return this;
 	}
 
-	public void unregisterListener(@Nonnull Object listener) {
+	@Nonnull
+	public HttpHandlerRegistry unregisterListener(@Nonnull Object listener) {
 		handlers.removeIf(handler -> handler.getHolder() == listener);
+		return this;
 	}
 
-	public void unregisterListeners(@Nonnull Object... listeners) {
+	@Nonnull
+	public HttpHandlerRegistry unregisterListeners(@Nonnull Object... listeners) {
 		for (Object listener : listeners)
 			unregisterListener(listener);
+		return this;
 	}
 
-	public void unregisterListeners(@Nonnull Iterable<?> listeners) {
+	@Nonnull
+	public HttpHandlerRegistry unregisterListeners(@Nonnull Iterable<?> listeners) {
 		for (Object listener : listeners)
 			unregisterListener(listener);
+		return this;
 	}
 
-	public void unregisterListener(@Nonnull Class<?> listenerClass) {
+	@Nonnull
+	public HttpHandlerRegistry unregisterListener(@Nonnull Class<?> listenerClass) {
 		handlers.removeIf(handler -> handler.getHolder().getClass() == listenerClass);
+		return this;
 	}
 
-	public void unregisterListeners(@Nonnull Class<?>... listenerClasses) {
+	@Nonnull
+	public HttpHandlerRegistry unregisterListeners(@Nonnull Class<?>... listenerClasses) {
 		for (Class<?> listenerClass : listenerClasses)
 			unregisterListener(listenerClass);
+		return this;
 	}
 
-	public void unregisterListeners(@Nonnull ClassLoader loader) {
+	@Nonnull
+	public HttpHandlerRegistry unregisterListeners(@Nonnull ClassLoader loader) {
 		handlers.removeIf(handler -> handler.getHolder().getClass().getClassLoader().equals(loader));
+		return this;
 	}
 
-	public void unregisterAll() {
+	@Nonnull
+	public HttpHandlerRegistry unregisterAll() {
 		handlers.clear();
+		return this;
 	}
 
 	@Nonnull

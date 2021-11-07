@@ -15,7 +15,7 @@ public interface RegisteredHandler {
 
 	/**
 	 * The path of the handler.
-	 * The path must start with {@link /} and must not end with {@link /}.
+	 * The path must start with '/' and must not end with '/'.
 	 *
 	 * @return the path of the handler
 	 */
