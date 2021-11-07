@@ -165,6 +165,7 @@ public class MasterPlayerManager extends DefaultPlayerManager implements Logging
 		databaseManager.getDatabase().insertOrUpdate(PlayerConstants.TABLE_NAME)
 			.where(PlayerConstants.UUID_FIELD, updatedPlayer.getUniqueId())
 			.set(PlayerConstants.NAME_FIELD, updatedPlayer.getName())
+			.set(PlayerConstants.LANGUAGE_FIELD, updatedPlayer.getLanguage())
 			.set(PlayerConstants.FIRST_LOGIN_TIME_FIELD, updatedPlayer.getFirstLoginTime())
 			.set(PlayerConstants.LAST_ONLINE_TIME_FIELD, updatedPlayer.getLastOnlineTime())
 			.set(PlayerConstants.ONLINE_DURATION_FIELD, updatedPlayer.getOnlineDuration())
