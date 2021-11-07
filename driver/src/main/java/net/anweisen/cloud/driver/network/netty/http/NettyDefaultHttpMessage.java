@@ -126,7 +126,7 @@ public interface NettyDefaultHttpMessage<M extends HttpMessage<?>> extends HttpM
 	@Nonnull
 	@Override
 	default M setBody(@Nonnull Collection<Document> array) {
-		return setBody(Document.toJson(array));
+		return setBody(Document.toJson((Collection<?>) array));
 	}
 
 	@Nonnull
