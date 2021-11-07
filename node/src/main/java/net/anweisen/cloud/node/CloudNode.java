@@ -273,6 +273,11 @@ public final class CloudNode extends CloudBase {
 	}
 
 	@Override
+	public void reload() throws Exception {
+		// TODO
+	}
+
+	@Override
 	public synchronized void shutdown() throws Exception {
 
 		logger.info("Shutting down..");

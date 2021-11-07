@@ -172,6 +172,29 @@ public final class CloudMaster extends CloudBase {
 	}
 
 	@Override
+	public void reload() throws Exception {
+		logger.info("Reloading..");
+
+		logger.info("Loading translations..");
+		translationManager.retrieve();
+
+		if (permissionManager != null) {
+			logger.info("Reloading permission management..");
+			permissionManager.reload();
+		}
+
+		// TODO send
+		logger.info("Reloading modules..");
+		moduleManager.disableModules();
+		moduleManager.unregisterModules();
+		moduleManager.resolveModules();
+		moduleManager.loadModules();
+		moduleManager.enableModules();
+
+		logger.info("Reloading complete");
+	}
+
+	@Override
 	public synchronized void shutdown() throws Exception {
 
 		logger.info("Shutting down..");

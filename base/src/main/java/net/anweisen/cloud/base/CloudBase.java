@@ -2,6 +2,7 @@ package net.anweisen.cloud.base;
 
 import net.anweisen.cloud.base.command.CommandManager;
 import net.anweisen.cloud.base.command.commands.PlayerCommand;
+import net.anweisen.cloud.base.command.commands.ReloadCommand;
 import net.anweisen.cloud.base.command.commands.ServiceCommand;
 import net.anweisen.cloud.base.command.sender.ConsoleCommandSender;
 import net.anweisen.cloud.base.console.Console;
@@ -42,6 +43,8 @@ public abstract class CloudBase extends CloudDriver {
 
 	}
 
+	public abstract void reload() throws Exception;
+
 	protected void runConsole() {
 		console.addInputHandler(input -> {
 			getCommandManager().executeCommand(ConsoleCommandSender.INSTANCE, input);
@@ -50,6 +53,7 @@ public abstract class CloudBase extends CloudDriver {
 
 	protected void registerDefaultCommands() {
 		getCommandManager().registerCommands(
+			new ReloadCommand(),
 			new PlayerCommand(),
 			new ServiceCommand()
 		);
