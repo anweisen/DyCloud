@@ -8,6 +8,8 @@ import net.anweisen.utilities.common.config.Document;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -119,6 +121,18 @@ public interface NettyDefaultHttpMessage<M extends HttpMessage<?>> extends HttpM
 	@Override
 	default M setBody(@Nonnull Document document) {
 		return setBody(document.toJson());
+	}
+
+	@Nonnull
+	@Override
+	default M setBody(@Nonnull Collection<Document> array) {
+		return setBody(Document.toJson(array));
+	}
+
+	@Nonnull
+	@Override
+	default M setBody(@Nonnull Document[] array) {
+		return setBody(Arrays.asList(array));
 	}
 
 	@SuppressWarnings("unchecked")

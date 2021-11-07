@@ -80,16 +80,19 @@ public class NettyHttpChannelHandler extends SimpleChannelInboundHandler<HttpReq
 				if (auth == null) {
 					auth = Tuple.empty();
 					String header = httpContext.getRequest().getHeader("Authorization");
-					String[] authorization = header.split(" ");
 
-					if (authorization.length == 2) {
-						String type = authorization[0];
-						HttpAuthHandler authHandler = server.getAuthRegistry().getAuthMethodHandler(type);
-						auth.setFirst(authHandler);
+					if (header != null) {
+						String[] authorization = header.split(" ");
 
-						if (authHandler != null) {
-							HttpAuthUser authUser = authHandler.getAuthUser(authorization[1]);
-							auth.setSecond(authUser);
+						if (authorization.length == 2) {
+							String type = authorization[0];
+							HttpAuthHandler authHandler = server.getAuthRegistry().getAuthMethodHandler(type);
+							auth.setFirst(authHandler);
+
+							if (authHandler != null) {
+								HttpAuthUser authUser = authHandler.getAuthUser(authorization[1]);
+								auth.setSecond(authUser);
+							}
 						}
 					}
 				}
@@ -99,7 +102,7 @@ public class NettyHttpChannelHandler extends SimpleChannelInboundHandler<HttpReq
 					break;
 				}
 				if (!auth.getSecond().hasPermission(handler.getPermission())) {
-					httpContext.getResponse().setStatusCode(HttpCodes.UNAUTHORIZED).setBody("Permission " + handler.getPermission() + " required");
+					httpContext.getResponse().setStatusCode(HttpCodes.FORBIDDEN).setBody("Permission " + handler.getPermission() + " required");
 					break;
 				}
 
@@ -108,6 +111,7 @@ public class NettyHttpChannelHandler extends SimpleChannelInboundHandler<HttpReq
 			try {
 				handler.execute(httpContext);
 			} catch (Exception ex) {
+				httpContext.getResponse().setStatusCode(HttpCodes.INTERNAL_SERVER_ERROR);
 				error("Could not execute http handler for '{}'", fullPath, ex);
 			}
 

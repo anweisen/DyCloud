@@ -4,6 +4,7 @@ import net.anweisen.utilities.common.config.Document;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -59,4 +60,10 @@ public interface HttpMessage<M extends HttpMessage<?>> {
 
 	@Nonnull
 	M setBody(@Nonnull Document document);
+
+	@Nonnull
+	M setBody(@Nonnull Collection<Document> array);
+
+	@Nonnull
+	M setBody(@Nonnull Document[] array);
 }
