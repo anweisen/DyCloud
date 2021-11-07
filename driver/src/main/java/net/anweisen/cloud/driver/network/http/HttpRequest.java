@@ -1,6 +1,7 @@
 package net.anweisen.cloud.driver.network.http;
 
 import javax.annotation.Nonnull;
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +15,7 @@ public interface HttpRequest extends HttpMessage<HttpRequest> {
 	HttpMethod getMethod();
 
 	@Nonnull
-	String getUri();
+	URI getUri();
 
 	@Nonnull
 	String getPath();

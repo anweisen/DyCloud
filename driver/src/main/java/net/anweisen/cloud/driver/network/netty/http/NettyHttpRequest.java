@@ -1,94 +1,61 @@
 package net.anweisen.cloud.driver.network.netty.http;
 
+import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.HttpVersion;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import net.anweisen.cloud.driver.network.http.HttpContext;
 import net.anweisen.cloud.driver.network.http.HttpMethod;
 import net.anweisen.cloud.driver.network.http.HttpRequest;
-import net.anweisen.cloud.driver.network.http.HttpVersion;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.net.URI;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class NettyHttpRequest implements HttpRequest {
+public class NettyHttpRequest implements HttpRequest, NettyDefaultHttpMessage<HttpRequest> {
 
-	protected final io.netty.handler.codec.http.HttpRequest request;
-	protected final HttpContext context;
+	protected final io.netty.handler.codec.http.HttpRequest nettyRequest;
+	protected final NettyHttpContext context;
 
 	protected final Map<String, String> pathParameters;
 	protected final Map<String, List<String>> queryParameters;
 
-	public NettyHttpRequest(@Nonnull HttpContext context, @Nonnull io.netty.handler.codec.http.HttpRequest request, @Nonnull URI uri, @Nonnull Map<String, String> pathParameters) {
-		this.request = request;
+	protected byte[] body;
+
+	public NettyHttpRequest(@Nonnull NettyHttpContext context, @Nonnull io.netty.handler.codec.http.HttpRequest nettyRequest, @Nonnull Map<String, String> pathParameters) {
+		this.nettyRequest = nettyRequest;
 		this.context = context;
 
 		this.pathParameters = pathParameters;
-		this.queryParameters = new QueryStringDecoder(request.uri()).parameters();
+		this.queryParameters = new QueryStringDecoder(nettyRequest.uri()).parameters();
+	}
+
+	@Nonnull
+	@Override
+	public HttpHeaders getNettyHeaders() {
+		return nettyRequest.headers();
+	}
+
+	@Nonnull
+	@Override
+	public io.netty.handler.codec.http.HttpVersion getNettyHttpVersion() {
+		return nettyRequest.protocolVersion();
+	}
+
+	@Override
+	public void setNettyHttpVersion(@Nonnull HttpVersion version) {
+		nettyRequest.setProtocolVersion(version);
 	}
 
 	@Nonnull
 	@Override
 	public HttpContext getContext() {
 		return context;
-	}
-
-	@Nullable
-	@Override
-	public String getHeader(@Nonnull String name) {
-		return request.headers().getAsString(name);
-	}
-
-	@Override
-	public int getHeaderInt(@Nonnull String name) {
-		return 0;
-	}
-
-	@Override
-	public boolean getHeaderBoolean(@Nonnull String name) {
-		return false;
-	}
-
-	@Override
-	public boolean hasHeader(@Nonnull String name) {
-		return false;
-	}
-
-	@Nonnull
-	@Override
-	public HttpRequest addHeader(@Nonnull String name, @Nonnull String value) {
-		return null;
-	}
-
-	@Nonnull
-	@Override
-	public HttpRequest removeHeader(@Nonnull String name) {
-		return null;
-	}
-
-	@Nonnull
-	@Override
-	public HttpRequest clearHeaders() {
-		return null;
-	}
-
-	@Nonnull
-	@Override
-	public Map<String, String> getHeaders() {
-		Map<String, String> maps = new HashMap<>(request.headers().size());
-
-		for (Entry<String, String> entry : request.headers().entries()) {
-			maps.put(entry.getKey(), entry.getValue());
-		}
-
-		return maps;
 	}
 
 	@Nonnull
@@ -105,55 +72,44 @@ public class NettyHttpRequest implements HttpRequest {
 
 	@Nonnull
 	@Override
-	public HttpVersion getVersion() {
-		return null;
-	}
-
-	@Nonnull
-	@Override
-	public HttpRequest setVersion(@Nonnull HttpVersion version) {
-		return null;
-	}
-
-	@Nonnull
-	@Override
 	public byte[] getBody() {
+		if (body != null) return body;
+
+		if (nettyRequest instanceof FullHttpRequest) {
+			FullHttpRequest fullRequest = (FullHttpRequest) nettyRequest;
+
+			if (fullRequest.content().hasArray()) {
+				body = fullRequest.content().array();
+			} else {
+				body = new byte[fullRequest.content().readableBytes()];
+				fullRequest.content().getBytes(fullRequest.content().readerIndex(), body);
+			}
+		}
+
 		return new byte[0];
 	}
 
 	@Nonnull
 	@Override
-	public String getBodyString() {
-		return null;
-	}
-
-	@Nonnull
-	@Override
 	public HttpRequest setBody(@Nonnull byte[] data) {
-		return null;
-	}
-
-	@Nonnull
-	@Override
-	public HttpRequest setBody(@Nonnull String text) {
-		return null;
+		throw new UnsupportedOperationException("You cannot set the body of a client http request");
 	}
 
 	@Nonnull
 	@Override
 	public HttpMethod getMethod() {
-		return HttpMethod.valueOf(request.method().name());
+		return HttpMethod.valueOf(nettyRequest.method().name());
 	}
 
 	@Nonnull
 	@Override
-	public String getUri() {
-		return null;
+	public URI getUri() {
+		return context.uri;
 	}
 
 	@Nonnull
 	@Override
 	public String getPath() {
-		return null;
+		return context.uri.getPath();
 	}
 }

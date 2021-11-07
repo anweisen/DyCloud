@@ -27,4 +27,9 @@ public interface HttpContext {
 
 	boolean isCloseAfter();
 
+	@Nonnull
+	HttpContext cancelSendResponse(boolean cancel);
+
+	boolean isCancelSendResponse();
+
 }

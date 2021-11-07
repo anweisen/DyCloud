@@ -8,6 +8,7 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.network.http.HttpServer;
+import net.anweisen.cloud.driver.network.http.auth.HttpAuthRegistry;
 import net.anweisen.cloud.driver.network.http.handler.HttpHandlerRegistry;
 import net.anweisen.cloud.driver.network.netty.NettyUtils;
 import net.anweisen.cloud.driver.network.object.HostAndPort;
@@ -24,6 +25,7 @@ public class NettyHttpServer implements HttpServer, LoggingApiUser {
 	protected final EventLoopGroup workerEventLoopGroup = NettyUtils.newEventLoopGroup();
 
 	protected final HttpHandlerRegistry handlerRegistry = new HttpHandlerRegistry();
+	protected final HttpAuthRegistry authRegistry = new HttpAuthRegistry();
 
 	@Override
 	public void addListener(@Nonnull HostAndPort address) {
@@ -64,5 +66,11 @@ public class NettyHttpServer implements HttpServer, LoggingApiUser {
 	@Override
 	public HttpHandlerRegistry getHandlerRegistry() {
 		return handlerRegistry;
+	}
+
+	@Nonnull
+	@Override
+	public HttpAuthRegistry getAuthRegistry() {
+		return authRegistry;
 	}
 }

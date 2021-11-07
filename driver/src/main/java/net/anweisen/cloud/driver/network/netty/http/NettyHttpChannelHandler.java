@@ -1,9 +1,12 @@
 package net.anweisen.cloud.driver.network.netty.http;
 
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.HttpRequest;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
+import net.anweisen.cloud.driver.network.http.HttpCodes;
 import net.anweisen.cloud.driver.network.http.HttpMethod;
 import net.anweisen.cloud.driver.network.http.handler.RegisteredHandler;
 import net.anweisen.cloud.driver.network.object.HostAndPort;
@@ -11,6 +14,7 @@ import net.anweisen.cloud.driver.network.object.HostAndPort;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -74,6 +78,19 @@ public class NettyHttpChannelHandler extends SimpleChannelInboundHandler<HttpReq
 				error("Could not execute http handler for '{}'", fullPath, ex);
 			}
 
+		}
+
+		if (!httpContext.cancelSendResponse) {
+
+			if (httpContext.response.getStatusCode() == HttpCodes.NOT_FOUND && httpContext.response.nettyResponse.content().readableBytes() == 0) {
+				httpContext.response.nettyResponse.content().writeBytes(("Cannot " + method + " " + fullPath).getBytes(StandardCharsets.UTF_8));
+			}
+
+			ChannelFuture channelFuture = context.channel().writeAndFlush(httpContext.response.nettyResponse).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+
+			if (httpContext.closeAfter) {
+				channelFuture.addListener(ChannelFutureListener.CLOSE);
+			}
 		}
 
 	}

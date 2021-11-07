@@ -7,6 +7,9 @@ import java.util.Map;
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
+ *
+ * @see HttpResponse
+ * @see HttpRequest
  */
 public interface HttpMessage<M extends HttpMessage<?>> {
 

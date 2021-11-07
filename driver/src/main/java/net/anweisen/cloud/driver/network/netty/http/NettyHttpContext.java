@@ -21,9 +21,11 @@ public class NettyHttpContext implements HttpContext {
 	protected final NettyHttpServer server;
 
 	protected final NettyHttpRequest request;
+	protected final NettyHttpResponse response;
 
 	protected volatile boolean closeAfter = true;
 	protected volatile boolean cancelNext = false;
+	protected volatile boolean cancelSendResponse = false;
 
 	public NettyHttpContext(@Nonnull URI uri, @Nonnull NettyHttpChannel channel, @Nonnull NettyHttpServer server, @Nonnull io.netty.handler.codec.http.HttpRequest request,
 	                        @Nonnull Map<String, String> pathParameters) {
@@ -31,7 +33,8 @@ public class NettyHttpContext implements HttpContext {
 		this.channel = channel;
 		this.server = server;
 
-		this.request = new NettyHttpRequest(this, request, uri, pathParameters);
+		this.request = new NettyHttpRequest(this, request, pathParameters);
+		this.response = new NettyHttpResponse(this, request);
 	}
 
 	@Override
@@ -55,6 +58,18 @@ public class NettyHttpContext implements HttpContext {
 	@Override
 	public HttpContext closeAfter(boolean close) {
 		this.closeAfter = close;
+		return this;
+	}
+
+	@Override
+	public boolean isCancelSendResponse() {
+		return cancelSendResponse;
+	}
+
+	@Nonnull
+	@Override
+	public HttpContext cancelSendResponse(boolean cancel) {
+		this.cancelSendResponse = cancel;
 		return this;
 	}
 

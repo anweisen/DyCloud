@@ -40,7 +40,6 @@ public class HttpHandlerRegistry {
 		for (Method method : ReflectionUtils.getMethodsAnnotatedWith(handler.getClass(), HttpEndpoint.class)) {
 			HttpEndpoint endpointAnnotation = method.getAnnotation(HttpEndpoint.class);
 
-
 			String path = pathPrefix + routerAnnotation.value();
 			if (!path.startsWith("/"))
 				path = "/" + path;
