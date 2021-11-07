@@ -7,6 +7,7 @@ import io.netty.handler.codec.http.QueryStringDecoder;
 import net.anweisen.cloud.driver.network.http.HttpContext;
 import net.anweisen.cloud.driver.network.http.HttpMethod;
 import net.anweisen.cloud.driver.network.http.HttpRequest;
+import net.anweisen.cloud.driver.network.netty.NettyUtils;
 
 import javax.annotation.Nonnull;
 import java.net.URI;
@@ -77,13 +78,7 @@ public class NettyHttpRequest implements HttpRequest, NettyDefaultHttpMessage<Ht
 
 		if (nettyRequest instanceof FullHttpRequest) {
 			FullHttpRequest fullRequest = (FullHttpRequest) nettyRequest;
-
-			if (fullRequest.content().hasArray()) {
-				body = fullRequest.content().array();
-			} else {
-				body = new byte[fullRequest.content().readableBytes()];
-				fullRequest.content().getBytes(fullRequest.content().readerIndex(), body);
-			}
+			return body = NettyUtils.asByteArray(fullRequest.content());
 		}
 
 		return new byte[0];

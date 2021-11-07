@@ -16,4 +16,6 @@ public interface HttpChannel {
 	@Nonnull
 	HostAndPort getClientAddress();
 
+	void close();
+
 }

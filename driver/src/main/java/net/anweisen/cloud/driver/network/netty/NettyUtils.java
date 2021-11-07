@@ -99,6 +99,17 @@ public final class NettyUtils {
 	}
 
 	@Nonnull
+	public static byte[] asByteArray(@Nonnull ByteBuf buffer) {
+		if (buffer.hasArray()) {
+			return buffer.array();
+		} else {
+			byte[] bytes = new byte[buffer.readableBytes()];
+			buffer.getBytes(buffer.readerIndex(), bytes);
+			return bytes;
+		}
+	}
+
+	@Nonnull
 	public static byte[] readByteArray(@Nonnull ByteBuf buffer, @Nonnegative int size) {
 		byte[] data = new byte[size];
 		buffer.readBytes(data);

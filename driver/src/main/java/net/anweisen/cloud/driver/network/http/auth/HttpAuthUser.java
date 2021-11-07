@@ -1,15 +1,13 @@
 package net.anweisen.cloud.driver.network.http.auth;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public interface HttpAuthHandler {
+public interface HttpAuthUser {
 
-	@Nullable
-	HttpAuthUser getAuthUser(@Nonnull String token);
+	boolean hasPermission(@Nonnull String permission);
 
 }

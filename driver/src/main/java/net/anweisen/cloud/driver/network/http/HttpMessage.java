@@ -1,5 +1,7 @@
 package net.anweisen.cloud.driver.network.http;
 
+import net.anweisen.utilities.common.config.Document;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -26,7 +28,7 @@ public interface HttpMessage<M extends HttpMessage<?>> {
 	boolean hasHeader(@Nonnull String name);
 
 	@Nonnull
-	M addHeader(@Nonnull String name, @Nonnull String value);
+	M setHeader(@Nonnull String name, @Nonnull String value);
 
 	@Nonnull
 	M removeHeader(@Nonnull String name);
@@ -54,4 +56,7 @@ public interface HttpMessage<M extends HttpMessage<?>> {
 
 	@Nonnull
 	M setBody(@Nonnull String text);
+
+	@Nonnull
+	M setBody(@Nonnull Document document);
 }

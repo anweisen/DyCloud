@@ -3,6 +3,7 @@ package net.anweisen.cloud.driver.network.netty.http;
 import io.netty.handler.codec.http.HttpHeaders;
 import net.anweisen.cloud.driver.network.http.HttpMessage;
 import net.anweisen.cloud.driver.network.http.HttpVersion;
+import net.anweisen.utilities.common.config.Document;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -49,7 +50,7 @@ public interface NettyDefaultHttpMessage<M extends HttpMessage<?>> extends HttpM
 
 	@Nonnull
 	@Override
-	default M addHeader(@Nonnull String name, @Nonnull String value) {
+	default M setHeader(@Nonnull String name, @Nonnull String value) {
 		getNettyHeaders().add(name, value);
 		return self();
 	}
@@ -112,6 +113,12 @@ public interface NettyDefaultHttpMessage<M extends HttpMessage<?>> extends HttpM
 	@Override
 	default M setBody(@Nonnull String text) {
 		return setBody(text.getBytes(StandardCharsets.UTF_8));
+	}
+
+	@Nonnull
+	@Override
+	default M setBody(@Nonnull Document document) {
+		return setBody(document.toJson());
 	}
 
 	@SuppressWarnings("unchecked")

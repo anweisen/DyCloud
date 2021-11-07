@@ -13,17 +13,21 @@ public class HttpAuthRegistry {
 
 	private final Map<String, HttpAuthHandler> handlers = new LinkedHashMap<>();
 
-	public void registerAuthMethodHandler(@Nonnull String type, @Nonnull HttpAuthHandler handler) {
+	@Nonnull
+	public HttpAuthRegistry registerAuthMethodHandler(@Nonnull String type, @Nonnull HttpAuthHandler handler) {
 		handlers.put(type, handler);
+		return this;
+	}
+
+	@Nonnull
+	public HttpAuthRegistry unregisterAuthMethodHandler(@Nonnull String type) {
+		handlers.remove(type);
+		return this;
 	}
 
 	@Nullable
 	public HttpAuthHandler getAuthMethodHandler(@Nonnull String type) {
 		return handlers.get(type);
-	}
-
-	public void unregisterAuthMethodHandler(@Nonnull String type) {
-		handlers.remove(type);
 	}
 
 }

@@ -1,5 +1,6 @@
 package net.anweisen.cloud.driver.network.netty.http;
 
+import io.netty.channel.Channel;
 import net.anweisen.cloud.driver.network.http.HttpChannel;
 import net.anweisen.cloud.driver.network.object.HostAndPort;
 
@@ -12,10 +13,12 @@ import javax.annotation.Nonnull;
 public class NettyHttpChannel implements HttpChannel {
 
 	protected final HostAndPort serverAddress, clientAddress;
+	protected final Channel nettyChannel;
 
-	public NettyHttpChannel(@Nonnull HostAndPort serverAddress, @Nonnull HostAndPort clientAddress) {
+	public NettyHttpChannel(@Nonnull HostAndPort serverAddress, @Nonnull HostAndPort clientAddress, @Nonnull Channel nettyChannel) {
 		this.serverAddress = serverAddress;
 		this.clientAddress = clientAddress;
+		this.nettyChannel = nettyChannel;
 	}
 
 	@Nonnull
@@ -28,6 +31,11 @@ public class NettyHttpChannel implements HttpChannel {
 	@Override
 	public HostAndPort getClientAddress() {
 		return clientAddress;
+	}
+
+	@Override
+	public void close() {
+		nettyChannel.close();
 	}
 
 	@Override
