@@ -1,4 +1,5 @@
-[![CI](https://github.com/anweisen/DyCloud/actions/workflows/ci.yml/badge.svg)](https://github.com/anweisen/DyCloud/actions/workflows/ci.yml)
+[![CI](https://github.com/anweisen/DyCloud/actions/workflows/ci.yml/badge.svg)](https://github.com/anweisen/DyCloud/actions/workflows/ci.yml) 
+[![wakatime](https://wakatime.com/badge/user/119921b1-76ee-4483-bd85-585caee7c213/project/b198287a-3d4b-4bca-b778-04e4a626ba88.svg)](https://wakatime.com/badge/user/119921b1-76ee-4483-bd85-585caee7c213/project/b198287a-3d4b-4bca-b778-04e4a626ba88)
 
 # DyCloud
 A minecraft cloud system using docker & netty supporting multiroot & multiproxy for learning purpose
