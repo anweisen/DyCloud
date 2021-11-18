@@ -15,6 +15,7 @@ public class ConsoleReadThread extends Thread {
 	private CompletableTask<String> currentTask;
 
 	public ConsoleReadThread(@Nonnull JLine3Console console) {
+		super("ConsoleThread");
 		this.console = console;
 	}
 
