@@ -5,6 +5,7 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.handler.codec.http.websocketx.*;
+import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.network.http.HttpChannel;
 import net.anweisen.cloud.driver.network.http.websocket.WebSocketChannel;
 import net.anweisen.cloud.driver.network.http.websocket.WebSocketFrameType;
@@ -19,7 +20,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class NettyWebSocketChannel implements WebSocketChannel {
+public class NettyWebSocketChannel implements WebSocketChannel, LoggingApiUser {
 
 	protected final Collection<WebSocketListener> listeners = new CopyOnWriteArrayList<>();
 	protected final NettyHttpContext context;
@@ -41,6 +42,7 @@ public class NettyWebSocketChannel implements WebSocketChannel {
 		Preconditions.checkNotNull(data);
 
 		WebSocketFrame frame;
+		trace("Sending {} on {}", type, this);
 
 		switch (type) {
 			case PING:
@@ -52,9 +54,11 @@ public class NettyWebSocketChannel implements WebSocketChannel {
 			case TEXT:
 				frame = new TextWebSocketFrame(Unpooled.buffer(data.length).writeBytes(data));
 				break;
-			default:
+			case BINARY:
 				frame = new BinaryWebSocketFrame(Unpooled.buffer(data.length).writeBytes(data));
 				break;
+			default:
+				throw new IllegalArgumentException("Cannot send " + type + " frame");
 		}
 
 		nettyChannel.writeAndFlush(frame).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
@@ -62,7 +66,7 @@ public class NettyWebSocketChannel implements WebSocketChannel {
 
 	@Override
 	public void close() {
-		close(200, "websocket closed");
+		close(1000, "websocket closed");
 	}
 
 	@Override
@@ -90,5 +94,10 @@ public class NettyWebSocketChannel implements WebSocketChannel {
 	@Override
 	public Collection<WebSocketListener> getListeners() {
 		return listeners;
+	}
+
+	@Override
+	public String toString() {
+		return "WebSocketChannel[client=" + getChannel().getClientAddress() + " server=" + getChannel().getServerAddress() + "]";
 	}
 }

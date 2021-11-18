@@ -18,9 +18,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -69,32 +67,19 @@ public class NettyHttpChannelHandler extends SimpleChannelInboundHandler<HttpReq
 		String[] pathEntries = fullPath.split("/");
 		String[] handlerPathEntries;
 		Tuple<HttpAuthHandler, HttpAuthUser> auth = null;
+		Collection<RegisteredHandler> pathHandlers = new ArrayList<>();
 		for (RegisteredHandler handler : server.getHandlerRegistry().getHandlers()) {
-			if (httpContext.cancelNext) break;
 
-			if (!Arrays.asList(handler.getMethods()).contains(method)) continue;
 			handlerPathEntries = handler.getPath().split("/");
 			if (!checkPath(pathEntries, handlerPathEntries, pathParameters)) continue;
+			pathHandlers.add(handler);
+			if (!Arrays.asList(handler.getMethods()).contains(method)) continue;
 
 			if (!handler.getPermission().isEmpty()) {
 				if (auth == null) {
 					auth = Tuple.empty();
 					String header = httpContext.getRequest().getHeader("Authorization");
-
-					if (header != null) {
-						String[] authorization = header.split(" ");
-
-						if (authorization.length == 2) {
-							String type = authorization[0];
-							HttpAuthHandler authHandler = server.getAuthRegistry().getAuthMethodHandler(type);
-							auth.setFirst(authHandler);
-
-							if (authHandler != null) {
-								HttpAuthUser authUser = authHandler.getAuthUser(authorization[1]);
-								auth.setSecond(authUser);
-							}
-						}
-					}
+					server.applyUserAuth(auth, header);
 				}
 
 				if (auth.getSecond() == null) {
@@ -115,9 +100,29 @@ public class NettyHttpChannelHandler extends SimpleChannelInboundHandler<HttpReq
 				error("Could not execute http handler for '{}'", fullPath, ex);
 			}
 
+			if (httpContext.cancelNext) break;
+
 		}
 
 		if (!httpContext.cancelSendResponse) {
+
+			if (!httpContext.getResponse().hasHeader("Access-Control-Allow-Origin"))
+				httpContext.getResponse().setHeader("Access-Control-Allow-Origin", "*");
+			if (!httpContext.getResponse().hasHeader("Access-Control-Allow-Methods")) {
+				Set<String> methods = new LinkedHashSet<>();
+				for (RegisteredHandler handler : pathHandlers) {
+					for (HttpMethod current : handler.getMethods()) {
+						methods.add(current.name());
+					}
+				}
+				methods.add("OPTIONS");
+				httpContext.getResponse().setHeader("Access-Control-Allow-Methods", String.join(", ", methods));
+				if (httpContext.getRequest().getMethod() == HttpMethod.OPTIONS && httpContext.getResponse().getStatusCode() == HttpCodes.NOT_FOUND) {
+					httpContext.getResponse().setStatusCode(HttpCodes.OK);
+				}
+			}
+			if (!httpContext.getResponse().hasHeader("Access-Control-Allow-Headers"))
+				httpContext.getResponse().setHeader("Access-Control-Allow-Headers", "*");
 
 			if (httpContext.response.getStatusCode() == HttpCodes.NOT_FOUND && httpContext.response.nettyResponse.content().readableBytes() == 0) {
 				httpContext.response.nettyResponse.content().writeBytes(("Cannot " + method + " " + fullPath).getBytes(StandardCharsets.UTF_8));

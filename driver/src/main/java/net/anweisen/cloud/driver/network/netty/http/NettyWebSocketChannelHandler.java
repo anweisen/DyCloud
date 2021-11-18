@@ -4,6 +4,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.*;
 import net.anweisen.cloud.driver.CloudDriver;
+import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.network.http.websocket.WebSocketFrameType;
 import net.anweisen.cloud.driver.network.http.websocket.WebSocketListener;
 import net.anweisen.cloud.driver.network.netty.NettyUtils;
@@ -14,12 +15,24 @@ import javax.annotation.Nonnull;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class NettyWebSocketChannelHandler extends SimpleChannelInboundHandler<WebSocketFrame> {
+public class NettyWebSocketChannelHandler extends SimpleChannelInboundHandler<WebSocketFrame> implements LoggingApiUser {
 
 	protected final NettyWebSocketChannel channel;
 
 	public NettyWebSocketChannelHandler(@Nonnull NettyWebSocketChannel channel) {
 		this.channel = channel;
+	}
+
+	@Override
+	public void channelActive(ChannelHandlerContext context) throws Exception {
+		channel.context.server.getWebSocketChannels().add(channel);
+		info("{} was successfully connected!", channel);
+	}
+
+	@Override
+	public void channelInactive(ChannelHandlerContext context) throws Exception {
+		channel.context.server.getWebSocketChannels().remove(channel);
+		info("{} was closed", channel);
 	}
 
 	@Override
@@ -43,6 +56,8 @@ public class NettyWebSocketChannelHandler extends SimpleChannelInboundHandler<We
 	}
 
 	public void handle(@Nonnull WebSocketFrameType type, @Nonnull WebSocketFrame frame) {
+		trace("Received {} on {}", type, channel);
+
 		byte[] data = NettyUtils.asByteArray(frame.content());
 
 		for (WebSocketListener listener : channel.getListeners()) {

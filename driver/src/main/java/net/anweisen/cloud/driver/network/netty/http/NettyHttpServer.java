@@ -8,12 +8,20 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.network.http.HttpServer;
+import net.anweisen.cloud.driver.network.http.auth.HttpAuthHandler;
 import net.anweisen.cloud.driver.network.http.auth.HttpAuthRegistry;
+import net.anweisen.cloud.driver.network.http.auth.HttpAuthUser;
 import net.anweisen.cloud.driver.network.http.handler.HttpHandlerRegistry;
+import net.anweisen.cloud.driver.network.http.websocket.WebSocketChannel;
+import net.anweisen.cloud.driver.network.http.websocket.WebSocketFrameType;
 import net.anweisen.cloud.driver.network.netty.NettyUtils;
 import net.anweisen.cloud.driver.network.object.HostAndPort;
+import net.anweisen.utilities.common.collection.pair.Tuple;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -26,6 +34,8 @@ public class NettyHttpServer implements HttpServer, LoggingApiUser {
 
 	protected final HttpHandlerRegistry handlerRegistry = new HttpHandlerRegistry();
 	protected final HttpAuthRegistry authRegistry = new HttpAuthRegistry();
+
+	protected final Collection<WebSocketChannel> websocketChannels = new CopyOnWriteArrayList<>();
 
 	@Override
 	public void addListener(@Nonnull HostAndPort address) {
@@ -64,6 +74,26 @@ public class NettyHttpServer implements HttpServer, LoggingApiUser {
 
 	@Nonnull
 	@Override
+	public Collection<WebSocketChannel> getWebSocketChannels() {
+		return websocketChannels;
+	}
+
+	@Override
+	public void sendWebSocketFrame(@Nonnull WebSocketFrameType type, @Nonnull byte[] data) {
+		for (WebSocketChannel channel : websocketChannels) {
+			channel.sendFrame(type, data);
+		}
+	}
+
+	@Override
+	public void sendWebSocketFrame(@Nonnull WebSocketFrameType type, @Nonnull String text) {
+		for (WebSocketChannel channel : websocketChannels) {
+			channel.sendFrame(type, text);
+		}
+	}
+
+	@Nonnull
+	@Override
 	public HttpHandlerRegistry getHandlerRegistry() {
 		return handlerRegistry;
 	}
@@ -72,5 +102,23 @@ public class NettyHttpServer implements HttpServer, LoggingApiUser {
 	@Override
 	public HttpAuthRegistry getAuthRegistry() {
 		return authRegistry;
+	}
+
+	@Override
+	public void applyUserAuth(@Nonnull Tuple<HttpAuthHandler, HttpAuthUser> values, @Nullable String header) {
+		if (header != null) {
+			String[] authorization = header.split(" ");
+
+			if (authorization.length == 2) {
+				String type = authorization[0];
+				HttpAuthHandler authHandler = authRegistry.getAuthMethodHandler(type);
+				values.setFirst(authHandler);
+
+				if (authHandler != null) {
+					HttpAuthUser authUser = authHandler.getAuthUser(authorization[1]);
+					values.setSecond(authUser);
+				}
+			}
+		}
 	}
 }
