@@ -9,7 +9,7 @@ import java.util.Map;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public final class PacketConstants {
+public final class PacketChannels {
 
 	public static final int RESPONSE_CHANNEL = -1;
 	public static final int AUTH_CHANNEL = 1;                       // master  <-| node, wrapper
@@ -26,11 +26,11 @@ public final class PacketConstants {
 	public static final int COMMAND_SYSTEM_CHANNEL = 12;            // master  <-> wrapper, node
 	public static final int GLOBAL_CONFIG_CHANNEL = 13;             // master  <-> wrapper, node
 	public static final int TEMPLATE_STORAGE_CHANNEL = 14;          // master  <-| wrapper, node
-	public static final int TRANSLATION_SYSTEM_CHANNEL = 15;               // master  <-| wrapper, node
+	public static final int TRANSLATION_SYSTEM_CHANNEL = 15;        // master  <-| wrapper, node
 
 	private static final Map<Integer, String> channelNames = new LinkedHashMap<>();
 	static {
-		for (Field field : PacketConstants.class.getFields()) {
+		for (Field field : PacketChannels.class.getFields()) {
 			try {
 				registerChannelName(field.getName(), field.getInt(null));
 			} catch (Exception ex) {
@@ -45,7 +45,7 @@ public final class PacketConstants {
 			name = name.substring(0, name.indexOf("channel") - 1);
 
 		if (channelNames.containsKey(channel))
-			System.err.println("PacketConstants: " + name + " and " + channelNames.get(channel) + " share the same value: " + channel);
+			System.err.println("PacketChannels: " + name + " and " + channelNames.get(channel) + " share the same value: " + channel);
 
 		channelNames.put(channel, name);
 	}
@@ -55,6 +55,6 @@ public final class PacketConstants {
 		return channelNames.getOrDefault(channel, channel + "");
 	}
 
-	private PacketConstants() {}
+	private PacketChannels() {}
 
 }

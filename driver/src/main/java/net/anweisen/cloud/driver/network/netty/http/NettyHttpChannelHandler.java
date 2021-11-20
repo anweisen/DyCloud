@@ -17,7 +17,6 @@ import net.anweisen.utilities.common.collection.pair.Tuple;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -106,6 +105,7 @@ public class NettyHttpChannelHandler extends SimpleChannelInboundHandler<HttpReq
 
 		if (!httpContext.cancelSendResponse) {
 
+			// CORS
 			if (!httpContext.getResponse().hasHeader("Access-Control-Allow-Origin"))
 				httpContext.getResponse().setHeader("Access-Control-Allow-Origin", "*");
 			if (!httpContext.getResponse().hasHeader("Access-Control-Allow-Methods")) {
@@ -124,8 +124,22 @@ public class NettyHttpChannelHandler extends SimpleChannelInboundHandler<HttpReq
 			if (!httpContext.getResponse().hasHeader("Access-Control-Allow-Headers"))
 				httpContext.getResponse().setHeader("Access-Control-Allow-Headers", "*");
 
-			if (httpContext.response.getStatusCode() == HttpCodes.NOT_FOUND && httpContext.response.nettyResponse.content().readableBytes() == 0) {
-				httpContext.response.nettyResponse.content().writeBytes(("Cannot " + method + " " + fullPath).getBytes(StandardCharsets.UTF_8));
+			// Send default message
+			if (httpContext.response.nettyResponse.content().readableBytes() == 0) {
+				int code = httpContext.getResponse().getStatusCode();
+
+				if (!HttpCodes.isSuccessful(code) && !HttpCodes.isRedirection(code)) {
+					final String message;
+					switch (code) {
+						case HttpCodes.NOT_FOUND:
+							message = "Cannot " + method + " " + fullPath;
+							break;
+						default:
+							message = HttpCodes.getStatusMessage(code);
+					}
+
+					httpContext.getResponse().setBody((code + ": " + message).trim());
+				}
 			}
 
 			ChannelFuture channelFuture = context.channel().writeAndFlush(httpContext.response.nettyResponse).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
