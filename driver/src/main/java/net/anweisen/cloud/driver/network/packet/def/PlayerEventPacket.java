@@ -2,7 +2,7 @@ package net.anweisen.cloud.driver.network.packet.def;
 
 import net.anweisen.cloud.driver.event.player.*;
 import net.anweisen.cloud.driver.network.packet.Packet;
-import net.anweisen.cloud.driver.network.packet.PacketConstants;
+import net.anweisen.cloud.driver.network.packet.PacketChannels;
 import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import net.anweisen.cloud.driver.player.CloudPlayer;
@@ -78,7 +78,7 @@ public class PlayerEventPacket extends Packet {
 	}
 
 	protected PlayerEventPacket(@Nonnull PlayerEventPayload payload, @Nonnull Consumer<? super PacketBuffer> modifier) {
-		super(PacketConstants.PLAYER_EVENT_CHANNEL, newBuffer().writeEnum(payload));
+		super(PacketChannels.PLAYER_EVENT_CHANNEL, newBuffer().writeEnum(payload));
 		modifier.accept(buffer);
 	}
 

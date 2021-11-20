@@ -1,7 +1,7 @@
 package net.anweisen.cloud.driver.network.packet.def;
 
 import net.anweisen.cloud.driver.network.packet.Packet;
-import net.anweisen.cloud.driver.network.packet.PacketConstants;
+import net.anweisen.cloud.driver.network.packet.PacketChannels;
 import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 
 import javax.annotation.Nonnull;
@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 public class PlayerExecutorPacket extends Packet {
 
 	public PlayerExecutorPacket(@Nonnull PlayerExecutorPayload payload, @Nonnull UUID playerUniqueId, @Nonnull Consumer<? super PacketBuffer> modifier) {
-		super(PacketConstants.PLAYER_EXECUTOR_CHANNEL, newBuffer().writeEnum(payload).writeUniqueId(playerUniqueId));
+		super(PacketChannels.PLAYER_EXECUTOR_CHANNEL, newBuffer().writeEnum(payload).writeUniqueId(playerUniqueId));
 		apply(modifier);
 	}
 

@@ -1,7 +1,7 @@
 package net.anweisen.cloud.driver.network.packet.def;
 
 import net.anweisen.cloud.driver.network.packet.Packet;
-import net.anweisen.cloud.driver.network.packet.PacketConstants;
+import net.anweisen.cloud.driver.network.packet.PacketChannels;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 
 import javax.annotation.Nonnull;
@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 public class ServiceUpdateSelfInfoPacket extends Packet { // TODO move to wrapper?
 
 	public ServiceUpdateSelfInfoPacket(@Nonnull ServiceInfo info) {
-		super(PacketConstants.SERVICE_UPDATE_SELF_INFO_CHANNEL, newBuffer().writeObject(info));
+		super(PacketChannels.SERVICE_UPDATE_SELF_INFO_CHANNEL, newBuffer().writeObject(info));
 	}
 
 }

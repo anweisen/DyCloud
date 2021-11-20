@@ -1,7 +1,7 @@
 package net.anweisen.cloud.driver.network.packet.def;
 
 import net.anweisen.cloud.driver.network.packet.Packet;
-import net.anweisen.cloud.driver.network.packet.PacketConstants;
+import net.anweisen.cloud.driver.network.packet.PacketChannels;
 import net.anweisen.cloud.driver.service.config.ServiceTask;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 
@@ -16,15 +16,15 @@ public class ServiceControlPacket extends Packet {
 
 	/** @see net.anweisen.cloud.driver.service.RemoteServiceFactory#createServiceAsync(ServiceTask) */
 	public ServiceControlPacket(@Nonnull ServiceControlPayload payload, @Nonnull ServiceTask task) {
-		super(PacketConstants.SERVICE_CONTROL_CHANNEL, newBuffer().writeEnum(payload).writeObject(task));
+		super(PacketChannels.SERVICE_CONTROL_CHANNEL, newBuffer().writeEnum(payload).writeObject(task));
 	}
 
 	public ServiceControlPacket(@Nonnull ServiceControlPayload payload, @Nonnull ServiceInfo service) {
-		super(PacketConstants.SERVICE_CONTROL_CHANNEL, newBuffer().writeEnum(payload).writeObject(service));
+		super(PacketChannels.SERVICE_CONTROL_CHANNEL, newBuffer().writeEnum(payload).writeObject(service));
 	}
 
 	public ServiceControlPacket(@Nonnull ServiceControlPayload payload, @Nonnull UUID service) {
-		super(PacketConstants.SERVICE_CONTROL_CHANNEL, newBuffer().writeEnum(payload).writeUniqueId(service));
+		super(PacketChannels.SERVICE_CONTROL_CHANNEL, newBuffer().writeEnum(payload).writeUniqueId(service));
 	}
 
 	public enum ServiceControlPayload {

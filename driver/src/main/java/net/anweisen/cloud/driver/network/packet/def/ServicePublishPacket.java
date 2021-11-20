@@ -1,7 +1,7 @@
 package net.anweisen.cloud.driver.network.packet.def;
 
 import net.anweisen.cloud.driver.network.packet.Packet;
-import net.anweisen.cloud.driver.network.packet.PacketConstants;
+import net.anweisen.cloud.driver.network.packet.PacketChannels;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 
 import javax.annotation.Nonnull;
@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 public class ServicePublishPacket extends Packet {
 
 	public ServicePublishPacket(@Nonnull ServicePublishPayload payload, @Nonnull ServiceInfo info) {
-		super(PacketConstants.SERVICE_INFO_PUBLISH_CHANNEL, newBuffer().writeEnum(payload).writeObject(info));
+		super(PacketChannels.SERVICE_INFO_PUBLISH_CHANNEL, newBuffer().writeEnum(payload).writeObject(info));
 	}
 
 	public enum ServicePublishPayload {

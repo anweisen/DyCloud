@@ -3,7 +3,7 @@ package net.anweisen.cloud.driver.network.packet.def;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.network.listener.AuthenticationResponseListener;
 import net.anweisen.cloud.driver.network.packet.Packet;
-import net.anweisen.cloud.driver.network.packet.PacketConstants;
+import net.anweisen.cloud.driver.network.packet.PacketChannels;
 import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import net.anweisen.cloud.driver.service.specific.ServiceType;
@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 public class AuthenticationResponsePacket extends Packet {
 
 	public AuthenticationResponsePacket(boolean access, @Nonnull String message) {
-		super(PacketConstants.AUTH_CHANNEL, Document.create().set("access", access).set("message", message));
+		super(PacketChannels.AUTH_CHANNEL, Document.create().set("access", access).set("message", message));
 
 		if (access) {
 			buffer = newBuffer();

@@ -8,7 +8,7 @@ import net.anweisen.cloud.driver.network.handler.SocketChannelHandler;
 import net.anweisen.cloud.driver.network.internal.InternalQueryResponseManager;
 import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.network.packet.Packet;
-import net.anweisen.cloud.driver.network.packet.PacketConstants;
+import net.anweisen.cloud.driver.network.packet.PacketChannels;
 import net.anweisen.cloud.driver.network.packet.chunk.ChunkedPacketBuilder;
 import net.anweisen.cloud.driver.network.packet.chunk.ChunkedQueryResponse;
 import net.anweisen.utilities.common.concurrent.task.CompletableTask;
@@ -95,7 +95,7 @@ public class NettySocketChannel implements SocketChannel {
 
 	@Override
 	public boolean sendChunkedPacketsResponse(@Nonnull UUID uniqueId, @Nonnull Document header, @Nonnull InputStream inputStream) throws IOException {
-		return sendChunkedPackets(uniqueId, header, inputStream, PacketConstants.RESPONSE_CHANNEL);
+		return sendChunkedPackets(uniqueId, header, inputStream, PacketChannels.RESPONSE_CHANNEL);
 	}
 
 	@Override

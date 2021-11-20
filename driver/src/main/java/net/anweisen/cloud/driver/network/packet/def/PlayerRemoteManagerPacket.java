@@ -1,7 +1,7 @@
 package net.anweisen.cloud.driver.network.packet.def;
 
 import net.anweisen.cloud.driver.network.packet.Packet;
-import net.anweisen.cloud.driver.network.packet.PacketConstants;
+import net.anweisen.cloud.driver.network.packet.PacketChannels;
 import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 
 import javax.annotation.Nonnull;
@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 public class PlayerRemoteManagerPacket extends Packet {
 
 	public PlayerRemoteManagerPacket(@Nonnull PlayerRemoteManagerPayload payload, @Nullable Consumer<? super PacketBuffer> modifier) {
-		super(PacketConstants.PLAYER_REMOTE_MANAGER_CHANNEL, newBuffer().writeEnum(payload));
+		super(PacketChannels.PLAYER_REMOTE_MANAGER_CHANNEL, newBuffer().writeEnum(payload));
 		apply(modifier);
 	}
 

@@ -1,7 +1,7 @@
 package net.anweisen.cloud.driver.network.packet.def;
 
 import net.anweisen.cloud.driver.network.packet.Packet;
-import net.anweisen.cloud.driver.network.packet.PacketConstants;
+import net.anweisen.cloud.driver.network.packet.PacketChannels;
 
 import javax.annotation.Nonnull;
 
@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 public class ModuleSystemPacket extends Packet {
 
 	public ModuleSystemPacket(@Nonnull ModuleSystemPayload payload) {
-		super(PacketConstants.MODULE_SYSTEM_CHANNEL, newBuffer().writeEnum(payload));
+		super(PacketChannels.MODULE_SYSTEM_CHANNEL, newBuffer().writeEnum(payload));
 	}
 
 	public ModuleSystemPacket(@Nonnull ModuleSystemPayload payload, int index) {

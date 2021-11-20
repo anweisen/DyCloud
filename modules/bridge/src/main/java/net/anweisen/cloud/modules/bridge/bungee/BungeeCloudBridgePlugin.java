@@ -1,7 +1,7 @@
 package net.anweisen.cloud.modules.bridge.bungee;
 
 import net.anweisen.cloud.driver.console.LoggingApiUser;
-import net.anweisen.cloud.driver.network.packet.PacketConstants;
+import net.anweisen.cloud.driver.network.packet.PacketChannels;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.modules.bridge.bungee.listener.BungeeCloudListener;
 import net.anweisen.cloud.modules.bridge.bungee.listener.BungeePlayerExecutorListener;
@@ -51,7 +51,7 @@ public final class BungeeCloudBridgePlugin extends Plugin implements LoggingApiU
 
 	private void initListeners() {
 		CloudWrapper.getInstance().getEventManager().registerListeners(new BungeeCloudListener());
-		CloudWrapper.getInstance().getSocketComponent().getListenerRegistry().addListener(PacketConstants.PLAYER_EXECUTOR_CHANNEL, new BungeePlayerExecutorListener());
+		CloudWrapper.getInstance().getSocketComponent().getListenerRegistry().addListener(PacketChannels.PLAYER_EXECUTOR_CHANNEL, new BungeePlayerExecutorListener());
 		ProxyServer.getInstance().getPluginManager().registerListener(this, new BungeePlayerListener());
 	}
 

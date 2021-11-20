@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 
 public class Packet {
 
-	public static final Packet EMPTY_RESPONSE = new Packet(PacketConstants.RESPONSE_CHANNEL, Document.empty(), newBuffer());
+	public static final Packet EMPTY_RESPONSE = new Packet(PacketChannels.RESPONSE_CHANNEL, Document.empty(), newBuffer());
 
 	protected final long creationMillis = System.currentTimeMillis();
 
@@ -51,25 +51,25 @@ public class Packet {
 	@Nonnull
 	@CheckReturnValue
 	public static Packet createResponseFor(@Nonnull Packet packet, @Nullable Document header, @Nullable PacketBuffer buffer) {
-		return new Packet(PacketConstants.RESPONSE_CHANNEL, packet.getUniqueId(), header, buffer);
+		return new Packet(PacketChannels.RESPONSE_CHANNEL, packet.getUniqueId(), header, buffer);
 	}
 
 	@Nonnull
 	@CheckReturnValue
 	public static Packet createResponseFor(@Nonnull Packet packet, @Nullable Document header) {
-		return new Packet(PacketConstants.RESPONSE_CHANNEL, packet.getUniqueId(), header);
+		return new Packet(PacketChannels.RESPONSE_CHANNEL, packet.getUniqueId(), header);
 	}
 
 	@Nonnull
 	@CheckReturnValue
 	public static Packet createResponseFor(@Nonnull Packet packet, @Nullable PacketBuffer buffer) {
-		return new Packet(PacketConstants.RESPONSE_CHANNEL, packet.getUniqueId(), Document.empty(), buffer);
+		return new Packet(PacketChannels.RESPONSE_CHANNEL, packet.getUniqueId(), Document.empty(), buffer);
 	}
 
 	@Nonnull
 	@CheckReturnValue
 	public static Packet createResponseFor(@Nonnull Packet packet) {
-		return new Packet(PacketConstants.RESPONSE_CHANNEL, packet.getUniqueId(), Document.empty());
+		return new Packet(PacketChannels.RESPONSE_CHANNEL, packet.getUniqueId(), Document.empty());
 	}
 
 	@Nonnull
@@ -125,6 +125,6 @@ public class Packet {
 
 	@Override
 	public String toString() {
-		return "Packet[channel=" + PacketConstants.getChannelName(channel) + " uuid=" + uniqueId + " header=" + getHeader().toJson() + " buffer=" + getBuffer().length() + "]";
+		return "Packet[channel=" + PacketChannels.getChannelName(channel) + " uuid=" + uniqueId + " header=" + getHeader().toJson() + " buffer=" + getBuffer().length() + "]";
 	}
 }

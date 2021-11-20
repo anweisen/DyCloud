@@ -13,7 +13,7 @@ import net.anweisen.cloud.driver.network.http.HttpServer;
 import net.anweisen.cloud.driver.network.netty.http.NettyHttpServer;
 import net.anweisen.cloud.driver.network.netty.server.NettySocketServer;
 import net.anweisen.cloud.driver.network.object.HostAndPort;
-import net.anweisen.cloud.driver.network.packet.PacketConstants;
+import net.anweisen.cloud.driver.network.packet.PacketChannels;
 import net.anweisen.cloud.driver.network.packet.PacketListenerRegistry;
 import net.anweisen.cloud.driver.network.packet.def.NodePublishPacket;
 import net.anweisen.cloud.driver.network.packet.def.NodePublishPacket.NodePublishPayload;
@@ -146,20 +146,20 @@ public final class CloudMaster extends CloudBase {
 	private void loadNetworkListeners(@Nonnull PacketListenerRegistry registry) {
 		logger.info("Registering network listeners..");
 
-		registry.addListener(PacketConstants.AUTH_CHANNEL, new AuthenticationListener());
-		registry.addListener(PacketConstants.DATABASE_CHANNEL, new RemoteDatabaseActionListener(databaseManager));
-		registry.addListener(PacketConstants.NODE_DATA_CYCLE, new NodeDataCycleListener());
-		registry.addListener(PacketConstants.SERVICE_INFO_PUBLISH_CHANNEL, new ServiceInfoUpdateListener());
-		registry.addListener(PacketConstants.SERVICE_UPDATE_SELF_INFO_CHANNEL, new ServiceUpdateSelfInfoListener());
-		registry.addListener(PacketConstants.SERVICE_CONTROL_CHANNEL, new ServiceControlListener());
-		registry.addListener(PacketConstants.PLAYER_EVENT_CHANNEL, new PlayerEventListener());
-		registry.addListener(PacketConstants.PLAYER_EXECUTOR_CHANNEL, new PlayerExecutorListener());
-		registry.addListener(PacketConstants.PLAYER_REMOTE_MANAGER_CHANNEL, new PlayerRemoteManagerListener());
-		registry.addListener(PacketConstants.MODULE_SYSTEM_CHANNEL, new ModuleSystemListener());
-		registry.addListener(PacketConstants.COMMAND_SYSTEM_CHANNEL, new CommandSystemListener());
-		registry.addListener(PacketConstants.GLOBAL_CONFIG_CHANNEL, new GlobalConfigListener());
-		registry.addListener(PacketConstants.TEMPLATE_STORAGE_CHANNEL, new TemplateStorageListener());
-		registry.addListener(PacketConstants.TRANSLATION_SYSTEM_CHANNEL, new TranslationSystemListener());
+		registry.addListener(PacketChannels.AUTH_CHANNEL, new AuthenticationListener());
+		registry.addListener(PacketChannels.DATABASE_CHANNEL, new RemoteDatabaseActionListener(databaseManager));
+		registry.addListener(PacketChannels.NODE_DATA_CYCLE, new NodeDataCycleListener());
+		registry.addListener(PacketChannels.SERVICE_INFO_PUBLISH_CHANNEL, new ServiceInfoUpdateListener());
+		registry.addListener(PacketChannels.SERVICE_UPDATE_SELF_INFO_CHANNEL, new ServiceUpdateSelfInfoListener());
+		registry.addListener(PacketChannels.SERVICE_CONTROL_CHANNEL, new ServiceControlListener());
+		registry.addListener(PacketChannels.PLAYER_EVENT_CHANNEL, new PlayerEventListener());
+		registry.addListener(PacketChannels.PLAYER_EXECUTOR_CHANNEL, new PlayerExecutorListener());
+		registry.addListener(PacketChannels.PLAYER_REMOTE_MANAGER_CHANNEL, new PlayerRemoteManagerListener());
+		registry.addListener(PacketChannels.MODULE_SYSTEM_CHANNEL, new ModuleSystemListener());
+		registry.addListener(PacketChannels.COMMAND_SYSTEM_CHANNEL, new CommandSystemListener());
+		registry.addListener(PacketChannels.GLOBAL_CONFIG_CHANNEL, new GlobalConfigListener());
+		registry.addListener(PacketChannels.TEMPLATE_STORAGE_CHANNEL, new TemplateStorageListener());
+		registry.addListener(PacketChannels.TRANSLATION_SYSTEM_CHANNEL, new TranslationSystemListener());
 	}
 
 	private void initModules() {

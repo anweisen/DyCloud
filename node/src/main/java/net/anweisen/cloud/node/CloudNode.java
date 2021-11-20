@@ -29,7 +29,7 @@ import net.anweisen.cloud.driver.network.listener.*;
 import net.anweisen.cloud.driver.network.netty.client.NettySocketClient;
 import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.network.packet.Packet;
-import net.anweisen.cloud.driver.network.packet.PacketConstants;
+import net.anweisen.cloud.driver.network.packet.PacketChannels;
 import net.anweisen.cloud.driver.network.packet.PacketListenerRegistry;
 import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket;
 import net.anweisen.cloud.driver.network.packet.def.AuthenticationPacket.AuthenticationPayload;
@@ -178,7 +178,7 @@ public final class CloudNode extends CloudBase {
 			listener = new AuthenticationResponseListener(lock, condition);
 
 			logger.info("Connecting to master socket on {}..", config.getMasterAddress());
-			socketClient.getListenerRegistry().addListener(PacketConstants.AUTH_CHANNEL, listener);
+			socketClient.getListenerRegistry().addListener(PacketChannels.AUTH_CHANNEL, listener);
 			socketClient.connect(config.getMasterAddress());
 
 			sendAuthentication();
@@ -217,12 +217,12 @@ public final class CloudNode extends CloudBase {
 	private void loadNetworkListeners(@Nonnull PacketListenerRegistry registry) {
 		logger.info("Registering network listeners..");
 
-		registry.addListener(PacketConstants.NODE_INFO_PUBLISH_CHANNEL, new NodePublishListener());
-		registry.addListener(PacketConstants.SERVICE_INFO_PUBLISH_CHANNEL, new ServicePublishListener());
-		registry.addListener(PacketConstants.SERVICE_CONTROL_CHANNEL, new ServiceControlListener());
-		registry.addListener(PacketConstants.PLAYER_EVENT_CHANNEL, new PlayerEventListener());
-		registry.addListener(PacketConstants.PLAYER_REMOTE_MANAGER_CHANNEL, new PlayerRemoteManagerListener());
-		registry.addListener(PacketConstants.GLOBAL_CONFIG_CHANNEL, new GlobalConfigUpdateListener());
+		registry.addListener(PacketChannels.NODE_INFO_PUBLISH_CHANNEL, new NodePublishListener());
+		registry.addListener(PacketChannels.SERVICE_INFO_PUBLISH_CHANNEL, new ServicePublishListener());
+		registry.addListener(PacketChannels.SERVICE_CONTROL_CHANNEL, new ServiceControlListener());
+		registry.addListener(PacketChannels.PLAYER_EVENT_CHANNEL, new PlayerEventListener());
+		registry.addListener(PacketChannels.PLAYER_REMOTE_MANAGER_CHANNEL, new PlayerRemoteManagerListener());
+		registry.addListener(PacketChannels.GLOBAL_CONFIG_CHANNEL, new GlobalConfigUpdateListener());
 	}
 
 	private void pullJavaImages() {
@@ -269,7 +269,7 @@ public final class CloudNode extends CloudBase {
 	}
 
 	private void publishDataCycle() {
-		socketClient.sendPacket(new Packet(PacketConstants.NODE_DATA_CYCLE, Packet.newBuffer().writeObject(NodeCycleData.current())));
+		socketClient.sendPacket(new Packet(PacketChannels.NODE_DATA_CYCLE, Packet.newBuffer().writeObject(NodeCycleData.current())));
 	}
 
 	@Override
