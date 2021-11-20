@@ -1,5 +1,12 @@
 package net.anweisen.cloud.driver.network.http;
 
+import net.anweisen.utilities.common.misc.StringUtils;
+
+import javax.annotation.Nonnull;
+import java.lang.reflect.Field;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
@@ -77,6 +84,49 @@ public final class HttpCodes {
 	public static final int LOOP_DETECTED = 508;
 	public static final int NOT_EXTENDED = 510;
 	public static final int NETWORK_AUTHENTICATION_REQUIRED = 511;
+
+	private static final Map<Integer, String> messages = new LinkedHashMap<>();
+	static {
+		for (Field field : HttpCodes.class.getFields()) {
+			try {
+				String fieldName = field.getName();
+				int value = (int) field.get(null);
+
+				String name = StringUtils.getEnumName(fieldName);
+				if (messages.containsKey(value))
+					System.err.println("HttpCodes: " + messages.get(value) + " and " + name + " have the same value of " + value);
+
+				messages.put(value, name);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	@Nonnull
+	public static String getStatusMessage(int code) {
+		return messages.getOrDefault(code, "");
+	}
+
+	public static boolean isInformation(int code) {
+		return code >= 100 && code < 200;
+	}
+
+	public static boolean isSuccessful(int code) {
+		return code >= 200 && code < 300;
+	}
+
+	public static boolean isRedirection(int code) {
+		return code >= 300 && code < 400;
+	}
+
+	public static boolean isClientError(int code) {
+		return code >= 400 && code < 500 || code >= 600;
+	}
+
+	public static boolean isServerError(int code) {
+		return code >= 500 && code < 600;
+	}
 
 	private HttpCodes() {}
 
