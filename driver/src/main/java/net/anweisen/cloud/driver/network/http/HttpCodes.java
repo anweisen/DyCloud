@@ -60,7 +60,6 @@ public final class HttpCodes {
 	public static final int UNSUPPORTED_MEDIA_TYPE = 415;
 	public static final int RANGE_NOT_SATISFIABLE = 416;
 	public static final int EXPECTATION_FAILED = 417;
-	public static final int IM_A_TEAPOT = 417;
 	public static final int MISDIRECTED_REQUEST = 421;
 	public static final int UNPROCESSABLE_ENTITY = 422;
 	public static final int LOCKED = 423;
@@ -94,7 +93,7 @@ public final class HttpCodes {
 
 				String name = StringUtils.getEnumName(fieldName);
 				if (messages.containsKey(value))
-					System.err.println("HttpCodes: " + messages.get(value) + " and " + name + " have the same value of " + value);
+					System.err.println("HttpCodes: '" + messages.get(value) + "' and '" + name + "' have the same value of " + value);
 
 				messages.put(value, name);
 			} catch (Exception ex) {

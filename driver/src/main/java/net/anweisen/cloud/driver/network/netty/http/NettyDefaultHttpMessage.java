@@ -28,7 +28,6 @@ public interface NettyDefaultHttpMessage<M extends HttpMessage<?>> extends HttpM
 
 	void setNettyHttpVersion(@Nonnull io.netty.handler.codec.http.HttpVersion version);
 
-
 	@Nullable
 	@Override
 	default String getHeader(@Nonnull String name) {

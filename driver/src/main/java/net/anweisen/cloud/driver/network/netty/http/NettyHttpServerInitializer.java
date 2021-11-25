@@ -24,6 +24,10 @@ public class NettyHttpServerInitializer extends ChannelInitializer<Channel> {
 
 	@Override
 	protected void initChannel(Channel channel) throws Exception {
+		if (server.getSslContext() != null) {
+			channel.pipeline().addLast(server.getSslContext().newHandler(channel.alloc()));
+		}
+
 		channel.pipeline()
 			.addLast("http-server-codec", new HttpServerCodec())
 			.addLast("http-object-aggregator", new HttpObjectAggregator(Short.MAX_VALUE))

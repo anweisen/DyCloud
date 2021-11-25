@@ -105,7 +105,7 @@ public final class CloudMaster extends CloudBase {
 		serviceConfigManager.loadTasks();
 		serviceConfigManager.registerTemplateStorage(LocalTemplateStorage.createDefault());
 
-		httpServer = new NettyHttpServer();
+		httpServer = new NettyHttpServer(config.getWebSslConfig());
 		for (HostAndPort address : config.getHttpListeners()) {
 			logger.info("Starting http server on {}..", address);
 			httpServer.addListener(address);

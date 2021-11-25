@@ -14,8 +14,10 @@ import net.anweisen.cloud.driver.network.http.auth.HttpAuthUser;
 import net.anweisen.cloud.driver.network.http.handler.HttpHandlerRegistry;
 import net.anweisen.cloud.driver.network.http.websocket.WebSocketChannel;
 import net.anweisen.cloud.driver.network.http.websocket.WebSocketFrameType;
+import net.anweisen.cloud.driver.network.netty.NettySSLServer;
 import net.anweisen.cloud.driver.network.netty.NettyUtils;
 import net.anweisen.cloud.driver.network.object.HostAndPort;
+import net.anweisen.cloud.driver.network.object.SSLConfiguration;
 import net.anweisen.utilities.common.collection.pair.Tuple;
 
 import javax.annotation.Nonnull;
@@ -27,7 +29,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class NettyHttpServer implements HttpServer, LoggingApiUser {
+public class NettyHttpServer extends NettySSLServer implements HttpServer, LoggingApiUser {
 
 	protected final EventLoopGroup bossEventLoopGroup = NettyUtils.newEventLoopGroup();
 	protected final EventLoopGroup workerEventLoopGroup = NettyUtils.newEventLoopGroup();
@@ -36,6 +38,11 @@ public class NettyHttpServer implements HttpServer, LoggingApiUser {
 	protected final HttpAuthRegistry authRegistry = new HttpAuthRegistry();
 
 	protected final Collection<WebSocketChannel> websocketChannels = new CopyOnWriteArrayList<>();
+
+	public NettyHttpServer(@Nullable SSLConfiguration sslConfiguration) throws Exception {
+		super(sslConfiguration);
+		initSslContext();
+	}
 
 	@Override
 	public void addListener(@Nonnull HostAndPort address) {

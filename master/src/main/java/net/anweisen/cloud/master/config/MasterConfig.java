@@ -4,12 +4,14 @@ import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.config.DriverConfig;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.network.object.HostAndPort;
+import net.anweisen.cloud.driver.network.object.SSLConfiguration;
 import net.anweisen.cloud.driver.service.specific.ServiceType;
 import net.anweisen.cloud.master.CloudMaster;
 import net.anweisen.utilities.common.config.Document;
 import net.anweisen.utilities.common.config.FileDocument;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
@@ -28,6 +30,7 @@ public final class MasterConfig implements DriverConfig, LoggingApiUser {
 
 	private UUID identity;
 	private HostAndPort hostAddress;
+	private SSLConfiguration webSslConfig;
 	private Collection<HostAndPort> httpListeners;
 	private Collection<String> ipWhitelist;
 	private Document databaseConfig;
@@ -48,6 +51,23 @@ public final class MasterConfig implements DriverConfig, LoggingApiUser {
 		if (!document.contains("httpListeners"))
 			document.set("httpListeners", Collections.singletonList(HostAndPort.localhost(CloudDriver.DEFAULT_HTTP_PORT)));
 		httpListeners = document.getInstanceList("httpListeners", HostAndPort.class);
+
+		if (!document.contains("webSsl"))
+			document.getDocument("webSsl")
+				.set("enabled", false)
+				.set("clientAuth", false)
+				.set("certificatePath", "/etc/ssl/certificate.pem")
+				.set("privateKeyPath", "/etc/ssl/privateKey.key");
+		if (document.getDocument("webSsl").getBoolean("enabled")) {
+			Document sslDocument = document.getDocument("webSsl");
+			String certificatePath = sslDocument.getString("certificatePath");
+			String privateKeyPath = sslDocument.getString("privateKeyPath");
+			webSslConfig = new SSLConfiguration(
+				sslDocument.getBoolean("clientAuth"),
+				certificatePath == null ? null : Paths.get(certificatePath),
+				privateKeyPath == null ? null : Paths.get(privateKeyPath)
+			);
+		}
 
 		ipWhitelist = document.getStringList("ipWhitelist");
 		if (!document.contains("ipWhitelist"))
@@ -88,6 +108,11 @@ public final class MasterConfig implements DriverConfig, LoggingApiUser {
 	@Nonnull
 	public HostAndPort getHostAddress() {
 		return hostAddress;
+	}
+
+	@Nullable
+	public SSLConfiguration getWebSslConfig() {
+		return webSslConfig;
 	}
 
 	@Nonnull
