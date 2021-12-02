@@ -7,6 +7,7 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.handler.codec.http.websocketx.*;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.network.http.HttpChannel;
+import net.anweisen.cloud.driver.network.http.HttpServer;
 import net.anweisen.cloud.driver.network.http.websocket.WebSocketChannel;
 import net.anweisen.cloud.driver.network.http.websocket.WebSocketFrameType;
 import net.anweisen.cloud.driver.network.http.websocket.WebSocketListener;
@@ -78,6 +79,12 @@ public class NettyWebSocketChannel implements WebSocketChannel, LoggingApiUser {
 	@Override
 	public HttpChannel getChannel() {
 		return context.getChannel();
+	}
+
+	@Nonnull
+	@Override
+	public HttpServer getServer() {
+		return context.getServer();
 	}
 
 	@Override

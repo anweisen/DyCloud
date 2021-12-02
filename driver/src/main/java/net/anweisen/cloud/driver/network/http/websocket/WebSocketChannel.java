@@ -1,6 +1,7 @@
 package net.anweisen.cloud.driver.network.http.websocket;
 
 import net.anweisen.cloud.driver.network.http.HttpChannel;
+import net.anweisen.cloud.driver.network.http.HttpServer;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -13,6 +14,9 @@ public interface WebSocketChannel {
 
 	@Nonnull
 	HttpChannel getChannel();
+
+	@Nonnull
+	HttpServer getServer();
 
 	void close();
 
