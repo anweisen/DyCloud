@@ -37,8 +37,8 @@ public enum ConsoleColor {
 
 	@Nonnull
 	public static String toColoredString(char triggerChar, @Nonnull String text) {
-		for (ConsoleColor consoleColour : values()) {
-			text = text.replace(triggerChar + "" + consoleColour.index, consoleColour.ansiCode);
+		for (ConsoleColor color : values()) {
+			text = text.replace(triggerChar + "" + color.index, color.ansiCode);
 		}
 
 		return text;
@@ -46,8 +46,8 @@ public enum ConsoleColor {
 
 	@Nonnull
 	public static String toUncoloredString(char triggerChar, @Nonnull String text) {
-		for (ConsoleColor consoleColour : values()) {
-			text = text.replace(triggerChar + "" + consoleColour.index, "");
+		for (ConsoleColor color : values()) {
+			text = text.replace(triggerChar + "" + color.index, "");
 		}
 
 		return text;
