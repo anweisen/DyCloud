@@ -44,6 +44,12 @@ public interface TranslatedValue {
 	@Nonnull
 	String getName();
 
+	/**
+	 * @return the raw value of this translatable
+	 */
+	@Nonnull
+	List<String> getValue();
+
 	@Nonnull
 	String asString(@Nonnull Object... args);
 

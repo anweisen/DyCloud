@@ -53,6 +53,7 @@ public class DefaultTranslatedValue implements TranslatedValue, LoggingApiUser {
 	}
 
 	@Nonnull
+	@Override
 	public List<String> getValue() {
 		return value;
 	}
@@ -193,8 +194,8 @@ public class DefaultTranslatedValue implements TranslatedValue, LoggingApiUser {
 				inArgument = false;
 				if (markedTrans) {
 					String translation = argument.toString();
-					if (translation.equals(getName()))      throw new IllegalStateException("Cannot use itself");
-					if (translation.equals(getFullName()))  throw new IllegalStateException("Cannot use itself");
+					if (translation.equals(getName()))      throw new IllegalStateException("Cannot use itself ('" + translation + "')");
+					if (translation.equals(getFullName()))  throw new IllegalStateException("Cannot use itself ('" + translation + "')");
 
 					final TranslatedValue value;
 					if (getSection().hasValue(translation)) {
