@@ -62,7 +62,9 @@ public final class HostAndPort implements SerializableObject {
 	@CheckReturnValue
 	public static String localhost() {
 		try {
-			return new BufferedReader(new InputStreamReader(new URL("http://checkip.amazonaws.com").openStream())).readLine();
+			try (BufferedReader reader = new BufferedReader(new InputStreamReader(new URL("https://checkip.amazonaws.com").openStream()))) {
+				return reader.readLine();
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
