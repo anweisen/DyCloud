@@ -14,6 +14,9 @@ public enum HttpMethod {
 	PATCH,
 	DELETE,
 	TRACE,
-	CONNECT
+	CONNECT,
+	PURGE,
+	LINK,
+	UNLINK,
 
 }
