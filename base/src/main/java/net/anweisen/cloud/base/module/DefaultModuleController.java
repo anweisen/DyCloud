@@ -6,8 +6,9 @@ import net.anweisen.cloud.base.module.config.ModuleEnvironment;
 import net.anweisen.cloud.base.module.config.ModuleState;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
-import net.anweisen.utilities.common.config.Document;
-import net.anweisen.utilities.common.config.FileDocument;
+import net.anweisen.utility.document.Document;
+import net.anweisen.utility.document.Documents;
+import net.anweisen.utility.document.wrapped.StorableDocument;
 
 import javax.annotation.Nonnull;
 import java.io.InputStream;
@@ -29,7 +30,7 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 	private final Path jarFile;
 
 	private Path dataFolder;
-	private FileDocument config;
+	private StorableDocument config;
 	private ModuleClassLoader classLoader;
 	private ModuleConfig moduleConfig;
 	private CloudModule module;
@@ -59,7 +60,7 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 		Document document;
 
 		try {
-			document = Document.parseJson(reader);
+			document = Documents.newJsonDocument(reader);
 		} catch (Exception ex) {
 			throw new IllegalArgumentException("Unable to parse module config", ex);
 		}
@@ -76,7 +77,7 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 			document.getString("version"),
 			document.getString("main"),
 			document.getString("website", ""),
-			document.getStringArray("depends"),
+			document.getBundle("depends").toStrings().toArray(new String[0]), // TODO ugly
 			document.getEnum("copy", ModuleCopyType.NONE),
 			document.getEnum("environment", ModuleEnvironment.ALL)
 		);
@@ -170,7 +171,7 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 
 	@Nonnull
 	@Override
-	public FileDocument getConfig() {
+	public StorableDocument getConfig() {
 		if (config == null)
 			return reloadConfig();
 		return config;
@@ -178,9 +179,9 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 
 	@Nonnull
 	@Override
-	public FileDocument reloadConfig() {
+	public StorableDocument reloadConfig() {
 		synchronized (this) {
-			return config = FileDocument.readJsonFile(this.getDataFolder().resolve("config.json").toFile());
+			return config = Documents.newStorableJsonDocumentUnchecked(this.getDataFolder().resolve("config.json"));
 		}
 	}
 

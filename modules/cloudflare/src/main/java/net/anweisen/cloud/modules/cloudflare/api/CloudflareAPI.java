@@ -8,7 +8,8 @@ import net.anweisen.cloud.modules.cloudflare.api.dns.DnsRecord;
 import net.anweisen.cloud.modules.cloudflare.api.dns.DnsRecordDetail;
 import net.anweisen.cloud.modules.cloudflare.config.CloudflareConfigEntry;
 import net.anweisen.cloud.modules.cloudflare.config.CloudflareConfigEntry.AuthenticationMethod;
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.document.Document;
+import net.anweisen.utility.document.Documents;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -139,7 +140,7 @@ public class CloudflareAPI implements LoggingApiUser {
 		Preconditions.checkNotNull(connection, "connection");
 		Preconditions.checkNotNull(record, "record");
 
-		return sendRequestAndReadResponse(connection, Document.of(record).toJson());
+		return sendRequestAndReadResponse(connection, Documents.newJsonDocument(record).toJson());
 	}
 
 	@Nonnull
@@ -156,9 +157,9 @@ public class CloudflareAPI implements LoggingApiUser {
 		}
 
 		if (connection.getResponseCode() >= 200 && connection.getResponseCode() < 300) {
-			return Document.parseJson(connection.getInputStream());
+			return Documents.newJsonDocument(connection.getInputStream());
 		} else {
-			return Document.parseJson(connection.getErrorStream());
+			return Documents.newJsonDocument(connection.getErrorStream());
 		}
 	}
 

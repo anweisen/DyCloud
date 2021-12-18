@@ -2,8 +2,8 @@ package net.anweisen.cloud.base.console.handler;
 
 import net.anweisen.cloud.base.console.ConsoleColor;
 import net.anweisen.cloud.base.console.SpacePadder;
-import net.anweisen.utilities.common.logging.handler.LogEntry;
-import net.anweisen.utilities.common.logging.handler.LogHandler;
+import net.anweisen.utility.common.logging.handler.LogEntry;
+import net.anweisen.utility.common.logging.handler.LogHandler;
 
 import javax.annotation.Nonnull;
 import java.io.PrintWriter;

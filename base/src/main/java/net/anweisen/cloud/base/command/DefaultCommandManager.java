@@ -10,9 +10,9 @@ import net.anweisen.cloud.base.command.sender.CommandSender;
 import net.anweisen.cloud.base.command.sender.PlayerCommandSender;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.config.global.objects.CommandObject;
-import net.anweisen.utilities.common.collection.WrappedException;
-import net.anweisen.utilities.common.misc.ReflectionUtils;
-import net.anweisen.utilities.common.misc.StringUtils;
+import net.anweisen.utility.common.collection.WrappedException;
+import net.anweisen.utility.common.misc.ReflectionUtils;
+import net.anweisen.utility.common.misc.StringUtils;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Method;

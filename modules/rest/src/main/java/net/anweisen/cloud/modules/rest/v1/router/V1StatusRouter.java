@@ -6,7 +6,7 @@ import net.anweisen.cloud.driver.network.http.HttpContext;
 import net.anweisen.cloud.driver.network.http.HttpMethod;
 import net.anweisen.cloud.driver.network.http.handler.HttpEndpoint;
 import net.anweisen.cloud.driver.network.http.handler.HttpRouter;
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.document.Documents;
 
 import javax.annotation.Nonnull;
 
@@ -23,7 +23,7 @@ public class V1StatusRouter {
 
 		context.getResponse()
 			.setHeader("Content-Type", "application/json")
-			.setBody(Document.of(
+			.setBody(Documents.newJsonDocument(
 				"up_time", driver.getUpTime(),
 				"startup_time", driver.getStartupTime()
 			))

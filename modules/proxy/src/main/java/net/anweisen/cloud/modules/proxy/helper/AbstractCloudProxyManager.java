@@ -7,8 +7,8 @@ import net.anweisen.cloud.modules.proxy.config.ProxyConfig;
 import net.anweisen.cloud.modules.proxy.config.ProxyMotdEntryConfig;
 import net.anweisen.cloud.modules.proxy.config.ProxyTabListEntryConfig;
 import net.anweisen.cloud.wrapper.CloudWrapper;
-import net.anweisen.utilities.common.collection.IRandom;
-import net.anweisen.utilities.common.misc.StringUtils;
+import net.anweisen.utility.common.collection.IRandom;
+import net.anweisen.utility.common.misc.StringUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

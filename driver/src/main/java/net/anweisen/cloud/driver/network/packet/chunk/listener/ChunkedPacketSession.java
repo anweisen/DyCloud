@@ -3,7 +3,8 @@ package net.anweisen.cloud.driver.network.packet.chunk.listener;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.chunk.ChunkedPacket;
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.document.Document;
+import net.anweisen.utility.document.Documents;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -28,7 +29,7 @@ public class ChunkedPacketSession implements LoggingApiUser {
 	private ChunkedPacket lastPacket;
 
 	private int chunkId = 0;
-	private Document header = Document.empty();
+	private Document header = Documents.emptyDocument();
 	private volatile boolean closed;
 
 	public ChunkedPacketSession(@Nonnull SocketChannel channel, @Nonnull ChunkedPacketListener listener, @Nonnull UUID sessionUniqueId, @Nonnull OutputStream outputStream, @Nonnull Map<String, Object> properties) {

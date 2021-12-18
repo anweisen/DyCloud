@@ -18,7 +18,7 @@ import net.anweisen.cloud.driver.network.netty.NettySSLServer;
 import net.anweisen.cloud.driver.network.netty.NettyUtils;
 import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.network.object.SSLConfiguration;
-import net.anweisen.utilities.common.collection.pair.Tuple;
+import net.anweisen.utility.common.collection.pair.Tuple;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

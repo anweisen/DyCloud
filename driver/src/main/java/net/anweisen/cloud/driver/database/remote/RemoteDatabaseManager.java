@@ -2,7 +2,7 @@ package net.anweisen.cloud.driver.database.remote;
 
 import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.database.DatabaseManager;
-import net.anweisen.utilities.database.Database;
+import net.anweisen.utility.database.Database;
 
 import javax.annotation.Nonnull;
 

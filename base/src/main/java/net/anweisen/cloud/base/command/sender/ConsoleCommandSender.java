@@ -2,7 +2,7 @@ package net.anweisen.cloud.base.command.sender;
 
 import net.anweisen.cloud.base.command.sender.defaults.DefaultConsoleCommandSender;
 import net.anweisen.cloud.base.console.Console;
-import net.anweisen.utilities.common.logging.ILogger;
+import net.anweisen.utility.common.logging.ILogger;
 
 import javax.annotation.Nonnull;
 

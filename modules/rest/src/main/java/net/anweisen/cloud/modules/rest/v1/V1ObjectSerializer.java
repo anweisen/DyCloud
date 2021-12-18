@@ -4,7 +4,8 @@ import net.anweisen.cloud.driver.player.CloudPlayer;
 import net.anweisen.cloud.driver.player.connection.PlayerConnection;
 import net.anweisen.cloud.driver.player.settings.PlayerSettings;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.document.Document;
+import net.anweisen.utility.document.Documents;
 
 import javax.annotation.Nonnull;
 
@@ -15,7 +16,7 @@ import javax.annotation.Nonnull;
 public final class V1ObjectSerializer {
 
 	public static Document forOnlinePlayer(@Nonnull CloudPlayer player) {
-		return Document.of(
+		return Documents.newJsonDocument(
 			"uniqueId", player.getUniqueId(),
 			"name", player.getName(),
 			"server", player.getServerOptional().map(ServiceInfo::getName).orElse(null),
@@ -27,25 +28,25 @@ public final class V1ObjectSerializer {
 	}
 
 	public static Document forPlayerConnection(@Nonnull PlayerConnection connection, boolean includeProxy, boolean includeAddress) {
-		return Document.of(
+		return Documents.newJsonDocument(
 			"online", connection.getOnlineMode(),
 			"legacy", connection.getLegacy(),
-			"version", Document.of(
+			"version", Documents.newJsonDocument(
 				"name", connection.getVersion().getName(),
 				"id", connection.getRawVersion()
 			)
-		).<Document>applyIf(includeProxy, data -> data.set("proxy", connection.getProxyName()))
-		.<Document>applyIf(includeAddress, data -> data.set("address", connection.getAddress()));
+		).applyIf(includeProxy, data -> data.set("proxy", connection.getProxyName()))
+		.applyIf(includeAddress, data -> data.set("address", connection.getAddress()));
 	}
 
 	public static Document forPlayerSettings(@Nonnull PlayerSettings settings, boolean includeSkinParts) {
-		return Document.of(
+		return Documents.newJsonDocument(
 			"locale", settings.getLocale(),
 			"chatColors", settings.hasChatColors(),
 			"chatMode", settings.getChatMode(),
 			"mainHand", settings.getMainHand(),
 			"renderDistance", settings.getRenderDistance()
-		).<Document>applyIf(includeSkinParts, data -> data.set("skin", settings.getSkinParts()));
+		).applyIf(includeSkinParts, data -> data.set("skin", settings.getSkinParts()));
 	}
 
 	private V1ObjectSerializer() {}

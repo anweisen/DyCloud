@@ -2,7 +2,7 @@ package net.anweisen.cloud.base.console.jline3;
 
 import net.anweisen.cloud.base.console.Console;
 import net.anweisen.cloud.base.console.ConsoleColor;
-import net.anweisen.utilities.common.concurrent.task.Task;
+import net.anweisen.utility.common.concurrent.task.Task;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 import org.jline.reader.Completer;

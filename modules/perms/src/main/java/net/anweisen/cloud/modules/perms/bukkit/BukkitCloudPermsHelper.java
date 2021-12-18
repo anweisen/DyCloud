@@ -1,7 +1,7 @@
 package net.anweisen.cloud.modules.perms.bukkit;
 
 import net.anweisen.cloud.driver.player.permission.Permissions;
-import net.anweisen.utilities.common.misc.ReflectionUtils;
+import net.anweisen.utility.common.misc.ReflectionUtils;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;

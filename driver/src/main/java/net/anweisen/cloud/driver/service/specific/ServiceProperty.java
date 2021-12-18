@@ -3,7 +3,7 @@ package net.anweisen.cloud.driver.service.specific;
 import net.anweisen.cloud.driver.service.specific.data.PlayerInfo;
 import net.anweisen.cloud.driver.service.specific.data.PluginInfo;
 import net.anweisen.cloud.driver.service.specific.data.WorldInfo;
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.document.Document;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -50,7 +50,7 @@ public interface ServiceProperty<T> {
 	/**
 	 * The registered plugin messaging channels of the proxy messenger
 	 */
-	ServiceProperty<Collection<String>> MESSAGING_CHANNELS = newServiceProperty("channels", Document::getStringList);
+	ServiceProperty<Collection<String>> MESSAGING_CHANNELS = newServiceProperty("channels", Document::getStrings);
 
 	/**
 	 * A string representing the current phase of the service like LOBBY, FULL, INGAME, defaults to LOBBY when started
@@ -103,12 +103,12 @@ public interface ServiceProperty<T> {
 
 	@Nonnull
 	static <T> ServiceProperty<List<T>> newServiceListProperty(@Nonnull String name, @Nonnull Function<Document, T> mapper) {
-		return newServiceProperty(name, (document, path) -> document.getDocumentList(path).stream().map(mapper).collect(Collectors.toList()));
+		return newServiceProperty(name, (document, path) -> document.getDocuments(path).stream().map(mapper).collect(Collectors.toList()));
 	}
 
 	@Nonnull
 	static <T> ServiceProperty<List<T>> newServiceListProperty(@Nonnull String name, @Nonnull Class<T> classOfT) {
-		return newServiceProperty(name, (document, path) -> document.getInstanceList(path, classOfT));
+		return newServiceProperty(name, (document, path) -> document.getInstances(path, classOfT));
 	}
 
 }

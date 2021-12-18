@@ -7,7 +7,7 @@ import net.anweisen.cloud.driver.network.http.handler.HttpHandlerRegistry;
 import net.anweisen.cloud.driver.network.http.websocket.WebSocketChannel;
 import net.anweisen.cloud.driver.network.http.websocket.WebSocketFrameType;
 import net.anweisen.cloud.driver.network.object.HostAndPort;
-import net.anweisen.utilities.common.collection.pair.Tuple;
+import net.anweisen.utility.common.collection.pair.Tuple;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

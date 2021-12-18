@@ -27,14 +27,14 @@
 		</dependency>
 
 		<dependency>
-			<groupId>net.anweisen.utilities</groupId>
+			<groupId>net.anweisen.utility</groupId>
 			<artifactId>database-mongodb</artifactId>
-			<version>${utilities.version}</version>
+			<version>${utility.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>net.anweisen.utilities</groupId>
+			<groupId>net.anweisen.utility</groupId>
 			<artifactId>database-sql</artifactId>
-			<version>${utilities.version}</version>
+			<version>${utility.version}</version>
 		</dependency>
 
 	</dependencies>

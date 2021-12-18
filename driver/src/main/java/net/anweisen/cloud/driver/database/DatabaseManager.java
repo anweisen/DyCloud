@@ -1,8 +1,8 @@
 package net.anweisen.cloud.driver.database;
 
 import net.anweisen.cloud.driver.CloudDriver;
-import net.anweisen.utilities.database.Database;
-import net.anweisen.utilities.database.SpecificDatabase;
+import net.anweisen.utility.database.Database;
+import net.anweisen.utility.database.SpecificDatabase;
 
 import javax.annotation.Nonnull;
 

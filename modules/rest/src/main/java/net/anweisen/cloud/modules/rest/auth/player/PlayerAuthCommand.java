@@ -6,7 +6,7 @@ import net.anweisen.cloud.base.command.annotation.CommandPath;
 import net.anweisen.cloud.base.command.sender.PlayerCommandSender;
 import net.anweisen.cloud.driver.player.CloudPlayer;
 import net.anweisen.cloud.driver.player.permission.Permissions;
-import net.anweisen.utilities.common.collection.IRandom;
+import net.anweisen.utility.common.collection.IRandom;
 
 import javax.annotation.Nonnull;
 import java.util.Base64;

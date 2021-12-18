@@ -5,7 +5,7 @@ import net.anweisen.cloud.driver.player.chat.ChatClickReaction;
 import net.anweisen.cloud.driver.player.chat.ChatText;
 import net.anweisen.cloud.driver.translate.LanguageSection;
 import net.anweisen.cloud.driver.translate.TranslatedValue;
-import net.anweisen.utilities.common.misc.StringUtils;
+import net.anweisen.utility.common.misc.StringUtils;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

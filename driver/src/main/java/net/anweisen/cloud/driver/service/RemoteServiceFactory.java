@@ -5,7 +5,7 @@ import net.anweisen.cloud.driver.network.packet.def.ServiceControlPacket;
 import net.anweisen.cloud.driver.network.packet.def.ServiceControlPacket.ServiceControlPayload;
 import net.anweisen.cloud.driver.service.config.ServiceTask;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
-import net.anweisen.utilities.common.concurrent.task.Task;
+import net.anweisen.utility.common.concurrent.task.Task;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

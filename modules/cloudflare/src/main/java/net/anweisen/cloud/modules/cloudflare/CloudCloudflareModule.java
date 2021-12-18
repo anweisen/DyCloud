@@ -13,7 +13,7 @@ import net.anweisen.cloud.modules.cloudflare.config.CloudflareConfigEntry;
 import net.anweisen.cloud.modules.cloudflare.config.CloudflareConfigEntryGroup;
 import net.anweisen.cloud.modules.cloudflare.listener.CloudNodeConnectionListener;
 import net.anweisen.cloud.modules.cloudflare.listener.CloudServiceStatusListener;
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.document.Documents;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
@@ -47,7 +47,7 @@ public final class CloudCloudflareModule extends CloudModule {
 	private void loadConfig() {
 		config = getConfig().getInstance("config", CloudflareConfig.class);
 		getLogger().debug("Loaded config {}", config);
-		if (config == null)
+		if (config == null) {
 			getConfig().set("config", config = new CloudflareConfig(
 				Collections.singletonList(
 					new CloudflareConfigEntry(
@@ -66,7 +66,9 @@ public final class CloudCloudflareModule extends CloudModule {
 						)
 					)
 				)
-			)).save();
+			));
+			getConfig().save();
+		}
 	}
 
 	private void initCloudflareApi() {
@@ -89,7 +91,7 @@ public final class CloudCloudflareModule extends CloudModule {
 					DnsType.A,
 					endpoint,
 					node.getAddress().getHost(),
-					Document.empty()
+					Documents.emptyDocument()
 				)
 			);
 

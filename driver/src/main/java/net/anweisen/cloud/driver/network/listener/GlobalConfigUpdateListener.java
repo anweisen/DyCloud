@@ -6,7 +6,7 @@ import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
 import net.anweisen.cloud.driver.network.packet.def.GlobalConfigPacket.GlobalConfigPayload;
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.document.Document;
 
 import javax.annotation.Nonnull;
 

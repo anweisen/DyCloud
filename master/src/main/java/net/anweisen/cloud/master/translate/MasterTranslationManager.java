@@ -6,8 +6,9 @@ import net.anweisen.cloud.driver.translate.defaults.DefaultCachedLanguage;
 import net.anweisen.cloud.driver.translate.defaults.DefaultLanguageSection;
 import net.anweisen.cloud.driver.translate.defaults.DefaultTranslatable;
 import net.anweisen.cloud.driver.translate.defaults.DefaultTranslatedValue;
-import net.anweisen.utilities.common.config.Document;
-import net.anweisen.utilities.common.misc.FileUtils;
+import net.anweisen.utility.common.misc.FileUtils;
+import net.anweisen.utility.document.Document;
+import net.anweisen.utility.document.Documents;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -75,7 +76,7 @@ public class MasterTranslationManager implements TranslationManager, LoggingApiU
 	public void setup() {
 		FileUtils.createDirectory(directory);
 
-		List<Document> documents = Document.parseJsonArray(getClass().getClassLoader().getResourceAsStream("language/_.json"));
+		List<Document> documents = Documents.newJsonBundle(getClass().getClassLoader().getResourceAsStream("language/_.json")).toDocuments();
 		for (Document document : documents) {
 			try {
 				InputStream stream = getClass().getClassLoader().getResourceAsStream("language/" + document.getString("file"));
@@ -83,7 +84,7 @@ public class MasterTranslationManager implements TranslationManager, LoggingApiU
 					warn("Language file for {} could not be found", document);
 					continue;
 				}
-				Document values = Document.parseJson(stream);
+				Document values = Documents.newJsonDocument(stream);
 
 				Path languageDirectory = directory.resolve(FileUtils.getFileName(document.getString("file")));
 				FileUtils.createDirectory(languageDirectory);
@@ -91,15 +92,15 @@ public class MasterTranslationManager implements TranslationManager, LoggingApiU
 				// Write language file
 				Path languageConfig = languageDirectory.resolve(configPath);
 				if (!Files.exists(languageConfig)) {
-					Document.create()
-						.set("name", document.getString("name"))
-						.set("name.local", document.getString("name.local"))
-						.saveToFile(languageConfig);
+					Documents.newJsonDocument(
+						"name", document.getString("name"),
+						"name.local", document.getString("name.local")
+					).saveToFile(languageConfig);
 				}
 
 				// Write new translations to cloud section
 				Path cloudSection = languageDirectory.resolve("cloud.json");
-				Document existing = Document.readJsonFile(cloudSection);
+				Document existing = Documents.newJsonDocument(cloudSection);
 				values.forEach((key, value) -> {
 					if (!existing.contains(key))
 						existing.set(key, value);
@@ -120,7 +121,7 @@ public class MasterTranslationManager implements TranslationManager, LoggingApiU
 			String languageId = languageDirectory.getFileName().toString();
 
 			Path config = languageDirectory.resolve(configPath);
-			Document data = Document.readJsonFile(config);
+			Document data = Documents.newJsonDocumentUnchecked(config);
 
 			DefaultCachedLanguage language = new DefaultCachedLanguage(languageId, new LanguageConfig(data));
 			languages.put(languageId, language);
@@ -129,9 +130,9 @@ public class MasterTranslationManager implements TranslationManager, LoggingApiU
 
 				Map<String, TranslatedValue> values = new LinkedHashMap<>();
 				DefaultLanguageSection section = new DefaultLanguageSection(language, FileUtils.getFileName(sectionPath.getFileName()), values);
-				Document sectionData = Document.readJsonFile(sectionPath);
+				Document sectionData = Documents.newJsonDocumentUnchecked(sectionPath);
 				for (String key : sectionData.keys()) {
-					values.put(key, new DefaultTranslatedValue(section, key, sectionData.getStringList(key)));
+					values.put(key, new DefaultTranslatedValue(section, key, sectionData.getStrings(key)));
 				}
 
 				language.registerSection(section);

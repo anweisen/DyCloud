@@ -1,10 +1,10 @@
 package net.anweisen.cloud.wrapper;
 
 import net.anweisen.cloud.driver.console.handler.DefaultLogHandler;
-import net.anweisen.utilities.common.logging.ILogger;
-import net.anweisen.utilities.common.logging.LogLevel;
-import net.anweisen.utilities.common.logging.handler.HandledAsyncLogger;
-import net.anweisen.utilities.common.logging.handler.HandledLogger;
+import net.anweisen.utility.common.logging.ILogger;
+import net.anweisen.utility.common.logging.LogLevel;
+import net.anweisen.utility.common.logging.handler.HandledAsyncLogger;
+import net.anweisen.utility.common.logging.handler.HandledLogger;
 
 import javax.annotation.Nonnull;
 import java.lang.instrument.Instrumentation;

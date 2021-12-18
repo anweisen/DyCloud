@@ -2,9 +2,11 @@ package net.anweisen.cloud.driver.player.permission.impl;
 
 import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.player.permission.PermissionGroup;
-import net.anweisen.utilities.common.collection.WrappedException;
-import net.anweisen.utilities.common.config.Document;
-import net.anweisen.utilities.common.misc.FileUtils;
+import net.anweisen.utility.common.collection.WrappedException;
+import net.anweisen.utility.common.misc.FileUtils;
+import net.anweisen.utility.document.Bundle;
+import net.anweisen.utility.document.Document;
+import net.anweisen.utility.document.Documents;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -26,8 +28,9 @@ public class CloudPermissionManager extends DefaultPermissionManager implements 
 
 	@Override
 	public void reload() {
-		for (Document document : Document.readJsonArrayFile(file)) {
-			PermissionGroup group = document.toInstanceOf(DefaultPermissionGroup.class);
+		List<Document> documents = Documents.newJsonBundleUnchecked(file).toDocuments();
+		for (Document document : documents) {
+			PermissionGroup group = document.toInstance(DefaultPermissionGroup.class);
 			extended("=> {}", group);
 			if (group != null) groups.put(group.getUniqueId(), group);
 		}
@@ -56,11 +59,11 @@ public class CloudPermissionManager extends DefaultPermissionManager implements 
 		List<PermissionGroup> groups = new ArrayList<>(this.groups.values());
 		groups.sort(Comparator.comparingInt(PermissionGroup::getSortId));
 
-		List<Document> documents = new ArrayList<>(groups.size());
-		groups.forEach(group -> documents.add(Document.of(group)));
+		Bundle bundle = Documents.newJsonBundle(groups.size());
+		groups.forEach(group -> bundle.add(Documents.newJsonDocument(group)));
 
 		try {
-			Document.saveArray(documents, file);
+			bundle.saveToFile(file);
 		} catch (IOException ex) {
 			throw new WrappedException(ex);
 		}

@@ -1,7 +1,7 @@
 package net.anweisen.cloud.modules.perms.velocity;
 
 import com.velocitypowered.api.proxy.Player;
-import net.anweisen.utilities.common.misc.ReflectionUtils;
+import net.anweisen.utility.common.misc.ReflectionUtils;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;

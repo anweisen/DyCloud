@@ -3,9 +3,11 @@ package net.anweisen.cloud.wrapper.config;
 import net.anweisen.cloud.driver.config.DriverRemoteConfig;
 import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.wrapper.CloudWrapper;
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.document.Document;
+import net.anweisen.utility.document.Documents;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
@@ -26,13 +28,13 @@ public final class WrapperConfig implements DriverRemoteConfig {
 	private String serviceTaskName;
 
 	@Override
-	public void load() {
+	public void load() throws IOException {
 
-		Document document = Document.readJsonFile(path);
+		Document document = Documents.newJsonDocument(path);
 
 		masterAddress = document.getInstance("master", HostAndPort.class);
-		identity = document.getUUID("identity");
-		serviceUniqueId = document.getUUID("serviceUniqueId");
+		identity = document.getUniqueId("identity");
+		serviceUniqueId = document.getUniqueId("serviceUniqueId");
 		serviceTaskName = document.getString("serviceTaskName");
 
 	}

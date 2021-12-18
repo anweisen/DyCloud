@@ -1,7 +1,7 @@
 package net.anweisen.cloud.driver.console;
 
 import net.anweisen.cloud.driver.CloudDriver;
-import net.anweisen.utilities.common.logging.ILogger;
+import net.anweisen.utility.common.logging.ILogger;
 
 import javax.annotation.Nonnull;
 
@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public interface LoggingApiUser extends net.anweisen.utilities.common.logging.LoggingApiUser {
+public interface LoggingApiUser extends net.anweisen.utility.common.logging.LoggingApiUser {
 
 	@Nonnull
 	@Override

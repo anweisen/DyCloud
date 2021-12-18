@@ -3,7 +3,8 @@ package net.anweisen.cloud.driver.network.netty.http;
 import io.netty.handler.codec.http.HttpHeaders;
 import net.anweisen.cloud.driver.network.http.HttpMessage;
 import net.anweisen.cloud.driver.network.http.HttpVersion;
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.document.Document;
+import net.anweisen.utility.document.Documents;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -125,7 +126,7 @@ public interface NettyDefaultHttpMessage<M extends HttpMessage<?>> extends HttpM
 	@Nonnull
 	@Override
 	default M setBody(@Nonnull Collection<Document> array) {
-		return setBody(Document.toJson(array));
+		return setBody(Documents.newJsonBundle(array).toJson());
 	}
 
 	@Nonnull

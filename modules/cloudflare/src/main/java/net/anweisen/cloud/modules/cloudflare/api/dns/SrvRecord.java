@@ -4,7 +4,7 @@ import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.master.CloudMaster;
 import net.anweisen.cloud.modules.cloudflare.config.CloudflareConfigEntry;
 import net.anweisen.cloud.modules.cloudflare.config.CloudflareConfigEntryGroup;
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.document.Documents;
 
 import javax.annotation.Nonnull;
 
@@ -17,14 +17,15 @@ public class SrvRecord extends DnsRecord {
 			content,
 			1,
 			false,
-			Document.create()
-				.set("service", service)
-				.set("proto", proto)
-				.set("name", secondName)
-				.set("priority", priority)
-				.set("weight", weight)
-				.set("port", port)
-				.set("target", target)
+			Documents.newJsonDocument(
+				"service", service,
+				"proto", proto,
+				"name", secondName,
+				"priority", priority,
+				"weight", weight,
+				"port", port,
+				"target", target
+			)
 		);
 	}
 

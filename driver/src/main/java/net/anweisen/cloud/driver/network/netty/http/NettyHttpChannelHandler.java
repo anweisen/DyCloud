@@ -12,7 +12,7 @@ import net.anweisen.cloud.driver.network.http.auth.HttpAuthHandler;
 import net.anweisen.cloud.driver.network.http.auth.HttpAuthUser;
 import net.anweisen.cloud.driver.network.http.handler.RegisteredHandler;
 import net.anweisen.cloud.driver.network.object.HostAndPort;
-import net.anweisen.utilities.common.collection.pair.Tuple;
+import net.anweisen.utility.common.collection.pair.Tuple;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;

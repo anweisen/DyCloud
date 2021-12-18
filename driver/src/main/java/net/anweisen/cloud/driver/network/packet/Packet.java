@@ -2,7 +2,8 @@ package net.anweisen.cloud.driver.network.packet;
 
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.document.Document;
+import net.anweisen.utility.document.Documents;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
@@ -12,7 +13,7 @@ import java.util.function.Consumer;
 
 public class Packet {
 
-	public static final Packet EMPTY_RESPONSE = new Packet(PacketChannels.RESPONSE_CHANNEL, Document.empty(), newBuffer());
+	public static final Packet EMPTY_RESPONSE = new Packet(PacketChannels.RESPONSE_CHANNEL, Documents.emptyDocument(), newBuffer());
 
 	protected final long creationMillis = System.currentTimeMillis();
 
@@ -63,13 +64,13 @@ public class Packet {
 	@Nonnull
 	@CheckReturnValue
 	public static Packet createResponseFor(@Nonnull Packet packet, @Nullable PacketBuffer buffer) {
-		return new Packet(PacketChannels.RESPONSE_CHANNEL, packet.getUniqueId(), Document.empty(), buffer);
+		return new Packet(PacketChannels.RESPONSE_CHANNEL, packet.getUniqueId(), Documents.emptyDocument(), buffer);
 	}
 
 	@Nonnull
 	@CheckReturnValue
 	public static Packet createResponseFor(@Nonnull Packet packet) {
-		return new Packet(PacketChannels.RESPONSE_CHANNEL, packet.getUniqueId(), Document.empty());
+		return new Packet(PacketChannels.RESPONSE_CHANNEL, packet.getUniqueId(), Documents.emptyDocument());
 	}
 
 	@Nonnull
@@ -79,7 +80,7 @@ public class Packet {
 
 	@Nonnull
 	public static Document newDocument() {
-		return Document.create();
+		return Documents.newJsonDocument();
 	}
 
 	protected void apply(@Nullable Consumer<? super PacketBuffer> modifier) {
@@ -101,7 +102,7 @@ public class Packet {
 
 	@Nonnull
 	public Document getHeader() {
-		return header == null ? Document.empty() : header;
+		return header == null ? Documents.emptyDocument() : header;
 	}
 
 	@Nullable

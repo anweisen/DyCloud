@@ -3,13 +3,14 @@ package net.anweisen.cloud.driver.database.remote.action;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.network.packet.def.RemoteDatabaseActionPacket;
 import net.anweisen.cloud.driver.network.packet.def.RemoteDatabaseActionPacket.DatabaseActionPayload;
-import net.anweisen.utilities.common.concurrent.task.Task;
-import net.anweisen.utilities.common.config.Document;
-import net.anweisen.utilities.database.Order;
-import net.anweisen.utilities.database.action.DatabaseQuery;
-import net.anweisen.utilities.database.action.ExecutedQuery;
-import net.anweisen.utilities.database.exceptions.DatabaseException;
-import net.anweisen.utilities.database.internal.abstraction.DefaultExecutedQuery;
+import net.anweisen.utility.common.concurrent.task.Task;
+import net.anweisen.utility.database.Order;
+import net.anweisen.utility.database.action.DatabaseQuery;
+import net.anweisen.utility.database.action.ExecutedQuery;
+import net.anweisen.utility.database.exception.DatabaseException;
+import net.anweisen.utility.database.internal.abstraction.DefaultExecutedQuery;
+import net.anweisen.utility.document.Document;
+import net.anweisen.utility.document.Documents;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,7 +23,7 @@ import java.util.Objects;
  */
 public class RemoteDatabaseQuery implements DatabaseQuery, RemoteDatabaseCallbackAction<ExecutedQuery> {
 
-	private final Document document = Document.create();
+	private final Document document = Documents.newJsonDocument();
 	private final String table;
 
 	public RemoteDatabaseQuery(@Nonnull String table) {

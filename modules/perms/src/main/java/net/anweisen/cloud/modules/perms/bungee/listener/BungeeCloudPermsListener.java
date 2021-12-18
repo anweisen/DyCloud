@@ -2,7 +2,7 @@ package net.anweisen.cloud.modules.perms.bungee.listener;
 
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.player.permission.PermissionPlayer;
-import net.anweisen.utilities.common.misc.ReflectionUtils;
+import net.anweisen.utility.common.misc.ReflectionUtils;
 import net.md_5.bungee.api.event.PermissionCheckEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;

@@ -1,9 +1,8 @@
 package net.anweisen.cloud.base.console.handler;
 
 import net.anweisen.cloud.base.console.Console;
-import net.anweisen.cloud.driver.console.handler.UncoloredMessageFormatter;
-import net.anweisen.utilities.common.logging.handler.LogEntry;
-import net.anweisen.utilities.common.logging.handler.LogHandler;
+import net.anweisen.utility.common.logging.handler.LogEntry;
+import net.anweisen.utility.common.logging.handler.LogHandler;
 
 import javax.annotation.Nonnull;
 

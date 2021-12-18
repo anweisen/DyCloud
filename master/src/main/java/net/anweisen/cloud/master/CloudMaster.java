@@ -37,8 +37,8 @@ import net.anweisen.cloud.master.service.MasterServiceFactory;
 import net.anweisen.cloud.master.service.MasterServiceManager;
 import net.anweisen.cloud.master.service.config.MasterServiceConfigManager;
 import net.anweisen.cloud.master.translate.MasterTranslationManager;
-import net.anweisen.utilities.common.collection.NamedThreadFactory;
-import net.anweisen.utilities.common.logging.handler.HandledLogger;
+import net.anweisen.utility.common.collection.NamedThreadFactory;
+import net.anweisen.utility.common.logging.handler.HandledLogger;
 
 import javax.annotation.Nonnull;
 import java.nio.file.Paths;

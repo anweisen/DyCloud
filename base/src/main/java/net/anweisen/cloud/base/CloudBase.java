@@ -14,7 +14,7 @@ import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.def.ServicePublishPacket;
 import net.anweisen.cloud.driver.network.packet.def.ServicePublishPacket.ServicePublishPayload;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
-import net.anweisen.utilities.common.logging.handler.HandledLogger;
+import net.anweisen.utility.common.logging.handler.HandledLogger;
 
 import javax.annotation.Nonnull;
 

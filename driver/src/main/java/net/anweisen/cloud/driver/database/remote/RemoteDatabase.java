@@ -5,11 +5,11 @@ import net.anweisen.cloud.driver.database.remote.action.*;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.packet.def.RemoteDatabaseActionPacket;
 import net.anweisen.cloud.driver.network.packet.def.RemoteDatabaseActionPacket.DatabaseActionPayload;
-import net.anweisen.utilities.database.DatabaseConfig;
-import net.anweisen.utilities.database.SQLColumn;
-import net.anweisen.utilities.database.action.*;
-import net.anweisen.utilities.database.exceptions.DatabaseException;
-import net.anweisen.utilities.database.internal.abstraction.AbstractDatabase;
+import net.anweisen.utility.database.DatabaseConfig;
+import net.anweisen.utility.database.SQLColumn;
+import net.anweisen.utility.database.action.*;
+import net.anweisen.utility.database.exception.DatabaseException;
+import net.anweisen.utility.database.internal.abstraction.AbstractDatabase;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;

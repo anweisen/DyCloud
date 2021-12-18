@@ -14,11 +14,11 @@ import net.anweisen.cloud.driver.service.ServiceFactory;
 import net.anweisen.cloud.driver.service.ServiceManager;
 import net.anweisen.cloud.driver.service.config.ServiceConfigManager;
 import net.anweisen.cloud.driver.translate.TranslationManager;
-import net.anweisen.utilities.common.collection.NamedThreadFactory;
-import net.anweisen.utilities.common.function.ExceptionallyRunnable;
-import net.anweisen.utilities.common.logging.ILogger;
-import net.anweisen.utilities.common.logging.handler.HandledLogger;
-import net.anweisen.utilities.common.misc.FileUtils;
+import net.anweisen.utility.common.collection.NamedThreadFactory;
+import net.anweisen.utility.common.function.ExceptionallyRunnable;
+import net.anweisen.utility.common.logging.ILogger;
+import net.anweisen.utility.common.logging.handler.HandledLogger;
+import net.anweisen.utility.common.misc.FileUtils;
 
 import javax.annotation.Nonnull;
 import java.nio.file.Path;

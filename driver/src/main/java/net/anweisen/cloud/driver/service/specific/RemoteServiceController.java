@@ -3,7 +3,7 @@ package net.anweisen.cloud.driver.service.specific;
 import net.anweisen.cloud.driver.network.NetworkingApiUser;
 import net.anweisen.cloud.driver.network.packet.def.ServiceControlPacket;
 import net.anweisen.cloud.driver.network.packet.def.ServiceControlPacket.ServiceControlPayload;
-import net.anweisen.utilities.common.concurrent.task.Task;
+import net.anweisen.utility.common.concurrent.task.Task;
 
 import javax.annotation.Nonnull;
 

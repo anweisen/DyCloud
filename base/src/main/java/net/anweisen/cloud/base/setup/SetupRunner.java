@@ -3,7 +3,7 @@ package net.anweisen.cloud.base.setup;
 import net.anweisen.cloud.base.setup.cnl.CNLInterpreter;
 import net.anweisen.cloud.base.setup.cnl.commands.EchoCNLCommand;
 import net.anweisen.cloud.base.setup.cnl.commands.VarCNLCommand;
-import net.anweisen.utilities.common.collection.WrappedException;
+import net.anweisen.utility.common.collection.WrappedException;
 
 import java.io.InputStream;
 import java.nio.file.Files;

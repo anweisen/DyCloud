@@ -5,10 +5,10 @@ import net.anweisen.cloud.base.console.handler.ConsoleLogHandler;
 import net.anweisen.cloud.base.console.jline3.JLine3Console;
 import net.anweisen.cloud.base.setup.SetupRunner;
 import net.anweisen.cloud.driver.console.handler.FileLogHandler;
-import net.anweisen.utilities.common.logging.ILogger;
-import net.anweisen.utilities.common.logging.LogLevel;
-import net.anweisen.utilities.common.logging.handler.HandledAsyncLogger;
-import net.anweisen.utilities.common.logging.handler.HandledLogger;
+import net.anweisen.utility.common.logging.ILogger;
+import net.anweisen.utility.common.logging.LogLevel;
+import net.anweisen.utility.common.logging.handler.HandledAsyncLogger;
+import net.anweisen.utility.common.logging.handler.HandledLogger;
 
 import javax.annotation.Nonnull;
 

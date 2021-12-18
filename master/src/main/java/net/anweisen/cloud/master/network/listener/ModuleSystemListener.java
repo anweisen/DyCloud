@@ -9,8 +9,8 @@ import net.anweisen.cloud.driver.network.packet.PacketListener;
 import net.anweisen.cloud.driver.network.packet.def.ModuleSystemPacket.ModuleSystemPayload;
 import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.master.CloudMaster;
-import net.anweisen.utilities.common.config.Document;
-import net.anweisen.utilities.common.misc.FileUtils;
+import net.anweisen.utility.common.misc.FileUtils;
+import net.anweisen.utility.document.Documents;
 
 import javax.annotation.Nonnull;
 import java.nio.file.Files;
@@ -38,13 +38,13 @@ public class ModuleSystemListener implements PacketListener {
 			case GET_MODULE_JAR: {
 				int index = buffer.readInt();
 				ModuleController module = getModules().get(index);
-				channel.sendChunkedPacketsResponse(packet.getUniqueId(), Document.empty(), Files.newInputStream(module.getJarFile()));
+				channel.sendChunkedPacketsResponse(packet.getUniqueId(), Documents.emptyDocument(), Files.newInputStream(module.getJarFile()));
 				break;
 			}
 			case GET_MODULE_DATA_FOLDER: {
 				int index = buffer.readInt();
 				ModuleController module = getModules().get(index);
-				channel.sendChunkedPacketsResponse(packet.getUniqueId(), Document.empty(), FileUtils.zipToStream(module.getDataFolder()));
+				channel.sendChunkedPacketsResponse(packet.getUniqueId(), Documents.emptyDocument(), FileUtils.zipToStream(module.getDataFolder()));
 				break;
 			}
 		}

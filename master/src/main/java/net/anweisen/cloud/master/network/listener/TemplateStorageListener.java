@@ -9,8 +9,8 @@ import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.service.config.ServiceTemplate;
 import net.anweisen.cloud.driver.service.config.TemplateStorage;
 import net.anweisen.cloud.master.CloudMaster;
-import net.anweisen.utilities.common.config.Document;
-import net.anweisen.utilities.common.misc.FileUtils;
+import net.anweisen.utility.common.misc.FileUtils;
+import net.anweisen.utility.document.Documents;
 
 import javax.annotation.Nonnull;
 import java.io.InputStream;
@@ -36,9 +36,9 @@ public class TemplateStorageListener implements PacketListener, LoggingApiUser {
 
 				if (input == null) {
 					warn("Could not load requested template stream for {}", template.toShortString());
-					channel.sendChunkedPacketsResponse(packet.getUniqueId(), Document.create().set("exists", false), FileUtils.EMPTY_STREAM);
+					channel.sendChunkedPacketsResponse(packet.getUniqueId(), Documents.newJsonDocument("exists", false), FileUtils.EMPTY_STREAM);
 				} else {
-					channel.sendChunkedPacketsResponse(packet.getUniqueId(), Document.create().set("exists", true), input);
+					channel.sendChunkedPacketsResponse(packet.getUniqueId(), Documents.newJsonDocument("exists", true), input);
 				}
 				break;
 			}

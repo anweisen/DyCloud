@@ -1,7 +1,7 @@
 package net.anweisen.cloud.driver.service.specific;
 
 import net.anweisen.cloud.driver.service.ServiceManager;
-import net.anweisen.utilities.common.concurrent.task.Task;
+import net.anweisen.utility.common.concurrent.task.Task;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.TimeUnit;

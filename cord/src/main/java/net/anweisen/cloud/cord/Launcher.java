@@ -1,8 +1,8 @@
 package net.anweisen.cloud.cord;
 
 import net.anweisen.cloud.driver.CloudDriver;
-import net.anweisen.utilities.common.logging.ILogger;
-import net.anweisen.utilities.common.logging.LogLevel;
+import net.anweisen.utility.common.logging.ILogger;
+import net.anweisen.utility.common.logging.LogLevel;
 
 import javax.annotation.Nonnull;
 

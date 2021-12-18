@@ -4,7 +4,7 @@ import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.network.NetworkingApiUser;
 import net.anweisen.cloud.driver.network.packet.def.TemplateStoragePacket;
 import net.anweisen.cloud.driver.network.packet.def.TemplateStoragePacket.TemplateStoragePayload;
-import net.anweisen.utilities.common.concurrent.task.Task;
+import net.anweisen.utility.common.concurrent.task.Task;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

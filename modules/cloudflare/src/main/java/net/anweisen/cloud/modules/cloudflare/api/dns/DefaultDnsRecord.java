@@ -1,6 +1,6 @@
 package net.anweisen.cloud.modules.cloudflare.api.dns;
 
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.document.Document;
 
 import javax.annotation.Nonnull;
 

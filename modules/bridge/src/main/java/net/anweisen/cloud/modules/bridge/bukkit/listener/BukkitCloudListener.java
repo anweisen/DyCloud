@@ -7,7 +7,7 @@ import net.anweisen.cloud.driver.service.specific.data.PluginInfo;
 import net.anweisen.cloud.driver.service.specific.data.WorldInfo;
 import net.anweisen.cloud.modules.bridge.helper.BridgeHelper;
 import net.anweisen.cloud.wrapper.event.service.ServiceInfoConfigureEvent;
-import net.anweisen.utilities.common.misc.SimpleCollectionUtils;
+import net.anweisen.utility.common.misc.CollectionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
@@ -32,7 +32,7 @@ public class BukkitCloudListener {
 			.set(ServiceProperty.EXTRA, BridgeHelper.getExtra())
 			.set(ServiceProperty.MAX_PLAYERS, BridgeHelper.getMaxPlayers())
 			.set(ServiceProperty.ONLINE_PLAYERS, Bukkit.getOnlinePlayers().size())
-			.set(ServiceProperty.MESSAGING_CHANNELS, SimpleCollectionUtils.setOf(Bukkit.getMessenger().getIncomingChannels(), Bukkit.getMessenger().getOutgoingChannels()))
+			.set(ServiceProperty.MESSAGING_CHANNELS, CollectionUtils.createSetOf(Bukkit.getMessenger().getIncomingChannels(), Bukkit.getMessenger().getOutgoingChannels()))
 			.set(ServiceProperty.PLAYERS, Bukkit.getOnlinePlayers().stream().map(player -> {
 				return new PlayerInfo(player.getUniqueId(), player.getName());
 			}).collect(Collectors.toList()))

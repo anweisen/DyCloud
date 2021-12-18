@@ -9,7 +9,7 @@ import net.anweisen.cloud.driver.player.connection.DefaultPlayerConnection;
 import net.anweisen.cloud.driver.player.connection.PlayerConnection;
 import net.anweisen.cloud.driver.player.permission.PermissionData;
 import net.anweisen.cloud.driver.translate.TranslationManager;
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.document.Document;
 
 import javax.annotation.Nonnull;
 import java.util.UUID;

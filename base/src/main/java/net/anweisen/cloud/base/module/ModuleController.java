@@ -2,7 +2,7 @@ package net.anweisen.cloud.base.module;
 
 import net.anweisen.cloud.base.module.config.ModuleConfig;
 import net.anweisen.cloud.base.module.config.ModuleState;
-import net.anweisen.utilities.common.config.FileDocument;
+import net.anweisen.utility.document.wrapped.StorableDocument;
 
 import javax.annotation.Nonnull;
 import java.nio.file.Path;
@@ -36,10 +36,10 @@ public interface ModuleController {
 	Path getDataFolder();
 
 	@Nonnull
-	FileDocument getConfig();
+	StorableDocument getConfig();
 
 	@Nonnull
-	FileDocument reloadConfig();
+	StorableDocument reloadConfig();
 
 	boolean isEnabled();
 

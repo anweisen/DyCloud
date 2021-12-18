@@ -2,9 +2,9 @@ package net.anweisen.cloud.driver.service.config;
 
 import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
-import net.anweisen.utilities.common.collection.WrappedException;
-import net.anweisen.utilities.common.concurrent.task.Task;
-import net.anweisen.utilities.common.misc.FileUtils;
+import net.anweisen.utility.common.collection.WrappedException;
+import net.anweisen.utility.common.concurrent.task.Task;
+import net.anweisen.utility.common.misc.FileUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

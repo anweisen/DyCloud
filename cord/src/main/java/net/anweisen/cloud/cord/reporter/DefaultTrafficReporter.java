@@ -2,7 +2,7 @@ package net.anweisen.cloud.cord.reporter;
 
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
-import net.anweisen.utilities.common.collection.NumberFormatter;
+import net.anweisen.utility.common.collection.NumberFormatter;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;

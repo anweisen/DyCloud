@@ -1,14 +1,14 @@
 package net.anweisen.cloud.modules.notify;
 
 import net.anweisen.cloud.base.module.CloudModule;
+import net.anweisen.cloud.driver.util.DiscordWebhook;
+import net.anweisen.cloud.driver.util.DiscordWebhook.EmbedObject;
 import net.anweisen.cloud.modules.notify.config.NotifyConfig;
 import net.anweisen.cloud.modules.notify.config.NotifyDiscordConfig;
 import net.anweisen.cloud.modules.notify.config.NotifyIngameConfig;
 import net.anweisen.cloud.modules.notify.listener.DiscordServiceStatusListener;
 import net.anweisen.cloud.modules.notify.listener.IngameServiceStatusListener;
-import net.anweisen.utilities.common.collection.Colors;
-import net.anweisen.utilities.common.discord.DiscordWebhook;
-import net.anweisen.utilities.common.discord.DiscordWebhook.EmbedObject;
+import net.anweisen.utility.common.collection.Colors;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -36,9 +36,9 @@ public final class CloudNotifyModule extends CloudModule {
 	}
 
 	private void loadConfig() {
-		config = getConfig().toInstanceOf(NotifyConfig.class);
+		config = getConfig().toInstance(NotifyConfig.class);
 		getLogger().debug("Loaded config {}", config);
-		if (config == null)
+		if (config == null) {
 			getConfig().set(config = new NotifyConfig(
 				new NotifyIngameConfig(
 					true,
@@ -57,7 +57,9 @@ public final class CloudNotifyModule extends CloudModule {
 					new DiscordWebhook("").setUsername("Cloud").addEmbed(new EmbedObject().setDescription("**{service}** was **stopped** on **{node}**").setColor(Colors.DO_NOT_DISTURB)),
 					new DiscordWebhook("").setUsername("Cloud").addEmbed(new EmbedObject().setDescription("**{service}** was **deleted** on **{node}**").setColor(Color.decode("#c51010")))
 				)
-			)).save();
+			));
+			getConfig().save();
+		}
 	}
 
 	@Override

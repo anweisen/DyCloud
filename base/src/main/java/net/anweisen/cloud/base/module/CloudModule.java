@@ -6,8 +6,8 @@ import net.anweisen.cloud.base.module.config.ModuleState;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.config.global.GlobalConfig;
 import net.anweisen.cloud.driver.event.EventManager;
-import net.anweisen.utilities.common.config.FileDocument;
-import net.anweisen.utilities.common.logging.ILogger;
+import net.anweisen.utility.common.logging.ILogger;
+import net.anweisen.utility.document.wrapped.StorableDocument;
 
 import javax.annotation.Nonnull;
 import java.nio.file.Path;
@@ -83,19 +83,20 @@ public abstract class CloudModule implements Module {
 	}
 
 	@Nonnull
-	public FileDocument getConfig() {
+	public StorableDocument getConfig() {
 		return controller.getConfig();
 	}
 
 	@Nonnull
-	public FileDocument reloadConfig() {
+	public StorableDocument reloadConfig() {
 		return controller.reloadConfig();
 	}
 
 	protected boolean getEnabled(boolean defaultValue) {
-		FileDocument config = getConfig();
+		StorableDocument config = getConfig();
 		if (!config.contains("enabled")) {
-			config.set("enabled", defaultValue).save();
+			config.set("enabled", defaultValue);
+			config.save();
 		}
 
 		boolean enabled = config.getBoolean("enabled");

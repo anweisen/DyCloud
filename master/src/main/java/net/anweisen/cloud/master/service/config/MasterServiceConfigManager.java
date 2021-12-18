@@ -4,11 +4,13 @@ import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.service.config.ServiceConfigManager;
 import net.anweisen.cloud.driver.service.config.ServiceTask;
 import net.anweisen.cloud.driver.service.config.TemplateStorage;
-import net.anweisen.utilities.common.config.Document;
-import net.anweisen.utilities.common.misc.FileUtils;
+import net.anweisen.utility.common.misc.FileUtils;
+import net.anweisen.utility.document.Document;
+import net.anweisen.utility.document.Documents;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -29,12 +31,12 @@ public class MasterServiceConfigManager implements ServiceConfigManager, Logging
 		FileUtils.createDirectory(directory);
 	}
 
-	public void loadTasks() {
+	public void loadTasks() throws IOException {
 		tasks.clear();
 		for (Path file : FileUtils.list(directory).filter(path -> path.toString().endsWith(".json")).collect(Collectors.toList())) {
 			extended("Loading task '{}'", file.getFileName());
-			Document document = Document.readJsonFile(file);
-			ServiceTask task = document.toInstanceOf(ServiceTask.class);
+			Document document = Documents.newJsonDocument(file);
+			ServiceTask task = document.toInstance(ServiceTask.class);
 			extended("=> {}", task);
 			if (task != null) tasks.put(task.getName(), task);
 		}

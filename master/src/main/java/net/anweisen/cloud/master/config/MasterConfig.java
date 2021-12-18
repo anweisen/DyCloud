@@ -7,11 +7,13 @@ import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.network.object.SSLConfiguration;
 import net.anweisen.cloud.driver.service.specific.ServiceType;
 import net.anweisen.cloud.master.CloudMaster;
-import net.anweisen.utilities.common.config.Document;
-import net.anweisen.utilities.common.config.FileDocument;
+import net.anweisen.utility.document.Document;
+import net.anweisen.utility.document.Documents;
+import net.anweisen.utility.document.wrapped.StorableDocument;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
@@ -36,11 +38,11 @@ public final class MasterConfig implements DriverConfig, LoggingApiUser {
 	private Document databaseConfig;
 
 	@Override
-	public void load() {
+	public void load() throws IOException {
 
-		FileDocument document = FileDocument.readJsonFile(path);
+		StorableDocument document = Documents.newStorableJsonDocument(path);
 
-		identity = document.getUUID("identity");
+		identity = document.getUniqueId("identity");
 		if (identity == null)
 			document.set("identity", identity = UUID.randomUUID());
 
@@ -50,7 +52,7 @@ public final class MasterConfig implements DriverConfig, LoggingApiUser {
 
 		if (!document.contains("httpListeners"))
 			document.set("httpListeners", Collections.singletonList(HostAndPort.localhost(CloudDriver.DEFAULT_HTTP_PORT)));
-		httpListeners = document.getInstanceList("httpListeners", HostAndPort.class);
+		httpListeners = document.getBundle("httpListeners").toInstances(HostAndPort.class);
 
 		if (!document.contains("webSsl"))
 			document.getDocument("webSsl")
@@ -69,7 +71,7 @@ public final class MasterConfig implements DriverConfig, LoggingApiUser {
 			);
 		}
 
-		ipWhitelist = document.getStringList("ipWhitelist");
+		ipWhitelist = document.getBundle("ipWhitelist").toStrings();
 		if (!document.contains("ipWhitelist"))
 			document.set("ipWhitelist", Collections.singletonList(HostAndPort.localhost()));
 

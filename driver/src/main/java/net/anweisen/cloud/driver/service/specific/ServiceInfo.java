@@ -7,7 +7,7 @@ import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import net.anweisen.cloud.driver.node.NodeInfo;
 import net.anweisen.cloud.driver.service.config.ServiceTask;
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.document.Document;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;

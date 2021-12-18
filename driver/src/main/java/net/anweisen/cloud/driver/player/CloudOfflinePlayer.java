@@ -6,7 +6,7 @@ import net.anweisen.cloud.driver.player.permission.PermissionData;
 import net.anweisen.cloud.driver.player.permission.PermissionManager;
 import net.anweisen.cloud.driver.player.permission.PermissionPlayer;
 import net.anweisen.cloud.driver.translate.TranslationManager;
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.document.Document;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

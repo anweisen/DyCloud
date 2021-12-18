@@ -9,7 +9,7 @@ import net.anweisen.cloud.driver.network.http.handler.HttpEndpoint;
 import net.anweisen.cloud.driver.network.http.handler.HttpRouter;
 import net.anweisen.cloud.driver.network.http.websocket.WebSocketChannel;
 import net.anweisen.cloud.driver.network.http.websocket.WebSocketFrameType;
-import net.anweisen.utilities.common.collection.pair.Tuple;
+import net.anweisen.utility.common.collection.pair.Tuple;
 
 import javax.annotation.Nonnull;
 import java.util.List;

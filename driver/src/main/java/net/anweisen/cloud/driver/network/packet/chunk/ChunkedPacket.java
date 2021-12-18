@@ -2,7 +2,7 @@ package net.anweisen.cloud.driver.network.packet.chunk;
 
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.document.Document;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;

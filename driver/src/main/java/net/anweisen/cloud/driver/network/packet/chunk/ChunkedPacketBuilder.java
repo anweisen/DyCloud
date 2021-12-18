@@ -3,7 +3,8 @@ package net.anweisen.cloud.driver.network.packet.chunk;
 import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.network.SocketChannel;
 import net.anweisen.cloud.driver.network.exception.ChunkInterruptException;
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.document.Document;
+import net.anweisen.utility.document.Documents;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -29,7 +30,7 @@ public class ChunkedPacketBuilder {
 	private Consumer<ChunkedPacket> target;
 
 	private UUID uniqueId = UUID.randomUUID();
-	private Document header = Document.empty();
+	private Document header = Documents.emptyDocument();
 	private int chunkSize = DEFAULT_CHUNK_SIZE;
 
 	private boolean completed;
@@ -106,11 +107,11 @@ public class ChunkedPacketBuilder {
 	}
 
 	private ChunkedPacket createSegment(int channel, UUID uniqueId, int id, int chunkSize, int length, byte[] data) {
-		return new ChunkedPacket(channel, uniqueId, Document.empty(), id, chunkSize, length, false, data, 0);
+		return new ChunkedPacket(channel, uniqueId, Documents.emptyDocument(), id, chunkSize, length, false, data, 0);
 	}
 
 	private ChunkedPacket createEndPacket(int channel, UUID uniqueId, int id, int chunkSize) {
-		return new ChunkedPacket(channel, uniqueId, Document.empty(), id, chunkSize, 0, true, new byte[0], id - 1);
+		return new ChunkedPacket(channel, uniqueId, Documents.emptyDocument(), id, chunkSize, 0, true, new byte[0], id - 1);
 	}
 
 	public ChunkedPacketBuilder complete() throws IOException {

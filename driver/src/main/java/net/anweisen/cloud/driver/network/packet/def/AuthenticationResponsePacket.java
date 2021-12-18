@@ -7,8 +7,8 @@ import net.anweisen.cloud.driver.network.packet.PacketChannels;
 import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
 import net.anweisen.cloud.driver.service.specific.ServiceType;
-import net.anweisen.utilities.common.collection.ArrayWalker;
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.common.collection.ArrayWalker;
+import net.anweisen.utility.document.Documents;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 public class AuthenticationResponsePacket extends Packet {
 
 	public AuthenticationResponsePacket(boolean access, @Nonnull String message) {
-		super(PacketChannels.AUTH_CHANNEL, Document.create().set("access", access).set("message", message));
+		super(PacketChannels.AUTH_CHANNEL, Documents.newJsonDocument("access", access, "message", message));
 
 		if (access) {
 			buffer = newBuffer();
@@ -39,7 +39,7 @@ public class AuthenticationResponsePacket extends Packet {
 		append(PropertySection.TASKS, buffer -> buffer.writeObjectCollection(driver.getServiceConfigManager().getServiceTasks()));
 		append(PropertySection.TEMPLATE_STORAGES, buffer -> buffer.writeStringCollection(driver.getServiceConfigManager().getTemplateStorageNames()));
 		append(PropertySection.SERVICES, buffer -> buffer.writeObjectCollection(driver.getServiceManager().getServiceInfos()));
-		append(PropertySection.START_PORTS, buffer -> ArrayWalker.walk(ServiceType.values()).forEach(type -> buffer.writeVarInt(type.getStartPort())));
+		append(PropertySection.START_PORTS, buffer -> ArrayWalker.walkArray(ServiceType.values()).forEach(type -> buffer.writeVarInt(type.getStartPort())));
 		append(PropertySection.PERMISSION_GROUPS, driver.hasPermissionManager(), buffer -> buffer.writeObjectCollection((Collection<? extends SerializableObject>) (Collection<?>) driver.getPermissionManager().getGroups()));
 		append(PropertySection.ONLINE_PLAYERS, buffer -> buffer.writeObjectCollection((Collection<? extends SerializableObject>) (Collection<?>) driver.getPlayerManager().getOnlinePlayers()));
 		append(PropertySection.GLOBAL_CONFIG, buffer -> buffer.writeDocument(driver.getGlobalConfig().getRawData()));

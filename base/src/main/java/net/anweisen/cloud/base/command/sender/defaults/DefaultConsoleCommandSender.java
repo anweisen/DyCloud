@@ -6,7 +6,7 @@ import net.anweisen.cloud.base.console.Console;
 import net.anweisen.cloud.base.console.ConsoleColor;
 import net.anweisen.cloud.driver.player.chat.ChatText;
 import net.anweisen.cloud.driver.translate.Translatable;
-import net.anweisen.utilities.common.logging.ILogger;
+import net.anweisen.utility.common.logging.ILogger;
 
 import javax.annotation.Nonnull;
 

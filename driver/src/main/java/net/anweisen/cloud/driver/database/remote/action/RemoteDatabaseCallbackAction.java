@@ -1,7 +1,7 @@
 package net.anweisen.cloud.driver.database.remote.action;
 
-import net.anweisen.utilities.database.action.DatabaseAction;
-import net.anweisen.utilities.database.exceptions.DatabaseException;
+import net.anweisen.utility.database.action.DatabaseAction;
+import net.anweisen.utility.database.exception.DatabaseException;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;

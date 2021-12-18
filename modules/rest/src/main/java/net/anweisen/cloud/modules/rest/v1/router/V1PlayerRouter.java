@@ -8,7 +8,7 @@ import net.anweisen.cloud.driver.network.http.handler.HttpEndpoint;
 import net.anweisen.cloud.driver.network.http.handler.HttpRouter;
 import net.anweisen.cloud.driver.player.CloudPlayer;
 import net.anweisen.cloud.modules.rest.v1.V1ObjectSerializer;
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.document.Documents;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -38,7 +38,7 @@ public class V1PlayerRouter {
 	public void getOnlineCount(@Nonnull HttpContext context) {
 		context.getResponse()
 			.setHeader("Content-Type", "application/json")
-			.setBody(Document.of("count", CloudDriver.getInstance().getPlayerManager().getOnlinePlayerCount()))
+			.setBody(Documents.newJsonDocument("count", CloudDriver.getInstance().getPlayerManager().getOnlinePlayerCount()))
 			.setStatusCode(HttpCodes.OK)
 			.getContext()
 			.closeAfter(true)
@@ -49,7 +49,7 @@ public class V1PlayerRouter {
 	public void getRegisteredCount(@Nonnull HttpContext context) {
 		context.getResponse()
 			.setHeader("Content-Type", "application/json")
-			.setBody(Document.of("count", CloudDriver.getInstance().getPlayerManager().getRegisteredPlayerCount()))
+			.setBody(Documents.newJsonDocument("count", CloudDriver.getInstance().getPlayerManager().getRegisteredPlayerCount()))
 			.setStatusCode(HttpCodes.OK)
 			.getContext()
 			.closeAfter(true)

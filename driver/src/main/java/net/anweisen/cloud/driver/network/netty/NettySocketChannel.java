@@ -11,9 +11,9 @@ import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketChannels;
 import net.anweisen.cloud.driver.network.packet.chunk.ChunkedPacketBuilder;
 import net.anweisen.cloud.driver.network.packet.chunk.ChunkedQueryResponse;
-import net.anweisen.utilities.common.concurrent.task.CompletableTask;
-import net.anweisen.utilities.common.concurrent.task.Task;
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.common.concurrent.task.CompletableTask;
+import net.anweisen.utility.common.concurrent.task.Task;
+import net.anweisen.utility.document.Document;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

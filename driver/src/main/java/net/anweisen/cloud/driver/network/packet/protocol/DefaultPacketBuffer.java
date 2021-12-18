@@ -1,9 +1,9 @@
 package net.anweisen.cloud.driver.network.packet.protocol;
 
 import net.anweisen.cloud.driver.network.packet.protocol.objects.SerializableDocument;
-import net.anweisen.utilities.common.collection.WrappedException;
-import net.anweisen.utilities.common.config.Document;
-import net.anweisen.utilities.common.misc.SimpleCollectionUtils;
+import net.anweisen.utility.common.collection.WrappedException;
+import net.anweisen.utility.common.misc.CollectionUtils;
+import net.anweisen.utility.document.Document;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -193,7 +193,7 @@ public abstract class DefaultPacketBuffer implements PacketBuffer {
 	@Nonnull
 	@Override
 	public PacketBuffer writeDocumentCollection(@Nonnull Collection<? extends Document> documents) {
-		return writeObjectCollection(SimpleCollectionUtils.convert(documents, SerializableDocument::new));
+		return writeObjectCollection(CollectionUtils.convertCollection(documents, SerializableDocument::new));
 	}
 
 	@Nonnull
@@ -205,7 +205,7 @@ public abstract class DefaultPacketBuffer implements PacketBuffer {
 	@Nonnull
 	@Override
 	public PacketBuffer writeDocumentArray(@Nonnull Document[] documents) {
-		return writeObjectArray(SimpleCollectionUtils.convert(Arrays.asList(documents), SerializableDocument::new).toArray(new SerializableObject[0]));
+		return writeObjectArray(CollectionUtils.convertCollection(Arrays.asList(documents), SerializableDocument::new).toArray(new SerializableObject[0]));
 	}
 
 	@Nonnull

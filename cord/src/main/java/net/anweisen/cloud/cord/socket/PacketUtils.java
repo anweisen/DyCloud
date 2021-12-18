@@ -6,7 +6,7 @@ import io.netty.util.AttributeKey;
 import net.anweisen.cloud.cord.socket.stream.ProxyDownstreamHandler;
 import net.anweisen.cloud.cord.socket.stream.ProxyUpstreamHandler;
 import net.anweisen.cloud.driver.network.netty.NettyUtils;
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.document.Documents;
 
 import javax.annotation.Nonnull;
 
@@ -25,15 +25,18 @@ public final class PacketUtils {
 	public static ByteBuf createStatusPacket(int protocolVersion) {
 		ByteBuf buffer = Unpooled.buffer();
 		NettyUtils.writeVarInt(buffer, 0);
-		NettyUtils.writeString(buffer, Document.create()
-			.set("version", Document.create()
-				.set("name", "DyCloud v1.0")
-				.set("protocol", protocolVersion)
-			).set("players", Document.create()
-				.set("max", 1)
-				.set("online", 0)
-			).set("description", Document.create()
-				.set("text", "§8» §7github.com/anweisen/§e§lDyCloud")
+		NettyUtils.writeString(buffer, Documents.newJsonDocument(
+				"version", Documents.newJsonDocument(
+					"name", "DyCloud v1.0",
+					"protocol", protocolVersion
+				),
+				"players", Documents.newJsonDocument(
+					"max", 1,
+					"online", 0
+				),
+				"description", Documents.newJsonDocument(
+					"text", "§8» §7github.com/anweisen/§e§lDyCloud"
+				)
 			).toJson());
 		return buffer;
 	}

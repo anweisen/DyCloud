@@ -3,9 +3,9 @@ package net.anweisen.cloud.driver.database.remote.action;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.network.packet.def.RemoteDatabaseActionPacket;
 import net.anweisen.cloud.driver.network.packet.def.RemoteDatabaseActionPacket.DatabaseActionPayload;
-import net.anweisen.utilities.common.concurrent.task.Task;
-import net.anweisen.utilities.database.action.DatabaseCountEntries;
-import net.anweisen.utilities.database.exceptions.DatabaseException;
+import net.anweisen.utility.common.concurrent.task.Task;
+import net.anweisen.utility.database.action.DatabaseCountEntries;
+import net.anweisen.utility.database.exception.DatabaseException;
 
 import javax.annotation.Nonnull;
 

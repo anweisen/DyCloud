@@ -17,8 +17,8 @@ import net.anweisen.cloud.driver.service.specific.ServiceEnvironment;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.driver.service.specific.ServiceState;
 import net.anweisen.cloud.node.CloudNode;
-import net.anweisen.utilities.common.config.Document;
-import net.anweisen.utilities.common.misc.FileUtils;
+import net.anweisen.utility.common.misc.FileUtils;
+import net.anweisen.utility.document.Documents;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -204,12 +204,12 @@ public class DockerServiceActor implements LoggingApiUser {
 		trace("Created docker container {} for {}", containerId, info);
 		trace("=> Applied memory limit of {} bytes = {} kilobytes = {} megabytes", 1024L * 1024L * task.getMemoryLimit(), 1024L * task.getMemoryLimit(), task.getMemoryLimit());
 
-		Document.create()
-			.set("master", cloud.getConfig().getMasterAddress())
-			.set("identity", cloud.getConfig().getIdentity())
-			.set("serviceTaskName", task.getName())
-			.set("serviceUniqueId", info.getUniqueId())
-			.saveToFile(tempTemplateDirectory.resolve(".cloud/config.json"));
+		Documents.newJsonDocument(
+			"master", cloud.getConfig().getMasterAddress(),
+			"identity", cloud.getConfig().getIdentity(),
+			"serviceTaskName", task.getName(),
+			"serviceUniqueId", info.getUniqueId()
+		).saveToFile(tempTemplateDirectory.resolve(".cloud/config.json"));
 
 		// Copy resources to container
 		dockerClient.copyArchiveToContainerCmd(containerId)

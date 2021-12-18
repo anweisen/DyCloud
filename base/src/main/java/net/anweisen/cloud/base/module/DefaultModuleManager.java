@@ -2,7 +2,7 @@ package net.anweisen.cloud.base.module;
 
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.console.LoggingApiUser;
-import net.anweisen.utilities.common.misc.FileUtils;
+import net.anweisen.utility.common.misc.FileUtils;
 
 import javax.annotation.Nonnull;
 import java.nio.file.Path;

@@ -3,7 +3,7 @@ package net.anweisen.cloud.driver.event.global;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.config.global.GlobalConfig;
 import net.anweisen.cloud.driver.event.Event;
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.document.Document;
 
 import javax.annotation.Nonnull;
 

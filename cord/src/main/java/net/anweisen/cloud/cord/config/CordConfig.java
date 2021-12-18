@@ -2,9 +2,11 @@ package net.anweisen.cloud.cord.config;
 
 import net.anweisen.cloud.cord.CloudCord;
 import net.anweisen.cloud.driver.network.object.HostAndPort;
-import net.anweisen.utilities.common.config.FileDocument;
+import net.anweisen.utility.document.Documents;
+import net.anweisen.utility.document.wrapped.StorableDocument;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -20,9 +22,9 @@ public final class CordConfig {
 
 	private HostAndPort bindAddress;
 
-	public void load() {
+	public void load() throws IOException {
 
-		FileDocument document = FileDocument.readJsonFile(path);
+		StorableDocument document = Documents.newStorableJsonDocument(path);
 
 		if (bindAddress == null)
 			document.set("bindAddress", bindAddress = HostAndPort.localhost(25565));

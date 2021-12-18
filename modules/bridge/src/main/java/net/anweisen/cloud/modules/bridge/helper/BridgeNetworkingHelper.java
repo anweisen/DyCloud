@@ -8,7 +8,7 @@ import net.anweisen.cloud.driver.player.connection.PlayerConnection;
 import net.anweisen.cloud.driver.player.defaults.DefaultCloudPlayer;
 import net.anweisen.cloud.driver.player.settings.PlayerSettings;
 import net.anweisen.cloud.wrapper.CloudWrapper;
-import net.anweisen.utilities.common.collection.pair.Tuple;
+import net.anweisen.utility.common.collection.pair.Tuple;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

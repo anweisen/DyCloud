@@ -5,8 +5,8 @@ import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketSender;
 import net.anweisen.cloud.driver.network.packet.chunk.ChunkedQueryResponse;
-import net.anweisen.utilities.common.concurrent.task.Task;
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.common.concurrent.task.Task;
+import net.anweisen.utility.document.Document;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;

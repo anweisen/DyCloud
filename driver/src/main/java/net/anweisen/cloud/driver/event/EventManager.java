@@ -1,8 +1,8 @@
 package net.anweisen.cloud.driver.event;
 
 import net.anweisen.cloud.driver.CloudDriver;
-import net.anweisen.utilities.common.collection.WrappedException;
-import net.anweisen.utilities.common.concurrent.task.Task;
+import net.anweisen.utility.common.collection.WrappedException;
+import net.anweisen.utility.common.concurrent.task.Task;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

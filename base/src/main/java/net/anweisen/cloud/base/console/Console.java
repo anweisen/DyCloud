@@ -1,6 +1,6 @@
 package net.anweisen.cloud.base.console;
 
-import net.anweisen.utilities.common.concurrent.task.Task;
+import net.anweisen.utility.common.concurrent.task.Task;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;

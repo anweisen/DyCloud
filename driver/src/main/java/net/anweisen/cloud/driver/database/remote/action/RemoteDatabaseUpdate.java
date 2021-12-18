@@ -3,10 +3,11 @@ package net.anweisen.cloud.driver.database.remote.action;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.network.packet.def.RemoteDatabaseActionPacket;
 import net.anweisen.cloud.driver.network.packet.def.RemoteDatabaseActionPacket.DatabaseActionPayload;
-import net.anweisen.utilities.common.concurrent.task.Task;
-import net.anweisen.utilities.common.config.Document;
-import net.anweisen.utilities.database.action.DatabaseUpdate;
-import net.anweisen.utilities.database.exceptions.DatabaseException;
+import net.anweisen.utility.common.concurrent.task.Task;
+import net.anweisen.utility.database.action.DatabaseUpdate;
+import net.anweisen.utility.database.exception.DatabaseException;
+import net.anweisen.utility.document.Document;
+import net.anweisen.utility.document.Documents;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -18,7 +19,7 @@ import java.util.Objects;
  */
 public class RemoteDatabaseUpdate implements DatabaseUpdate {
 
-	private final Document document = Document.create();
+	private final Document document = Documents.newJsonDocument();
 	private final String table;
 
 	public RemoteDatabaseUpdate(@Nonnull String table) {

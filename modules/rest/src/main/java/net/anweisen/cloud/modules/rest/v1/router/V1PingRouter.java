@@ -5,7 +5,7 @@ import net.anweisen.cloud.driver.network.http.HttpContext;
 import net.anweisen.cloud.driver.network.http.HttpMethod;
 import net.anweisen.cloud.driver.network.http.handler.HttpEndpoint;
 import net.anweisen.cloud.driver.network.http.handler.HttpRouter;
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.document.Documents;
 
 import javax.annotation.Nonnull;
 
@@ -20,7 +20,7 @@ public class V1PingRouter {
 	public void getIndex(@Nonnull HttpContext context) {
 		context.getResponse()
 			.setHeader("Content-Type", "application/json")
-			.setBody(Document.of("success", true))
+			.setBody(Documents.newJsonDocument("success", true))
 			.setStatusCode(HttpCodes.OK)
 			.getContext()
 			.closeAfter(true)

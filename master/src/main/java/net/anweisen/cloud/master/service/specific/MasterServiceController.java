@@ -9,7 +9,7 @@ import net.anweisen.cloud.driver.service.specific.ServiceController;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.master.CloudMaster;
 import net.anweisen.cloud.master.node.NodeServer;
-import net.anweisen.utilities.common.concurrent.task.Task;
+import net.anweisen.utility.common.concurrent.task.Task;
 
 import javax.annotation.Nonnull;
 

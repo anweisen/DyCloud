@@ -3,10 +3,10 @@ package net.anweisen.cloud.driver.event.defaults;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.event.EventListener;
 import net.anweisen.cloud.driver.event.*;
-import net.anweisen.utilities.common.collection.ClassWalker;
-import net.anweisen.utilities.common.concurrent.task.CompletableTask;
-import net.anweisen.utilities.common.concurrent.task.Task;
-import net.anweisen.utilities.common.misc.ReflectionUtils;
+import net.anweisen.utility.common.collection.ClassWalker;
+import net.anweisen.utility.common.concurrent.task.CompletableTask;
+import net.anweisen.utility.common.concurrent.task.Task;
+import net.anweisen.utility.common.misc.ReflectionUtils;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Method;

@@ -2,7 +2,7 @@ package net.anweisen.cloud.driver.config.global;
 
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.config.global.objects.CommandObject;
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.document.Document;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -41,7 +41,7 @@ public interface GlobalConfig {
 
 	@Nonnull
 	default Collection<CommandObject> getIngameCommands() {
-		return getRawData().getInstanceList("ingameCommands", CommandObject.class);
+		return getRawData().getBundle("ingameCommands").toInstances(CommandObject.class);
 	}
 
 	@Nonnull

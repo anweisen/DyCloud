@@ -1,6 +1,6 @@
 package net.anweisen.cloud.base.setup.cnl;
 
-import net.anweisen.utilities.common.misc.FileUtils;
+import net.anweisen.utility.common.misc.FileUtils;
 
 import javax.annotation.Nonnull;
 import java.io.BufferedReader;

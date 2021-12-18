@@ -12,7 +12,8 @@ import net.anweisen.cloud.driver.player.permission.PermissionData;
 import net.anweisen.cloud.driver.player.settings.DefaultPlayerSettings;
 import net.anweisen.cloud.driver.player.settings.PlayerSettings;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.document.Document;
+import net.anweisen.utility.document.Documents;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -43,7 +44,7 @@ public class DefaultCloudPlayer implements CloudPlayer, SerializableObject {
 		this.connection = connection;
 		this.proxy = proxy;
 		this.joinTime = System.currentTimeMillis();
-		this.onlineProperties = Document.create();
+		this.onlineProperties = Documents.newJsonDocument();
 	}
 
 	@Override

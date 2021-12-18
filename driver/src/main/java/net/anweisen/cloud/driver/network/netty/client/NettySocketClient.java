@@ -13,7 +13,7 @@ import net.anweisen.cloud.driver.network.handler.SocketChannelHandler;
 import net.anweisen.cloud.driver.network.netty.NettyDefaultSocketComponent;
 import net.anweisen.cloud.driver.network.netty.NettyUtils;
 import net.anweisen.cloud.driver.network.object.HostAndPort;
-import net.anweisen.utilities.common.collection.WrappedException;
+import net.anweisen.utility.common.collection.WrappedException;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;

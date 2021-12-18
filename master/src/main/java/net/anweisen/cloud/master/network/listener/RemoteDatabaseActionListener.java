@@ -7,13 +7,13 @@ import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.PacketListener;
 import net.anweisen.cloud.driver.network.packet.def.RemoteDatabaseActionPacket.DatabaseActionPayload;
 import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
-import net.anweisen.utilities.common.config.Document;
-import net.anweisen.utilities.database.Order;
-import net.anweisen.utilities.database.SQLColumn;
-import net.anweisen.utilities.database.action.*;
-import net.anweisen.utilities.database.action.hierarchy.OrderedAction;
-import net.anweisen.utilities.database.action.hierarchy.SetAction;
-import net.anweisen.utilities.database.action.hierarchy.WhereAction;
+import net.anweisen.utility.database.Order;
+import net.anweisen.utility.database.SQLColumn;
+import net.anweisen.utility.database.action.*;
+import net.anweisen.utility.database.action.hierarchy.OrderedAction;
+import net.anweisen.utility.database.action.hierarchy.SetAction;
+import net.anweisen.utility.database.action.hierarchy.WhereAction;
+import net.anweisen.utility.document.Document;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -47,7 +47,7 @@ public class RemoteDatabaseActionListener implements PacketListener {
 					applyWhere(document, action);
 					applyOrder(document, action);
 					if (document.contains("select"))
-						action.select(document.getStringArray("select"));
+						action.select(document.getStrings("select").toArray(new String[0]));
 					channel.sendPacket(Packet.createResponseFor(packet, Packet.newBuffer().writeDocumentCollection(action.execute().toList())));
 					break;
 				}

@@ -13,8 +13,8 @@ import net.anweisen.cloud.master.CloudMaster;
 import net.anweisen.cloud.master.node.NodeServer;
 import net.anweisen.cloud.master.service.specific.CloudService;
 import net.anweisen.cloud.master.service.specific.DefaultCloudService;
-import net.anweisen.utilities.common.concurrent.task.Task;
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.common.concurrent.task.Task;
+import net.anweisen.utility.document.Documents;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -79,7 +79,7 @@ public class MasterServiceFactory implements ServiceFactory, LoggingApiUser {
 		ServiceInfo info = new ServiceInfo(
 				UUID.randomUUID(), null, task.getName(), serviceNumber, task.getEnvironment(),
 				ServiceState.DEFINED, ServiceControlState.CREATING, false, node.getInfo().getName(), node.getInfo().getAddress().getHost(),
-				port, true, Document.create()
+				port, true, Documents.newJsonDocument()
 		);
 
 		CloudService service = new DefaultCloudService(info);

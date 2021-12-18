@@ -1,6 +1,6 @@
 package net.anweisen.cloud.driver.network.http;
 
-import net.anweisen.utilities.common.misc.StringUtils;
+import net.anweisen.utility.common.misc.StringUtils;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;

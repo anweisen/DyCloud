@@ -6,7 +6,7 @@ import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
 import net.anweisen.cloud.driver.network.packet.protocol.DefaultPacketBuffer;
 import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
-import net.anweisen.utilities.common.collection.WrappedException;
+import net.anweisen.utility.common.collection.WrappedException;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;

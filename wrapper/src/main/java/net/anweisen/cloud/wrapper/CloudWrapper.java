@@ -34,9 +34,9 @@ import net.anweisen.cloud.driver.translate.TranslationManager;
 import net.anweisen.cloud.driver.translate.defaults.RemoteTranslationManager;
 import net.anweisen.cloud.wrapper.config.WrapperConfig;
 import net.anweisen.cloud.wrapper.event.service.ServiceInfoConfigureEvent;
-import net.anweisen.utilities.common.collection.WrappedException;
-import net.anweisen.utilities.common.logging.handler.HandledLogger;
-import net.anweisen.utilities.common.misc.ReflectionUtils;
+import net.anweisen.utility.common.collection.WrappedException;
+import net.anweisen.utility.common.logging.handler.HandledLogger;
+import net.anweisen.utility.common.misc.ReflectionUtils;
 
 import javax.annotation.Nonnull;
 import java.lang.instrument.Instrumentation;

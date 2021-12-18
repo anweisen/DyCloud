@@ -4,8 +4,8 @@ import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.network.packet.Packet;
 import net.anweisen.cloud.driver.network.packet.chunk.ChunkedQueryResponse;
 import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
-import net.anweisen.utilities.common.concurrent.task.Task;
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.common.concurrent.task.Task;
+import net.anweisen.utility.document.Document;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

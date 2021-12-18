@@ -22,7 +22,7 @@ import io.netty.util.internal.logging.JdkLoggerFactory;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.DriverEnvironment;
 import net.anweisen.cloud.driver.network.exception.SilentDecoderException;
-import net.anweisen.utilities.common.collection.NamedThreadFactory;
+import net.anweisen.utility.common.collection.NamedThreadFactory;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnegative;

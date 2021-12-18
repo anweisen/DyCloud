@@ -1,7 +1,7 @@
 package net.anweisen.cloud.driver.console.handler;
 
-import net.anweisen.utilities.common.logging.handler.LogEntry;
-import net.anweisen.utilities.common.logging.handler.LogHandler;
+import net.anweisen.utility.common.logging.handler.LogEntry;
+import net.anweisen.utility.common.logging.handler.LogHandler;
 
 import javax.annotation.Nonnull;
 import java.io.PrintStream;

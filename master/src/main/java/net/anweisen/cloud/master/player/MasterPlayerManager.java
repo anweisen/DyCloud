@@ -21,8 +21,9 @@ import net.anweisen.cloud.driver.player.permission.Permissions;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.driver.translate.Translatable;
 import net.anweisen.cloud.master.CloudMaster;
-import net.anweisen.utilities.common.concurrent.task.Task;
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.common.concurrent.task.Task;
+import net.anweisen.utility.document.Document;
+import net.anweisen.utility.document.Documents;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -97,7 +98,7 @@ public class MasterPlayerManager extends DefaultPlayerManager implements Logging
 				System.currentTimeMillis(),
 				System.currentTimeMillis(),
 				0,
-				Document.create()
+				Documents.newJsonDocument()
 			);
 			saveOfflinePlayer(offlinePlayer);
 			return offlinePlayer;
@@ -169,8 +170,8 @@ public class MasterPlayerManager extends DefaultPlayerManager implements Logging
 			.set(PlayerConstants.FIRST_LOGIN_TIME_FIELD, updatedPlayer.getFirstLoginTime())
 			.set(PlayerConstants.LAST_ONLINE_TIME_FIELD, updatedPlayer.getLastOnlineTime())
 			.set(PlayerConstants.ONLINE_DURATION_FIELD, updatedPlayer.getOnlineDuration())
-			.set(PlayerConstants.LAST_CONNECTION_FIELD, Document.ofNullable(updatedPlayer.getLastConnection()))
-			.set(PlayerConstants.PERMISSION_DATA_FIELD, Document.of(updatedPlayer.getStoredPermissionData()))
+			.set(PlayerConstants.LAST_CONNECTION_FIELD, Documents.newJsonDocumentNullable(updatedPlayer.getLastConnection()))
+			.set(PlayerConstants.PERMISSION_DATA_FIELD, Documents.newJsonDocument(updatedPlayer.getStoredPermissionData()))
 			.set(PlayerConstants.PROPERTIES_FIELD, updatedPlayer.getProperties())
 			.executeAsync();
 	}
@@ -193,7 +194,7 @@ public class MasterPlayerManager extends DefaultPlayerManager implements Logging
 	@Nonnull
 	protected CloudOfflinePlayer createOfflinePlayer(@Nonnull Document document) {
 		return new DefaultCloudOfflinePlayer(
-			document.getUUID(PlayerConstants.UUID_FIELD),
+			document.getUniqueId(PlayerConstants.UUID_FIELD),
 			document.getString(PlayerConstants.NAME_FIELD),
 			document.getString(PlayerConstants.LANGUAGE_FIELD),
 			document.getInstance(PlayerConstants.LAST_CONNECTION_FIELD, DefaultPlayerConnection.class),

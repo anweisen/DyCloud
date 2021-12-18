@@ -1,6 +1,6 @@
 package net.anweisen.cloud.driver.network.http.handler;
 
-import net.anweisen.utilities.common.misc.ReflectionUtils;
+import net.anweisen.utility.common.misc.ReflectionUtils;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Method;

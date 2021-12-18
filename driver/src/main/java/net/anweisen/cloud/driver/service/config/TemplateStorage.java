@@ -1,6 +1,6 @@
 package net.anweisen.cloud.driver.service.config;
 
-import net.anweisen.utilities.common.concurrent.task.Task;
+import net.anweisen.utility.common.concurrent.task.Task;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

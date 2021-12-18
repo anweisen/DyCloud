@@ -12,7 +12,7 @@ import net.anweisen.cloud.modules.bridge.bungee.BungeeCloudBridgePlugin;
 import net.anweisen.cloud.modules.bridge.helper.BridgeHelper;
 import net.anweisen.cloud.modules.bridge.helper.BridgeNetworkingHelper;
 import net.anweisen.cloud.modules.bridge.helper.BridgeProxyHelper;
-import net.anweisen.utilities.common.collection.pair.Tuple;
+import net.anweisen.utility.common.collection.pair.Tuple;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;

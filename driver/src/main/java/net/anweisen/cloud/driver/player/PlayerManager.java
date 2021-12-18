@@ -1,7 +1,7 @@
 package net.anweisen.cloud.driver.player;
 
 import net.anweisen.cloud.driver.CloudDriver;
-import net.anweisen.utilities.common.concurrent.task.Task;
+import net.anweisen.utility.common.concurrent.task.Task;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

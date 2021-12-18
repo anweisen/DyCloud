@@ -5,11 +5,12 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import net.anweisen.cloud.driver.CloudDriver;
+import net.anweisen.cloud.driver.network.netty.NettyPacketBuffer;
 import net.anweisen.cloud.driver.network.netty.NettyUtils;
 import net.anweisen.cloud.driver.network.packet.Packet;
-import net.anweisen.cloud.driver.network.netty.NettyPacketBuffer;
 import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
-import net.anweisen.utilities.common.config.Document;
+import net.anweisen.utility.document.Document;
+import net.anweisen.utility.document.Documents;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -47,11 +48,11 @@ public final class NettyPacketDecoder extends ByteToMessageDecoder {
 	private Document readHeader(@Nonnull ByteBuf buffer) {
 		int length = NettyUtils.readVarInt(buffer);
 		if (length == 0) {
-			return Document.empty();
+			return Documents.emptyDocument();
 		} else {
 			byte[] content = new byte[length];
 			buffer.readBytes(content);
-			return Document.parseJson(new String(content, StandardCharsets.UTF_8));
+			return Documents.newJsonDocument(new String(content, StandardCharsets.UTF_8));
 		}
 	}
 }

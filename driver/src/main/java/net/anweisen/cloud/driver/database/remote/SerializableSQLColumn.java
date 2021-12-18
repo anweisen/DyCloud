@@ -2,7 +2,7 @@ package net.anweisen.cloud.driver.database.remote;
 
 import net.anweisen.cloud.driver.network.packet.protocol.PacketBuffer;
 import net.anweisen.cloud.driver.network.packet.protocol.SerializableObject;
-import net.anweisen.utilities.database.SQLColumn;
+import net.anweisen.utility.database.SQLColumn;
 
 import javax.annotation.Nonnull;
 

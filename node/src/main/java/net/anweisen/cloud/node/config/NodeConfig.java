@@ -4,9 +4,11 @@ import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.config.DriverRemoteConfig;
 import net.anweisen.cloud.driver.network.object.HostAndPort;
 import net.anweisen.cloud.node.CloudNode;
-import net.anweisen.utilities.common.config.FileDocument;
+import net.anweisen.utility.document.Documents;
+import net.anweisen.utility.document.wrapped.StorableDocument;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
@@ -28,19 +30,19 @@ public final class NodeConfig implements DriverRemoteConfig {
 	private String dockerNetworkMode;
 
 	@Override
-	public void load() {
+	public void load() throws IOException {
 
-		FileDocument document = FileDocument.readJsonFile(path);
+		StorableDocument document = Documents.newStorableJsonDocument(path);
 
 		nodeName = document.getString("name");
 		if (nodeName ==  null)
 			document.set("nodeName", nodeName = "Node-1");
 
-		identity = document.getUUID("identity");
+		identity = document.getUniqueId("identity");
 		if (identity == null)
 			document.set("identity", identity = UUID.randomUUID());
 
-		masterAddress = document.getDocument("masterAddress").toInstanceOf(HostAndPort.class);
+		masterAddress = document.getInstance("masterAddress", HostAndPort.class);
 		if (masterAddress == null)
 			document.set("masterAddress", masterAddress = HostAndPort.localhost(CloudDriver.DEFAULT_PORT));
 

@@ -2,7 +2,7 @@ package net.anweisen.cloud.modules.bridge.bungee.command;
 
 import net.anweisen.cloud.driver.config.global.objects.CommandObject;
 import net.anweisen.cloud.modules.bridge.helper.BridgeNetworkingHelper;
-import net.anweisen.utilities.common.misc.StringUtils;
+import net.anweisen.utility.common.misc.StringUtils;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;

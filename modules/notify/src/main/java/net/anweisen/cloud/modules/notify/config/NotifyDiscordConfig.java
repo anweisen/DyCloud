@@ -1,6 +1,6 @@
 package net.anweisen.cloud.modules.notify.config;
 
-import net.anweisen.utilities.common.discord.DiscordWebhook;
+import net.anweisen.cloud.driver.util.DiscordWebhook;
 
 import javax.annotation.Nullable;
 

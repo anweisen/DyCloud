@@ -5,7 +5,7 @@ import net.anweisen.cloud.cord.reporter.CordTrafficReporter;
 import net.anweisen.cloud.cord.reporter.DefaultTrafficReporter;
 import net.anweisen.cloud.cord.socket.NettyCordSocketServer;
 import net.anweisen.cloud.driver.CloudDriver;
-import net.anweisen.utilities.common.logging.ILogger;
+import net.anweisen.utility.common.logging.ILogger;
 
 import javax.annotation.Nonnull;
 

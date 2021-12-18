@@ -1,7 +1,7 @@
 package net.anweisen.cloud.base.console.jline3;
 
-import net.anweisen.utilities.common.concurrent.task.CompletableTask;
-import net.anweisen.utilities.common.concurrent.task.Task;
+import net.anweisen.utility.common.concurrent.task.CompletableTask;
+import net.anweisen.utility.common.concurrent.task.Task;
 import org.jline.reader.EndOfFileException;
 import org.jline.reader.UserInterruptException;
 

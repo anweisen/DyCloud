@@ -16,9 +16,9 @@ import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 import net.anweisen.cloud.driver.service.specific.ServiceType;
 import net.anweisen.cloud.driver.translate.LanguageConfig;
 import net.anweisen.cloud.driver.translate.defaults.DefaultRequestingLanguage;
-import net.anweisen.utilities.common.collection.ArrayWalker;
-import net.anweisen.utilities.common.config.Document;
-import net.anweisen.utilities.common.logging.LogLevel;
+import net.anweisen.utility.common.collection.ArrayWalker;
+import net.anweisen.utility.common.logging.LogLevel;
+import net.anweisen.utility.document.Document;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.locks.Condition;
@@ -108,7 +108,7 @@ public class AuthenticationResponseListener implements PacketListener, LoggingAp
 				break;
 			}
 			case START_PORTS: {
-				ArrayWalker.walk(ServiceType.values()).forEach(type -> type.setStartPort(buffer.readVarInt()));
+				ArrayWalker.walkArray(ServiceType.values()).forEach(type -> type.setStartPort(buffer.readVarInt()));
 				break;
 			}
 			case TEMPLATE_STORAGES: {

@@ -3,6 +3,7 @@ package net.anweisen.cloud.driver.config;
 import net.anweisen.cloud.driver.CloudDriver;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.util.UUID;
 
 /**
@@ -13,7 +14,7 @@ import java.util.UUID;
  */
 public interface DriverConfig {
 
-	void load();
+	void load() throws IOException;
 
 	@Nonnull
 	UUID getIdentity();
