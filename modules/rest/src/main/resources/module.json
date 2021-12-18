@@ -1,0 +1,9 @@
+{
+	"name": "Cloud-Rest",
+	"author": "anweisen",
+	"version": "1.0",
+	"main": "net.anweisen.cloud.modules.rest.CloudRestModule",
+	"website": "https://github.com/anweisen/DyCloud",
+	"description": "Runtime module to enable the use of the rest api",
+	"environment": "MASTER"
+}
