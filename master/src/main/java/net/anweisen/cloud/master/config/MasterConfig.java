@@ -60,12 +60,12 @@ public final class MasterConfig implements DriverConfig, LoggingApiUser {
 				.set("privateKeyPath", "/etc/ssl/privateKey.key");
 		if (document.getDocument("webSsl").getBoolean("enabled")) {
 			Document sslDocument = document.getDocument("webSsl");
-			String certificatePath = sslDocument.getString("certificatePath");
-			String privateKeyPath = sslDocument.getString("privateKeyPath");
+			String certificate = sslDocument.getString("certificatePath");
+			String privateKey = sslDocument.getString("privateKeyPath");
 			webSslConfig = new SSLConfiguration(
 				sslDocument.getBoolean("clientAuth"),
-				certificatePath == null ? null : Paths.get(certificatePath),
-				privateKeyPath == null ? null : Paths.get(privateKeyPath)
+				certificate == null ? null : Paths.get(certificate),
+				privateKey == null ? null : Paths.get(privateKey)
 			);
 		}
 
