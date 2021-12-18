@@ -5,12 +5,12 @@ import net.anweisen.cloud.driver.console.LoggingApiUser;
 import net.anweisen.cloud.driver.database.DatabaseManager;
 import net.anweisen.cloud.driver.player.PlayerConstants;
 import net.anweisen.cloud.master.CloudMaster;
-import net.anweisen.utilities.common.config.Document;
-import net.anweisen.utilities.database.Database;
-import net.anweisen.utilities.database.DatabaseConfig;
-import net.anweisen.utilities.database.SQLColumn;
-import net.anweisen.utilities.database.SQLColumn.Type;
-import net.anweisen.utilities.database.SimpleDatabaseTypeResolver;
+import net.anweisen.utility.database.Database;
+import net.anweisen.utility.database.DatabaseConfig;
+import net.anweisen.utility.database.SQLColumn;
+import net.anweisen.utility.database.SQLColumn.Type;
+import net.anweisen.utility.database.SimpleDatabaseTypeResolver;
+import net.anweisen.utility.document.Document;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;

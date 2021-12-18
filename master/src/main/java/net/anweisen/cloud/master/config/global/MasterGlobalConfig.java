@@ -5,8 +5,9 @@ import net.anweisen.cloud.driver.config.global.GlobalConfig;
 import net.anweisen.cloud.driver.network.packet.def.GlobalConfigPacket;
 import net.anweisen.cloud.driver.network.packet.def.GlobalConfigPacket.GlobalConfigPayload;
 import net.anweisen.cloud.master.CloudMaster;
-import net.anweisen.utilities.common.config.Document;
-import net.anweisen.utilities.common.config.FileDocument;
+import net.anweisen.utility.document.Document;
+import net.anweisen.utility.document.Documents;
+import net.anweisen.utility.document.wrapped.StorableDocument;
 
 import javax.annotation.Nonnull;
 import java.nio.file.Path;
@@ -42,7 +43,7 @@ public class MasterGlobalConfig implements GlobalConfig {
 	@Override
 	public void update() {
 		// We only save values which keys are contained in defaultValues, because we dont want temp values to be saved
-		FileDocument document = FileDocument.wrap(Document.create(), path.toFile());
+		StorableDocument document = Documents.newStorableDocument(Documents.newJsonDocument(), path);
 		rawData.forEach((key, value) -> {
 			if (defaultValues.containsKey(key))
 				document.set(key, value);
@@ -54,7 +55,7 @@ public class MasterGlobalConfig implements GlobalConfig {
 
 	@Override
 	public void fetch() {
-		rawData = Document.readJsonFile(path);
+		rawData = Documents.newJsonDocumentUnchecked(path);
 
 		defaultValues.forEach((key, value) -> {
 			if (!rawData.contains(key))
