@@ -48,6 +48,7 @@ public final class ProtocolVersion {
 	public static final ProtocolVersion v1_16_4 = create(754, "1.16.4", "1.16.5");
 	public static final ProtocolVersion v1_17   = create(755, "1.17");
 	public static final ProtocolVersion v1_17_1 = create(756, "1.17.1");
+	public static final ProtocolVersion v1_18   = create(757, "1.18");
 
 	@Nonnull
 	private static ProtocolVersion create(int versionId, @Nonnull String name, @Nonnull String... otherNames) {
