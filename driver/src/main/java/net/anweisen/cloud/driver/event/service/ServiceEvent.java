@@ -1,6 +1,6 @@
 package net.anweisen.cloud.driver.event.service;
 
-import net.anweisen.cloud.driver.event.Event;
+import net.anweisen.cloud.driver.event.DefaultEvent;
 import net.anweisen.cloud.driver.service.specific.ServiceInfo;
 
 import javax.annotation.Nonnull;
@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public abstract class ServiceEvent implements Event {
+public abstract class ServiceEvent extends DefaultEvent {
 
 	protected final ServiceInfo serviceInfo;
 

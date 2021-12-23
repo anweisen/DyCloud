@@ -1,7 +1,7 @@
 package net.anweisen.cloud.driver.event.player;
 
 import net.anweisen.cloud.driver.CloudDriver;
-import net.anweisen.cloud.driver.event.Event;
+import net.anweisen.cloud.driver.event.DefaultEvent;
 import net.anweisen.cloud.driver.player.CloudPlayer;
 import net.anweisen.cloud.driver.player.PlayerManager;
 
@@ -12,7 +12,7 @@ import java.util.UUID;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public abstract class PlayerEvent implements Event {
+public abstract class PlayerEvent extends DefaultEvent {
 
 	protected final CloudPlayer player;
 
