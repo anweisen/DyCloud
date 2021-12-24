@@ -145,7 +145,7 @@ public class DockerServiceActor implements LoggingApiUser {
 			return;
 		}
 
-		String image = "openjdk:" + task.getJavaVersion();
+		String image = cloud.getConfig().getDockerJavaImage() + task.getJavaVersion();
 		debug("Creating docker container using image '{}' for {}..", image, info);
 		DockerClient dockerClient = cloud.getDockerClient();
 

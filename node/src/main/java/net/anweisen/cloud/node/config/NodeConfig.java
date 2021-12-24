@@ -28,6 +28,7 @@ public final class NodeConfig implements DriverRemoteConfig {
 	private HostAndPort masterAddress;
 	private String dockerHost;
 	private String dockerNetworkMode;
+	private String dockerJavaImage;
 
 	@Override
 	public void load() throws IOException {
@@ -53,6 +54,10 @@ public final class NodeConfig implements DriverRemoteConfig {
 		dockerNetworkMode = document.getString("docker.networkMode");
 		if (dockerNetworkMode == null)
 			document.set("docker.networkMode", dockerNetworkMode = "host");
+
+		dockerJavaImage = document.getString("docker.javaImage");
+		if (dockerJavaImage == null)
+			document.set("docker.javaImage", dockerJavaImage = "openjdk:");
 
 		document.save();
 	}
@@ -84,4 +89,8 @@ public final class NodeConfig implements DriverRemoteConfig {
 		return dockerNetworkMode;
 	}
 
+	@Nonnull
+	public String getDockerJavaImage() {
+		return dockerJavaImage;
+	}
 }

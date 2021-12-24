@@ -231,7 +231,7 @@ public final class CloudNode extends CloudBase {
 		serviceConfigManager.getServiceTasks().forEach(task -> javaVersions.add(task.getJavaVersion()));
 		logger.debug("Pulling java images for {}", javaVersions);
 		for (int javaVersion : javaVersions) {
-			String image = "openjdk:" + javaVersion;
+			String image = config.getDockerJavaImage() + javaVersion;
 			try {
 				logger.info("Pulling image '{}' for Java {}..", image, javaVersion);
 				dockerClient.pullImageCmd(image).start().awaitCompletion();
