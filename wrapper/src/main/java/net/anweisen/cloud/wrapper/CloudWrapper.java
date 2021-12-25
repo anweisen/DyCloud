@@ -204,6 +204,8 @@ public final class CloudWrapper extends CloudDriver {
 					}
 				}
 			}
+		} else {
+			applicationClassLoader = ClassLoader.getSystemClassLoader();
 		}
 
 		// append application file to system class loader
