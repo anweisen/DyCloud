@@ -69,65 +69,65 @@ I would recommend you to use one of the **following cloud systems**:
 
 ## Progress
 
- 📁 | Name / Label / Description
---- | --------------------------
-✔️ | Logging
-✔️ | Basic Networking with Netty
-✔️ | Advanced Networking: Chunked Packets & Queries
-✔️ | Node Management + Authentication
-✔️ | Request API with Packets
-✔️ | Event System
-✔️ | Master TemplateStorage -> Download
-✔️ | Docker: Wrapper Setup
-✔️ | Service Start / Stop
-✔️ | Wrapper Authentication
-❌ | Proper Docker Connection (Not Legacy)
-🚧 | Node Information Cycle & Timeout
-❌ | Node Load Balancing
-❌ | Auto Client Reconnect
-❌ | Encryption for sockets
-❌ | Pre launch setup
-🚧 | REST API
-🚧 | Websocket API for Dashboard
-❌ | SSL Encryption for http server
-✔️ | ServiceInfo publish
-✔️ | Basic Service Events
-🧪 | Service auto start (minCount & maxCount)
-🧪 | Shutdown mechanism
-❌ | Template Cache
-✔️ | Proxy Bridge
-🚧 | Support for Velocity
-🚧 | Support for MineStorm
-🚧 | Support for SpongePowered
-✔️ | Dynamic Proxy Server Registry
-🧪 | MultiProxy Cord
-✔️ | Lobby Balancing
-✔️ | Remote Database API
-🧪 | Service Timeout (Crash detection) -> Delete -> Start new
-❌ | Messenger System for Modules
-✔️ | Bukkit Bridge
-🚧 | Implement all driver functions for wrapper & node (remote)
-❌ | Wrapper & Node to Master Logging
-✔️ | Player Executor
-✔️ | Global Player Management
-✔️ | Permission System
-🧪 | Permission Chat & Tab Extension
-✔️ | Module System (Master, Node?, Wrapper?)
-✔️ | Module Copy
-✔️ | Notify Module
-✔️ | Synced Proxy Module
-❌ | Service Screens
-✔️ | Message Translations
-✔️ | Advanced Translations (link to other messages & chatevents eg run command)
-✔️ | Proxy Commands (+ Cloud Command API?)
-🚧 | Cloud Commands
-❌ | Migrate to Gradle
-❌ | Relocate google depends & netty to prevent issues from server software using older versions
-⚠️ | Service Deployments
-⚠️ | Static Services
-⚠️ | NPC Module
-⚠️ | Signs Module
-⚠️ | [CloudAPI](https://github.com/anweisen/CloudAPI) Implementation
+| 📁  | Name / Label / Description                                                                  |
+|-----|---------------------------------------------------------------------------------------------|
+| ✔️ | Logging                                                                                     |
+| ✔️ | Basic Networking with Netty                                                                 |
+| ✔️ | Advanced Networking: Chunked Packets & Queries                                              |
+| ✔️ | Node Management + Authentication                                                            |
+| ✔️ | Request API with Packets                                                                    |
+| ✔️ | Event System                                                                                |
+| ✔️ | Master TemplateStorage -> Download                                                          |
+| ✔️ | Docker: Wrapper Setup                                                                       |
+| ✔️ | Service Start / Stop                                                                        |
+| ✔️ | Wrapper Authentication                                                                      |
+| ❌  | Proper Docker Connection (Not Legacy)                                                       |
+| 🚧  | Node Information Cycle & Timeout                                                            |
+| ❌  | Node Load Balancing                                                                         |
+| ❌  | Auto Client Reconnect                                                                       |
+| ❌  | Encryption for sockets                                                                      |
+| ❌  | Pre launch setup                                                                            |
+| 🚧  | REST API                                                                                    |
+| 🚧  | Websocket API for Dashboard                                                                 |
+| ❌  | SSL Encryption for http server                                                              |
+| ✔️ | ServiceInfo publish                                                                         |
+| ✔️ | Basic Service Events                                                                        |
+| 🧪 | Service auto start (minCount & maxCount)                                                    |
+| 🧪 | Shutdown mechanism                                                                          |
+| ❌  | Template Cache                                                                              |
+| ✔️ | Proxy Bridge                                                                                |
+| 🚧  |  Support for Velocity                                                                       |
+| 🚧  | Support for MineStorm                                                                       |
+| 🚧  | Support for SpongePowered                                                                   |
+| ✔️ | Dynamic Proxy Server Registry                                                               |
+| 🧪 | MultiProxy Cord                                                                             |
+| ✔️ | Lobby Balancing                                                                             |
+| ✔️ | Remote Database API                                                                         |
+| 🧪 | Service Timeout (Crash detection) -> Delete -> Start new                                    |
+| ❌  | Messenger System for Modules                                                                |
+| ✔️ | Bukkit Bridge                                                                               |
+| 🚧  | Implement all driver functions for wrapper & node (remote)                                  |
+| ❌  | Wrapper & Node to Master Logging                                                            |
+| ✔️ | Player Executor                                                                             |
+| ✔️ | Global Player Management                                                                    |
+| ✔️ | Permission System                                                                           |
+| 🧪 | Permission Chat & Tab Extension                                                             |
+| ✔️ | Module System (Master, Node?, Wrapper?)                                                     |
+| ✔️ | Module Copy                                                                                 |
+| ✔️ | Notify Module                                                                               |
+| ✔️ | Synced Proxy Module                                                                         |
+| ❌  | Service Screens                                                                             |
+| ✔️ | Message Translations                                                                        |
+| ✔️ | Advanced Translations (link to other messages & chatevents eg run command)                  |
+| ✔️ | Proxy Commands (+ Cloud Command API?)                                                       |
+| 🚧  | Cloud Commands                                                                              |
+| ❌  | Migrate to Gradle                                                                           |
+| ❌  | Relocate google depends & netty to prevent issues from server software using older versions |
+| ⚠️ | Service Deployments                                                                         |
+| ⚠️ | Static Services                                                                             |
+| ⚠️ | NPC Module                                                                                  |
+| ⚠️ | Signs Module                                                                                |
+| ⚠️ | [CloudAPI](https://github.com/anweisen/CloudAPI) Implementation                             |
 
 ``✔️`` **Finished** <br>
 ``🧪`` **Experimental** <br>
