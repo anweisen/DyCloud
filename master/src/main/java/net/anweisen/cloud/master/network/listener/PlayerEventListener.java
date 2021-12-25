@@ -73,7 +73,7 @@ public class PlayerEventListener implements PacketListener, LoggingApiUser {
 
 					CloudPlayer player = findPlayer(playerUniqueId);
 					ServiceInfo target = findService(targetUniqueId);
-					info("Player[name={} uuid={}] requested to connect to the Minecraftserver '{}' on '{}'", player.getName(), player.getUniqueId(), target.getName(), serviceInfo.getName());
+					info("Player[name={} uuid={}] requested to connect to the Server '{}' on '{}'", player.getName(), player.getUniqueId(), target.getName(), serviceInfo.getName());
 
 					cloud.getEventManager().callEvent(new PlayerProxyServerConnectRequestEvent(player, target));
 					cloud.getSocketComponent().sendPacket(PlayerEventPacket.forProxyServerConnectRequest(playerUniqueId, targetUniqueId));
