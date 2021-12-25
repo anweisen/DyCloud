@@ -22,13 +22,13 @@ public final class CloudProxyModule extends CloudModule {
 		instance = this;
 
 		loadConfig();
-		if (!getEnabled(true)) return;
+		if (!checkEnabled(true)) return;
 	}
 
 	private void loadConfig() {
-		config = getConfig().toInstanceOf(ProxyConfig.class);
+		config = getConfig().toInstance(ProxyConfig.class);
 		getLogger().debug("Loaded config {}", config);
-		if (config == null)
+		if (config == null) {
 			getConfig().set(config = new ProxyConfig(
 				new ProxyTabListConfig(
 					Collections.singletonList(new ProxyTabListEntryConfig(
@@ -66,7 +66,9 @@ public final class CloudProxyModule extends CloudModule {
 						)
 					)
 				)
-			)).save();
+			));
+			getConfig().save();
+		}
 		getGlobalConfig().set("proxyConfig", config).update();
 	}
 

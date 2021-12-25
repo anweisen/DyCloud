@@ -7,7 +7,7 @@ import net.anweisen.cloud.modules.hub.command.HubCommand;
  * @author anweisen | https://github.com/anweisen
  * @since 1.0
  */
-public class CloudHubCommandModule extends CloudModule {
+public final class CloudHubCommandModule extends CloudModule {
 
 	@Override
 	protected void onLoad() {

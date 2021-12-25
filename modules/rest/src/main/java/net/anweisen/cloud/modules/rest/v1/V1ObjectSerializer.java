@@ -17,7 +17,7 @@ public final class V1ObjectSerializer {
 
 	public static Document forOnlinePlayer(@Nonnull CloudPlayer player) {
 		return Documents.newJsonDocument(
-			"uniqueId", player.getUniqueId(),
+			"uuid", player.getUniqueId(),
 			"name", player.getName(),
 			"server", player.getServerOptional().map(ServiceInfo::getName).orElse(null),
 			"proxy", player.getProxy().getName(),
@@ -42,10 +42,10 @@ public final class V1ObjectSerializer {
 	public static Document forPlayerSettings(@Nonnull PlayerSettings settings, boolean includeSkinParts) {
 		return Documents.newJsonDocument(
 			"locale", settings.getLocale(),
-			"chatColors", settings.hasChatColors(),
-			"chatMode", settings.getChatMode(),
-			"mainHand", settings.getMainHand(),
-			"renderDistance", settings.getRenderDistance()
+			"chat_colors", settings.hasChatColors(),
+			"chat_mode", settings.getChatMode(),
+			"main_hand", settings.getMainHand(),
+			"render_distance", settings.getRenderDistance()
 		).applyIf(includeSkinParts, data -> data.set("skin", settings.getSkinParts()));
 	}
 

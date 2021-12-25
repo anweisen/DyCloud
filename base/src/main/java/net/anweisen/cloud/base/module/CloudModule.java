@@ -92,7 +92,7 @@ public abstract class CloudModule implements Module {
 		return controller.reloadConfig();
 	}
 
-	protected boolean getEnabled(boolean defaultValue) {
+	protected boolean checkEnabled(boolean defaultValue) {
 		StorableDocument config = getConfig();
 		if (!config.contains("enabled")) {
 			config.set("enabled", defaultValue);

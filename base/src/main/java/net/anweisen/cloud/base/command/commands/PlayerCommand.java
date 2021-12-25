@@ -79,7 +79,7 @@ public class PlayerCommand {
 			player = manager.getOfflinePlayerByUniqueId(UUID.fromString(input));
 			if (player != null) return player;
 		} catch (Exception ex) {
-			// Input is not a valid uuid
+			// input is not a valid uuid
 		}
 
 		sender.sendTranslation("cloud.player.unregistered");

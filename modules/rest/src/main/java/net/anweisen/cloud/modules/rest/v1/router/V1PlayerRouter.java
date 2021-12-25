@@ -56,7 +56,7 @@ public class V1PlayerRouter {
 			.cancelNext(true);
 	}
 
-	@HttpEndpoint(method = HttpMethod.POST, path = "{player}/kick", permission = "web.player.kick")
+	@HttpEndpoint(method = HttpMethod.POST, path = "{player}/kick", permission = "web.player.action.kick")
 	public void postPlayerKick(@Nonnull HttpContext context) {
 
 	}

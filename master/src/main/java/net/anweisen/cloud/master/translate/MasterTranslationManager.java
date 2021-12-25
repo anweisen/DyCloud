@@ -79,9 +79,10 @@ public class MasterTranslationManager implements TranslationManager, LoggingApiU
 		List<Document> documents = Documents.newJsonBundle(getClass().getClassLoader().getResourceAsStream("language/_.json")).toDocuments();
 		for (Document document : documents) {
 			try {
-				InputStream stream = getClass().getClassLoader().getResourceAsStream("language/" + document.getString("file"));
+				String path = "language/" + document.getString("file");
+				InputStream stream = getClass().getClassLoader().getResourceAsStream(path);
 				if (stream == null) {
-					warn("Language file for {} could not be found", document);
+					warn("Language file for {} ({}) could not be found", document, path);
 					continue;
 				}
 				Document values = Documents.newJsonDocument(stream);
@@ -89,7 +90,7 @@ public class MasterTranslationManager implements TranslationManager, LoggingApiU
 				Path languageDirectory = directory.resolve(FileUtils.getFileName(document.getString("file")));
 				FileUtils.createDirectory(languageDirectory);
 
-				// Write language file
+				// write language file
 				Path languageConfig = languageDirectory.resolve(configPath);
 				if (!Files.exists(languageConfig)) {
 					Documents.newJsonDocument(
@@ -98,14 +99,14 @@ public class MasterTranslationManager implements TranslationManager, LoggingApiU
 					).saveToFile(languageConfig);
 				}
 
-				// Write new translations to cloud section
-				Path cloudSection = languageDirectory.resolve("cloud.json");
-				Document existing = Documents.newJsonDocument(cloudSection);
+				// write new translations to cloud section
+				Path cloudSectionPath = languageDirectory.resolve("cloud.json");
+				Document cloudSection = Documents.newJsonDocument(cloudSectionPath); // existing cloud section
 				values.forEach((key, value) -> {
-					if (!existing.contains(key))
-						existing.set(key, value);
+					if (!cloudSection.contains(key))
+						cloudSection.set(key, value);
 				});
-				values.saveToFile(cloudSection);
+				values.saveToFile(cloudSectionPath);
 
 			} catch (Exception ex) {
 				error("Could not copy default language {}", document, ex);
@@ -131,7 +132,7 @@ public class MasterTranslationManager implements TranslationManager, LoggingApiU
 				Map<String, TranslatedValue> values = new LinkedHashMap<>();
 				DefaultLanguageSection section = new DefaultLanguageSection(language, FileUtils.getFileName(sectionPath.getFileName()), values);
 				Document sectionData = Documents.newJsonDocumentUnchecked(sectionPath);
-				for (String key : sectionData.keys()) {
+				for (String key : new ArrayList<>(sectionData.keys())) { // make copy of set for concurrency
 					values.put(key, new DefaultTranslatedValue(section, key, sectionData.getStrings(key)));
 				}
 

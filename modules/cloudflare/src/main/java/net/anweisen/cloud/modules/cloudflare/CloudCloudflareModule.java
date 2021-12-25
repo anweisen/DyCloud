@@ -34,7 +34,7 @@ public final class CloudCloudflareModule extends CloudModule {
 		instance = this;
 
 		loadConfig();
-		if (!getEnabled(false)) return;
+		if (!checkEnabled(false)) return;
 		initCloudflareApi();
 		createCloudflareDnsNodeEntries();
 		initListeners();

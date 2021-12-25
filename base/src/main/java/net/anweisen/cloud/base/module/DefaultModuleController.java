@@ -103,8 +103,8 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 	@Override
 	public void loadModule() {
 		synchronized (this) {
-			if (module == null) return; // Was never initialized
-			if (state != ModuleState.DISABLED) return; // Must be disabled first
+			if (module == null) return; // was never initialized
+			if (state != ModuleState.DISABLED) return; // must be disabled first
 
 			info("Module {} is being loaded..", module);
 
@@ -121,8 +121,8 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 	@Override
 	public void enableModule() {
 		synchronized (this) {
-			if (module == null) return; // Was never initialized
-			if (state != ModuleState.LOADED) return; // Must be loaded first
+			if (module == null) return; // was never initialized
+			if (state != ModuleState.LOADED) return; // must be loaded first
 
 			info("Module {} is being enabled..", module);
 

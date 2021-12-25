@@ -78,7 +78,7 @@ public class DockerServiceActor implements LoggingApiUser {
 		Path tempTemplateDirectory = FileUtils.getTempDirectory().resolve(info.getName());
 		FileUtils.createDirectory(tempTemplateDirectory);
 
-		// Download, extract and copy templates
+		// download, extract and copy templates
 		for (ServiceTemplate template : task.getTemplates()) {
 			long startMillis = System.currentTimeMillis();
 			debug("Downloading template '{}'..", template.toShortString()); // TODO cache this, taking way to long to download a 1gb map every time
@@ -101,7 +101,7 @@ public class DockerServiceActor implements LoggingApiUser {
 			stream.close();
 			trace("Finished extracting template '{}' in {}ms", template.toShortString(), System.currentTimeMillis() - startMillis);
 		}
-		// Copy modules
+		// copy modules
 		for (ModuleController module : cloud.getModuleManager().getModules()) {
 			if (module.getModuleConfig().getCopyType().applies(task.getEnvironment().getServiceType())) {
 				if (!module.isEnabled()) {
@@ -113,7 +113,7 @@ public class DockerServiceActor implements LoggingApiUser {
 				FileUtils.copy(module.getJarFile(), tempTemplateDirectory.resolve(task.getEnvironment().getPluginsFolder() + "/" + module.getJarFile().getFileName()));
 			}
 		}
-		// Copy config files
+		// copy config files
 		ServiceEnvironment environment = task.getEnvironment();
 		for (String config : environment.getConfigs()) {
 			trace("Copying config resource '{}' to {}..", config, info.getName());
@@ -128,7 +128,7 @@ public class DockerServiceActor implements LoggingApiUser {
 			input.close();
 			output.close();
 		}
-		// Write eula
+		// write eula
 		if (environment.isServer()) {
 			trace("Writing eula file for {}..", info);
 			BufferedWriter writer = FileUtils.newBufferedWriter(tempTemplateDirectory.resolve("eula.txt"));
@@ -149,8 +149,8 @@ public class DockerServiceActor implements LoggingApiUser {
 		debug("Creating docker container using image '{}' for {}..", image, info);
 		DockerClient dockerClient = cloud.getDockerClient();
 
-		// Normally, all required images are pulled on startup
-		// But if the image is not installed here, we will just pull it again
+		// normally, all required images are pulled on startup
+		// but if the image is not installed here, we will just pull it again
 		try {
 			trace("Searching for image '{}'", image);
 			dockerClient.inspectImageCmd(image).exec();
@@ -167,8 +167,8 @@ public class DockerServiceActor implements LoggingApiUser {
 
 		List<String> arguments = new ArrayList<>(Collections.singletonList("java"));
 		arguments.addAll(Arrays.asList(
-			"-DIReallyKnowWhatIAmDoingISwear=true", // skip deprecated build warning
-			"-Djline.terminal=jline.UnsupportedTerminal", // docker container dont support these, skip warning
+			"-DIReallyKnowWhatIAmDoingISwear=true", // skip deprecated build warning (for paper, bukkit, spigot)
+			"-Djline.terminal=jline.UnsupportedTerminal", // docker container dont support these, just skip warning
 			"-Dfile.encoding=UTF-8", // we want to use utf8 as standard everywhere
 			"-Dclient.encoding.override=UTF-8",
 			"-XX:+UseStringDeduplication",
@@ -184,21 +184,21 @@ public class DockerServiceActor implements LoggingApiUser {
 			"-jar", "wrapper.jar", applicationFile.getFileName().toString()
 		));
 
-		// Create docker container
+		// create docker container
 		String containerId = dockerClient.createContainerCmd(image)
 			.withName(info.getName())
 			.withWorkingDir(serverDirectory)
 			.withCmd(arguments)
 			.withPortSpecs(containerPort + "")
 			.withExposedPorts(ExposedPort.tcp(containerPort), ExposedPort.udp(containerPort)) // we need to expose the port in order to get the port binding working
-			.withHostName(CloudNode.getInstance().getConfig().getMasterAddress().getHost()) // TODO is this needed?
+//			.withHostName(CloudNode.getInstance().getConfig().getMasterAddress().getHost()) // TODO is this needed?
 			.withHostConfig(new HostConfig()
 				.withNetworkMode(cloud.getConfig().getDockerNetworkMode())
 				.withPortBindings(
 					new PortBinding(Binding.bindPort(info.getPort()), ExposedPort.tcp(containerPort)),
 					new PortBinding(Binding.bindPort(info.getPort()), ExposedPort.udp(containerPort))
 				)
-				.withMemory(task.getMemoryLimit() < 1 ? null : 1024L * 1024L * task.getMemoryLimit()) // bytes -> kilobytes -> megabytes
+				.withMemory(task.getMemoryLimit() < 1 ? null : 1024L * 1024L * task.getMemoryLimit()) // megabytes > kilobytes > bytes => *1024^2
 			).exec().getId();
 		info.setDockerContainerId(containerId);
 		trace("Created docker container {} for {}", containerId, info);
@@ -211,7 +211,7 @@ public class DockerServiceActor implements LoggingApiUser {
 			"serviceUniqueId", info.getUniqueId()
 		).saveToFile(tempTemplateDirectory.resolve(".cloud/config.json"));
 
-		// Copy resources to container
+		// copy resources to container
 		dockerClient.copyArchiveToContainerCmd(containerId)
 			.withHostResource(tempTemplateDirectory.toAbsolutePath().toString())
 			.withRemotePath(serverDirectory)

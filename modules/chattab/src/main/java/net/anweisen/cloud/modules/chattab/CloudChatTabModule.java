@@ -23,13 +23,15 @@ public final class CloudChatTabModule extends CloudModule {
 	}
 
 	private void loadConfig() {
-		config = getConfig().toInstanceOf(ChatTabConfig.class);
+		config = getConfig().toInstance(ChatTabConfig.class);
 		getLogger().debug("Loaded config {}", config);
-		if (config == null)
+		if (config == null) {
 			getConfig().set(config = new ChatTabConfig(
 				new TabConfig(true, "", ""),
 				new ChatConfig(true, "{player.display} §8» §7{message}")
-			)).save();
+			));
+			getConfig().save();
+		}
 		getGlobalConfig().set("chattabConfig", config).update();
 	}
 

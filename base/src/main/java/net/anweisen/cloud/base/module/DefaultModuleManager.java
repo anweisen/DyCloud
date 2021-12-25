@@ -52,7 +52,7 @@ public class DefaultModuleManager implements ModuleManager, LoggingApiUser {
 
 		List<DefaultModuleController> modules = new CopyOnWriteArrayList<>();
 
-		// Resolve modules and load configs
+		// resolve modules and load configs
 		for (Path file : FileUtils.list(directory).filter(path -> path.toString().endsWith(".jar")).collect(Collectors.toList())) {
 			try {
 				info("Resolving module {}..", file.getFileName());
@@ -65,7 +65,7 @@ public class DefaultModuleManager implements ModuleManager, LoggingApiUser {
 			}
 		}
 
-		// Check if the depends are existing
+		// check if the depends are existing
 		for (DefaultModuleController module : modules) {
 			for (String depend : module.getModuleConfig().getDepends()) {
 				if (hasModule(modules, depend)) continue;
@@ -75,21 +75,22 @@ public class DefaultModuleManager implements ModuleManager, LoggingApiUser {
 			}
 		}
 
-		// Order the modules by depends
+		// order the modules by depends
+		// TODO handle: a requires b, b requires c, c requires a -> invalid
 		modules.sort((module1, module2) -> {
 
-			// If this module requires the other module, load this after the other
+			// if this module requires the other module, load this after the other
 			if (arrayContains(module1.getModuleConfig().getDepends(), module2.getModuleConfig().getName()))
 				return -1;
 
-			// If the other module requires this module, load the other after this
+			// if the other module requires this module, load the other after this
 			if (arrayContains(module2.getModuleConfig().getDepends(), module1.getModuleConfig().getName()))
 				return 1;
 
 			return 0;
 		});
 
-		// Init modules
+		// init modules
 		for (DefaultModuleController module : modules) {
 			try {
 				if (!module.getModuleConfig().getEnvironment().applies(CloudDriver.getInstance().getEnvironment())) {

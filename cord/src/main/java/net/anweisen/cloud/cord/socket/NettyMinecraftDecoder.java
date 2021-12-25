@@ -55,7 +55,7 @@ public class NettyMinecraftDecoder extends SimpleChannelInboundHandler<ByteBuf> 
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			buffer.resetReaderIndex(); // Wait until we receive the full packet
+			buffer.resetReaderIndex(); // wait until we receive the full packet
 		}
 	}
 
@@ -165,7 +165,7 @@ public class NettyMinecraftDecoder extends SimpleChannelInboundHandler<ByteBuf> 
 	}
 
 	private static boolean matchesHostName(@Nonnull String hostname, @Nonnull ServiceTask task) {
-		for (String cordHostname : task.getProperties().getStringList("cordHostnames")) {
+		for (String cordHostname : task.getProperties().getStrings("cordHostnames")) {
 			if (matchesHostName(hostname, cordHostname))
 				return true;
 		}
