@@ -210,11 +210,13 @@ public class DefaultTranslatedValue implements TranslatedValue, LoggingApiUser {
 						int arg = Integer.parseInt(argument.toString());
 						Object current = args[arg];
 						Object replacement =
-							  current instanceof Supplier ? ((Supplier<?>)current).get()
-							: current instanceof Callable ? ((Callable<?>)current).call()
-							: current;
+							current instanceof Supplier ? ((Supplier<?>) current).get()
+								: current instanceof Callable ? ((Callable<?>) current).call()
+								: current;
 						builder.append(replacement);
-					} catch (NumberFormatException | IndexOutOfBoundsException ex) {
+					} catch (NumberFormatException ex) { // if this is not a number, we just ignore it
+						builder.append(start).append(argument).append(end);
+					} catch (IndexOutOfBoundsException ex) {
 						warn("Invalid argument index '{}' in {}", argument, this);
 						builder.append(start).append(argument).append(end);
 					} catch (Exception ex) {
