@@ -28,7 +28,7 @@ public final class CloudProxyModule extends CloudModule {
 	private void loadConfig() {
 		config = getConfig().toInstance(ProxyConfig.class);
 		getLogger().debug("Loaded config {}", config);
-		if (config == null) {
+		if (config == null || config.getMotd() == null || config.getTablist() == null) {
 			getConfig().set(config = new ProxyConfig(
 				false,
 				new ProxyTabListConfig(

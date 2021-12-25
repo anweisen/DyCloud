@@ -30,4 +30,11 @@ public class ProxyMotdConfig {
 		return maintenanceMotds;
 	}
 
+	@Override
+	public String toString() {
+		return "ProxyMotdConfig[" +
+			"motds=" + motds.size() +
+			" maintenanceMotds=" + maintenanceMotds.size() +
+			']';
+	}
 }

@@ -28,4 +28,12 @@ public class ProxyTabListConfig {
 	public double getAnimationInterval() {
 		return animationInterval;
 	}
+
+	@Override
+	public String toString() {
+		return "ProxyTabListConfig[" +
+			"frames=" + frames.size() +
+			" animationInterval=" + animationInterval +
+			']';
+	}
 }

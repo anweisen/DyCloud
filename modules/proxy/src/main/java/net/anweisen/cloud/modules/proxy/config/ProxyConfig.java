@@ -34,4 +34,13 @@ public class ProxyConfig {
 	public boolean isUseTranslations() {
 		return useTranslations;
 	}
+
+	@Override
+	public String toString() {
+		return "ProxyConfig[" +
+			"useTranslations=" + useTranslations +
+			" tablist=" + tablist +
+			" motd=" + motd +
+			']';
+	}
 }
