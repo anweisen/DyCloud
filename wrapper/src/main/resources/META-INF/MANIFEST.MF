@@ -1,3 +1,4 @@
 Manifest-Version: 1.0
 Main-Class: net.anweisen.cloud.wrapper.Launcher
+Premain-Class: net.anweisen.cloud.wrapper.Launcher
 Launcher-Agent-Class: net.anweisen.cloud.wrapper.Launcher

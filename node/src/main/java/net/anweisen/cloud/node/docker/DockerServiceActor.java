@@ -173,7 +173,8 @@ public class DockerServiceActor implements LoggingApiUser {
 			"-Dclient.encoding.override=UTF-8",
 			"-XX:+UseStringDeduplication",
 			"-XX:-UseAdaptiveSizePolicy",
-			"-XX:+UseCompressedOops"
+			"-XX:+UseCompressedOops",
+			"-javaagent:" + serverDirectory + "/wrapper.jar" // adds the wrapper to the class path of the boot classloader
 		));
 		if (task.getJavaVersion() >= 9) {
 			arguments.addAll(Arrays.asList(

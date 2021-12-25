@@ -36,11 +36,9 @@ import net.anweisen.cloud.wrapper.config.WrapperConfig;
 import net.anweisen.cloud.wrapper.event.service.ServiceInfoConfigureEvent;
 import net.anweisen.utility.common.collection.WrappedException;
 import net.anweisen.utility.common.logging.handler.HandledLogger;
-import net.anweisen.utility.common.misc.ReflectionUtils;
 
 import javax.annotation.Nonnull;
 import java.lang.instrument.Instrumentation;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -52,9 +50,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.jar.Attributes;
-import java.util.jar.JarFile;
-import java.util.jar.Manifest;
+import java.util.jar.*;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -119,7 +115,7 @@ public final class CloudWrapper extends CloudDriver {
 		loadNetworkListeners(socketClient.getListenerRegistry());
 		connectAndAwaitAuthentication();
 
-		// Retrieve current service info
+		// retrieve current service info provided by the master
 		serviceInfo = serviceManager.getServiceInfoByUniqueId(config.getServiceUniqueId());
 
 		try {
@@ -185,49 +181,57 @@ public final class CloudWrapper extends CloudDriver {
 
 		applicationFile = Paths.get(applicationFileName);
 		if (Files.notExists(applicationFile)) throw new IllegalStateException("Application file " + applicationFileName + " does not exist");
-		URL applicationFileUrl = applicationFile.toUri().toURL();
 
-		// Inject the classpath into current class loader
-		// This eliminates the need of creating a new class loader and setting it as the system class loader which does not work properly with java16
-		// TODO just use the instrumentation?
-		try {
-			ClassLoader loader = this.getClass().getClassLoader();
-			Class<?> loaderClass = loader.getClass();
-			Field ucpField = ReflectionUtils.getInheritedPrivateField(loaderClass, "ucp");
-			ucpField.setAccessible(true);
-			Object ucp = ucpField.get(loader);
-
-			Class<?> ucpClass = ucp.getClass();
-			Method addUrlMethod = ucpClass.getDeclaredMethod("addURL", URL.class);
-			addUrlMethod.setAccessible(true);
-			addUrlMethod.invoke(ucp, applicationFileUrl);
-
-			applicationClassLoader = loader;
-		} catch (Throwable exInjectClassPath) {
-			logger.error("Unable to inject application file to ucp (class path) of current class loader. Fallbacking to an URLClassLoader.", exInjectClassPath);
-			applicationClassLoader = new URLClassLoader(new URL[] { applicationFileUrl }, this.getClass().getClassLoader());
-
-			// https://stackoverflow.com/questions/5380275/replacement-system-classloader-for-classes-in-jars-containing-jars
-			// Replace system class loader with created URLCLassLoader
-			try {
-				Field loaderField = ClassLoader.class.getDeclaredField("scl");
-				loaderField.setAccessible(true);
-				loaderField.set(null, applicationClassLoader);
-
-				// field in pre java9 that indicated whether a system class loader is set
-				Field setField = ClassLoader.class.getDeclaredField("sclSet");
-				setField.setAccessible(true);
-				setField.set(null, true);
-			} catch (Throwable exReplaceSystemLoader) {
+		// create our own classloader and load all classes (only load don't initialize)
+		// so the parent of the application's classloader is the system classloader, and not the platform classloader
+		// but only for spigot servers >= 1.18, bungeecord plugin management will break with this logic, must be loaded with the system classloader directly
+		// => "Plugin requires net.md_5.bungee.api.plugin.PluginClassloader"
+		if (shouldPreloadClasses(applicationFile)) {
+			applicationClassLoader = new URLClassLoader(new URL[] { applicationFile.toUri().toURL() }, ClassLoader.getSystemClassLoader());
+			try (JarInputStream stream = new JarInputStream(Files.newInputStream(applicationFile))) {
+				JarEntry entry;
+				while ((entry = stream.getNextJarEntry()) != null) {
+					// only resolve class files
+					if (!entry.isDirectory() && entry.getName().endsWith(".class")) {
+						// canonicalize the class name
+						String className = entry.getName().replace('/', '.').replace(".class", "");
+						// load the class
+						try {
+							Class.forName(className, false, applicationClassLoader);
+						} catch (Throwable ignored) {
+							// ignore
+						}
+					}
+				}
 			}
 		}
+
+		// append application file to system class loader
+		// could be problematic if the application (java9+) uses the platform or higher (-> bootstrap) classloader
+		// dont append to bootstrap loader => classloader of application main class will magically be null
+		// previous solution: https://github.com/anweisen/DyCloud/blob/a328842/wrapper/src/main/java/net/anweisen/cloud/wrapper/CloudWrapper.java#L190
+		JarFile applicationJarFile = new JarFile(applicationFile.toFile());
+		instrumentation.appendToSystemClassLoaderSearch(applicationJarFile);
 
 		Attributes manifestAttributes = getManifestAttributes(applicationFile);
 
 		String mainClassName = manifestAttributes.getValue("Main-Class");
+		String premainClassName = manifestAttributes.getValue("Premain-Class");
 		String agentClassName = manifestAttributes.getValue("Launcher-Agent-Class");
 		logger.debug("Found attributes main:{} agent:{}", mainClassName, agentClassName);
 
+		if (premainClassName != null) {
+			try {
+				Class<?> premainClass = Class.forName(premainClassName, true, applicationClassLoader);
+				Method agentMethod = premainClass.getMethod("premain", String.class, Instrumentation.class);
+				logger.trace("Invoking premain method..");
+				agentMethod.invoke(null, null, instrumentation);
+				logger.trace("Successfully invoked premain method");
+			} catch (ClassNotFoundException ex) {
+			} catch (Throwable ex) {
+				logger.error("Unable to execute premain", ex);
+			}
+		}
 		if (agentClassName != null) {
 			try {
 				Class<?> agentClass = Class.forName(agentClassName, true, applicationClassLoader);
@@ -309,6 +313,15 @@ public final class CloudWrapper extends CloudDriver {
 			return manifest.getMainAttributes();
 		} catch (Exception ex) {
 			throw new WrappedException("Unable to extract manifest attributes from jarfile", ex);
+		}
+	}
+
+	// https://github.com/CloudNetService/CloudNet-v3/pull/560/files#diff-3e7f947c6535489177b7860ba2888ac02022f2427f48a6f4e9f12087f2951fbeR47-R55
+	private boolean shouldPreloadClasses(@Nonnull Path applicationFile) {
+		try (JarFile jarFile = new JarFile(applicationFile.toFile())) {
+			return jarFile.getEntry("META-INF/versions.list") != null;
+		} catch (Exception ex) {
+			throw new WrappedException("Unable to find out whether to preload classes of jarfile", ex);
 		}
 	}
 

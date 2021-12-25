@@ -19,6 +19,10 @@ public final class Launcher {
 
 	private static Instrumentation instrumentationInstance;
 
+	public static void premain(String premainArgs, Instrumentation instrumentation) {
+		instrumentationInstance = instrumentation;
+	}
+
 	public static void agentmain(String agentArgs, Instrumentation instrumentation) {
 		instrumentationInstance = instrumentation;
 	}
