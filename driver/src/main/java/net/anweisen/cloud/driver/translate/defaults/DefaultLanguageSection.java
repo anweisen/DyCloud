@@ -62,7 +62,7 @@ public class DefaultLanguageSection implements LanguageSection, LoggingApiUser {
 	@Nonnull
 	@Override
 	public TranslatedValue createEmptyValue(@Nonnull String name) {
-		return new DefaultTranslatedValue(this, name, Collections.singletonList("[" + name + "]"));
+		return new DefaultTranslatedValue(this, name, Collections.singletonList("[" + id + "." + name + "/" + parent.getId() + "]"));
 	}
 
 	@Override
