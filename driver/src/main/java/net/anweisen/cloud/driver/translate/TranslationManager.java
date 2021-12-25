@@ -1,5 +1,6 @@
 package net.anweisen.cloud.driver.translate;
 
+import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.CloudDriver;
 
 import javax.annotation.Nonnull;
@@ -30,6 +31,11 @@ public interface TranslationManager {
 
 	@Nullable
 	Language getLanguage(@Nonnull String id);
+
+	@Nonnull
+	default Language findDefaultLanguage() {
+		return Preconditions.checkNotNull(getLanguage(getDefaultLanguage()), "Default Language '" + getDefaultLanguage() + "' not found");
+	}
 
 	boolean hasLanguage(@Nonnull String id);
 
