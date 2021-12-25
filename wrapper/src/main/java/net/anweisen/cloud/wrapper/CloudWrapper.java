@@ -220,7 +220,7 @@ public final class CloudWrapper extends CloudDriver {
 		String mainClassName = manifestAttributes.getValue("Main-Class");
 		String premainClassName = manifestAttributes.getValue("Premain-Class");
 		String agentClassName = manifestAttributes.getValue("Launcher-Agent-Class");
-		logger.debug("Found attributes main:{} agent:{}", mainClassName, agentClassName);
+		logger.debug("Found attributes main:{} premain:{} agent:{}", mainClassName, premainClassName, agentClassName);
 
 		if (premainClassName != null) {
 			try {
@@ -259,6 +259,7 @@ public final class CloudWrapper extends CloudDriver {
 				);
 			} catch (Exception ex) {
 				logger.error("Unable to start application..", ex);
+				// TODO stop
 			}
 		}, "Application-Thread");
 

@@ -174,11 +174,13 @@ public class DockerServiceActor implements LoggingApiUser {
 			"-XX:+UseStringDeduplication",
 			"-XX:-UseAdaptiveSizePolicy",
 			"-XX:+UseCompressedOops",
-			"-javaagent:" + serverDirectory + "/wrapper.jar" // adds the wrapper to the class path of the boot classloader
+			"-javaagent:" + serverDirectory + "/wrapper.jar" // forces the vm to add the wrapper jar to the classpath (ucp) of the builtin boot classloader
 		));
 		if (task.getJavaVersion() >= 9) {
 			arguments.addAll(Arrays.asList(
-				"--add-opens", "java.base/jdk.internal.loader=ALL-UNNAMED" // needed to be able to access the private ucp field of the builtin class loader in java9+
+				// was earlier needed to be able to access the private ucp field of the builtin classloader in java9+
+				// we leave it in for the case we or some plugins want to do some pre-java9-like reflections
+				"--add-opens", "java.base/jdk.internal.loader=ALL-UNNAMED"
 			));
 		}
 		arguments.addAll(Arrays.asList(
@@ -192,7 +194,6 @@ public class DockerServiceActor implements LoggingApiUser {
 			.withCmd(arguments)
 			.withPortSpecs(containerPort + "")
 			.withExposedPorts(ExposedPort.tcp(containerPort), ExposedPort.udp(containerPort)) // we need to expose the port in order to get the port binding working
-//			.withHostName(CloudNode.getInstance().getConfig().getMasterAddress().getHost()) // TODO is this needed?
 			.withHostConfig(new HostConfig()
 				.withNetworkMode(cloud.getConfig().getDockerNetworkMode())
 				.withPortBindings(
