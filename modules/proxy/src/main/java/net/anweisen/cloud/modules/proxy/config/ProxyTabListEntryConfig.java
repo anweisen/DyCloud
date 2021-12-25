@@ -1,7 +1,6 @@
 package net.anweisen.cloud.modules.proxy.config;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -9,24 +8,24 @@ import java.util.Collection;
  */
 public class ProxyTabListEntryConfig {
 
-	private Collection<String> header;
-	private Collection<String> footer;
+	private String header;
+	private String footer;
 
 	private ProxyTabListEntryConfig() {
 	}
 
-	public ProxyTabListEntryConfig(@Nonnull Collection<String> header, @Nonnull Collection<String> footer) {
+	public ProxyTabListEntryConfig(@Nonnull String header, @Nonnull String footer) {
 		this.header = header;
 		this.footer = footer;
 	}
 
 	@Nonnull
-	public Collection<String> getHeader() {
+	public String getHeader() {
 		return header;
 	}
 
 	@Nonnull
-	public Collection<String> getFooter() {
+	public String getFooter() {
 		return footer;
 	}
 }

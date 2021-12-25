@@ -3,18 +3,17 @@ package net.anweisen.cloud.modules.proxy.helper;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.player.permission.PermissionGroup;
 import net.anweisen.cloud.driver.player.permission.PermissionPlayer;
+import net.anweisen.cloud.driver.translate.Translatable;
 import net.anweisen.cloud.modules.proxy.config.ProxyConfig;
 import net.anweisen.cloud.modules.proxy.config.ProxyMotdEntryConfig;
 import net.anweisen.cloud.modules.proxy.config.ProxyTabListEntryConfig;
 import net.anweisen.cloud.wrapper.CloudWrapper;
 import net.anweisen.utility.common.collection.IRandom;
-import net.anweisen.utility.common.misc.StringUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Function;
 
 /**
  * @author anweisen | https://github.com/anweisen
@@ -48,13 +47,16 @@ public abstract class AbstractCloudProxyManager {
 
 		ProxyTabListEntryConfig frame = config.getTablist().getFrames().get(tablistAnimationIndex);
 
-		header = StringUtils.getIterableAsString(frame.getHeader(), "\n", Function.identity());
-		footer = StringUtils.getIterableAsString(frame.getFooter(), "\n", Function.identity());
+		header = frame.getHeader();
+		footer = frame.getFooter();
 
 		updateTabList();
 	}
 
 	protected String replacePlayer(@Nonnull String content, @Nonnull UUID playerUniqueId) {
+		if (config.isUseTranslations())
+			content = Translatable.of(content).translate(playerUniqueId).asString();
+
 		if (CloudDriver.getInstance().hasPermissionManager()) {
 			PermissionPlayer permissionPlayer = CloudDriver.getInstance().getPermissionManager().getPlayerByUniqueId(playerUniqueId);
 			PermissionGroup group = permissionPlayer.getHighestGroup();

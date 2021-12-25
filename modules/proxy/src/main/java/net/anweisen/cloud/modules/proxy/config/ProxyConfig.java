@@ -8,13 +8,15 @@ import javax.annotation.Nonnull;
  */
 public class ProxyConfig {
 
+	private boolean useTranslations;
 	private ProxyTabListConfig tablist;
 	private ProxyMotdConfig motd;
 
 	private ProxyConfig() {
 	}
 
-	public ProxyConfig(@Nonnull ProxyTabListConfig tablist, @Nonnull ProxyMotdConfig motd) {
+	public ProxyConfig(boolean useTranslations, @Nonnull ProxyTabListConfig tablist, @Nonnull ProxyMotdConfig motd) {
+		this.useTranslations = useTranslations;
 		this.tablist = tablist;
 		this.motd = motd;
 	}
@@ -27,5 +29,9 @@ public class ProxyConfig {
 	@Nonnull
 	public ProxyMotdConfig getMotd() {
 		return motd;
+	}
+
+	public boolean isUseTranslations() {
+		return useTranslations;
 	}
 }
