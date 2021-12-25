@@ -1,5 +1,6 @@
 package net.anweisen.cloud.driver.translate;
 
+import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.player.CloudOfflinePlayer;
 
@@ -23,16 +24,25 @@ public interface Translatable {
 	String getName();
 
 	@Nonnull
-	TranslatedValue translateDefault();
+	default TranslatedValue translateDefault() {
+		return translate(CloudDriver.getInstance().getTranslationManager().findDefaultLanguage());
+	}
 
 	@Nonnull
-	TranslatedValue translate(@Nonnull String language);
+	default TranslatedValue translate(@Nonnull String language) {
+		return translate(Preconditions.checkNotNull(CloudDriver.getInstance().getTranslationManager().getLanguage(language), "Unknown language '" + language + "'"));
+	}
 
 	@Nonnull
-	TranslatedValue translate(@Nonnull UUID playerUniqueId);
+	default TranslatedValue translate(@Nonnull UUID playerUniqueId) {
+		CloudOfflinePlayer player = CloudDriver.getInstance().getPlayerManager().getOfflinePlayerByUniqueId(playerUniqueId);
+		return player == null ? translateDefault() : translate(player);
+	}
 
 	@Nonnull
-	TranslatedValue translate(@Nonnull CloudOfflinePlayer player);
+	default TranslatedValue translate(@Nonnull CloudOfflinePlayer player) {
+		return translate(player.getLanguage());
+	}
 
 	@Nonnull
 	TranslatedValue translate(@Nonnull Language language);
