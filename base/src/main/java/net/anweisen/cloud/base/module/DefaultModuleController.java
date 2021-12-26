@@ -77,7 +77,7 @@ public class DefaultModuleController implements ModuleController, LoggingApiUser
 			document.getString("version"),
 			document.getString("main"),
 			document.getString("website", ""),
-			document.getBundle("depends").toStrings().toArray(new String[0]), // TODO ugly
+			document.getStrings("depends").toArray(new String[0]),
 			document.getEnum("copy", ModuleCopyType.NONE),
 			document.getEnum("environment", ModuleEnvironment.ALL)
 		);
