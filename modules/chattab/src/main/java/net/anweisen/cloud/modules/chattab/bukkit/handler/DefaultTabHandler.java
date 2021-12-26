@@ -1,9 +1,11 @@
 package net.anweisen.cloud.modules.chattab.bukkit.handler;
 
+import com.google.common.base.Preconditions;
 import net.anweisen.cloud.driver.CloudDriver;
 import net.anweisen.cloud.driver.player.permission.PermissionGroup;
 import net.anweisen.cloud.driver.player.permission.PermissionPlayer;
 import net.anweisen.cloud.modules.chattab.bukkit.BukkitCloudChatTabPlugin;
+import net.anweisen.cloud.modules.chattab.bukkit.handler.TabFormatter.Format;
 import net.anweisen.cloud.modules.chattab.config.TabConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -19,19 +21,33 @@ import javax.annotation.Nonnull;
  */
 public class DefaultTabHandler implements TabHandler {
 
+	public static final int SORT_ID_LENGTH = 5;
+
+	private TabFormatter formatter = new DefaultTabFormatter();
+
+	@Nonnull
+	@Override
+	public TabFormatter getFormatter() {
+		return formatter;
+	}
+
+	@Override
+	public void setFormatter(@Nonnull TabFormatter formatter) {
+		Preconditions.checkNotNull(formatter, "Cannot set formatter to null");
+		this.formatter = formatter;
+	}
+
 	@Override
 	public void update() {
 		PermissionGroup globalHighestGroup = CloudDriver.getInstance().getPermissionManager().getHighestGroup();
 		if (globalHighestGroup == null) return;
 
-		int maxSortIdLength = String.valueOf(globalHighestGroup.getSortId()).length();
-
 		for (Player player : Bukkit.getOnlinePlayers()) {
-			update(player, maxSortIdLength);
+			update(player);
 		}
 	}
 
-	public void update(@Nonnull Player player, int maxSortIdLength) {
+	public void update(@Nonnull Player player) {
 		PermissionPlayer permissionPlayer = CloudDriver.getInstance().getPermissionManager().getPlayerByUniqueId(player.getUniqueId());
 		PermissionGroup permissionGroup = permissionPlayer.getHighestGroup();
 
@@ -42,24 +58,36 @@ public class DefaultTabHandler implements TabHandler {
 			if (scoreboard == Bukkit.getScoreboardManager().getMainScoreboard())
 				observator.setScoreboard(scoreboard = Bukkit.getScoreboardManager().getNewScoreboard());
 
-			String teamName = String.format("%0" + maxSortIdLength + "d", permissionGroup.getSortId()) + permissionGroup.getName();
+			Format format = formatter.format(observator, player, permissionPlayer, permissionGroup);
+
+			String teamName = String.format("%0" + SORT_ID_LENGTH + "d", format.getSortId()) + "-" + player.getUniqueId();
 			if (teamName.length() > 16)
 				teamName = teamName.substring(0, 16);
 
 			Team team = scoreboard.getTeam(teamName);
 			if (team == null)
 				team = scoreboard.registerNewTeam(teamName);
-
 			team.addEntry(player.getName());
-			team.setDisplayName(permissionGroup.getDisplayName());
-			team.setPrefix(permissionGroup.getNamePrefix());
-			try {
-				team.setColor(ChatColor.getByChar(permissionGroup.getColor().replace("§", "")));
-			} catch (Throwable ex) {
+			team.setDisplayName(player.getName());
+
+			team.setPrefix(format.getNametagPrefix());
+			team.setSuffix(format.getNametagSuffix());
+
+			if (format.getTeamColor() != null) {
+				team.setColor(format.getTeamColor());
+			} else {
+				try {
+					team.setColor(ChatColor.getByChar(ChatColor.getLastColors(format.getNametagPrefix()).replace("§", "")));
+				} catch (Throwable ex) {
+				}
 			}
 
-			player.setPlayerListName(tablistConfig.getPrefix() + permissionGroup.getTabPrefix() + player.getName() + tablistConfig.getSuffix());
-			player.setDisplayName(permissionGroup.getNamePrefix() + player.getName());
+			player.setPlayerListName(
+				(format.getApplyTablistConfig() ? tablistConfig.getPrefix() : "")
+			   + format.getTablistName() +
+				(format.getApplyTablistConfig() ? tablistConfig.getSuffix() : "")
+			);
+			player.setDisplayName(format.getDisplayName());
 
 		}
 	}
