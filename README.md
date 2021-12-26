@@ -1,5 +1,5 @@
 [![CI](https://img.shields.io/github/workflow/status/anweisen/DyCloud/CI?style=for-the-badge)](https://github.com/anweisen/DyCloud/actions/workflows/ci.yml)
-[![wakatime](https://wakatime.com/badge/user/119921b1-76ee-4483-bd85-585caee7c213.svg?style=for-the-badge)](https://wakatime.com/badge/github/anweisen/DyCloud)
+[![wakatime](https://wakatime.com/badge/github/anweisen/DyCloud.svg?style=for-the-badge)](https://wakatime.com/badge/github/anweisen/DyCloud)
  ![lines](https://img.shields.io/tokei/lines/github/anweisen/DyCloud?style=for-the-badge)
 
 # DyCloud
