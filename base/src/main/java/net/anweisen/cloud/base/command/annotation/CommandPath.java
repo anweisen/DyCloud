@@ -15,6 +15,6 @@ import java.lang.annotation.Target;
 public @interface CommandPath {
 
 	@Nonnull
-	String value();
+	String[] value();
 
 }

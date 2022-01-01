@@ -44,10 +44,13 @@ public abstract class DefaultCommandManager implements CommandManager {
 				arguments.add(new RegisteredCommandArgument(argumentAnnotation.value(), argumentAnnotation.completer(), argumentAnnotation.words(), argumentAnnotation.raw(), argumentAnnotation.optional()));
 			}
 
-			commands.add(new RegisteredCommand(
-				commandAnnotation.name(), pathAnnotation.value(), commandAnnotation.permission(), commandAnnotation.scope(),
-				arguments, method, command
-			));
+			for (String path : pathAnnotation.value()) {
+				commands.add(new RegisteredCommand(
+					commandAnnotation.name(), path, commandAnnotation.permission(), commandAnnotation.scope(),
+					arguments, method, command
+				));
+			}
+
 		}
 
 		handleCommandChange();
