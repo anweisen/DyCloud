@@ -26,7 +26,9 @@ public class PlayerExecutorPacket extends Packet {
 		SEND_TITLE,
 		CONNECT_SERVER,
 		CONNECT_FALLBACK,
-		DISCONNECT
+		DISCONNECT,
+		PERFORM_COMMAND,
+		CHAT
 	}
 
 }

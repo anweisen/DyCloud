@@ -51,6 +51,12 @@ public class PlayerExecutorListener implements PacketListener {
 			case DISCONNECT:
 				executor.disconnect(buffer.readString());
 				return;
+			case CHAT:
+				executor.chat(buffer.readString());
+				return;
+			case PERFORM_COMMAND:
+				executor.performCommand(buffer.readString());
+				return;
 			default:
 				throw new IllegalStateException("Unrecognized PlayerExecutorPayload." + payload);
 		}

@@ -108,6 +108,20 @@ public class BungeePlayerExecutorListener implements PacketListener, LoggingApiU
 				}
 				break;
 			}
+			case CHAT: {
+				String message = buffer.readString();
+				for (ProxiedPlayer player : players) {
+					player.chat(message);
+				}
+				break;
+			}
+			case PERFORM_COMMAND: {
+				String command = buffer.readString();
+				for (ProxiedPlayer player : players) {
+					player.chat("/" + command);
+				}
+				break;
+			}
 		}
 	}
 

@@ -91,6 +91,16 @@ public abstract class DefaultPlayerExecutor implements PlayerExecutor {
 		sendPacket(PlayerExecutorPayload.DISCONNECT, buffer -> buffer.writeString(kickReason == null ? "§cNo kick reason given" : kickReason));
 	}
 
+	@Override
+	public void chat(@Nonnull String message) {
+		sendPacket(PlayerExecutorPayload.CHAT, buffer -> buffer.writeString(message));
+	}
+
+	@Override
+	public void performCommand(@Nonnull String command) {
+		sendPacket(PlayerExecutorPayload.PERFORM_COMMAND, buffer -> buffer.writeString(command));
+	}
+
 	private void sendPacket(@Nonnull PlayerExecutorPayload payload, @Nonnull Consumer<? super PacketBuffer> modifier) {
 		sendPacket(new PlayerExecutorPacket(payload, playerUniqueId, modifier));
 	}

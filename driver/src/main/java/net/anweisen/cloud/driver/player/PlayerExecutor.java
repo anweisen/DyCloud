@@ -140,4 +140,8 @@ public interface PlayerExecutor {
 	 */
 	void disconnect(@Nullable String kickReason);
 
+	void chat(@Nonnull String message);
+
+	void performCommand(@Nonnull String command);
+
 }
