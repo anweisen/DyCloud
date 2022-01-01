@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
  */
 public class DefaultTabHandler implements TabHandler {
 
-	public static final int SORT_ID_LENGTH = 5;
+	public static int SORT_ID_LENGTH = 5;
 
 	private TabFormatter formatter = new DefaultTabFormatter();
 
@@ -39,8 +39,12 @@ public class DefaultTabHandler implements TabHandler {
 
 	@Override
 	public void update() {
-		PermissionGroup globalHighestGroup = CloudDriver.getInstance().getPermissionManager().getHighestGroup();
-		if (globalHighestGroup == null) return;
+		// we use the default group and not the highest group because the higher the group is, the lower the sortId is
+		PermissionGroup defaultGroup = CloudDriver.getInstance().getPermissionManager().getDefaultGroup();
+		if (defaultGroup != null) {
+			int length = String.valueOf(defaultGroup.getSortId()).length();
+			if (length > SORT_ID_LENGTH) SORT_ID_LENGTH = length;
+		}
 
 		for (Player player : Bukkit.getOnlinePlayers()) {
 			update(player);
